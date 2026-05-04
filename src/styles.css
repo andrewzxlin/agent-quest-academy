@@ -1203,6 +1203,60 @@ h1 {
   padding: 6px 8px;
 }
 
+.mastery-ladder-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.mastery-ladder-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.mastery-step {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.mastery-step.done {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.mastery-step span,
+.mastery-step strong,
+.mastery-step small {
+  display: block;
+}
+
+.mastery-step span {
+  align-items: center;
+  background: #16a34a;
+  border-radius: 999px;
+  color: white;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.mastery-step strong {
+  margin-top: 10px;
+}
+
+.mastery-step small {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
 .job-scenario-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2098,6 +2152,7 @@ button:disabled {
   .role-fit-grid,
   .landing-checklist-grid,
   .diagram-flow,
+  .mastery-ladder-grid,
   .summary-grid {
     grid-template-columns: 1fr;
   }

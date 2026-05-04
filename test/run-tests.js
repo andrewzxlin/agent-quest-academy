@@ -43,6 +43,7 @@ import {
   jobRoleFitCard,
   jobScenarioCard,
   lessonSkillCard,
+  lessonMasteryLadder,
   learningPuzzleBoard,
   masteryForLesson,
   mistakeFocusCard,
@@ -68,6 +69,7 @@ const tests = [
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
+  ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
   ["learning puzzle board tracks job-readiness pieces", testLearningPuzzleBoard],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
@@ -279,6 +281,38 @@ function testConceptDiagramCards() {
     assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project/i);
   }
   assert.equal(conceptDiagramCard("missing-lesson"), null);
+}
+
+function testLessonMasteryLadder() {
+  const progress = createInitialProgress(1000);
+  const lesson = flattenLessons()[0];
+  let ladder = lessonMasteryLadder(progress, lesson.id);
+  assert.equal(ladder.lessonId, lesson.id);
+  assert.equal(ladder.title, "0 to mastery ladder");
+  assert.equal(ladder.level, "Starting from zero");
+  assert.equal(ladder.doneCount, 0);
+  assert.equal(ladder.totalCount, 3);
+  assert.deepEqual(ladder.stages.map((stage) => stage.id), ["recognize", "connect", "explain"]);
+  assert.ok(ladder.nextAction.includes("Recognize"));
+  assert.doesNotMatch(JSON.stringify(ladder), /repo|project implementation|build a project/i);
+
+  for (const question of lesson.questions.filter((item) => item.type === "single")) {
+    answerQuestion(progress, { ...question, lessonId: lesson.id }, question.answer, 1000);
+  }
+  ladder = lessonMasteryLadder(progress, lesson.id);
+  assert.equal(ladder.stages.find((stage) => stage.id === "recognize").done, true);
+  assert.equal(ladder.doneCount, 1);
+  assert.equal(ladder.level, "Pattern recognized");
+
+  const multi = lesson.questions.find((item) => item.type === "multi");
+  const short = lesson.questions.find((item) => item.type === "short");
+  answerQuestion(progress, { ...multi, lessonId: lesson.id }, multi.answer, 1000);
+  answerQuestion(progress, { ...short, lessonId: lesson.id }, short.keywords[0], 1000);
+  ladder = lessonMasteryLadder(progress, lesson.id);
+  assert.equal(ladder.doneCount, 3);
+  assert.equal(ladder.level, "Ready to teach");
+  assert.ok(ladder.nextAction.includes("60-second"));
+  assert.equal(lessonMasteryLadder(progress, "missing-lesson"), null);
 }
 
 function testLearningPuzzleBoard() {

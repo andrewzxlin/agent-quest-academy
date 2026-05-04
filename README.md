@@ -156,6 +156,13 @@
 - Each diagram reuses the chapter visual mark, accent color, caption, and Image 2.0 prompt seed.
 - This gives beginners a picture-first anchor before answering choice questions or short explanations.
 
+## Lesson Mastery Ladder
+
+- Every lesson now shows a three-step ladder: Recognize, Connect, and Explain.
+- Recognize is driven by single-choice answers, Connect by multi-select answers, and Explain by the short-answer prompt.
+- The ladder shows the learner whether they are starting from zero, recognizing patterns, forming explanations, or ready to teach the idea.
+- This makes the path from beginner to job-facing explanation visible without adding harder exercises.
+
 ## Learning Puzzle Board
 
 - The home screen now shows 8 job-readiness puzzle pieces across the full agentic workflow path.

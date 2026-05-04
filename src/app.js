@@ -29,6 +29,7 @@ import {
   jobRoleFitCard,
   jobScenarioCard,
   lessonSkillCard,
+  lessonMasteryLadder,
   learningPuzzleBoard,
   loadProgress,
   masteryForLesson,
@@ -100,6 +101,7 @@ function render() {
   const jobScenario = jobScenarioCard(chapter.id);
   const skillCard = lessonSkillCard(progress, lesson.id);
   const conceptDiagram = conceptDiagramCard(lesson.id);
+  const masteryLadder = lessonMasteryLadder(progress, lesson.id);
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -184,6 +186,7 @@ function render() {
         ${renderGlossaryCard(glossary)}
         ${renderLessonSkillCard(skillCard)}
         ${renderConceptDiagramCard(conceptDiagram)}
+        ${renderLessonMasteryLadder(masteryLadder)}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -753,6 +756,28 @@ function renderConceptDiagramCard(card) {
         .join("")}
     </div>
     <p class="diagram-caption"><b>${card.mark}</b>${card.caption}</p>
+  </section>`;
+}
+
+function renderLessonMasteryLadder(card) {
+  if (!card) return "";
+  return `<section class="mastery-ladder-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Mastery Ladder</p>
+        <h3>${card.level}</h3>
+      </div>
+      <p>${card.doneCount}/${card.totalCount} stages ready - ${card.nextAction}</p>
+    </div>
+    <div class="mastery-ladder-grid">
+      ${card.stages
+        .map((stage, index) => `<div class="mastery-step ${stage.done ? "done" : ""}">
+          <span>${index + 1}</span>
+          <strong>${stage.label}</strong>
+          <small>${stage.current}/${stage.target} - ${stage.proof}</small>
+        </div>`)
+        .join("")}
+    </div>
   </section>`;
 }
 

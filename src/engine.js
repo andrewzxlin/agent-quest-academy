@@ -241,6 +241,64 @@ export function conceptDiagramCard(lessonId) {
   };
 }
 
+export function lessonMasteryLadder(progress, lessonId) {
+  const lesson = flattenLessons().find((item) => item.id === lessonId);
+  if (!lesson) return null;
+  const countCorrect = (type) =>
+    lesson.questions.filter((question) => {
+      if (question.type !== type) return false;
+      const state = progress.answered[questionKey({ ...question, lessonId })];
+      return state?.correctCount > 0;
+    }).length;
+  const countTotal = (type) => lesson.questions.filter((question) => question.type === type).length;
+  const stages = [
+    {
+      id: "recognize",
+      label: "Recognize",
+      current: countCorrect("single"),
+      target: countTotal("single"),
+      proof: "Spot the strongest workflow signal in single choice."
+    },
+    {
+      id: "connect",
+      label: "Connect",
+      current: countCorrect("multi"),
+      target: countTotal("multi"),
+      proof: "Link several correct workflow parts in multi-select."
+    },
+    {
+      id: "explain",
+      label: "Explain",
+      current: countCorrect("short"),
+      target: countTotal("short"),
+      proof: "Say the idea in a short job-facing explanation."
+    }
+  ].map((stage) => ({
+    ...stage,
+    done: stage.target > 0 && stage.current >= stage.target
+  }));
+  const doneCount = stages.filter((stage) => stage.done).length;
+  const active = stages.find((stage) => !stage.done) ?? stages[stages.length - 1];
+  const level =
+    doneCount === stages.length
+      ? "Ready to teach"
+      : doneCount === 2
+        ? "Explanation forming"
+        : doneCount === 1
+          ? "Pattern recognized"
+          : "Starting from zero";
+
+  return {
+    lessonId,
+    title: "0 to mastery ladder",
+    level,
+    doneCount,
+    totalCount: stages.length,
+    nextAction: doneCount === stages.length ? "Rehearse the 60-second explanation." : `Next: ${active.label}.`,
+    stages
+  };
+}
+
 export function selectLearnerProfile(progress, profileId) {
   const profile = LEARNER_PROFILES.find((item) => item.id === profileId);
   progress.learnerProfile = profile ? profile.id : null;
