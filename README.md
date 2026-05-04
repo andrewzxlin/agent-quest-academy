@@ -19,6 +19,12 @@
 - This turns mistakes into architecture judgment practice instead of simple right/wrong memorization.
 - Every checked answer includes a next-time recall cue so learners know what signal to look for in review.
 
+## Session Rhythm
+
+- The quiz card now shows the current run as Recognize, Connect, and Explain steps.
+- Learners can see that choice prompts come first and the short explanation stays small.
+- The rhythm strip reduces blank-page anxiety by making the final short answer visible before it arrives.
+
 ## Uncertainty Safety Cards
 
 - Every question now explains that "not sure" is a valid learning move.

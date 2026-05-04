@@ -3023,6 +3023,82 @@ h1 {
   margin-top: 6px;
 }
 
+.session-rhythm-card {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr auto;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.session-rhythm-card span,
+.session-rhythm-card strong,
+.session-rhythm-card small {
+  display: block;
+}
+
+.session-rhythm-card > div > span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.session-rhythm-card strong {
+  margin-top: 4px;
+}
+
+.session-rhythm-card small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.session-rhythm-steps {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(5, minmax(46px, 1fr));
+}
+
+.session-rhythm-steps em {
+  background: rgb(255 255 255 / 0.75);
+  border: 1px solid rgb(37 99 235 / 0.16);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+  padding: 8px;
+  text-align: center;
+}
+
+.session-rhythm-steps em.current {
+  background: #dbeafe;
+  border-color: #60a5fa;
+  color: #1d4ed8;
+}
+
+.session-rhythm-steps em.done {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #15803d;
+}
+
+.session-rhythm-steps em.short {
+  border-style: dashed;
+}
+
+.session-rhythm-steps b,
+.session-rhythm-steps span {
+  display: block;
+}
+
+.session-rhythm-steps b {
+  font-size: 10px;
+  margin-bottom: 3px;
+}
+
 .question-signal-preview {
   background: #fff7ed;
   border: 1px solid #fed7aa;
@@ -3910,6 +3986,7 @@ button:disabled {
   .onboarding-card.compact-card,
   .focus-guard-card,
   .first-five-card,
+  .session-rhythm-card,
   .job-scenario-card,
   .lesson-skill-card,
   .explain-grid,
@@ -3927,6 +4004,7 @@ button:disabled {
   .daily-landing-route,
   .rescue-quest-grid,
   .question-signal-steps,
+  .session-rhythm-steps,
   .proof-booster-card,
   .puzzle-grid,
   .skill-grid,

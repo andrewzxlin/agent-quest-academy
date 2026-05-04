@@ -73,6 +73,7 @@ import {
   selectLearnerProfile,
   setDashboardMode,
   sevenDayLandingPath,
+  sessionRhythmCard,
   signalPreviewCard,
   skillProfileCard,
   shortAnswerSupport,
@@ -162,6 +163,7 @@ function render() {
   const isReviewMode = sessionMode === "review";
   const isBossMode = sessionMode === "boss";
   const answerReady = isAnswerReady(question, getResponse(question));
+  const sessionRhythm = sessionRhythmCard(sessionQuestions, currentIndex);
 
   root.innerHTML = `
     <div class="shell">
@@ -281,6 +283,7 @@ function render() {
               <small>本課熟練度</small>
             </div>
           </div>
+          ${renderSessionRhythmCard(sessionRhythm)}
           ${renderQuestionMasteryStage(questionMasteryStage(question))}
           ${renderQuestionSignalPreview(questionSignalPreview(question))}
           ${renderQuestionCoach(questionCoachHint(question))}
@@ -439,6 +442,25 @@ function render() {
   `;
 
   bindEvents();
+}
+
+function renderSessionRhythmCard(card) {
+  return `<div class="session-rhythm-card">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.currentLabel}: ${card.currentFormat}</strong>
+      <small>${card.headline}</small>
+    </div>
+    <div class="session-rhythm-steps">
+      ${card.steps
+        .map((step, index) => `<em class="${step.status} ${step.choiceBased ? "choice" : "short"}">
+          <b>${index + 1}</b>
+          <span>${step.label}</span>
+        </em>`)
+        .join("")}
+    </div>
+    <small>${card.promise}</small>
+  </div>`;
 }
 
 function renderQuestion(question) {

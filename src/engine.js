@@ -775,6 +775,47 @@ export function questionSignalPreview(question) {
   };
 }
 
+export function sessionRhythmCard(questions, currentIndex = 0) {
+  const safeIndex = Math.min(Math.max(currentIndex, 0), Math.max(questions.length - 1, 0));
+  const labelByType = {
+    single: "Recognize",
+    multi: "Connect",
+    short: "Explain"
+  };
+  const formatByType = {
+    single: "Tap one option",
+    multi: "Choose several signals",
+    short: "One short sentence"
+  };
+  const steps = questions.map((question, index) => ({
+    id: `${question.lessonId ?? "session"}:${question.id}`,
+    type: question.type,
+    label: labelByType[question.type] ?? "Practice",
+    format: formatByType[question.type] ?? "Tiny prompt",
+    status: index < safeIndex ? "done" : index === safeIndex ? "current" : "up-next",
+    choiceBased: ["single", "multi"].includes(question.type)
+  }));
+  const choiceCount = steps.filter((step) => step.choiceBased).length;
+  const shortCount = steps.filter((step) => step.type === "short").length;
+  const current = steps[safeIndex] ?? null;
+
+  return {
+    title: "Session Rhythm",
+    headline:
+      questions.length === 0
+        ? "No active prompts"
+        : shortCount > 0
+          ? `${choiceCount} choice prompts before ${shortCount} tiny explanation.`
+          : `${choiceCount} choice prompts in this run.`,
+    currentLabel: current?.label ?? "Complete",
+    currentFormat: current?.format ?? "No prompt",
+    choiceCount,
+    shortCount,
+    steps,
+    promise: "Choices first; the explanation stays small."
+  };
+}
+
 export function selectLearnerProfile(progress, profileId) {
   const profile = LEARNER_PROFILES.find((item) => item.id === profileId);
   progress.learnerProfile = profile ? profile.id : null;

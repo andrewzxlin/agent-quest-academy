@@ -85,6 +85,7 @@ import {
   selectLearnerProfile,
   setDashboardMode,
   sevenDayLandingPath,
+  sessionRhythmCard,
   signalPreviewCard,
   skillProfileCard,
   shortAnswerSupport,
@@ -119,6 +120,7 @@ const tests = [
   ["uncertainty safety cards normalize unsure answers", testUncertaintySafetyCards],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
+  ["session rhythm shows choices before tiny explanation", testSessionRhythmCard],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["proof booster turns feedback into immediate proof or review", testProofBoosterCard],
@@ -769,6 +771,34 @@ function testQuestionSignalPreview() {
     assert.equal(preview.steps[2].text, preview.reward);
     assert.doesNotMatch(JSON.stringify(preview), /repo|project implementation|build a project|coding task/i);
   }
+}
+
+function testSessionRhythmCard() {
+  const progress = createInitialProgress(1000);
+  const lesson = flattenLessons()[0];
+  const session = buildSessionQuestions(progress, lesson, 1000);
+  let rhythm = sessionRhythmCard(session, 0);
+
+  assert.equal(rhythm.title, "Session Rhythm");
+  assert.equal(rhythm.choiceCount, 4);
+  assert.equal(rhythm.shortCount, 1);
+  assert.ok(rhythm.headline.includes("4 choice prompts"));
+  assert.equal(rhythm.currentLabel, "Recognize");
+  assert.equal(rhythm.steps[0].status, "current");
+  assert.equal(rhythm.steps.at(-1).type, "short");
+  assert.equal(rhythm.steps.at(-1).label, "Explain");
+  assert.ok(rhythm.steps.slice(0, -1).every((step) => step.choiceBased));
+  assert.doesNotMatch(JSON.stringify(rhythm), /repo|project implementation|build a project|coding task/i);
+
+  rhythm = sessionRhythmCard(session, session.length - 1);
+  assert.equal(rhythm.currentLabel, "Explain");
+  assert.equal(rhythm.currentFormat, "One short sentence");
+  assert.equal(rhythm.steps.at(-1).status, "current");
+  assert.ok(rhythm.steps.slice(0, -1).every((step) => step.status === "done"));
+
+  rhythm = sessionRhythmCard([], 10);
+  assert.equal(rhythm.headline, "No active prompts");
+  assert.equal(rhythm.steps.length, 0);
 }
 
 function testShortAnswerSupport() {
