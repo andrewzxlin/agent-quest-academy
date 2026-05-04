@@ -5220,6 +5220,59 @@ h1 {
   color: #7f1d1d;
 }
 
+.next-step-nudge {
+  align-items: center;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr auto;
+  margin-top: 12px;
+  padding: 12px 14px;
+}
+
+.next-step-nudge.repair {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.next-step-nudge span,
+.next-step-nudge strong,
+.next-step-nudge small,
+.next-step-nudge b {
+  display: block;
+}
+
+.next-step-nudge span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.next-step-nudge.repair span {
+  color: #c2410c;
+}
+
+.next-step-nudge strong {
+  margin-top: 4px;
+}
+
+.next-step-nudge small {
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.next-step-nudge b {
+  background: #fff;
+  border: 1px solid rgb(37 99 235 / 0.16);
+  border-radius: 999px;
+  color: var(--ink);
+  padding: 8px 10px;
+  text-align: center;
+}
+
 .answer-loot-card {
   background: rgb(255 255 255 / 0.88);
   border: 1px solid rgb(22 163 74 / 0.34);
@@ -6189,6 +6242,7 @@ button:disabled {
   .session-rhythm-card,
   .ability-shard-card,
   .question-mission-strip,
+  .next-step-nudge,
   .job-scenario-card,
   .lesson-skill-card,
   .explain-grid,

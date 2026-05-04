@@ -70,6 +70,7 @@ import {
   mistakeSafetyNetCard,
   mistakeRescuePrompt,
   mistakeNotebook,
+  nextStepNudgeCard,
   nextPracticeRecommendation,
   onboardingState,
   oneLineCoachCard,
@@ -355,6 +356,7 @@ function render() {
           ${renderQuestionHintDeck(questionHintDeck(question), question)}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
+          ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
           <div class="actions">
             <button class="primary" data-check="true" ${checked || !answerReady ? "disabled" : ""}>檢查答案</button>
             <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
@@ -2352,6 +2354,20 @@ function renderFeedback(question, result, progressState) {
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+  </div>`;
+}
+
+function renderNextStepNudgeCard(card) {
+  return `<div class="next-step-nudge ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.why}</small>
+    </div>
+    <div>
+      <b>${card.actionLabel}</b>
+      <small>${card.tinyRule}</small>
+    </div>
   </div>`;
 }
 

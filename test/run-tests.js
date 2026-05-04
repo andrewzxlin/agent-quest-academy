@@ -83,6 +83,7 @@ import {
   mistakeSafetyNetCard,
   mistakeRescuePrompt,
   mistakeNotebook,
+  nextStepNudgeCard,
   nextPracticeRecommendation,
   onboardingState,
   oneLineCoachCard,
@@ -162,6 +163,7 @@ const tests = [
   ["short answer recipe turns writing into three tiny steps", testShortAnswerRecipe],
   ["answer evidence clips turn every checked answer into a reusable signal", testAnswerEvidenceClips],
   ["answer loot card makes each answer feel like a small reward", testAnswerLootCard],
+  ["next step nudge makes the post-answer action obvious", testNextStepNudgeCard],
   ["answer outcome card makes score memory and job use visible", testAnswerOutcomeCard],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["proof booster turns feedback into immediate proof or review", testProofBoosterCard],
@@ -1254,6 +1256,27 @@ function testAnswerLootCard() {
   assert.equal(card.badges.find((badge) => badge.id === "xp").value, "+2");
   assert.equal(card.badges.find((badge) => badge.id === "loop").value, "Review");
   assert.ok(card.headline.includes("Repair loot"));
+}
+
+function testNextStepNudgeCard() {
+  const [single] = flattenQuestions().filter((item) => item.type === "single");
+
+  let card = nextStepNudgeCard(single, gradeQuestion(single, single.answer), 0, 5, "lesson");
+  assert.equal(card.title, "Next Step Nudge");
+  assert.equal(card.status, "advance");
+  assert.equal(card.actionLabel, "Next tiny prompt");
+  assert.ok(card.headline.includes("Signal saved"));
+  assert.ok(card.why.includes("fresh"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = nextStepNudgeCard(single, gradeQuestion(single, 99), 4, 5, "review");
+  assert.equal(card.status, "repair");
+  assert.equal(card.actionLabel, "Complete review");
+  assert.ok(card.tinyRule.includes("move after the fix"));
+
+  card = nextStepNudgeCard(single, gradeQuestion(single, single.answer), 7, 8, "boss");
+  assert.equal(card.actionLabel, "Settle Boss result");
+  assert.ok(card.why.includes("boss loop"));
 }
 
 function testAnswerProofLines() {

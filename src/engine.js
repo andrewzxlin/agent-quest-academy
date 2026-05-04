@@ -1504,6 +1504,36 @@ export function answerLootCard(question, result, progress) {
   };
 }
 
+export function nextStepNudgeCard(question, result, currentIndex, totalCount, mode = "lesson") {
+  const stage = questionMasteryStage(question);
+  const isLast = currentIndex >= totalCount - 1;
+  const finishLabelByMode = {
+    lesson: "Finish this micro-lesson",
+    review: "Complete review",
+    boss: "Settle Boss result",
+    interview: "Complete interview drill"
+  };
+  const nextLabelByMode = {
+    lesson: "Next tiny prompt",
+    review: "Next review card",
+    boss: "Next Boss prompt",
+    interview: "Next interview prompt"
+  };
+  const actionLabel = isLast ? finishLabelByMode[mode] ?? "Finish session" : nextLabelByMode[mode] ?? "Next tiny prompt";
+  const status = result.correct ? "advance" : "repair";
+
+  return {
+    title: "Next Step Nudge",
+    status,
+    actionLabel,
+    headline: result.correct ? "Signal saved. Keep the chain moving." : "Repair seed saved. Continue without restarting.",
+    why: isLast
+      ? `This closes the ${mode} loop and turns the ${stage.label} signal into session progress.`
+      : `The next prompt keeps the ${stage.label} signal warm while the idea is still fresh.`,
+    tinyRule: result.correct ? "One more small step is enough." : "Do not reread everything; just move after the fix."
+  };
+}
+
 export function questionMasterySignal(progress, question) {
   const state = progress.answered[questionKey(question)];
   if (!state) return null;
