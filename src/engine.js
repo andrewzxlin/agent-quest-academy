@@ -1107,6 +1107,60 @@ export function questionComfortMeterCard(question, answerReady = false, checked 
   };
 }
 
+export function questionTimeboxCard(question, currentIndex = 0, total = 1, checked = false, result = null) {
+  const typeConfig = {
+    single: {
+      seconds: 20,
+      label: "Quick pick",
+      stopLine: "Pick the strongest signal; do not reread every option twice."
+    },
+    multi: {
+      seconds: 35,
+      label: "Signal sweep",
+      stopLine: "Select the options that clearly belong, then check."
+    },
+    short: {
+      seconds: 60,
+      label: "Tiny explain",
+      stopLine: "One useful sentence is enough; polish comes later."
+    }
+  };
+  const config = typeConfig[question.type] ?? typeConfig.single;
+  const safeTotal = Math.max(1, total);
+  const safeIndex = Math.min(Math.max(currentIndex, 0), safeTotal - 1);
+  const status = checked ? (result?.correct ? "banked" : "review") : "live";
+
+  return {
+    title: "Tiny Timebox",
+    status,
+    headline: checked ? (result?.correct ? "Timebox banked" : "Timebox becomes review") : `Try this in ${config.seconds} seconds`,
+    progressLabel: `${safeIndex + 1}/${safeTotal}`,
+    modeLabel: config.label,
+    stopLine: checked
+      ? result?.correct
+        ? "Move on while the signal is fresh."
+        : "Stop here; the review loop will bring it back."
+      : config.stopLine,
+    lanes: [
+      {
+        id: "timer",
+        label: "Timer",
+        text: `${config.seconds}s`
+      },
+      {
+        id: "stop",
+        label: "Stop line",
+        text: checked ? "Saved" : "Check after one pass"
+      },
+      {
+        id: "after",
+        label: "After",
+        text: checked ? (result?.correct ? "Next prompt" : "Review later") : "Feedback appears"
+      }
+    ]
+  };
+}
+
 export function questionMissionStrip(question, answerReady = false, checked = false, result = null) {
   const preview = questionSignalPreview(question);
   const status = checked ? (result?.correct ? "saved" : "repair") : answerReady ? "ready" : "choosing";

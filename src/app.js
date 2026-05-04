@@ -88,6 +88,7 @@ import {
   questionMissionStrip,
   questionRoleSignalCard,
   questionSignalPreview,
+  questionTimeboxCard,
   recallComboCard,
   questBriefCard,
   reviewOrbitCard,
@@ -218,6 +219,7 @@ function render() {
   const questionMission = questionMissionStrip(question, answerReady, checked, lastResult);
   const roleSignal = questionRoleSignalCard(question);
   const comfortMeter = questionComfortMeterCard(question, answerReady, checked, lastResult);
+  const timebox = questionTimeboxCard(question, currentIndex, sessionQuestions.length, checked, lastResult);
 
   root.innerHTML = `
     <div class="shell">
@@ -362,6 +364,7 @@ function render() {
           ${renderAbilityShardCard(abilityShard)}
           ${renderQuestionRoleSignalCard(roleSignal)}
           ${renderQuestionComfortMeterCard(comfortMeter)}
+          ${renderQuestionTimeboxCard(timebox)}
           ${renderQuestionMissionStrip(questionMission)}
           ${renderQuestionHintDeck(questionHintDeck(question), question)}
           ${renderQuestion(question)}
@@ -629,6 +632,25 @@ function renderQuestionComfortMeterCard(card) {
       ${card.bars.map((bar) => `<i class="${bar.active ? "active" : ""}"></i>`).join("")}
     </div>
     <div class="comfort-lanes">
+      ${card.lanes
+        .map((lane) => `<em>
+          <b>${lane.label}</b>
+          ${lane.text}
+        </em>`)
+        .join("")}
+    </div>
+  </div>`;
+}
+
+function renderQuestionTimeboxCard(card) {
+  return `<div class="question-timebox-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.modeLabel} / ${card.progressLabel}</small>
+    </div>
+    <p>${card.stopLine}</p>
+    <div class="timebox-lanes">
       ${card.lanes
         .map((lane) => `<em>
           <b>${lane.label}</b>

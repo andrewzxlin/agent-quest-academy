@@ -102,6 +102,7 @@ import {
   questionMissionStrip,
   questionRoleSignalCard,
   questionSignalPreview,
+  questionTimeboxCard,
   recallComboCard,
   questBriefCard,
   reviewOrbitCard,
@@ -162,6 +163,7 @@ const tests = [
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
   ["question role signal connects each prompt to role evidence", testQuestionRoleSignalCard],
   ["question comfort meter makes each prompt feel low-friction", testQuestionComfortMeterCard],
+  ["question timebox keeps every prompt small", testQuestionTimeboxCard],
   ["question mission strip keeps pick check save visible", testQuestionMissionStrip],
   ["session rhythm shows choices before tiny explanation", testSessionRhythmCard],
   ["ability shard card turns each prompt into a collectible piece", testAbilityShardCard],
@@ -1130,6 +1132,44 @@ function testQuestionComfortMeterCard() {
   card = questionComfortMeterCard(single, true, true, { correct: true });
   assert.equal(card.status, "saved");
   assert.ok(card.reassurance.includes("saved signal"));
+}
+
+function testQuestionTimeboxCard() {
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  let card = questionTimeboxCard(single, 0, 5);
+  assert.equal(card.title, "Tiny Timebox");
+  assert.equal(card.status, "live");
+  assert.equal(card.progressLabel, "1/5");
+  assert.equal(card.modeLabel, "Quick pick");
+  assert.ok(card.headline.includes("20 seconds"));
+  assert.equal(card.lanes.find((lane) => lane.id === "timer").text, "20s");
+  assert.ok(card.stopLine.includes("strongest signal"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = questionTimeboxCard(multi, 2, 5);
+  assert.equal(card.progressLabel, "3/5");
+  assert.equal(card.modeLabel, "Signal sweep");
+  assert.equal(card.lanes.find((lane) => lane.id === "timer").text, "35s");
+  assert.ok(card.stopLine.includes("clearly belong"));
+
+  card = questionTimeboxCard(short, 99, 5);
+  assert.equal(card.progressLabel, "5/5");
+  assert.equal(card.modeLabel, "Tiny explain");
+  assert.equal(card.lanes.find((lane) => lane.id === "timer").text, "60s");
+  assert.ok(card.stopLine.includes("One useful sentence"));
+
+  card = questionTimeboxCard(single, 0, 0, true, { correct: false });
+  assert.equal(card.status, "review");
+  assert.equal(card.progressLabel, "1/1");
+  assert.ok(card.headline.includes("review"));
+  assert.equal(card.lanes.find((lane) => lane.id === "after").text, "Review later");
+
+  card = questionTimeboxCard(single, 0, 1, true, { correct: true });
+  assert.equal(card.status, "banked");
+  assert.equal(card.lanes.find((lane) => lane.id === "after").text, "Next prompt");
 }
 
 function testQuestionMissionStrip() {

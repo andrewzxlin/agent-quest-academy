@@ -4802,6 +4802,88 @@ h1 {
   text-transform: uppercase;
 }
 
+.question-timebox-card {
+  align-items: center;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 0.85fr 1fr 1.15fr;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.question-timebox-card.banked {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.question-timebox-card.review {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.question-timebox-card span,
+.question-timebox-card strong,
+.question-timebox-card small,
+.timebox-lanes b {
+  display: block;
+}
+
+.question-timebox-card span {
+  color: #c2410c;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.question-timebox-card.banked span {
+  color: #15803d;
+}
+
+.question-timebox-card.review span {
+  color: #b91c1c;
+}
+
+.question-timebox-card strong {
+  margin-top: 4px;
+}
+
+.question-timebox-card p {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.question-timebox-card small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.timebox-lanes {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.timebox-lanes em {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(194 65 12 / 0.12);
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 12px;
+  font-style: normal;
+  padding: 9px;
+}
+
+.timebox-lanes b {
+  color: var(--muted);
+  font-size: 10px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
 .question-coach {
   border: 1px solid #bfdbfe;
   border-radius: 12px;
@@ -6576,6 +6658,7 @@ button:disabled {
   .ability-shard-card,
   .question-role-signal-card,
   .question-comfort-meter,
+  .question-timebox-card,
   .question-mission-strip,
   .next-step-nudge,
   .job-scenario-card,
@@ -6602,6 +6685,7 @@ button:disabled {
   .question-signal-steps,
   .question-role-chips,
   .comfort-lanes,
+  .timebox-lanes,
   .question-mission-steps,
   .chapter-gate-steps,
   .lesson-ladder-strip,
