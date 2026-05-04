@@ -52,6 +52,7 @@ import {
   onboardingState,
   oneLineCoachCard,
   pitchPracticeCard,
+  proofBoosterCard,
   questionCoachHint,
   questionMasterySignal,
   questionMasteryStage,
@@ -1302,12 +1303,29 @@ function renderFeedback(question, result, progressState) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderProofBoosterCard(proofBoosterCard(question, result, progressState))}
     ${renderAnswerProofLine(answerProofLine(question, result))}
     ${renderQuestionMasterySignal(questionMasterySignal(progressState, question))}
     ${renderRecallCue(answerRecallCue(question, result))}
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+  </div>`;
+}
+
+function renderProofBoosterCard(card) {
+  return `<div class="proof-booster-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <p>${card.proofLine}</p>
+    </div>
+    <div>
+      <small>${card.stage}</small>
+      <small>${card.signalTitle}</small>
+      <em>${card.correctCount} clean / ${card.wrongCount} review</em>
+    </div>
+    <p>${card.nextUse}</p>
   </div>`;
 }
 

@@ -2629,6 +2629,58 @@ h1 {
   color: #7f1d1d;
 }
 
+.proof-booster-card {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(22 163 74 / 0.28);
+  border-radius: 10px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr auto;
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.proof-booster-card.review {
+  border-color: rgb(234 88 12 / 0.28);
+}
+
+.proof-booster-card span,
+.proof-booster-card strong,
+.proof-booster-card small,
+.proof-booster-card em {
+  display: block;
+}
+
+.proof-booster-card span {
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.proof-booster-card.review span {
+  color: #c2410c;
+}
+
+.proof-booster-card strong,
+.proof-booster-card p {
+  margin-top: 7px;
+}
+
+.proof-booster-card p {
+  color: var(--ink);
+  margin-bottom: 0;
+}
+
+.proof-booster-card small,
+.proof-booster-card em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  margin-top: 5px;
+  text-align: right;
+}
+
 .recall-cue {
   background: rgb(255 255 255 / 0.68);
   border: 1px solid rgb(15 23 42 / 0.1);
@@ -3331,6 +3383,7 @@ button:disabled {
   .signal-preview-stats,
   .rhythm-grid,
   .question-signal-steps,
+  .proof-booster-card,
   .puzzle-grid,
   .skill-grid,
   .pitch-grid,

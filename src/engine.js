@@ -740,6 +740,27 @@ export function questionMasterySignal(progress, question) {
   };
 }
 
+export function proofBoosterCard(question, result, progress) {
+  const proof = answerProofLine(question, result);
+  const signal = questionMasterySignal(progress, question);
+  const stage = questionMasteryStage(question);
+  const status = result.correct ? "proof" : "review";
+
+  return {
+    title: "Proof Booster",
+    status,
+    headline: result.correct ? "This answer became evidence." : "This miss became a review seed.",
+    stage: stage.label,
+    proofLine: proof.body,
+    nextUse: result.correct
+      ? "Reuse this line in the one-line coach or a short interview answer."
+      : "Replay this pattern later; the review loop protects the weak spot.",
+    signalTitle: signal?.title ?? "Signal saved",
+    correctCount: signal?.correctCount ?? 0,
+    wrongCount: signal?.wrongCount ?? 0
+  };
+}
+
 export function mistakeRescuePrompt(question, result) {
   if (result.correct) return null;
   if (question.type === "single") {

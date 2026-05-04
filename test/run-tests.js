@@ -65,6 +65,7 @@ import {
   onboardingState,
   oneLineCoachCard,
   pitchPracticeCard,
+  proofBoosterCard,
   questionCoachHint,
   questionMasterySignal,
   questionMasteryStage,
@@ -105,6 +106,7 @@ const tests = [
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
+  ["proof booster turns feedback into immediate proof or review", testProofBoosterCard],
   ["question mastery signals show recall progress", testQuestionMasterySignals],
   ["learning receipt reel turns answers into visible evidence", testLearningReceiptReel],
   ["signal preview shows the reward before starting", testSignalPreviewCard],
@@ -650,6 +652,33 @@ function testAnswerProofLines() {
     assert.ok(proof.body.includes("workflow"));
     assert.doesNotMatch(`${proof.title} ${proof.body}`, /repo|project implementation|build a project/i);
   }
+}
+
+function testProofBoosterCard() {
+  const progress = createInitialProgress(1000);
+  const [single, nextSingle] = flattenQuestions().filter((item) => item.type === "single");
+
+  let result = gradeQuestion(single, single.answer);
+  answerQuestion(progress, single, single.answer, 1000);
+  let booster = proofBoosterCard(single, result, progress);
+  assert.equal(booster.title, "Proof Booster");
+  assert.equal(booster.status, "proof");
+  assert.equal(booster.stage, "Recognize");
+  assert.equal(booster.correctCount, 1);
+  assert.equal(booster.wrongCount, 0);
+  assert.ok(booster.headline.includes("evidence"));
+  assert.ok(booster.proofLine.startsWith("I can "));
+  assert.ok(booster.nextUse.includes("one-line coach"));
+  assert.doesNotMatch(JSON.stringify(booster), /repo|project implementation|build a project|coding task/i);
+
+  result = gradeQuestion(nextSingle, 99);
+  answerQuestion(progress, nextSingle, 99, 2000);
+  booster = proofBoosterCard(nextSingle, result, progress);
+  assert.equal(booster.status, "review");
+  assert.equal(booster.correctCount, 0);
+  assert.equal(booster.wrongCount, 1);
+  assert.ok(booster.headline.includes("review seed"));
+  assert.ok(booster.nextUse.includes("review loop"));
 }
 
 function testQuestionMasterySignals() {

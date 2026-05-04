@@ -206,6 +206,12 @@
 - Single choice becomes a decision signal, multi choice becomes a workflow map signal, and short answer becomes interview wording.
 - This makes every low-friction question feel like a small job-facing win instead of a random quiz item.
 
+## Proof Booster
+
+- Checked answers now show a small proof booster in the feedback panel.
+- Correct answers become immediate evidence lines; misses become review seeds.
+- This makes each quiz result feel useful without adding new task types.
+
 ## Daily Minimum Card
 
 - The home screen now shows a 3-minute minimum: one question is enough to bank today's smallest useful practice.
