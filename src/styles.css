@@ -309,6 +309,57 @@ h1 {
   border-color: #86efac;
 }
 
+.pitch-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.pitch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.pitch-grid div {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8fafc;
+  padding: 12px;
+}
+
+.pitch-grid strong,
+.pitch-grid span {
+  display: block;
+}
+
+.pitch-grid span {
+  color: var(--muted);
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.pitch-grid span.done {
+  color: #15803d;
+  font-weight: 800;
+}
+
+.pitch-input {
+  width: 100%;
+  min-height: 140px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  font: inherit;
+}
+
+.sample-answer {
+  color: var(--muted);
+  margin-top: 10px;
+}
+
 .visual-card {
   min-height: 180px;
   border-radius: 12px;
@@ -825,6 +876,7 @@ button:disabled {
 
   .chapter-track,
   .readiness-grid,
+  .pitch-grid,
   .summary-grid {
     grid-template-columns: 1fr;
   }

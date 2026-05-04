@@ -42,6 +42,12 @@
 - Due review is prioritized first, then unfinished lessons, Boss checks, and interview practice.
 - The recommendation removes decision friction so beginners can keep moving without planning the curriculum themselves.
 
+## 60-Second Pitch Practice
+
+- Chapter summary cards can open a lightweight interview pitch drill.
+- Learners write a short answer using a three-part outline: problem, workflow role, and risk or tradeoff.
+- The drill checks for enough detail, agent/workflow language, and risk-aware reasoning without requiring audio recording.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

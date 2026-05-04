@@ -12,11 +12,13 @@ import {
   achievements,
   dailyMissions,
   gradeQuestion,
+  gradePitchPractice,
   jobReadinessMap,
   loadProgress,
   masteryForLesson,
   mistakeNotebook,
   nextPracticeRecommendation,
+  pitchPracticeCard,
   reviewStats,
   resetProgress,
   saveProgress
@@ -34,6 +36,8 @@ let lastResult = null;
 let sessionMode = "lesson";
 let bossScore = 0;
 let latestCompletion = null;
+let activePitch = null;
+let pitchAnswer = "";
 
 const root = document.querySelector("#app");
 
@@ -120,6 +124,7 @@ function render() {
         </section>
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
+        ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -245,6 +250,7 @@ function render() {
                   <p>${item.interviewPitch}</p>
                   <small>${item.commonMistake}</small>
                   <em>${item.nextAction}</em>
+                  <button class="secondary compact" data-pitch="${item.chapterId}">練 60 秒回答</button>
                 </div>`
               )
               .join("")}
@@ -294,6 +300,32 @@ function renderRecommendationCard(recommendation) {
       <p>${recommendation.reason}</p>
     </div>
     <button class="primary compact" data-recommend="true" ${recommendation.type === "done" ? "disabled" : ""}>${recommendation.cta}</button>
+  </section>`;
+}
+
+function renderPitchPracticeCard(card) {
+  const result = gradePitchPractice(card, pitchAnswer);
+  return `<section class="pitch-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Interview Pitch</p>
+        <h3>${card.title}</h3>
+      </div>
+      <button class="ghost compact" data-close-pitch="true">關閉</button>
+    </div>
+    <p>${card.prompt}</p>
+    <div class="pitch-grid">
+      <div>
+        <strong>回答大綱</strong>
+        ${card.outline.map((item) => `<span>${item}</span>`).join("")}
+      </div>
+      <div>
+        <strong>即時檢查 ${result.doneCount}/${result.total}</strong>
+        ${result.checks.map((item) => `<span class="${item.done ? "done" : ""}">${item.done ? "已做到" : "可再補"}：${item.label}</span>`).join("")}
+      </div>
+    </div>
+    <textarea class="pitch-input" placeholder="用自己的話寫一段 60 秒回答。">${pitchAnswer}</textarea>
+    <p class="sample-answer">示範方向：${card.sampleAnswer}</p>
   </section>`;
 }
 
@@ -371,6 +403,8 @@ function bindEvents() {
       sessionMode = "lesson";
       bossScore = 0;
       latestCompletion = null;
+      activePitch = null;
+      pitchAnswer = "";
       sessionQuestions = [];
       currentIndex = 0;
       clearAnswerState();
@@ -385,6 +419,8 @@ function bindEvents() {
     currentIndex = 0;
     bossScore = 0;
     latestCompletion = null;
+    activePitch = null;
+    pitchAnswer = "";
     clearAnswerState();
     render();
   });
@@ -397,6 +433,8 @@ function bindEvents() {
     currentIndex = 0;
     bossScore = 0;
     latestCompletion = null;
+    activePitch = null;
+    pitchAnswer = "";
     clearAnswerState();
     render();
   });
@@ -409,6 +447,8 @@ function bindEvents() {
     currentIndex = 0;
     bossScore = 0;
     latestCompletion = null;
+    activePitch = null;
+    pitchAnswer = "";
     clearAnswerState();
     render();
   });
@@ -438,6 +478,23 @@ function bindEvents() {
       shortAnswer = event.target.value;
     });
   }
+
+  const pitchTextarea = document.querySelector(".pitch-input");
+  if (pitchTextarea) {
+    pitchTextarea.addEventListener("input", (event) => {
+      pitchAnswer = event.target.value;
+      render();
+    });
+  }
+
+  document.querySelectorAll("[data-pitch]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activePitch = pitchPracticeCard(progress, button.dataset.pitch);
+      pitchAnswer = "";
+      latestCompletion = null;
+      render();
+    });
+  });
 
   document.querySelector("[data-check]")?.addEventListener("click", () => {
     const question = sessionQuestions[currentIndex];
@@ -505,6 +562,8 @@ function bindEvents() {
     sessionMode = "lesson";
     bossScore = 0;
     latestCompletion = null;
+    activePitch = null;
+    pitchAnswer = "";
     sessionQuestions = [];
     currentIndex = 0;
     clearAnswerState();
@@ -515,11 +574,19 @@ function bindEvents() {
     latestCompletion = null;
     render();
   });
+
+  document.querySelector("[data-close-pitch]")?.addEventListener("click", () => {
+    activePitch = null;
+    pitchAnswer = "";
+    render();
+  });
 }
 
 function startRecommendedPractice(recommendation) {
   const lessons = flattenLessons();
   latestCompletion = null;
+  activePitch = null;
+  pitchAnswer = "";
   bossScore = 0;
   currentIndex = 0;
   clearAnswerState();

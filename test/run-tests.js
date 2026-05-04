@@ -23,11 +23,13 @@ import {
   achievements,
   dailyMissions,
   getDueReviewQuestions,
+  gradePitchPractice,
   gradeQuestion,
   jobReadinessMap,
   masteryForLesson,
   mistakeNotebook,
   nextPracticeRecommendation,
+  pitchPracticeCard,
   reviewStats
 } from "../src/engine.js";
 
@@ -59,6 +61,7 @@ const tests = [
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["completion cards summarize finished sessions", testCompletionCards],
   ["next practice recommendation picks the highest-value next step", testNextPracticeRecommendation],
+  ["pitch practice cards coach interview answers", testPitchPracticeCards],
   ["job readiness map derives status from progress", testJobReadinessMap],
   ["interview questions work with answer and review flow", testInterviewQuestionFlow]
 ];
@@ -424,6 +427,25 @@ function testNextPracticeRecommendation() {
   recommendation = nextPracticeRecommendation(progress, now);
   assert.equal(recommendation.type, "lesson");
   assert.notEqual(recommendation.chapterId, firstChapter.id);
+}
+
+function testPitchPracticeCards() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  const card = pitchPracticeCard(progress, chapter.id);
+
+  assert.equal(card.chapterId, chapter.id);
+  assert.equal(card.outline.length, 3);
+  assert.equal(card.checks.length, 3);
+  assert.ok(card.sampleAnswer.length > 20);
+
+  const weak = gradePitchPractice(card, "agent");
+  assert.equal(weak.ready, false);
+  assert.ok(weak.doneCount < weak.total);
+
+  const strong = gradePitchPractice(card, "我會說明 agent workflow 的角色，並補充實務風險與取捨，讓面試官知道我能把流程邊界講清楚。");
+  assert.equal(strong.ready, true);
+  assert.equal(strong.doneCount, strong.total);
 }
 
 function testJobReadinessMap() {

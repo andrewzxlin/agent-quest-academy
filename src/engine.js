@@ -371,6 +371,37 @@ export function nextPracticeRecommendation(progress, now = Date.now()) {
   };
 }
 
+export function pitchPracticeCard(progress, chapterId) {
+  const summary = chapterSummaryCards(progress).find((item) => item.chapterId === chapterId);
+  if (!summary) return null;
+  return {
+    chapterId,
+    title: `60 秒回答：${summary.title}`,
+    prompt: `請用 3 句話說明你如何理解 ${summary.title}，以及它在 agentic workflow 中解決什麼問題。`,
+    outline: ["這章在解決什麼問題", "它在 agentic workflow 中扮演什麼角色", "實務上要注意哪個風險或取捨"],
+    sampleAnswer: summary.interviewPitch,
+    checks: [
+      { id: "agent", label: "提到 agent / workflow", terms: ["agent", "workflow", "流程"] },
+      { id: "risk", label: "提到風險或取捨", terms: ["風險", "取捨", "tradeoff", "邊界"] },
+      { id: "detail", label: "至少 40 個字", minLength: 40 }
+    ]
+  };
+}
+
+export function gradePitchPractice(card, response) {
+  const text = `${response ?? ""}`.trim().toLowerCase();
+  const checks = card.checks.map((check) => {
+    const done = check.minLength ? text.length >= check.minLength : check.terms.some((term) => text.includes(term.toLowerCase()));
+    return { id: check.id, label: check.label, done };
+  });
+  return {
+    checks,
+    doneCount: checks.filter((check) => check.done).length,
+    total: checks.length,
+    ready: checks.every((check) => check.done)
+  };
+}
+
 export function dailyMissions(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   return [
