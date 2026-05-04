@@ -414,6 +414,7 @@ function renderJobRoleFitCard(card) {
           <span>${track.level}</span>
           <strong>${track.title}</strong>
           <p>${track.description}</p>
+          <p class="role-proof-line">${track.proofLine}</p>
           <small>${track.readyCount}/${track.total} ready · ${track.practicingCount} practicing</small>
           <em>${track.nextGap}</em>
           <small>${track.nextAction}</small>

@@ -729,6 +729,7 @@ export function jobRoleFitCard(progress) {
       practicingCount: practicingPieces.length,
       total: pieces.length,
       level,
+      proofLine: roleFitProofLine(track, readyPieces, practicingPieces),
       nextGap: next?.title ?? "All role signals are ready",
       recommendedPractice: roleFitRecommendedPractice(progress, next, chaptersById, gatesByChapter),
       nextAction: next
@@ -744,6 +745,16 @@ export function jobRoleFitCard(progress) {
     summary: strongest.readyCount > 0 ? `Strongest path now: ${strongest.title}` : "Start with any path; all begin with low-friction drills.",
     tracks
   };
+}
+
+function roleFitProofLine(track, readyPieces, practicingPieces) {
+  if (readyPieces.length > 0) {
+    return `I can explain ${readyPieces.map((piece) => piece.title).slice(0, 2).join(" and ")} as evidence for ${track.title}.`;
+  }
+  if (practicingPieces.length > 0) {
+    return `I am building ${track.title} evidence through ${practicingPieces[0].title}.`;
+  }
+  return `I can start ${track.title} with low-friction drills before any project work.`;
 }
 
 function roleFitRecommendedPractice(progress, next, chaptersById, gatesByChapter) {

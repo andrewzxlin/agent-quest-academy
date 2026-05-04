@@ -400,6 +400,11 @@ h1 {
   font-size: 12px;
 }
 
+.role-fit-track .role-proof-line {
+  color: var(--ink);
+  font-weight: 800;
+}
+
 .role-fit-track em {
   color: var(--ink);
   font-size: 12px;
