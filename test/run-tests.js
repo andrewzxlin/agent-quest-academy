@@ -27,6 +27,7 @@ import {
   chapterGateMap,
   chapterMap,
   chapterSummaryCards,
+  choiceArcadeCard,
   choiceEliminationHint,
   choiceLensCard,
   completionCard,
@@ -117,6 +118,7 @@ const tests = [
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
   ["lesson practice plans show choice-first sequence", testLessonPracticePlans],
   ["practice diet card keeps beginner work choice-heavy", testPracticeDietCard],
+  ["choice arcade turns choices into low-friction rooms", testChoiceArcadeCard],
   ["lesson stage route makes recognize connect explain visible", testLessonStageRoute],
   ["lesson warmup cards remove first-step friction", testLessonWarmupCards],
   ["lesson analogy bridges explain concepts in plain language", testLessonAnalogyBridges],
@@ -488,6 +490,42 @@ function testPracticeDietCard() {
   card = practiceDietCard(progress, lesson.id, 1000);
   assert.equal(card.formats.find((format) => format.id === "single").attempted, 1);
   assert.equal(practiceDietCard(progress, "missing-lesson", 1000), null);
+}
+
+function testChoiceArcadeCard() {
+  const progress = createInitialProgress(1000);
+  let card = choiceArcadeCard(progress);
+  assert.equal(card.title, "Choice Arcade");
+  assert.equal(card.completedCount, 0);
+  assert.equal(card.totalCount, 3);
+  assert.equal(card.choicePercent, 100);
+  assert.equal(card.activeId, "recognize");
+  assert.deepEqual(card.rooms.map((room) => room.id), ["recognize", "connect", "explain"]);
+  assert.deepEqual(card.rooms.map((room) => room.target), [1, 1, 1]);
+  assert.ok(card.promise.includes("Choice rooms"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const single = flattenQuestions().find((question) => question.type === "single");
+  answerQuestion(progress, single, single.answer, 1000);
+  card = choiceArcadeCard(progress);
+  assert.equal(card.rooms.find((room) => room.id === "recognize").status, "done");
+  assert.equal(card.activeId, "connect");
+  assert.equal(card.choicePercent, 100);
+
+  const multi = flattenQuestions().find((question) => question.type === "multi");
+  answerQuestion(progress, multi, multi.answer, 1000);
+  card = choiceArcadeCard(progress);
+  assert.equal(card.rooms.find((room) => room.id === "connect").status, "done");
+  assert.equal(card.activeId, "explain");
+  assert.equal(card.nextAction, "Write one tiny sentence.");
+
+  const short = flattenQuestions().find((question) => question.type === "short");
+  answerQuestion(progress, short, short.keywords.slice(0, short.minMatches).join(" "), 1000);
+  card = choiceArcadeCard(progress);
+  assert.equal(card.completedCount, 3);
+  assert.equal(card.activeReward, "Interview line");
+  assert.equal(card.shortCorrect, 1);
+  assert.ok(card.headline.includes("All rooms"));
 }
 
 function testLessonStageRoute() {

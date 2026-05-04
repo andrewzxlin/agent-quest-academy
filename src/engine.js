@@ -487,6 +487,68 @@ export function practiceDietCard(progress, lessonId, now = Date.now()) {
   };
 }
 
+export function choiceArcadeCard(progress) {
+  const questions = flattenQuestions();
+  const correctCount = (type) =>
+    questions.filter(
+      (question) => question.type === type && (progress.answered[questionKey(question)]?.correctCount ?? 0) > 0
+    ).length;
+  const singleCorrect = correctCount("single");
+  const multiCorrect = correctCount("multi");
+  const shortCorrect = correctCount("short");
+  const rooms = [
+    {
+      id: "recognize",
+      label: "Recognize Room",
+      format: "Single choice",
+      current: singleCorrect,
+      target: 1,
+      reward: "Decision coin",
+      proof: "Spot one strong agentic workflow signal."
+    },
+    {
+      id: "connect",
+      label: "Connect Room",
+      format: "Multi choice",
+      current: multiCorrect,
+      target: 1,
+      reward: "Workflow link",
+      proof: "Keep several correct workflow parts together."
+    },
+    {
+      id: "explain",
+      label: "Explain Room",
+      format: "Tiny short answer",
+      current: shortCorrect,
+      target: 1,
+      reward: "Interview line",
+      proof: "Turn one idea into a short job-facing sentence."
+    }
+  ].map((room) => ({
+    ...room,
+    status: room.current >= room.target ? "done" : room.current > 0 ? "started" : "locked"
+  }));
+  const completedCount = rooms.filter((room) => room.status === "done").length;
+  const active = rooms.find((room) => room.status !== "done") ?? rooms[rooms.length - 1];
+  const answeredCorrect = singleCorrect + multiCorrect + shortCorrect;
+  const choiceCorrect = singleCorrect + multiCorrect;
+
+  return {
+    title: "Choice Arcade",
+    headline: completedCount === rooms.length ? "All rooms are open." : `Next room: ${active.label}`,
+    activeId: active.id,
+    activeReward: active.reward,
+    completedCount,
+    totalCount: rooms.length,
+    choiceCorrect,
+    shortCorrect,
+    choicePercent: answeredCorrect === 0 ? 100 : Math.round((choiceCorrect / answeredCorrect) * 100),
+    nextAction: active.id === "explain" ? "Write one tiny sentence." : "Clear one more choice prompt.",
+    promise: "Choice rooms come first; short writing stays tiny.",
+    rooms
+  };
+}
+
 export function lessonStageRoute(progress, lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;

@@ -14,6 +14,7 @@ import {
   chapterGateMap,
   chapterMap,
   chapterSummaryCards,
+  choiceArcadeCard,
   choiceEliminationHint,
   choiceLensCard,
   completionCard,
@@ -158,6 +159,7 @@ function render() {
   const focusGuard = focusGuardCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
+  const choiceArcade = choiceArcadeCard(progress);
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
@@ -246,6 +248,7 @@ function render() {
         ${renderFocusGuardCard(focusGuard)}
         ${renderFirstFiveMinuteStartCard(firstFive)}
         ${renderPracticeDietCard(practiceDiet)}
+        ${renderChoiceArcadeCard(choiceArcade)}
         ${renderZeroToLandingQuestCard(zeroToLandingQuest)}
         ${renderRoleSamplerCard(roleSampler)}
         ${renderJargonShieldCard(jargonShield)}
@@ -605,6 +608,35 @@ function renderPracticeDietCard(card) {
     <div class="practice-diet-action">
       <small>${card.promise}</small>
       <button class="primary compact" data-practice-diet-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderChoiceArcadeCard(card) {
+  return `<section class="choice-arcade-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.choicePercent}% choice-based - ${card.completedCount}/${card.totalCount} rooms</p>
+    </div>
+    <div class="choice-arcade-rooms">
+      ${card.rooms
+        .map((room) => `<div class="${room.status}">
+          <span>${room.format}</span>
+          <strong>${room.label}</strong>
+          <small>${room.proof}</small>
+          <em>${room.reward}</em>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="choice-arcade-action">
+      <div>
+        <strong>${card.activeReward}</strong>
+        <small>${card.promise}</small>
+      </div>
+      <button class="primary compact" data-choice-arcade-action="true">${card.nextAction}</button>
     </div>
   </section>`;
 }
@@ -2024,6 +2056,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-practice-diet-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-choice-arcade-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

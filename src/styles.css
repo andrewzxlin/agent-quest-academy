@@ -479,6 +479,72 @@ h1 {
   text-transform: uppercase;
 }
 
+.choice-arcade-card {
+  background: #fefce8;
+  border: 1px solid #fde047;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.choice-arcade-card .section-title > p,
+.choice-arcade-card small {
+  color: var(--muted);
+}
+
+.choice-arcade-rooms {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.choice-arcade-rooms div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(202 138 4 / 0.16);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.choice-arcade-rooms div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.choice-arcade-rooms span,
+.choice-arcade-rooms strong,
+.choice-arcade-rooms small,
+.choice-arcade-rooms em,
+.choice-arcade-action strong,
+.choice-arcade-action small {
+  display: block;
+}
+
+.choice-arcade-rooms span {
+  color: #a16207;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.choice-arcade-rooms strong {
+  margin-top: 6px;
+}
+
+.choice-arcade-rooms em {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 800;
+  margin-top: 8px;
+}
+
+.choice-arcade-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
 .practice-diet-action {
   align-items: center;
   display: flex;
@@ -4679,6 +4745,7 @@ button:disabled {
   .recommendation-card,
   .dashboard-mode-card,
   .practice-diet-card,
+  .choice-arcade-card,
   .zero-landing-quest-card,
   .jargon-shield-card,
   .quest-compass,
@@ -4740,6 +4807,7 @@ button:disabled {
   .role-fit-grid,
   .practice-diet-formats,
   .practice-diet-rules,
+  .choice-arcade-rooms,
   .zero-landing-milestones,
   .role-sampler-grid,
   .phrase-bank-steps,
@@ -4791,7 +4859,8 @@ button:disabled {
     min-width: 0;
   }
 
-  .practice-diet-action {
+  .practice-diet-action,
+  .choice-arcade-action {
     align-items: stretch;
     flex-direction: column;
   }

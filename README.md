@@ -210,6 +210,12 @@
 - It makes the current lesson mix explicit: mostly single choice and multi-select, with one tiny short answer at the end.
 - The card gives learners a clear start button while promising no build assignment, setup, or long writing in this phase.
 
+## Choice Arcade
+
+- Beginner view now turns the first single-choice, multi-choice, and tiny short-answer wins into three visible rooms.
+- The arcade keeps choices first while making the small amount of short writing feel like the final unlock.
+- The active room shows the next tiny reward, so progress feels game-like without adding heavier work.
+
 ## Zero-to-Landing Quest
 
 - Beginner view now compresses the path from first choice to interview line into five visible milestones.
