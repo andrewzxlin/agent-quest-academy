@@ -16,6 +16,7 @@ import {
   gradeQuestion,
   gradePitchPractice,
   jobReadinessMap,
+  jobScenarioCard,
   loadProgress,
   masteryForLesson,
   mistakeNotebook,
@@ -68,6 +69,7 @@ function render() {
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const onboarding = onboardingState(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
+  const jobScenario = jobScenarioCard(chapter.id);
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -137,6 +139,7 @@ function render() {
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
+        ${renderJobScenarioCard(jobScenario)}
         ${renderGlossaryCard(glossary)}
 
         <section class="quiz-card">
@@ -400,6 +403,26 @@ function renderGlossaryCard(glossary) {
           </div>`
         )
         .join("")}
+    </div>
+  </section>`;
+}
+
+function renderJobScenarioCard(card) {
+  return `<section class="job-scenario-card">
+    <div>
+      <p class="eyebrow">Workplace Scenario</p>
+      <h3>${card.chapterTitle} 在工作中長這樣</h3>
+      <p>${card.workplaceTask}</p>
+    </div>
+    <div class="scenario-grid">
+      <div>
+        <span>常見陷阱</span>
+        <strong>${card.commonTrap}</strong>
+      </div>
+      <div>
+        <span>面試訊號</span>
+        <strong>${card.interviewSignal}</strong>
+      </div>
     </div>
   </section>`;
 }

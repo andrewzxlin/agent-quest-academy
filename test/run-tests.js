@@ -9,6 +9,7 @@ import {
   flattenQuestions,
   interviewQuestionsForChapter,
   interviewScenarios,
+  jobScenarioCards,
   jobReadinessSkills
 } from "../src/course.js";
 import {
@@ -29,6 +30,7 @@ import {
   gradePitchPractice,
   gradeQuestion,
   jobReadinessMap,
+  jobScenarioCard,
   masteryForLesson,
   mistakeNotebook,
   nextPracticeRecommendation,
@@ -46,6 +48,7 @@ const tests = [
   ["beginner glossary covers every chapter with plain-language terms", testBeginnerGlossaryCoverage],
   ["chapter visuals cover every chapter", testChapterVisuals],
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
+  ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
@@ -169,6 +172,25 @@ function testJobReadinessCoverage() {
       1,
       `expected one skill for ${chapter.id}`
     );
+  }
+}
+
+function testJobScenarioCards() {
+  assert.equal(jobScenarioCards.length, course.chapters.length);
+  const chapterIds = new Set(course.chapters.map((chapter) => chapter.id));
+  for (const scenario of jobScenarioCards) {
+    assert.ok(chapterIds.has(scenario.chapterId), `unknown chapter for ${scenario.chapterId}`);
+    assert.ok(scenario.workplaceTask.length >= 40);
+    assert.ok(scenario.commonTrap.length >= 20);
+    assert.ok(scenario.interviewSignal.length >= 20);
+    assert.doesNotMatch(
+      `${scenario.workplaceTask} ${scenario.commonTrap} ${scenario.interviewSignal}`,
+      /repo|project implementation|專案實作/i
+    );
+    const card = jobScenarioCard(scenario.chapterId);
+    assert.equal(card.chapterId, scenario.chapterId);
+    assert.equal(card.workplaceTask, scenario.workplaceTask);
+    assert.ok(card.chapterTitle.length > 0);
   }
 }
 

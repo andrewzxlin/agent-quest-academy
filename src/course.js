@@ -1219,6 +1219,57 @@ export const beginnerGlossary = [
   }
 ];
 
+export const jobScenarioCards = [
+  {
+    chapterId: "agent-basics",
+    workplaceTask: "PM 說想做一個客服 AI，你要判斷它只是 FAQ chatbot，還是需要查訂單、更新狀態、交給真人審核的 agentic workflow。",
+    commonTrap: "把會聊天的模型直接叫 agent，卻沒有 state、tool、approval gate。",
+    interviewSignal: "能用流程邊界說明什麼時候需要 agent，什麼時候普通 workflow 就夠。"
+  },
+  {
+    chapterId: "tools",
+    workplaceTask: "團隊要讓 AI 查庫存、開 ticket、寄通知，你要設計工具名稱、schema、失敗時的 retry 或 fallback。",
+    commonTrap: "只寫一段 prompt，希望模型自己猜 API 參數和錯誤處理。",
+    interviewSignal: "能說清楚 tool schema、權限、錯誤恢復如何影響 agent 可靠度。"
+  },
+  {
+    chapterId: "rag",
+    workplaceTask: "公司文件太多，使用者問政策或產品細節時，你要讓 agent 先找資料再回答，並附上可追溯來源。",
+    commonTrap: "把所有文件塞進 prompt，或只相信模型記憶，導致答案過期或沒有依據。",
+    interviewSignal: "能解釋 chunking、retrieval、citation 如何降低幻覺與維護成本。"
+  },
+  {
+    chapterId: "memory",
+    workplaceTask: "使用者希望 AI 記住偏好和歷史決策，你要判斷哪些能短期保存，哪些能長期保存，哪些必須讓使用者控制。",
+    commonTrap: "把所有對話都當永久記憶，造成隱私、過期資訊和錯誤偏好累積。",
+    interviewSignal: "能把 memory policy、更新機制、刪除權限講成可執行規則。"
+  },
+  {
+    chapterId: "guardrails",
+    workplaceTask: "agent 可能寄信、退款、改資料，你要設計哪些動作可自動做，哪些要拒絕，哪些要先請人批准。",
+    commonTrap: "只在 prompt 裡說請小心，卻沒有實際 policy、approval gate 或輸出檢查。",
+    interviewSignal: "能把安全邊界放進 workflow，而不是只靠模型自覺。"
+  },
+  {
+    chapterId: "evals",
+    workplaceTask: "改了 prompt、retriever 或工具後，你要確認 agent 是否真的變好，而不是只看幾次 demo 感覺不錯。",
+    commonTrap: "每次都手動隨便問幾題，沒有固定資料集、rubric 或 regression cases。",
+    interviewSignal: "能用 eval dataset、rubric、回歸測試說明品質如何被量化。"
+  },
+  {
+    chapterId: "observability",
+    workplaceTask: "agent 回答慢、成本高、偶爾查錯資料，你要從 trace 裡看是哪個 span 出問題。",
+    commonTrap: "只看最後答案，沒有 latency、token、tool failure、retrieval 命中等可觀測資料。",
+    interviewSignal: "能說清楚 trace/span/metric 如何支援 debug、成本控制與品質改善。"
+  },
+  {
+    chapterId: "frameworks",
+    workplaceTask: "需求從單次問答變成多步驟審核流程，你要判斷何時用 LangChain 組合能力，何時用 LangGraph 管 stateful workflow。",
+    commonTrap: "所有東西都寫成一條 chain，導致分支、暫停、人工審核和重試很難維護。",
+    interviewSignal: "能比較 chain 與 graph，並說明 durable execution 對真實 agent 的價值。"
+  }
+];
+
 export function interviewQuestionsForChapter(chapterId) {
   const scenario = interviewScenarios.find((item) => item.chapterId === chapterId);
   if (!scenario) return [];

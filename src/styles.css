@@ -396,6 +396,50 @@ h1 {
   font-size: 13px;
 }
 
+.job-scenario-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: center;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.job-scenario-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.job-scenario-card p {
+  color: var(--muted);
+}
+
+.scenario-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.scenario-grid div {
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.72);
+  padding: 12px;
+}
+
+.scenario-grid span,
+.scenario-grid strong {
+  display: block;
+}
+
+.scenario-grid span {
+  color: #9a3412;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
 .pitch-card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -1054,6 +1098,7 @@ button:disabled {
   .completion-card,
   .recommendation-card,
   .onboarding-card.compact-card,
+  .job-scenario-card,
   .explain-grid,
   .mission-grid {
     grid-template-columns: 1fr;

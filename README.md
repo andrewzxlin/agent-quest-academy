@@ -78,6 +78,12 @@
 - Single-choice and multi-select hints teach how to spot workflow-relevant options.
 - Short-answer hints include a sentence starter so beginners can begin without staring at a blank box.
 
+## Workplace Scenario Cards
+
+- Every chapter has a work-facing scenario before the quiz.
+- Each card explains the likely workplace task, the common beginner trap, and the interview signal.
+- This connects low-friction practice to job-ready agent workflow judgment without adding project implementation tasks.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

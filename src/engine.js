@@ -1,4 +1,12 @@
-import { beginnerGlossary, course, flattenInterviewQuestions, flattenLessons, flattenQuestions, jobReadinessSkills } from "./course.js";
+import {
+  beginnerGlossary,
+  course,
+  flattenInterviewQuestions,
+  flattenLessons,
+  flattenQuestions,
+  jobReadinessSkills,
+  jobScenarioCards
+} from "./course.js";
 
 const STORAGE_KEY = "agentQuestProgress:v1";
 
@@ -76,6 +84,16 @@ export function beginnerGlossaryCards(chapterId) {
     chapterId,
     chapterTitle: chapter?.title ?? chapterId,
     terms: glossary?.terms ?? []
+  };
+}
+
+export function jobScenarioCard(chapterId) {
+  const chapter = course.chapters.find((item) => item.id === chapterId);
+  const scenario = jobScenarioCards.find((item) => item.chapterId === chapterId);
+  return {
+    chapterId,
+    chapterTitle: chapter?.title ?? chapterId,
+    ...scenario
   };
 }
 
