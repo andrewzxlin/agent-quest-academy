@@ -121,6 +121,7 @@ import {
   reviewRhythmCard,
   reviewSprintCard,
   reviewStats,
+  roleQuestBoardCard,
   roleSamplerCard,
   selectLearnerProfile,
   setDashboardMode,
@@ -231,6 +232,7 @@ const tests = [
   ["daily phrase bank makes reusable lines visible in beginner flow", testDailyPhraseBankCard],
   ["zero to landing quest compresses the beginner route", testZeroToLandingQuestCard],
   ["landing mission strip keeps the job route visible above the card wall", testLandingMissionStripCard],
+  ["role quest board turns career paths into beginner-safe quests", testRoleQuestBoardCard],
   ["role sampler turns role paths into choice-first samples", testRoleSamplerCard],
   ["quest compass turns recommendation into a game-like next step", testQuestCompass],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
@@ -2481,6 +2483,42 @@ function testLandingMissionStripCard() {
   card = landingMissionStripCard(progress, now);
   assert.equal(card.route.find((step) => step.id === "first-receipt").status, "done");
   assert.ok(card.percent >= 40);
+}
+
+function testRoleQuestBoardCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = roleQuestBoardCard(progress, now);
+
+  assert.equal(card.title, "Role Quest Board");
+  assert.equal(card.tracks.length, 3);
+  assert.equal(card.activeRole, "AI App Builder");
+  assert.equal(card.action.type, "lesson");
+  assert.equal(card.action.chapterId, "agent-basics");
+  assert.ok(card.headline.includes("Try"));
+  assert.ok(card.progressLabel.includes("sampled"));
+  assert.ok(card.promise.includes("choices"));
+  assert.ok(card.tracks.every((track) => track.steps.map((step) => step.id).join(",") === "sample,boss,interview"));
+  assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").status, "active");
+  assert.ok(card.tracks.every((track) => track.nextAction.length > 0));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = roleQuestBoardCard(progress, now);
+  assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").sampled, true);
+  assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").sampled, true);
+  assert.equal(card.activeRole, "Agent Reliability Builder");
+
+  const chapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, now);
+  card = roleQuestBoardCard(progress, now);
+  assert.ok(card.headline.includes("Strongest route"));
+  assert.ok(card.tracks.some((track) => track.status === "boss-proven"));
+  assert.ok(card.tracks.some((track) => track.steps.find((step) => step.id === "boss").done));
 }
 
 function testRoleSamplerCard() {

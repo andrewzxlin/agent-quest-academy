@@ -3862,6 +3862,75 @@ export function roleSamplerCard(progress) {
   };
 }
 
+export function roleQuestBoardCard(progress, now = Date.now()) {
+  const roleFit = jobRoleFitCard(progress);
+  const sampler = roleSamplerCard(progress);
+  const passport = jobSignalPassport(progress, now);
+  const sampleById = new Map(sampler.tracks.map((track) => [track.id, track]));
+  const activeSample = sampler.tracks.find((track) => !track.sampled) ?? sampler.tracks[0];
+  const activeTrack = roleFit.tracks.find((track) => track.id === activeSample?.id) ?? roleFit.tracks[0];
+  const totalReady = roleFit.tracks.reduce((sum, track) => sum + track.readyCount, 0);
+  const totalPracticing = roleFit.tracks.reduce((sum, track) => sum + track.practicingCount, 0);
+
+  return {
+    title: "Role Quest Board",
+    headline: totalReady > 0 ? `Strongest route: ${passport.stamps[0].value}` : `Try ${activeTrack.title} without choosing a lane`,
+    summary: "Sample role paths as tiny quests, then let Boss proof and interview drills reveal the strongest fit.",
+    activeRole: activeTrack.title,
+    activeMove: sampleById.get(activeTrack.id)?.choiceMove ?? "Pick one workflow signal.",
+    action: activeTrack.recommendedPractice,
+    actionLabel: activeTrack.recommendedPractice.cta,
+    progressLabel: `${totalReady} ready / ${totalPracticing} practicing / ${sampler.sampledCount} sampled`,
+    promise: "Each role quest starts from choices and visible proof, not a separate project task.",
+    tracks: roleFit.tracks.map((track) => {
+      const sample = sampleById.get(track.id);
+      const status =
+        track.level === "interview-ready"
+          ? "complete"
+          : track.readyCount > 0
+            ? "boss-proven"
+            : track.practicingCount > 0 || sample?.sampled
+              ? "started"
+              : track.id === activeTrack.id
+                ? "active"
+                : "locked";
+      return {
+        id: track.id,
+        title: track.title,
+        status,
+        level: track.level,
+        readyCount: track.readyCount,
+        practicingCount: track.practicingCount,
+        total: track.total,
+        nextGap: track.nextGap,
+        nextAction: track.recommendedPractice.cta,
+        sampled: Boolean(sample?.sampled),
+        sampleRoute: sample?.sampleRoute ?? "Next sample via a choice prompt.",
+        steps: [
+          {
+            id: "sample",
+            label: "Sample",
+            done: Boolean(sample?.sampled),
+            text: sample?.sampleRoute ?? "Answer one choice prompt."
+          },
+          {
+            id: "boss",
+            label: "Boss",
+            done: track.readyCount > 0,
+            text: track.readyCount > 0 ? `${track.readyCount}/${track.total} proof pieces` : `Make ${track.nextGap} Boss-proven.`
+          },
+          {
+            id: "interview",
+            label: "Interview",
+            done: track.level === "interview-ready",
+            text: track.level === "interview-ready" ? "Ready to say out loud." : "Turn proof into spoken wording."
+          }
+        ]
+      };
+    })
+  };
+}
+
 export function jobRoleFitCard(progress) {
   const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));

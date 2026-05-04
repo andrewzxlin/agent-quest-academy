@@ -1299,6 +1299,7 @@ h1 {
 }
 
 .beginner-command-grid .zero-landing-quest-card,
+.beginner-command-grid .role-quest-board-card,
 .beginner-command-grid .boss-gate-teaser-card,
 .beginner-command-grid .interview-preview-card,
 .beginner-command-grid .pitch-unlock-preview-card,
@@ -2015,6 +2016,104 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 20px;
+}
+
+.role-quest-board-card {
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.role-quest-board-card > p,
+.role-quest-board-card .section-title > p,
+.role-quest-board-card small,
+.role-quest-board-card span,
+.role-quest-board-card em {
+  color: var(--muted);
+}
+
+.role-quest-lanes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.role-quest-lanes > div {
+  background: rgb(255 255 255 / 0.86);
+  border: 1px solid rgb(15 118 110 / 0.14);
+  border-radius: 10px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.role-quest-lanes > div.active {
+  border-color: #60a5fa;
+}
+
+.role-quest-lanes > div.started,
+.role-quest-lanes > div.boss-proven,
+.role-quest-lanes > div.complete {
+  border-color: #86efac;
+}
+
+.role-quest-lanes span,
+.role-quest-lanes strong,
+.role-quest-lanes small,
+.role-quest-action strong,
+.role-quest-action span,
+.role-quest-action small {
+  display: block;
+}
+
+.role-quest-lanes span {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.role-quest-steps {
+  display: grid;
+  gap: 6px;
+}
+
+.role-quest-steps em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  font-size: 12px;
+  font-style: normal;
+  padding: 8px;
+}
+
+.role-quest-steps em.done {
+  border-color: #86efac;
+  color: #15803d;
+}
+
+.role-quest-steps b {
+  color: var(--ink);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.role-quest-action {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgb(15 118 110 / 0.16);
+  border-radius: 10px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 12px;
+}
+
+.role-quest-action span,
+.role-quest-action small {
+  margin-top: 5px;
 }
 
 .role-sampler-card .section-title > p,
@@ -7740,6 +7839,7 @@ button:disabled {
   .proof-grid,
   .first-five-grid,
   .role-fit-grid,
+  .role-quest-lanes,
   .practice-diet-formats,
   .practice-diet-rules,
   .choice-arcade-rooms,
@@ -7849,6 +7949,11 @@ button:disabled {
   }
 
   .zero-landing-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .role-quest-action {
     align-items: stretch;
     flex-direction: column;
   }

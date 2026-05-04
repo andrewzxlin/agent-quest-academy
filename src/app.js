@@ -108,6 +108,7 @@ import {
   reviewSprintCard,
   reviewStats,
   resetProgress,
+  roleQuestBoardCard,
   roleSamplerCard,
   saveProgress,
   selectLearnerProfile,
@@ -207,6 +208,7 @@ function render() {
   const jobPacketPreview = jobPacketPreviewCard(progress, Date.now());
   const jobPacketShowcase = jobPacketShowcaseCard(progress, Date.now());
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
+  const roleQuestBoard = roleQuestBoardCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
   const glossary = beginnerGlossaryCards(chapter.id);
@@ -329,6 +331,7 @@ function render() {
           jobPacketPreview,
           jobPacketShowcase,
           zeroToLandingQuest,
+          roleQuestBoard,
           roleSampler,
           jargonShield,
           dailyQuest,
@@ -1116,6 +1119,7 @@ function renderBeginnerCommandCenter(cards) {
         ${renderJobPacketPreviewCard(cards.jobPacketPreview)}
         ${renderJobPacketShowcaseCard(cards.jobPacketShowcase)}
         ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
+        ${renderRoleQuestBoardCard(cards.roleQuestBoard)}
         ${renderRoleSamplerCard(cards.roleSampler)}
         ${renderJargonShieldCard(cards.jargonShield)}
       </div>
@@ -1424,6 +1428,45 @@ function renderZeroToLandingQuestCard(card) {
         <small>${card.promise}</small>
       </div>
       <button class="primary compact" data-zero-landing-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderRoleQuestBoardCard(card) {
+  return `<section class="role-quest-board-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.progressLabel}</p>
+    </div>
+    <p>${card.summary}</p>
+    <div class="role-quest-lanes">
+      ${card.tracks
+        .map((track) => `<div class="${track.status}">
+          <span>${track.level}</span>
+          <strong>${track.title}</strong>
+          <small>${track.readyCount}/${track.total} ready / ${track.practicingCount} practicing</small>
+          <div class="role-quest-steps">
+            ${track.steps
+              .map((step) => `<em class="${step.done ? "done" : ""}">
+                <b>${step.label}</b>
+                ${step.text}
+              </em>`)
+              .join("")}
+          </div>
+          <small>${track.nextGap}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="role-quest-action">
+      <div>
+        <strong>${card.activeRole}</strong>
+        <span>${card.activeMove}</span>
+        <small>${card.promise}</small>
+      </div>
+      <button class="primary compact" data-role-quest-action="true" ${card.action.type === "locked" ? "disabled" : ""}>${card.actionLabel}</button>
     </div>
   </section>`;
 }
@@ -3103,6 +3146,10 @@ function bindEvents() {
 
   document.querySelector("[data-zero-landing-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-role-quest-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(roleQuestBoardCard(progress, Date.now()).action);
   });
 
   document.querySelector("[data-daily-skill-ticket-action]")?.addEventListener("click", () => {
