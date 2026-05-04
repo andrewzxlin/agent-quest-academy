@@ -157,6 +157,12 @@
 - The radar shows the active gate, tiny next move, and how the result becomes proof.
 - It keeps the full checklist from feeling overwhelming by focusing on one gap at a time.
 
+## 7-Day Landing Path
+
+- The home screen now shows seven low-friction steps from first answer to a job-facing line.
+- Each step is derived from existing answers, lessons, review, Boss, role evidence, and interview drill progress.
+- The path gives beginners a visible route without adding project implementation tasks.
+
 ## Mistake Rescue Prompts
 
 - Wrong answers now show a short rescue prompt before the detailed explanation.

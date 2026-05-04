@@ -74,6 +74,7 @@ import {
   reviewSprintCard,
   reviewStats,
   selectLearnerProfile,
+  sevenDayLandingPath,
   signalPreviewCard,
   shortAnswerSupport,
   uncertaintySafetyCard
@@ -146,6 +147,7 @@ const tests = [
   ["job signal passport summarizes current role evidence", testJobSignalPassport],
   ["landing gap radar highlights the closest job-readiness gap", testLandingGapRadar],
   ["landing checklist tracks job-readiness gates", testLandingReadinessChecklist],
+  ["seven day landing path turns progress into low-friction steps", testSevenDayLandingPath],
   ["job evidence brief turns progress into an interview line", testJobEvidenceBrief],
   ["one-line coach turns progress into tiny interview wording", testOneLineCoachCard],
   ["exercise scope card keeps practice low-friction", testExerciseScopeCard],
@@ -1502,6 +1504,53 @@ function testLandingReadinessChecklist() {
   assert.equal(checklist.items.find((item) => item.id === "boss-proof").done, true);
   assert.equal(checklist.items.find((item) => item.id === "role-paths").done, true);
   assert.equal(checklist.items.find((item) => item.id === "interview-lines").done, true);
+}
+
+function testSevenDayLandingPath() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let path = sevenDayLandingPath(progress, now);
+  assert.equal(path.title, "7-Day Landing Path");
+  assert.equal(path.days.length, 7);
+  assert.equal(path.completedCount, 0);
+  assert.equal(path.percent, 0);
+  assert.equal(path.days[0].id, "first-answer");
+  assert.equal(path.days[0].done, false);
+  assert.equal(path.days[6].id, "landing-line");
+  assert.ok(path.activeAction.includes("single-choice"));
+  assert.deepEqual(path.days.map((day) => day.day), [1, 2, 3, 4, 5, 6, 7]);
+  assert.doesNotMatch(JSON.stringify(path), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  path = sevenDayLandingPath(progress, now);
+  assert.equal(path.days.find((day) => day.id === "first-answer").done, true);
+  assert.equal(path.completedCount, 2);
+  assert.equal(path.days.find((day) => day.id === "review-loop").done, true);
+
+  completeLesson(progress, flattenLessons()[0].id, now);
+  path = sevenDayLandingPath(progress, now);
+  assert.equal(path.days.find((day) => day.id === "first-lesson").done, true);
+
+  const chapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, now);
+  path = sevenDayLandingPath(progress, now);
+  assert.equal(path.days.find((day) => day.id === "boss-proof").done, true);
+  assert.equal(path.days.find((day) => day.id === "role-evidence").done, true);
+
+  for (const interviewQuestion of interviewQuestionsForChapter(chapter.id)) {
+    const response =
+      interviewQuestion.type === "multi"
+        ? interviewQuestion.answer
+        : interviewQuestion.answer ?? interviewQuestion.keywords[0];
+    answerQuestion(progress, interviewQuestion, response, now);
+  }
+  path = sevenDayLandingPath(progress, now);
+  assert.equal(path.days.find((day) => day.id === "interview-wording").done, true);
+  assert.ok(path.completedCount >= 6);
 }
 
 function testJobEvidenceBrief() {

@@ -1529,6 +1529,96 @@ export function landingGapRadar(progress, now = Date.now()) {
   };
 }
 
+export function sevenDayLandingPath(progress, now = Date.now()) {
+  const next = nextPracticeRecommendation(progress, now);
+  const answers = Object.values(progress.answered ?? {});
+  const proofCards = abilityProofCards(progress);
+  const roleFit = jobRoleFitCard(progress);
+  const checklist = landingReadinessChecklist(progress, now);
+  const interviewAnswered = flattenInterviewQuestions().some((question) => progress.answered[questionKey(question)]);
+  const passedBosses = (progress.bossResults ?? []).filter((item) => item.passed).length;
+  const rolePathEvidence = roleFit.tracks.filter((track) => track.readyCount > 0).length;
+  const reviewCreated = (progress.reviewQueue ?? []).length > 0 || answers.some((item) => item.wrongCount > 0);
+  const proofStarted = proofCards.some((card) => card.status !== "new");
+
+  const days = [
+    {
+      id: "first-answer",
+      day: 1,
+      title: "First answer",
+      done: answers.length > 0,
+      action: "Answer one single-choice question.",
+      signal: "Start a recall trail."
+    },
+    {
+      id: "first-lesson",
+      day: 2,
+      title: "First lesson receipt",
+      done: progress.completedLessons.length > 0,
+      action: "Finish one micro-lesson.",
+      signal: "Print the first learning receipt."
+    },
+    {
+      id: "review-loop",
+      day: 3,
+      title: "Review loop",
+      done: reviewCreated,
+      action: "Let one miss or correct answer enter spaced review.",
+      signal: "Make forgetting visible."
+    },
+    {
+      id: "boss-proof",
+      day: 4,
+      title: "Boss proof",
+      done: passedBosses > 0,
+      action: "Clear one chapter Boss Quiz.",
+      signal: "Turn lessons into proof."
+    },
+    {
+      id: "role-evidence",
+      day: 5,
+      title: "Role evidence",
+      done: rolePathEvidence > 0,
+      action: "Connect one proven chapter to a role path.",
+      signal: "Show what role the skill supports."
+    },
+    {
+      id: "interview-wording",
+      day: 6,
+      title: "Interview wording",
+      done: interviewAnswered,
+      action: "Answer one interview drill.",
+      signal: "Turn proof into spoken wording."
+    },
+    {
+      id: "landing-line",
+      day: 7,
+      title: "Landing line",
+      done: checklist.completedCount === checklist.totalCount,
+      action: "Read the one-line coach out loud.",
+      signal: "Keep one job-facing line ready."
+    }
+  ];
+  const completedCount = days.filter((day) => day.done).length;
+  const active = days.find((day) => !day.done) ?? days[days.length - 1];
+
+  return {
+    title: "7-Day Landing Path",
+    headline:
+      completedCount === days.length
+        ? "All seven landing steps are warm."
+        : `Day ${active.day}: ${active.title}`,
+    completedCount,
+    totalCount: days.length,
+    percent: Math.round((completedCount / days.length) * 100),
+    activeAction: active.done ? next.cta : active.action,
+    activeSignal: active.signal,
+    nextRecommendation: next.cta,
+    proofStarted,
+    days
+  };
+}
+
 export function jobRoleFitCard(progress) {
   const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));

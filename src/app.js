@@ -63,6 +63,7 @@ import {
   resetProgress,
   saveProgress,
   selectLearnerProfile,
+  sevenDayLandingPath,
   signalPreviewCard,
   shortAnswerSupport,
   uncertaintySafetyCard
@@ -121,6 +122,7 @@ function render() {
   const signalPreview = signalPreviewCard(progress, Date.now());
   const gapRadar = landingGapRadar(progress, Date.now());
   const landingChecklist = landingReadinessChecklist(progress, Date.now());
+  const landingPath = sevenDayLandingPath(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const dailyMinimum = dailyMinimumCard(progress, Date.now());
@@ -209,6 +211,7 @@ function render() {
         ${renderJobSignalPassport(signalPassport)}
         ${renderLandingGapRadar(gapRadar)}
         ${renderLandingReadinessChecklist(landingChecklist)}
+        ${renderSevenDayLandingPath(landingPath)}
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderOneLineCoachCard(oneLineCoach)}
         ${renderLearningReceiptReel(receiptReel)}
@@ -591,6 +594,29 @@ function renderLandingReadinessChecklist(card) {
           <span>${item.done ? "ready" : `${item.current}/${item.target}`}</span>
           <strong>${item.title}</strong>
           <small>${item.proof}</small>
+        </div>`)
+        .join("")}
+    </div>
+  </section>`;
+}
+
+function renderSevenDayLandingPath(path) {
+  return `<section class="seven-day-path-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${path.title}</p>
+        <h3>${path.headline}</h3>
+      </div>
+      <p>${path.completedCount}/${path.totalCount} steps - ${path.percent}%</p>
+    </div>
+    <strong>${path.activeAction}</strong>
+    <small>${path.activeSignal}</small>
+    <div class="seven-day-grid">
+      ${path.days
+        .map((day) => `<div class="${day.done ? "done" : ""}">
+          <span>Day ${day.day}</span>
+          <strong>${day.title}</strong>
+          <small>${day.done ? "Ready" : day.action}</small>
         </div>`)
         .join("")}
     </div>
