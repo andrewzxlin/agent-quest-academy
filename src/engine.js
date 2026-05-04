@@ -1045,6 +1045,55 @@ export function reviewSprintCard(progress, now = Date.now()) {
   };
 }
 
+export function reviewRescueQuest(progress, now = Date.now()) {
+  const mistakes = mistakeNotebook(progress, now, 6);
+  const dueCount = mistakes.filter((item) => item.due).length;
+  const rescuedCount = mistakes.filter((item) => !item.due && item.lastResult === "correct").length;
+  const lockedCount = Math.max(0, mistakes.length - dueCount - rescuedCount);
+  const mode = dueCount > 0 ? "active" : mistakes.length > 0 ? "waiting" : "empty";
+  const headline =
+    mode === "active"
+      ? "A weak card is ready to revive"
+      : mode === "waiting"
+        ? "Rescue cards are cooling down"
+        : "No rescue cards yet";
+
+  return {
+    title: "Rescue Quest",
+    mode,
+    headline,
+    dueCount,
+    rescuedCount,
+    lockedCount,
+    nextAction:
+      mode === "active"
+        ? "Replay the active card before starting a new lesson."
+        : mode === "waiting"
+          ? "Keep the streak alive with one fresh choice while rescue waits."
+          : "Missed answers will become rescue cards automatically.",
+    promise: "Every rescue is still a tiny quiz move: choose, connect, or write one sentence.",
+    cards: mistakes.slice(0, 3).map((item) => {
+      const status = item.due ? "active" : item.lastResult === "correct" ? "rescued" : "locked";
+      return {
+        key: item.key,
+        status,
+        label: status === "active" ? "Revive now" : status === "rescued" ? "Rescued" : "Cooling down",
+        chapterTitle: item.chapterTitle,
+        lessonTitle: item.lessonTitle,
+        prompt: item.question.prompt,
+        wrongCount: item.wrongCount,
+        correctCount: item.correctCount,
+        reward:
+          status === "active"
+            ? "Recover this weak signal"
+            : status === "rescued"
+              ? "Proof moved back into memory"
+              : "Return later at the right interval"
+      };
+    })
+  };
+}
+
 export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
   const questionsByKey = new Map(reviewableQuestions().map((question) => [questionKey(question), question]));
   const reviewByKey = new Map(progress.reviewQueue.map((item) => [item.questionKey, item]));

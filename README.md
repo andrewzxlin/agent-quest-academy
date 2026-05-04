@@ -177,6 +177,12 @@
 - The sprint card keeps spaced review concrete without adding project implementation tasks.
 - It helps beginners clear weak patterns through quick choices and short answers before learning more new material.
 
+## Rescue Quest
+
+- Mistakes now appear as rescue cards with active, cooling, or rescued states.
+- Due cards become a visible revive-now lane, while answered misses cool down until the next spaced review interval.
+- The quest keeps replay playful and concrete without adding setup, builds, or long-form assignments.
+
 ## Daily Quest Snapshot
 
 - The home screen shows today's mission completion count, total progress percent, and nearest next step.

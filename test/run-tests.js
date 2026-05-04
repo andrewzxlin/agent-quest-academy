@@ -68,10 +68,12 @@ import {
   pitchPracticeCard,
   proofBoosterCard,
   questionCoachHint,
+  questionKey,
   questionMasterySignal,
   questionMasteryStage,
   questionSignalPreview,
   recallComboCard,
+  reviewRescueQuest,
   reviewRhythmCard,
   reviewSprintCard,
   reviewStats,
@@ -130,6 +132,7 @@ const tests = [
   ["review stats separate due and scheduled", testReviewStats],
   ["review rhythm card explains spaced review timing", testReviewRhythmCard],
   ["review sprint card turns review into a tiny loop", testReviewSprintCard],
+  ["review rescue quest makes mistake replay game-like", testReviewRescueQuest],
   ["boss quiz uses low-friction chapter questions", testBossQuizQuestions],
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
@@ -1051,6 +1054,37 @@ function testReviewSprintCard() {
   card = reviewSprintCard(progress, now + day);
   assert.equal(card.mode, "ready");
   assert.ok(card.dueCount >= 1);
+}
+
+function testReviewRescueQuest() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let quest = reviewRescueQuest(progress, now);
+  assert.equal(quest.title, "Rescue Quest");
+  assert.equal(quest.mode, "empty");
+  assert.equal(quest.cards.length, 0);
+  assert.ok(quest.nextAction.includes("Missed answers"));
+  assert.doesNotMatch(JSON.stringify(quest), /repo|project implementation|build a project|coding task/i);
+
+  const [wrongQuestion, coolingQuestion] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, wrongQuestion, 99, now);
+  answerQuestion(progress, coolingQuestion, 99, now);
+  progress.reviewQueue = progress.reviewQueue.map((item) =>
+    item.questionKey === questionKey(coolingQuestion) ? { ...item, dueAt: now + 60_000 } : item
+  );
+  quest = reviewRescueQuest(progress, now);
+  assert.equal(quest.mode, "active");
+  assert.equal(quest.dueCount, 1);
+  assert.equal(quest.lockedCount, 1);
+  assert.deepEqual(new Set(quest.cards.map((card) => card.status)), new Set(["active", "locked"]));
+  assert.ok(quest.cards.find((card) => card.status === "active").reward.includes("Recover"));
+  assert.ok(quest.promise.includes("tiny quiz move"));
+
+  answerQuestion(progress, wrongQuestion, wrongQuestion.answer, now + 1);
+  quest = reviewRescueQuest(progress, now + 2);
+  assert.equal(quest.mode, "waiting");
+  assert.equal(quest.rescuedCount, 1);
+  assert.ok(quest.cards.find((card) => card.status === "rescued").reward.includes("memory"));
 }
 
 function testBossQuizQuestions() {

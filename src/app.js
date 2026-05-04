@@ -59,6 +59,7 @@ import {
   questionMasteryStage,
   questionSignalPreview,
   recallComboCard,
+  reviewRescueQuest,
   reviewRhythmCard,
   reviewSprintCard,
   reviewStats,
@@ -112,6 +113,7 @@ function render() {
   const stats = reviewStats(progress, Date.now());
   const reviewRhythm = reviewRhythmCard(progress, Date.now());
   const reviewSprint = reviewSprintCard(progress, Date.now());
+  const rescueQuest = reviewRescueQuest(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const compass = questCompass(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
@@ -225,6 +227,7 @@ function render() {
         ${renderSignalPreviewCard(signalPreview)}
         ${renderReviewRhythmCard(reviewRhythm)}
         ${renderReviewSprintCard(reviewSprint)}
+        ${renderReviewRescueQuest(rescueQuest)}
         ${renderMistakeFocusCard(mistakeFocus)}
         ${renderLearningPuzzleBoard(puzzle)}
         ${renderRecommendationCard(recommendation)}
@@ -889,6 +892,41 @@ function renderReviewSprintCard(card) {
           .join("")}
       </div>
     </div>
+  </section>`;
+}
+
+function renderReviewRescueQuest(card) {
+  return `<section class="review-rescue-quest ${card.mode}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.nextAction}</p>
+    </div>
+    <div class="rescue-quest-stats">
+      <span>${card.dueCount} active</span>
+      <span>${card.rescuedCount} rescued</span>
+      <span>${card.lockedCount} cooling</span>
+    </div>
+    <div class="rescue-quest-grid">
+      ${card.cards.length > 0
+        ? card.cards
+            .map((item) => `<div class="rescue-quest-card ${item.status}">
+              <span>${item.label}</span>
+              <strong>${item.chapterTitle}</strong>
+              <p>${item.prompt}</p>
+              <small>${item.wrongCount} misses / ${item.correctCount} clean - ${item.reward}</small>
+            </div>`)
+            .join("")
+        : `<div class="rescue-quest-card empty">
+            <span>Seed</span>
+            <strong>Answer a tiny prompt</strong>
+            <p>A missed question will appear here as a future rescue card.</p>
+            <small>Wrong answers return first; correct answers move later.</small>
+          </div>`}
+    </div>
+    <strong>${card.promise}</strong>
   </section>`;
 }
 

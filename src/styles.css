@@ -1508,6 +1508,86 @@ h1 {
   text-transform: uppercase;
 }
 
+.review-rescue-quest {
+  background: #fdf2f8;
+  border: 1px solid #fbcfe8;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.review-rescue-quest.waiting {
+  background: #f8fafc;
+  border-color: var(--line);
+}
+
+.review-rescue-quest > strong {
+  color: #9d174d;
+  display: block;
+  margin-top: 14px;
+}
+
+.rescue-quest-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.rescue-quest-stats span {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(157 23 77 / 0.14);
+  border-radius: 999px;
+  color: #9d174d;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 10px;
+}
+
+.rescue-quest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.rescue-quest-card {
+  background: rgb(255 255 255 / 0.84);
+  border: 1px solid rgb(157 23 77 / 0.12);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.rescue-quest-card.active {
+  border-color: #ec4899;
+  box-shadow: 0 10px 24px rgb(236 72 153 / 0.12);
+}
+
+.rescue-quest-card.rescued {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.rescue-quest-card span,
+.rescue-quest-card strong,
+.rescue-quest-card small {
+  display: block;
+}
+
+.rescue-quest-card span {
+  color: #9d174d;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.rescue-quest-card strong {
+  margin-top: 8px;
+}
+
+.rescue-quest-card p,
+.rescue-quest-card small {
+  color: var(--muted);
+}
+
 .mistake-focus-card {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -3467,6 +3547,7 @@ button:disabled {
   .signal-preview-card,
   .review-rhythm-card,
   .review-sprint-card,
+  .review-rescue-quest,
   .mistake-focus-card,
   .onboarding-card.compact-card,
   .job-scenario-card,
@@ -3483,6 +3564,7 @@ button:disabled {
   .combo-meter-grid,
   .signal-preview-stats,
   .rhythm-grid,
+  .rescue-quest-grid,
   .question-signal-steps,
   .proof-booster-card,
   .puzzle-grid,
