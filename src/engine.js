@@ -494,6 +494,25 @@ export function questionCoachHint(question) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function choiceEliminationHint(question) {
+  if (question.type === "single") {
+    return {
+      title: "Elimination hint",
+      body: "Before choosing, cross out options that only sound helpful but do not change the agent's decision, risk, state, or feedback.",
+      checks: ["Does it change the workflow?", "Does it reduce a real risk?", "Is it more than decoration?"]
+    };
+  }
+  if (question.type === "multi") {
+    return {
+      title: "Elimination hint",
+      body: "Before checking, remove choices that are only nice-to-have. Keep every option that changes state, tools, retrieval, checks, or human feedback.",
+      checks: ["Keep all workflow parts.", "Remove nice-to-have extras.", "Do not stop after one true option."]
+    };
+  }
+  if (question.type === "short") return null;
+  throw new Error(`Unknown question type: ${question.type}`);
+}
+
 export function shortAnswerSupport(question) {
   if (question.type !== "short") return null;
   const concepts = question.keywords.slice(0, Math.max(1, question.minMatches));

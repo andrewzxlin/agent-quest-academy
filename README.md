@@ -80,6 +80,12 @@
 - Single-choice and multi-select hints teach how to spot workflow-relevant options.
 - Short-answer hints include a sentence starter so beginners can begin without staring at a blank box.
 
+## Choice Elimination Hints
+
+- Single-choice and multi-select questions now show a tiny elimination hint before the learner answers.
+- The hint teaches beginners what to cross out: options that sound nice but do not change workflow state, risk, tools, checks, or feedback.
+- Short-answer questions skip this card so the final explanation step stays lightweight.
+
 ## Workplace Scenario Cards
 
 - Every chapter has a work-facing scenario before the quiz.

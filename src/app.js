@@ -11,6 +11,7 @@ import {
   chapterGateMap,
   chapterMap,
   chapterSummaryCards,
+  choiceEliminationHint,
   completionCard,
   conceptDiagramCard,
   completeBossQuiz,
@@ -209,6 +210,7 @@ function render() {
           </div>
           ${renderQuestionMasteryStage(questionMasteryStage(question))}
           ${renderQuestionCoach(questionCoachHint(question))}
+          ${renderChoiceEliminationHint(choiceEliminationHint(question))}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult) : ""}
           <div class="actions">
@@ -861,6 +863,19 @@ function renderQuestionCoach(hint) {
     <span>${hint.title}</span>
     <p>${hint.body}</p>
     ${hint.starter ? `<button class="starter-chip" data-starter="${hint.starter}">套用起手式</button>` : ""}
+  </div>`;
+}
+
+function renderChoiceEliminationHint(hint) {
+  if (!hint) return "";
+  return `<div class="elimination-hint">
+    <div>
+      <span>${hint.title}</span>
+      <p>${hint.body}</p>
+    </div>
+    <div class="elimination-checks">
+      ${hint.checks.map((check) => `<small>${check}</small>`).join("")}
+    </div>
   </div>`;
 }
 

@@ -24,6 +24,7 @@ import {
   chapterGateMap,
   chapterMap,
   chapterSummaryCards,
+  choiceEliminationHint,
   completionCard,
   conceptDiagramCard,
   completeBossQuiz,
@@ -80,6 +81,7 @@ const tests = [
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
+  ["choice elimination hints reduce option overload", testChoiceEliminationHints],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
@@ -454,6 +456,30 @@ function testQuestionCoachHints() {
       assert.ok(hint.body.includes("agent workflow"));
     } else {
       assert.equal(hint.starter, null);
+    }
+  }
+}
+
+function testChoiceEliminationHints() {
+  const questions = [...flattenQuestions(), ...flattenInterviewQuestions()];
+  for (const question of questions) {
+    const hint = choiceEliminationHint(question);
+    if (question.type === "short") {
+      assert.equal(hint, null);
+      continue;
+    }
+    assert.equal(hint.title, "Elimination hint");
+    assert.ok(hint.body.length >= 60);
+    assert.equal(hint.checks.length, 3);
+    assert.ok(hint.checks.every((check) => check.length >= 15));
+    assert.doesNotMatch(JSON.stringify(hint), /repo|project implementation|build a project/i);
+    if (question.type === "single") {
+      assert.ok(hint.body.includes("cross out"));
+      assert.ok(hint.checks.some((check) => check.includes("workflow")));
+    }
+    if (question.type === "multi") {
+      assert.ok(hint.body.includes("Keep every option"));
+      assert.ok(hint.checks.some((check) => check.includes("Do not stop")));
     }
   }
 }
