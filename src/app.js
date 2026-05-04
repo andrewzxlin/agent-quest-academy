@@ -86,6 +86,7 @@ import {
   questionHintDeck,
   questionMasterySignal,
   questionMasteryStage,
+  questionMiniDiagramCard,
   questionMissionStrip,
   questionRoleSignalCard,
   questionSignalPreview,
@@ -221,6 +222,7 @@ function render() {
   const roleSignal = questionRoleSignalCard(question);
   const comfortMeter = questionComfortMeterCard(question, answerReady, checked, lastResult);
   const timebox = questionTimeboxCard(question, currentIndex, sessionQuestions.length, checked, lastResult);
+  const miniDiagram = questionMiniDiagramCard(question);
 
   root.innerHTML = `
     <div class="shell">
@@ -363,6 +365,7 @@ function render() {
           ${renderLessonLadderStrip(ladderStrip)}
           ${renderSessionRhythmCard(sessionRhythm)}
           ${renderAbilityShardCard(abilityShard)}
+          ${renderQuestionMiniDiagramCard(miniDiagram)}
           ${renderQuestionRoleSignalCard(roleSignal)}
           ${renderQuestionComfortMeterCard(comfortMeter)}
           ${renderQuestionTimeboxCard(timebox)}
@@ -619,6 +622,26 @@ function renderQuestionRoleSignalCard(card) {
         .join("")}
     </div>
     <small>${card.tinyProof}</small>
+  </div>`;
+}
+
+function renderQuestionMiniDiagramCard(card) {
+  return `<div class="question-mini-diagram-card" style="--mini-diagram-accent: ${card.accent}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.bridge}</small>
+    </div>
+    <div class="mini-diagram-nodes">
+      ${card.nodes
+        .map((node, index) => `<em class="${node.status}">
+          <b>${index + 1}</b>
+          <strong>${node.label}</strong>
+          <small>${node.detail}</small>
+        </em>`)
+        .join("")}
+    </div>
+    <p><b>${card.mark}</b>${card.proofUse}</p>
   </div>`;
 }
 

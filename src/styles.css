@@ -4688,6 +4688,96 @@ h1 {
   text-transform: uppercase;
 }
 
+.question-mini-diagram-card {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--mini-diagram-accent, var(--blue));
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.question-mini-diagram-card span,
+.question-mini-diagram-card strong,
+.question-mini-diagram-card small,
+.mini-diagram-nodes b,
+.mini-diagram-nodes strong,
+.mini-diagram-nodes small {
+  display: block;
+}
+
+.question-mini-diagram-card > div:first-child > span {
+  color: var(--mini-diagram-accent, var(--blue));
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.question-mini-diagram-card > div:first-child > strong {
+  margin-top: 4px;
+}
+
+.question-mini-diagram-card > div:first-child > small,
+.question-mini-diagram-card p {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.question-mini-diagram-card p b {
+  color: var(--mini-diagram-accent, var(--blue));
+  margin-right: 8px;
+}
+
+.mini-diagram-nodes {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.mini-diagram-nodes em {
+  background: #ffffff;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  font-style: normal;
+  min-height: 104px;
+  padding: 10px;
+}
+
+.mini-diagram-nodes em.current {
+  border-color: var(--mini-diagram-accent, var(--blue));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mini-diagram-accent, var(--blue)) 14%, transparent);
+}
+
+.mini-diagram-nodes em.seen {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.mini-diagram-nodes b {
+  align-items: center;
+  background: color-mix(in srgb, var(--mini-diagram-accent, var(--blue)) 14%, white);
+  border-radius: 999px;
+  color: var(--mini-diagram-accent, var(--blue));
+  display: inline-flex;
+  font-size: 11px;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.mini-diagram-nodes strong {
+  margin-top: 8px;
+}
+
+.mini-diagram-nodes small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  margin-top: 5px;
+}
+
 .question-comfort-meter {
   align-items: center;
   background: #ecfeff;
@@ -6728,6 +6818,7 @@ button:disabled {
   .chapter-gate-strip,
   .session-rhythm-card,
   .ability-shard-card,
+  .question-mini-diagram-card,
   .question-role-signal-card,
   .question-comfort-meter,
   .question-timebox-card,
@@ -6755,6 +6846,7 @@ button:disabled {
   .mistake-safety-steps,
   .choice-lens-steps,
   .question-signal-steps,
+  .mini-diagram-nodes,
   .question-role-chips,
   .comfort-lanes,
   .timebox-lanes,

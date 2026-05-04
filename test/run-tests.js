@@ -100,6 +100,7 @@ import {
   questionKey,
   questionMasterySignal,
   questionMasteryStage,
+  questionMiniDiagramCard,
   questionMissionStrip,
   questionRoleSignalCard,
   questionSignalPreview,
@@ -148,6 +149,7 @@ const tests = [
   ["lesson warmup cards remove first-step friction", testLessonWarmupCards],
   ["lesson analogy bridges explain concepts in plain language", testLessonAnalogyBridges],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
+  ["question mini diagram maps each prompt to a visual workflow step", testQuestionMiniDiagramCard],
   ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
   ["lesson ladder strip keeps the current mastery stage visible", testLessonLadderStrip],
   ["lesson pitch builder turns mastery into interview lines", testLessonPitchBuilder],
@@ -735,6 +737,35 @@ function testConceptDiagramCards() {
     assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project/i);
   }
   assert.equal(conceptDiagramCard("missing-lesson"), null);
+}
+
+function testQuestionMiniDiagramCard() {
+  const single = flattenQuestions().find((item) => item.type === "single" && item.chapterId === "agent-basics");
+  const multi = flattenQuestions().find((item) => item.type === "multi" && item.chapterId === "tools");
+  const short = flattenQuestions().find((item) => item.type === "short" && item.chapterId === "rag");
+
+  let card = questionMiniDiagramCard(single);
+  assert.equal(card.title, "Question Mini Map");
+  assert.equal(card.stage, "Recognize");
+  assert.equal(card.nodes.length, 4);
+  assert.match(card.accent, /^#[0-9a-f]{6}$/i);
+  assert.match(card.mark, /^[A-Z]{2}$/);
+  assert.ok(card.headline.includes("Recognize"));
+  assert.equal(card.nodes.filter((node) => node.status === "current").length, 1);
+  assert.equal(card.nodes[1].status, "current");
+  assert.ok(card.bridge.includes("visual route"));
+  assert.ok(card.proofUse.includes("signal"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = questionMiniDiagramCard(multi);
+  assert.equal(card.stage, "Connect");
+  assert.equal(card.nodes[2].status, "current");
+  assert.ok(card.headline.includes(card.nodes[2].label));
+
+  card = questionMiniDiagramCard(short);
+  assert.equal(card.stage, "Explain");
+  assert.equal(card.nodes[3].status, "current");
+  assert.ok(card.nodes.slice(0, 3).every((node) => node.status === "seen"));
 }
 
 function testLessonMasteryLadder() {

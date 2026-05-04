@@ -837,6 +837,32 @@ export function conceptDiagramCard(lessonId) {
   };
 }
 
+export function questionMiniDiagramCard(question) {
+  const visual = chapterVisuals[question.chapterId] ?? chapterVisuals["agent-basics"];
+  const stage = questionMasteryStage(question);
+  const nodes = CONCEPT_DIAGRAM_NODES[question.chapterId] ?? CONCEPT_DIAGRAM_NODES["agent-basics"];
+  const activeIndexByStage = {
+    recognize: 1,
+    connect: 2,
+    explain: 3
+  };
+  const activeIndex = Math.min(nodes.length - 1, activeIndexByStage[stage.id] ?? 1);
+
+  return {
+    title: "Question Mini Map",
+    stage: stage.label,
+    accent: visual.accent,
+    mark: visual.mark,
+    headline: `${stage.label}: ${nodes[activeIndex].label}`,
+    bridge: "Read the visual route once, then answer the tiny prompt.",
+    proofUse: stage.proof,
+    nodes: nodes.map((node, index) => ({
+      ...node,
+      status: index < activeIndex ? "seen" : index === activeIndex ? "current" : "next"
+    }))
+  };
+}
+
 export function lessonMasteryLadder(progress, lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;
