@@ -21,6 +21,7 @@ import {
   answerQuestion,
   beginnerGlossaryCards,
   beginnerSkillMapCard,
+  bossGateTeaserCard,
   bossReadinessCard,
   buildReviewSessionQuestions,
   buildSessionQuestions,
@@ -192,6 +193,7 @@ const tests = [
   ["mistake focus card picks the highest-priority wrong answer", testMistakeFocusCard],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
   ["chapter gate map stages lessons boss interview and pitch unlocks", testChapterGateMap],
+  ["boss gate teaser makes the next proof gate visible", testBossGateTeaserCard],
   ["boss readiness card explains chapter checkpoint", testBossReadinessCard],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
@@ -2072,6 +2074,35 @@ function testChapterGateMap() {
   assert.equal(gates[0].pitchUnlocked, true);
   assert.equal(gates[1].gate, "current");
   assert.equal(gates[1].lessonsUnlocked, true);
+}
+
+function testBossGateTeaserCard() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  let card = bossGateTeaserCard(progress);
+  assert.equal(card.title, "Boss Gate Teaser");
+  assert.equal(card.status, "building");
+  assert.equal(card.chapterId, chapter.id);
+  assert.equal(card.steps.length, 3);
+  assert.deepEqual(card.steps.map((step) => step.id), ["lessons", "boss", "interview"]);
+  assert.ok(card.headline.includes("tiny lesson"));
+  assert.ok(card.reward.includes("job-facing evidence"));
+  assert.ok(card.promise.includes("choice-first"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  card = bossGateTeaserCard(progress);
+  assert.equal(card.status, "ready");
+  assert.equal(card.steps.find((step) => step.id === "lessons").done, true);
+  assert.equal(card.nextAction, "Start Boss Quiz");
+
+  completeBossQuiz(progress, chapter.id, 8, 8, 1000);
+  card = bossGateTeaserCard(progress);
+  assert.equal(card.chapterId, course.chapters[1].id);
+  assert.equal(card.status, "building");
+  assert.ok(card.unlock.includes("Boss"));
 }
 
 function testBossReadinessCard() {

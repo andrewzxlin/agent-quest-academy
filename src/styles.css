@@ -730,6 +730,7 @@ h1 {
 }
 
 .beginner-command-grid .zero-landing-quest-card,
+.beginner-command-grid .boss-gate-teaser-card,
 .beginner-command-grid .role-sampler-card,
 .beginner-command-grid .jargon-shield-card,
 .beginner-command-grid .daily-landing-step-card,
@@ -876,6 +877,74 @@ h1 {
 }
 
 .beginner-skill-map-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.boss-gate-teaser-card {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.boss-gate-teaser-card.ready {
+  background: #f5f3ff;
+  border-color: #c4b5fd;
+}
+
+.boss-gate-teaser-card.cleared {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.boss-gate-teaser-card .section-title > p,
+.boss-gate-teaser-card > p,
+.boss-gate-action small {
+  color: var(--muted);
+}
+
+.boss-gate-steps {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.boss-gate-steps div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(37 99 235 / 0.14);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.boss-gate-steps div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.boss-gate-steps span,
+.boss-gate-steps strong,
+.boss-gate-action strong,
+.boss-gate-action small {
+  display: block;
+}
+
+.boss-gate-steps span {
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.boss-gate-steps strong {
+  margin-top: 6px;
+}
+
+.boss-gate-action {
   align-items: center;
   display: flex;
   gap: 12px;
@@ -5242,6 +5311,7 @@ button:disabled {
   .practice-diet-card,
   .choice-arcade-card,
   .beginner-skill-map-card,
+  .boss-gate-teaser-card,
   .zero-landing-quest-card,
   .jargon-shield-card,
   .quest-compass,
@@ -5314,6 +5384,7 @@ button:disabled {
   .practice-diet-rules,
   .choice-arcade-rooms,
   .beginner-skill-map-nodes,
+  .boss-gate-steps,
   .zero-landing-milestones,
   .role-sampler-grid,
   .phrase-bank-steps,

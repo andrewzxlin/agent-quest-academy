@@ -8,6 +8,7 @@ import {
   answerQuestion,
   beginnerGlossaryCards,
   beginnerSkillMapCard,
+  bossGateTeaserCard,
   bossReadinessCard,
   buildReviewSessionQuestions,
   buildSessionQuestions,
@@ -170,6 +171,7 @@ function render() {
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
   const choiceArcade = choiceArcadeCard(progress);
   const beginnerSkillMap = beginnerSkillMapCard(progress);
+  const bossGateTeaser = bossGateTeaserCard(progress);
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
@@ -263,6 +265,7 @@ function render() {
           practiceDiet,
           choiceArcade,
           beginnerSkillMap,
+          bossGateTeaser,
           zeroToLandingQuest,
           roleSampler,
           jargonShield,
@@ -691,6 +694,7 @@ function renderBeginnerCommandCenter(cards) {
         ${renderPracticeDietCard(cards.practiceDiet)}
         ${renderChoiceArcadeCard(cards.choiceArcade)}
         ${renderBeginnerSkillMapCard(cards.beginnerSkillMap)}
+        ${renderBossGateTeaserCard(cards.bossGateTeaser)}
         ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
         ${renderRoleSamplerCard(cards.roleSampler)}
         ${renderJargonShieldCard(cards.jargonShield)}
@@ -812,6 +816,35 @@ function renderBeginnerSkillMapCard(card) {
         <small>${card.promise}</small>
       </div>
       <button class="primary compact" data-beginner-skill-map-action="true">Continue map</button>
+    </div>
+  </section>`;
+}
+
+function renderBossGateTeaserCard(card) {
+  if (!card) return "";
+  return `<section class="boss-gate-teaser-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.progress} - ${card.chapterTitle}</p>
+    </div>
+    <p>${card.reward}</p>
+    <div class="boss-gate-steps">
+      ${card.steps
+        .map((step) => `<div class="${step.done ? "done" : ""}">
+          <span>${step.label}</span>
+          <strong>${step.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="boss-gate-action">
+      <div>
+        <strong>${card.unlock}</strong>
+        <small>${card.promise}</small>
+      </div>
+      <button class="primary compact" data-boss-gate-action="true">${card.nextAction}</button>
     </div>
   </section>`;
 }
@@ -2291,6 +2324,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-beginner-skill-map-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-boss-gate-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 
