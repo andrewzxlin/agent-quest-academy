@@ -1315,6 +1315,45 @@ export function dailyQuestSnapshot(progress, now = Date.now()) {
   };
 }
 
+export function dailyMinimumCard(progress, now = Date.now()) {
+  const activity = getDailyActivity(progress, now);
+  const next = nextPracticeRecommendation(progress, now);
+  const done = activity.answers >= 1;
+  const checks = [
+    {
+      id: "answer-one",
+      label: "Answer one question",
+      done,
+      detail: done ? "You created one real recall signal today." : "One single-choice question is enough to start."
+    },
+    {
+      id: "save-signal",
+      label: "Save one signal",
+      done,
+      detail: "Correct answers schedule future recall; misses return sooner as review."
+    },
+    {
+      id: "know-next",
+      label: "Know the next move",
+      done: true,
+      detail: next.title
+    }
+  ];
+
+  return {
+    title: "3-minute minimum",
+    status: done ? "done" : "open",
+    headline: done ? "Minimum practice banked" : "One question is enough today",
+    body: done
+      ? "You can stop here without losing the streak feeling, or continue with the next tiny step."
+      : "Start with one low-friction question. No project work, no setup, no blank page.",
+    doneCount: checks.filter((check) => check.done).length,
+    totalCount: checks.length,
+    nextAction: done ? next.cta : "Answer one question",
+    checks
+  };
+}
+
 export function dailyMomentum(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   const activeToday = isActiveDay(activity);

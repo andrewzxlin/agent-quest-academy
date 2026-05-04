@@ -18,6 +18,7 @@ import {
   completeLesson,
   createInitialProgress,
   achievements,
+  dailyMinimumCard,
   dailyMomentum,
   dailyQuestSnapshot,
   dailyMissions,
@@ -102,6 +103,7 @@ function render() {
   const landingChecklist = landingReadinessChecklist(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
+  const dailyMinimum = dailyMinimumCard(progress, Date.now());
   const momentum = dailyMomentum(progress, Date.now());
   const onboarding = onboardingState(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
@@ -185,6 +187,7 @@ function render() {
         ${renderLandingReadinessChecklist(landingChecklist)}
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderDailyQuestSnapshot(dailyQuest)}
+        ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyMomentumCard(momentum)}
         ${renderReviewRhythmCard(reviewRhythm)}
         ${renderMistakeFocusCard(mistakeFocus)}
@@ -537,6 +540,25 @@ function renderDailyQuestSnapshot(snapshot) {
     <div class="quest-meter">
       <strong>${snapshot.percent}%</strong>
       <span>${snapshot.activeTitle}</span>
+    </div>
+  </section>`;
+}
+
+function renderDailyMinimumCard(card) {
+  return `<section class="daily-minimum-card ${card.status}">
+    <div>
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.body}</p>
+    </div>
+    <div>
+      <strong>${card.doneCount}/${card.totalCount}</strong>
+      <span>${card.nextAction}</span>
+      <div class="minimum-checks">
+        ${card.checks
+          .map((check) => `<small class="${check.done ? "done" : ""}">${check.label}</small>`)
+          .join("")}
+      </div>
     </div>
   </section>`;
 }

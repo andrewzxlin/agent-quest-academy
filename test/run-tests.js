@@ -31,6 +31,7 @@ import {
   completeLesson,
   createInitialProgress,
   achievements,
+  dailyMinimumCard,
   dailyMomentum,
   dailyQuestSnapshot,
   dailyMissions,
@@ -110,6 +111,7 @@ const tests = [
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
+  ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
@@ -857,6 +859,29 @@ function testDailyQuestSnapshot() {
   assert.equal(snapshot.completedCount, 3);
   assert.equal(snapshot.percent, 100);
   assert.ok(snapshot.nextStep.includes("已完成"));
+}
+
+function testDailyMinimumCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = dailyMinimumCard(progress, now);
+  assert.equal(card.title, "3-minute minimum");
+  assert.equal(card.status, "open");
+  assert.equal(card.doneCount, 1);
+  assert.equal(card.totalCount, 3);
+  assert.deepEqual(card.checks.map((check) => check.id), ["answer-one", "save-signal", "know-next"]);
+  assert.equal(card.checks.find((check) => check.id === "answer-one").done, false);
+  assert.equal(card.checks.find((check) => check.id === "know-next").done, true);
+  assert.ok(card.body.includes("No project work"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = dailyMinimumCard(progress, now);
+  assert.equal(card.status, "done");
+  assert.equal(card.doneCount, 3);
+  assert.equal(card.checks.find((check) => check.id === "answer-one").done, true);
+  assert.ok(card.headline.includes("banked"));
 }
 
 function testDailyMomentum() {

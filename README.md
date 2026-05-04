@@ -138,6 +138,12 @@
 - The snapshot is derived from the same daily missions used in the detailed progress area.
 - This adds a game-like "one more small step" loop without adding harder work.
 
+## Daily Minimum Card
+
+- The home screen now shows a 3-minute minimum: one question is enough to bank today's smallest useful practice.
+- The card confirms the learner has saved one recall signal and still knows the next move.
+- This gives busy beginners a clear stop line without adding project work or heavier assignments.
+
 ## Unsure Answer Flow
 
 - Empty answers are no longer treated as valid answers.
