@@ -27,6 +27,7 @@ import {
   completeLesson,
   createInitialProgress,
   achievements,
+  dailyQuestSnapshot,
   dailyMissions,
   getDueReviewQuestions,
   gradePitchPractice,
@@ -71,6 +72,7 @@ const tests = [
   ["boss quiz uses low-friction chapter questions", testBossQuizQuestions],
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
+  ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
@@ -400,6 +402,31 @@ function testDailyMissions() {
   completeBossQuiz(progress, "agent-basics", 7, 8, now);
   const missions = dailyMissions(progress, now);
   assert.equal(missions.every((mission) => mission.done), true);
+}
+
+function testDailyQuestSnapshot() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let snapshot = dailyQuestSnapshot(progress, now);
+  assert.equal(snapshot.completedCount, 0);
+  assert.equal(snapshot.totalCount, 3);
+  assert.equal(snapshot.percent, 0);
+  assert.ok(snapshot.nextStep.includes("還差"));
+
+  const questions = flattenQuestions().filter((item) => item.type === "single");
+  for (const question of questions.slice(0, 5)) {
+    answerQuestion(progress, question, question.answer, now);
+  }
+  snapshot = dailyQuestSnapshot(progress, now);
+  assert.equal(snapshot.completedCount, 1);
+  assert.ok(snapshot.percent > 0);
+
+  completeLesson(progress, flattenLessons()[0].id, now);
+  completeBossQuiz(progress, "agent-basics", 7, 8, now);
+  snapshot = dailyQuestSnapshot(progress, now);
+  assert.equal(snapshot.completedCount, 3);
+  assert.equal(snapshot.percent, 100);
+  assert.ok(snapshot.nextStep.includes("已完成"));
 }
 
 function testAchievements() {

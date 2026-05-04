@@ -356,6 +356,42 @@ h1 {
   margin: 4px 0;
 }
 
+.daily-quest-snapshot {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.daily-quest-snapshot h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.daily-quest-snapshot p,
+.daily-quest-snapshot span {
+  color: var(--muted);
+}
+
+.quest-meter {
+  min-width: 140px;
+  text-align: right;
+}
+
+.quest-meter strong,
+.quest-meter span {
+  display: block;
+}
+
+.quest-meter strong {
+  color: #15803d;
+  font-size: 30px;
+}
+
 .onboarding-card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -1259,6 +1295,7 @@ button:disabled {
   .completion-card,
   .recommendation-card,
   .career-snapshot,
+  .daily-quest-snapshot,
   .onboarding-card.compact-card,
   .job-scenario-card,
   .explain-grid,

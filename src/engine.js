@@ -506,6 +506,24 @@ export function careerReadinessSnapshot(progress, now = Date.now()) {
   };
 }
 
+export function dailyQuestSnapshot(progress, now = Date.now()) {
+  const missions = dailyMissions(progress, now);
+  const completedCount = missions.filter((mission) => mission.done).length;
+  const totalCurrent = missions.reduce((sum, mission) => sum + mission.current, 0);
+  const totalTarget = missions.reduce((sum, mission) => sum + mission.target, 0);
+  const active = missions.find((mission) => !mission.done) ?? missions[missions.length - 1];
+  const remaining = active ? Math.max(0, active.target - active.current) : 0;
+  const percent = totalTarget === 0 ? 0 : Math.round((totalCurrent / totalTarget) * 100);
+
+  return {
+    completedCount,
+    totalCount: missions.length,
+    percent,
+    activeTitle: active?.title ?? "今日任務",
+    nextStep: completedCount === missions.length ? "今日任務已完成，接著可以複習錯題或練 pitch。" : `${active.title} 還差 ${remaining} 步。`
+  };
+}
+
 export function completionCard(progress, event) {
   const summariesByChapter = new Map(chapterSummaryCards(progress).map((item) => [item.chapterId, item]));
   const summary = event.chapterId ? summariesByChapter.get(event.chapterId) : null;

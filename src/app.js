@@ -14,6 +14,7 @@ import {
   completeLesson,
   createInitialProgress,
   achievements,
+  dailyQuestSnapshot,
   dailyMissions,
   gradeQuestion,
   gradePitchPractice,
@@ -72,6 +73,7 @@ function render() {
   const stats = reviewStats(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
+  const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const onboarding = onboardingState(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
@@ -142,6 +144,7 @@ function render() {
         </section>
         ${renderOnboardingCard(onboarding)}
         ${renderCareerSnapshot(careerSnapshot)}
+        ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
@@ -364,6 +367,20 @@ function renderCareerSnapshot(snapshot) {
       <strong>${snapshot.percent}%</strong>
       <span>下一個缺口：${snapshot.nextGap}</span>
       <small>${snapshot.nextAction}</small>
+    </div>
+  </section>`;
+}
+
+function renderDailyQuestSnapshot(snapshot) {
+  return `<section class="daily-quest-snapshot">
+    <div>
+      <p class="eyebrow">Daily Quest</p>
+      <h3>${snapshot.completedCount}/${snapshot.totalCount} 今日任務完成</h3>
+      <p>${snapshot.nextStep}</p>
+    </div>
+    <div class="quest-meter">
+      <strong>${snapshot.percent}%</strong>
+      <span>${snapshot.activeTitle}</span>
     </div>
   </section>`;
 }

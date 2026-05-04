@@ -108,6 +108,12 @@
 - The prompt tells the learner what to look for next time, instead of only marking the answer wrong.
 - This keeps mistake replay supportive and low-friction.
 
+## Daily Quest Snapshot
+
+- The home screen shows today's mission completion count, total progress percent, and nearest next step.
+- The snapshot is derived from the same daily missions used in the detailed progress area.
+- This adds a game-like "one more small step" loop without adding harder work.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。
