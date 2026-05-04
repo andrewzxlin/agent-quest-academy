@@ -1048,6 +1048,75 @@ button:disabled {
   color: #15803d;
 }
 
+.proof-map {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.proof-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  background: #f8fafc;
+}
+
+.proof-card span,
+.proof-card strong,
+.proof-card small,
+.proof-card em {
+  display: block;
+}
+
+.proof-card span {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: #e2e8f0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.proof-card p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 8px 0;
+}
+
+.proof-card small,
+.proof-card em {
+  color: var(--ink);
+  font-size: 12px;
+  font-style: normal;
+  margin-top: 6px;
+}
+
+.proof-card.practicing {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.proof-card.proven,
+.proof-card.interview_ready {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.proof-card.proven span,
+.proof-card.interview_ready span {
+  background: #dcfce7;
+  color: #15803d;
+}
+
 .summary-map {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -1138,6 +1207,7 @@ button:disabled {
   .glossary-grid,
   .pitch-grid,
   .profile-grid,
+  .proof-grid,
   .summary-grid {
     grid-template-columns: 1fr;
   }

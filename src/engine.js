@@ -415,6 +415,40 @@ export function chapterSummaryCards(progress) {
   });
 }
 
+export function abilityProofCards(progress) {
+  const skillsByChapter = new Map(jobReadinessSkills.map((skill) => [skill.chapterId, skill]));
+  const interviewByChapter = flattenInterviewQuestions().reduce((groups, question) => {
+    const list = groups.get(question.chapterId) ?? [];
+    list.push(question);
+    groups.set(question.chapterId, list);
+    return groups;
+  }, new Map());
+
+  return chapterMap(progress).map((chapter) => {
+    const skill = skillsByChapter.get(chapter.chapterId);
+    const interviewQuestions = interviewByChapter.get(chapter.chapterId) ?? [];
+    const answeredInterviewCount = interviewQuestions.filter((question) => progress.answered[questionKey(question)]).length;
+    const interviewDone = interviewQuestions.length > 0 && answeredInterviewCount === interviewQuestions.length;
+    const status = interviewDone ? "interview_ready" : chapter.bossPassed ? "proven" : chapter.completedLessons > 0 ? "practicing" : "new";
+    const proof = interviewDone
+      ? "已完成 Boss 與面試情境題，可以練習完整說明。"
+      : chapter.bossPassed
+        ? "Boss 已通過，下一步是把判斷說成面試答案。"
+        : chapter.completedLessons > 0
+          ? `${chapter.lessonPercent}% micro-lessons completed，正在累積判斷力。`
+          : "尚未開始，先用詞卡和第一個 micro-lesson 建立直覺。";
+
+    return {
+      chapterId: chapter.chapterId,
+      title: chapter.title,
+      status,
+      abilityStatement: skill ? `我能判斷：${skill.signal}` : `我能說明：${chapter.theme}`,
+      proof,
+      interviewProgress: `${answeredInterviewCount}/${interviewQuestions.length} interview drill`
+    };
+  });
+}
+
 export function completionCard(progress, event) {
   const summariesByChapter = new Map(chapterSummaryCards(progress).map((item) => [item.chapterId, item]));
   const summary = event.chapterId ? summariesByChapter.get(event.chapterId) : null;

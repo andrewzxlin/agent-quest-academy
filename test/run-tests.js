@@ -13,6 +13,7 @@ import {
   jobReadinessSkills
 } from "../src/course.js";
 import {
+  abilityProofCards,
   answerQuestion,
   beginnerGlossaryCards,
   buildReviewSessionQuestions,
@@ -72,6 +73,7 @@ const tests = [
   ["chapter map summarizes lesson and boss progress", testChapterMap],
   ["chapter gate map stages lessons boss interview and pitch unlocks", testChapterGateMap],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
+  ["ability proof cards derive evidence from real progress", testAbilityProofCards],
   ["completion cards summarize finished sessions", testCompletionCards],
   ["next practice recommendation picks the highest-value next step", testNextPracticeRecommendation],
   ["pitch practice cards coach interview answers", testPitchPracticeCards],
@@ -472,6 +474,35 @@ function testChapterSummaryCards() {
 
   completeBossQuiz(progress, chapter.id, 7, 8, 1000);
   assert.ok(chapterSummaryCards(progress)[0].nextAction.includes("面試情境題"));
+}
+
+function testAbilityProofCards() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  const chapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === chapter.id);
+
+  let cards = abilityProofCards(progress);
+  assert.equal(cards.length, course.chapters.length);
+  assert.equal(cards[0].status, "new");
+  assert.ok(cards[0].abilityStatement.includes("我能"));
+
+  completeLesson(progress, chapterLessons[0].id, 1000);
+  cards = abilityProofCards(progress);
+  assert.equal(cards[0].status, "practicing");
+  assert.ok(cards[0].proof.includes("%"));
+
+  completeLesson(progress, chapterLessons[1].id, 1000);
+  completeLesson(progress, chapterLessons[2].id, 1000);
+  completeBossQuiz(progress, chapter.id, 8, 8, 1000);
+  cards = abilityProofCards(progress);
+  assert.equal(cards[0].status, "proven");
+
+  for (const question of interviewQuestionsForChapter(chapter.id)) {
+    answerQuestion(progress, question, question.answer ?? question.keywords?.[0] ?? "", 1000);
+  }
+  cards = abilityProofCards(progress);
+  assert.equal(cards[0].status, "interview_ready");
+  assert.equal(cards[0].interviewProgress, "3/3 interview drill");
 }
 
 function testCompletionCards() {

@@ -90,6 +90,12 @@
 - Complete beginners, AI users, and interview-focused learners see different routes after choosing a profile.
 - The routes keep the first steps concrete: glossary, micro-lessons, review, Boss, interview drill, and pitch practice.
 
+## Ability Proof Cards
+
+- Progress is translated into "I can judge..." ability statements.
+- Each chapter moves from new, to practicing, to Boss-proven, to interview-ready based on real completion data.
+- The cards help learners see job-facing evidence without adding project implementation tasks.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

@@ -1,5 +1,6 @@
 import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interviewQuestionsForChapter } from "./course.js";
 import {
+  abilityProofCards,
   answerQuestion,
   beginnerGlossaryCards,
   buildReviewSessionQuestions,
@@ -65,6 +66,7 @@ function render() {
   const gatesByChapter = new Map(gates.map((item) => [item.chapterId, item]));
   const readiness = jobReadinessMap(progress);
   const summaries = chapterSummaryCards(progress);
+  const proofs = abilityProofCards(progress);
   const stats = reviewStats(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const onboarding = onboardingState(progress);
@@ -255,6 +257,25 @@ function render() {
                   <strong>${skill.title}</strong>
                   <p>${skill.signal}</p>
                   <small>${skill.chapterTitle} / ${skill.lessonPercent}% / ${skill.evidence}</small>
+                </div>`
+              )
+              .join("")}
+          </div>
+        </section>
+        <section class="proof-map">
+          <div class="section-title">
+            <h3>能力證明卡</h3>
+            <p>把完成過的低阻力練習轉成「我能判斷什麼」的工作能力訊號。</p>
+          </div>
+          <div class="proof-grid">
+            ${proofs
+              .map(
+                (item) => `<div class="proof-card ${item.status}">
+                  <span>${proofStatusText(item.status)}</span>
+                  <strong>${item.title}</strong>
+                  <p>${item.abilityStatement}</p>
+                  <small>${item.proof}</small>
+                  <em>${item.interviewProgress}</em>
                 </div>`
               )
               .join("")}
@@ -507,6 +528,13 @@ function readinessStatusText(status) {
   if (status === "job_ready") return "可上場";
   if (status === "learning") return "學習中";
   return "未解鎖";
+}
+
+function proofStatusText(status) {
+  if (status === "interview_ready") return "面試可說明";
+  if (status === "proven") return "Boss 已證明";
+  if (status === "practicing") return "練習中";
+  return "待啟動";
 }
 
 function bindEvents() {
