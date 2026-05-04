@@ -39,6 +39,7 @@
 
 - Beginner view now previews AI App Builder, Agent Workflow Builder, and Agent Reliability Builder as lightweight samples.
 - Each path is framed as one choice-style judgment, so learners can try a role signal before committing to a lane.
+- The sampler now shows 0/3, 1/3, or 3/3 sampled progress from existing single-choice and multi-select answers.
 - The sampler keeps role exploration choice-first with no setup, project task, or long writing.
 
 ## Session Rhythm

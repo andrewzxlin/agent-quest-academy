@@ -643,13 +643,14 @@ function renderRoleSamplerCard(card) {
         <p class="eyebrow">${card.title}</p>
         <h3>${card.headline}</h3>
       </div>
-      <p>${card.summary}</p>
+      <p>${card.progressLabel} - ${card.summary}</p>
     </div>
     <div class="role-sampler-grid">
-      ${card.tracks.map((track) => `<div>
-        <span>${track.level}</span>
+      ${card.tracks.map((track) => `<div class="${track.sampled ? "sampled" : "try-next"}">
+        <span>${track.statusLabel}</span>
         <strong>${track.title}</strong>
         <p>${track.samplePrompt}</p>
+        <small>${track.level}</small>
         <small>${track.choiceMove}</small>
       </div>`).join("")}
     </div>

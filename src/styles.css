@@ -587,6 +587,11 @@ h1 {
   padding: 12px;
 }
 
+.role-sampler-grid div.sampled {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
 .role-sampler-grid span,
 .role-sampler-grid strong,
 .role-sampler-grid small,

@@ -2307,7 +2307,11 @@ export function zeroToLandingQuestCard(progress, now = Date.now()) {
 
 export function roleSamplerCard(progress) {
   const roleFit = jobRoleFitCard(progress);
-  const answeredCount = Object.keys(progress.answered ?? {}).length;
+  const answeredChoiceChapterIds = new Set(
+    flattenQuestions()
+      .filter((question) => ["single", "multi"].includes(question.type) && progress.answered[questionKey(question)])
+      .map((question) => question.chapterId)
+  );
   const samplesByRole = {
     "ai-app-builder": {
       choiceMove: "Pick the option that makes the AI product useful, bounded, and testable.",
@@ -2327,24 +2331,34 @@ export function roleSamplerCard(progress) {
       choiceMove: "Pick the option that changes a real workflow decision.",
       samplePrompt: "Which choice creates the clearest agentic workflow signal?"
     };
+    const sampled = track.chapterIds.some((chapterId) => answeredChoiceChapterIds.has(chapterId)) || track.level !== "starter";
     return {
       id: track.id,
       title: track.title,
       level: track.level,
+      sampled,
+      statusLabel: sampled ? "sampled" : "try next",
       nextGap: track.nextGap,
       choiceMove: sample.choiceMove,
       samplePrompt: sample.samplePrompt
     };
   });
-  const active = tracks.find((track) => track.level !== "interview-ready") ?? tracks[0];
+  const sampledCount = tracks.filter((track) => track.sampled).length;
+  const active = tracks.find((track) => !track.sampled) ?? tracks.find((track) => track.level !== "interview-ready") ?? tracks[0];
 
   return {
     title: "Role Sampler",
-    headline: answeredCount > 0 ? "Your tiny choices are already pointing somewhere." : "Try a role path with one choice.",
+    headline: sampledCount > 0 ? `${sampledCount}/${tracks.length} role paths sampled.` : "Try a role path with one choice.",
     summary: "No need to choose a career lane yet. Sample each path through quick judgment prompts first.",
+    sampledCount,
+    totalCount: tracks.length,
+    progressLabel: `${sampledCount}/${tracks.length} sampled`,
     activeRole: active?.title ?? "Agentic Workflow Builder",
     activeMove: active?.choiceMove ?? "Pick one workflow signal.",
-    nextAction: "Answer one single-choice question, then compare which role signal felt natural.",
+    nextAction:
+      sampledCount === tracks.length
+        ? "Use one tiny short answer to compare which role signal felt natural."
+        : "Answer one single-choice question, then compare which role signal felt natural.",
     promise: "Sampling stays choice-first: no project task, no setup, no long writing.",
     tracks
   };

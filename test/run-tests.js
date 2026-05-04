@@ -1605,10 +1605,15 @@ function testRoleSamplerCard() {
   let card = roleSamplerCard(progress);
   assert.equal(card.title, "Role Sampler");
   assert.equal(card.tracks.length, 3);
+  assert.equal(card.sampledCount, 0);
+  assert.equal(card.totalCount, 3);
+  assert.equal(card.progressLabel, "0/3 sampled");
   assert.equal(card.activeRole, "AI App Builder");
   assert.ok(card.headline.includes("one choice"));
   assert.ok(card.nextAction.includes("single-choice"));
   assert.ok(card.promise.includes("choice-first"));
+  assert.ok(card.tracks.every((track) => track.sampled === false));
+  assert.ok(card.tracks.every((track) => track.statusLabel === "try next"));
   assert.ok(card.tracks.every((track) => track.samplePrompt.includes("?")));
   assert.ok(card.tracks.every((track) => track.choiceMove.includes("Pick")));
   assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
@@ -1616,7 +1621,12 @@ function testRoleSamplerCard() {
   const question = flattenQuestions().find((item) => item.type === "single");
   answerQuestion(progress, question, question.answer, now);
   card = roleSamplerCard(progress);
-  assert.ok(card.headline.includes("pointing"));
+  assert.equal(card.sampledCount, 2);
+  assert.equal(card.progressLabel, "2/3 sampled");
+  assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").sampled, true);
+  assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").sampled, true);
+  assert.equal(card.activeRole, "Agent Reliability Builder");
+  assert.ok(card.headline.includes("2/3"));
   assert.ok(card.activeMove.length > 0);
 }
 
