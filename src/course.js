@@ -758,6 +758,13 @@ export function flattenQuestions() {
   );
 }
 
+export function bossQuestionsForChapter(chapterId, limit = 8) {
+  return flattenQuestions()
+    .filter((question) => question.chapterId === chapterId && question.type !== "short")
+    .filter((question) => question.id === "q1" || question.id === "q2" || question.id === "q4")
+    .slice(0, limit);
+}
+
 function lesson({ id, title, concept, analogy, focus, best, multi, shortKeywords, boundary, mistake }) {
   return {
     id,

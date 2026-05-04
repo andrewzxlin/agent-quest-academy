@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
-import { course, flattenLessons, flattenQuestions } from "../src/course.js";
+import { bossQuestionsForChapter, course, flattenLessons, flattenQuestions } from "../src/course.js";
 import {
   answerQuestion,
   buildReviewSessionQuestions,
   buildSessionQuestions,
+  completeBossQuiz,
   completeLesson,
   createInitialProgress,
   getDueReviewQuestions,
@@ -25,7 +26,9 @@ const tests = [
   ["session includes due review first", testSessionReview],
   ["fresh session questions keep stable keys", testFreshSessionQuestionKeys],
   ["review mode returns only due questions", testReviewModeOnlyDue],
-  ["review stats separate due and scheduled", testReviewStats]
+  ["review stats separate due and scheduled", testReviewStats],
+  ["boss quiz uses low-friction chapter questions", testBossQuizQuestions],
+  ["boss quiz records pass and fail results", testBossQuizCompletion]
 ];
 
 let failed = 0;
@@ -153,6 +156,26 @@ function testReviewStats() {
   assert.equal(stats.dueCount, 1);
   assert.equal(stats.scheduledCount, 2);
   assert.equal(stats.wrongCount, 1);
+}
+
+function testBossQuizQuestions() {
+  const chapter = course.chapters[0];
+  const bossQuestions = bossQuestionsForChapter(chapter.id, 8);
+  assert.equal(bossQuestions.length, 8);
+  assert.ok(bossQuestions.every((question) => question.chapterId === chapter.id));
+  assert.ok(bossQuestions.every((question) => question.type === "single" || question.type === "multi"));
+  assert.ok(bossQuestions.every((question) => question.lessonId));
+}
+
+function testBossQuizCompletion() {
+  const progress = createInitialProgress(1000);
+  completeBossQuiz(progress, "agent-basics", 7, 8, 1000);
+  assert.equal(progress.bossResults[0].passed, true);
+  assert.equal(progress.xp, 50);
+  completeBossQuiz(progress, "agent-basics", 4, 8, 2000);
+  assert.equal(progress.bossResults.length, 1);
+  assert.equal(progress.bossResults[0].passed, false);
+  assert.equal(progress.xp, 65);
 }
 
 function countBy(items, keyFn) {

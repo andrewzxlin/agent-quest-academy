@@ -1,8 +1,9 @@
-import { course, flattenLessons } from "./course.js";
+import { bossQuestionsForChapter, course, flattenLessons } from "./course.js";
 import {
   answerQuestion,
   buildReviewSessionQuestions,
   buildSessionQuestions,
+  completeBossQuiz,
   completeLesson,
   createInitialProgress,
   getDueReviewQuestions,
@@ -24,6 +25,7 @@ let shortAnswer = "";
 let checked = false;
 let lastResult = null;
 let sessionMode = "lesson";
+let bossScore = 0;
 
 const root = document.querySelector("#app");
 
@@ -34,10 +36,13 @@ function render() {
     sessionQuestions = buildSessionQuestions(progress, lesson);
   }
   const question = sessionQuestions[currentIndex];
+  const chapter = course.chapters.find((item) => item.id === lesson.chapterId) ?? course.chapters[0];
+  const bossResult = progress.bossResults?.find((item) => item.chapterId === chapter.id);
   const stats = reviewStats(progress, Date.now());
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
+  const isBossMode = sessionMode === "boss";
 
   root.innerHTML = `
     <div class="shell">
@@ -58,6 +63,10 @@ function render() {
           <strong>錯題複習</strong>
           <span>${dueCount === 0 ? "目前沒有到期題" : `立即刷 ${dueCount} 題到期題`}</span>
         </button>
+        <button class="boss-button" data-boss="true">
+          <strong>章節 Boss Quiz</strong>
+          <span>${bossResult ? `${bossResult.passed ? "已通關" : "待重戰"}：${bossResult.score}/${bossResult.total}` : `${chapter.title} 挑戰`}</span>
+        </button>
         <div class="map">
           ${lessons
             .map((item, index) => {
@@ -77,22 +86,22 @@ function render() {
       <main class="main">
         <section class="hero-card">
           <div>
-            <p class="eyebrow">${isReviewMode ? "Review Queue / 錯題重現" : `${lesson.chapterTitle} / ${lesson.chapterTheme}`}</p>
-            <h2>${isReviewMode ? "錯題複習模式" : lesson.title}</h2>
-            <p>${isReviewMode ? "只練已到期或剛答錯的題目。複習答對後會重新排入下一次間隔複習。" : lesson.concept}</p>
+            <p class="eyebrow">${isReviewMode ? "Review Queue / 錯題重現" : isBossMode ? `${chapter.title} / Boss Quiz` : `${lesson.chapterTitle} / ${lesson.chapterTheme}`}</p>
+            <h2>${isReviewMode ? "錯題複習模式" : isBossMode ? "章節 Boss Quiz" : lesson.title}</h2>
+            <p>${isReviewMode ? "只練已到期或剛答錯的題目。複習答對後會重新排入下一次間隔複習。" : isBossMode ? "只用選擇題檢查整章核心判斷。答對 80% 以上就算通關。" : lesson.concept}</p>
           </div>
           <div class="visual-card">
             <div class="orbital">
               <span>Model</span><span>Tool</span><span>State</span><span>Check</span>
             </div>
-            <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : lesson.analogy}</strong>
+            <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
 
         <section class="quiz-card">
           <div class="progress-row">
             <div>
-              <p class="eyebrow">${isReviewMode ? "複習" : "第"} ${currentIndex + 1} / ${sessionQuestions.length} 題</p>
+              <p class="eyebrow">${isReviewMode ? "複習" : isBossMode ? "Boss" : "第"} ${currentIndex + 1} / ${sessionQuestions.length} 題</p>
               <h3>${question.prompt}</h3>
             </div>
             <div class="mastery">
@@ -104,7 +113,7 @@ function render() {
           ${checked ? renderFeedback(question, lastResult) : ""}
           <div class="actions">
             <button class="primary" data-check="true" ${checked ? "disabled" : ""}>檢查答案</button>
-            <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : "完成本課") : "下一題"}</button>
+            <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : isBossMode ? "結算 Boss" : "完成本課") : "下一題"}</button>
           </div>
         </section>
 
@@ -153,6 +162,7 @@ function bindEvents() {
       selectedLessonIndex = Number(button.dataset.lesson);
       progress.currentLessonIndex = selectedLessonIndex;
       sessionMode = "lesson";
+      bossScore = 0;
       sessionQuestions = [];
       currentIndex = 0;
       clearAnswerState();
@@ -165,6 +175,18 @@ function bindEvents() {
     sessionMode = "review";
     sessionQuestions = buildReviewSessionQuestions(progress, Date.now(), 7);
     currentIndex = 0;
+    bossScore = 0;
+    clearAnswerState();
+    render();
+  });
+
+  document.querySelector("[data-boss]")?.addEventListener("click", () => {
+    const lessons = flattenLessons();
+    const lesson = lessons[selectedLessonIndex] ?? lessons[0];
+    sessionMode = "boss";
+    sessionQuestions = bossQuestionsForChapter(lesson.chapterId, 8);
+    currentIndex = 0;
+    bossScore = 0;
     clearAnswerState();
     render();
   });
@@ -197,6 +219,9 @@ function bindEvents() {
     lastResult = gradeQuestion(question, response);
     const answered = answerQuestion(progress, question, response);
     progress = answered.progress;
+    if (sessionMode === "boss" && lastResult.correct) {
+      bossScore += 1;
+    }
     checked = true;
     saveProgress(progress);
     render();
@@ -206,6 +231,12 @@ function bindEvents() {
     if (currentIndex === sessionQuestions.length - 1) {
       if (sessionMode === "review") {
         sessionMode = "lesson";
+      } else if (sessionMode === "boss") {
+        const lessons = flattenLessons();
+        const lesson = lessons[selectedLessonIndex] ?? lessons[0];
+        progress = completeBossQuiz(progress, lesson.chapterId, bossScore, sessionQuestions.length);
+        sessionMode = "lesson";
+        bossScore = 0;
       } else {
         const lesson = flattenLessons()[selectedLessonIndex];
         progress = completeLesson(progress, lesson.id);
@@ -226,6 +257,7 @@ function bindEvents() {
     progress = createInitialProgress();
     selectedLessonIndex = 0;
     sessionMode = "lesson";
+    bossScore = 0;
     sessionQuestions = [];
     currentIndex = 0;
     clearAnswerState();

@@ -10,6 +10,7 @@ export function createInitialProgress(now = Date.now()) {
     answered: {},
     reviewQueue: [],
     completedLessons: [],
+    bossResults: [],
     lastActiveAt: now
   };
 }
@@ -112,6 +113,18 @@ export function completeLesson(progress, lessonId) {
   }
   const lessons = flattenLessons();
   progress.currentLessonIndex = Math.min(progress.currentLessonIndex + 1, lessons.length - 1);
+  return progress;
+}
+
+export function completeBossQuiz(progress, chapterId, score, total, now = Date.now()) {
+  const passed = total > 0 && score / total >= 0.8;
+  const previous = progress.bossResults ?? [];
+  progress.bossResults = [
+    ...previous.filter((item) => item.chapterId !== chapterId),
+    { chapterId, score, total, passed, completedAt: now }
+  ];
+  progress.xp += passed ? 50 : 15;
+  progress.lastActiveAt = now;
   return progress;
 }
 

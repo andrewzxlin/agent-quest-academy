@@ -106,7 +106,8 @@ h1 {
   font-size: 12px;
 }
 
-.review-button {
+.review-button,
+.boss-button {
   border: 1px solid #fed7aa;
   border-radius: 12px;
   background: #fff7ed;
@@ -116,12 +117,21 @@ h1 {
   cursor: pointer;
 }
 
+.boss-button {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
 .review-button strong,
-.review-button span {
+.review-button span,
+.boss-button strong,
+.boss-button span {
   display: block;
 }
 
-.review-button span {
+.review-button span,
+.boss-button span {
   margin-top: 4px;
   font-size: 13px;
 }
