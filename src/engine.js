@@ -224,6 +224,59 @@ export function lessonSkillCard(progress, lessonId) {
   };
 }
 
+export function lessonPracticePlan(progress, lessonId) {
+  const lesson = flattenLessons().find((item) => item.id === lessonId);
+  if (!lesson) return null;
+  const countByType = (type) => lesson.questions.filter((question) => question.type === type).length;
+  const attemptedByType = (type) =>
+    lesson.questions.filter((question) => {
+      if (question.type !== type) return false;
+      return Boolean(progress.answered[questionKey({ ...question, lessonId })]);
+    }).length;
+  const formats = [
+    {
+      type: "single",
+      label: "Single choice",
+      role: "Recognize one strong workflow signal.",
+      order: 1
+    },
+    {
+      type: "multi",
+      label: "Multi-select",
+      role: "Connect several workflow parts.",
+      order: 2
+    },
+    {
+      type: "short",
+      label: "Tiny short answer",
+      role: "Explain the idea in one job-facing sentence.",
+      order: 3
+    }
+  ]
+    .map((format) => ({
+      ...format,
+      count: countByType(format.type),
+      attempted: attemptedByType(format.type)
+    }))
+    .filter((format) => format.count > 0);
+  const attempted = formats.reduce((sum, format) => sum + format.attempted, 0);
+  const total = formats.reduce((sum, format) => sum + format.count, 0);
+
+  return {
+    lessonId,
+    title: "Choice-first practice plan",
+    headline: "Quick choices first, one small explanation last.",
+    promise: "No coding tasks. This lesson stays focused on recognition, connection, and a tiny explanation.",
+    attempted,
+    total,
+    formats,
+    nextStep:
+      attempted >= total
+        ? "Replay due review or rehearse the lesson pitch."
+        : "Start with single choice; save the short answer for the end."
+  };
+}
+
 export function conceptDiagramCard(lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;

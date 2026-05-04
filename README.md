@@ -149,6 +149,12 @@
 - The card connects the lesson to one job-facing skill signal and one answer lens.
 - It reinforces that the current path stays low-friction: single choice, multi-select, and short answers rather than coding work.
 
+## Lesson Practice Plans
+
+- Every lesson now shows the exact low-friction practice sequence before the quiz.
+- Learners see that the session starts with single-choice recognition, moves to multi-select connection, and ends with one tiny short answer.
+- The plan makes it explicit that the current phase uses quick judgment practice, not coding tasks.
+
 ## Concept Diagram Cards
 
 - Every lesson now shows a four-step concept diagram before the quiz.

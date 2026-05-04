@@ -1122,6 +1122,63 @@ h1 {
   margin-top: 8px;
 }
 
+.lesson-practice-plan {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.lesson-practice-plan > p {
+  color: var(--muted);
+}
+
+.lesson-practice-plan > strong {
+  display: block;
+  margin-top: 14px;
+}
+
+.practice-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.practice-plan-grid div {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.practice-plan-grid span {
+  align-items: center;
+  background: #2563eb;
+  border-radius: 999px;
+  color: white;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.practice-plan-grid strong,
+.practice-plan-grid small {
+  display: block;
+}
+
+.practice-plan-grid strong {
+  margin-top: 10px;
+}
+
+.practice-plan-grid small {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
 .concept-diagram-card {
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--diagram-accent, #2563eb) 16%, white), transparent 38%),
@@ -2244,6 +2301,7 @@ button:disabled {
   .proof-grid,
   .role-fit-grid,
   .landing-checklist-grid,
+  .practice-plan-grid,
   .diagram-flow,
   .mastery-ladder-grid,
   .lesson-pitch-lines,

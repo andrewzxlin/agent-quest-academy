@@ -44,6 +44,7 @@ import {
   jobRoleFitCard,
   jobScenarioCard,
   lessonPitchBuilder,
+  lessonPracticePlan,
   lessonSkillCard,
   lessonMasteryLadder,
   learningPuzzleBoard,
@@ -71,6 +72,7 @@ const tests = [
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
+  ["lesson practice plans show choice-first sequence", testLessonPracticePlans],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
   ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
   ["lesson pitch builder turns mastery into interview lines", testLessonPitchBuilder],
@@ -269,6 +271,31 @@ function testLessonSkillCards() {
   assert.equal(updated.correct, 1);
   assert.ok(updated.mastery > 0);
   assert.equal(lessonSkillCard(progress, "missing-lesson"), null);
+}
+
+function testLessonPracticePlans() {
+  const progress = createInitialProgress(1000);
+  for (const lesson of flattenLessons()) {
+    const plan = lessonPracticePlan(progress, lesson.id);
+    const typeCounts = countBy(lesson.questions, (question) => question.type);
+    assert.equal(plan.lessonId, lesson.id);
+    assert.equal(plan.title, "Choice-first practice plan");
+    assert.equal(plan.total, lesson.questions.length);
+    assert.equal(plan.attempted, 0);
+    assert.deepEqual(plan.formats.map((format) => format.type), ["single", "multi", "short"]);
+    assert.deepEqual(plan.formats.map((format) => format.count), [typeCounts.single, typeCounts.multi, typeCounts.short]);
+    assert.deepEqual(plan.formats.map((format) => format.order), [1, 2, 3]);
+    assert.ok(plan.headline.includes("choices first"));
+    assert.ok(plan.promise.includes("No coding tasks"));
+    assert.doesNotMatch(JSON.stringify(plan), /repo|project implementation|build a project/i);
+  }
+
+  const lesson = flattenLessons()[0];
+  answerQuestion(progress, { ...lesson.questions[0], lessonId: lesson.id }, lesson.questions[0].answer, 1000);
+  const updated = lessonPracticePlan(progress, lesson.id);
+  assert.equal(updated.attempted, 1);
+  assert.equal(updated.formats.find((format) => format.type === "single").attempted, 1);
+  assert.equal(lessonPracticePlan(progress, "missing-lesson"), null);
 }
 
 function testConceptDiagramCards() {

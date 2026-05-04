@@ -30,6 +30,7 @@ import {
   jobRoleFitCard,
   jobScenarioCard,
   lessonPitchBuilder,
+  lessonPracticePlan,
   lessonSkillCard,
   lessonMasteryLadder,
   learningPuzzleBoard,
@@ -103,6 +104,7 @@ function render() {
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
   const skillCard = lessonSkillCard(progress, lesson.id);
+  const practicePlan = lessonPracticePlan(progress, lesson.id);
   const conceptDiagram = conceptDiagramCard(lesson.id);
   const masteryLadder = lessonMasteryLadder(progress, lesson.id);
   const lessonPitch = lessonPitchBuilder(progress, lesson.id);
@@ -189,6 +191,7 @@ function render() {
         ${renderJobScenarioCard(jobScenario)}
         ${renderGlossaryCard(glossary)}
         ${renderLessonSkillCard(skillCard)}
+        ${renderLessonPracticePlan(practicePlan)}
         ${renderConceptDiagramCard(conceptDiagram)}
         ${renderLessonMasteryLadder(masteryLadder)}
         ${renderLessonPitchBuilder(lessonPitch)}
@@ -739,6 +742,30 @@ function renderLessonSkillCard(card) {
         <p>${card.attempted}/${card.total} 題已嘗試，${card.mastery}% 已掌握。</p>
       </div>
     </div>
+  </section>`;
+}
+
+function renderLessonPracticePlan(plan) {
+  if (!plan) return "";
+  return `<section class="lesson-practice-plan">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Practice Plan</p>
+        <h3>${plan.title}</h3>
+      </div>
+      <p>${plan.attempted}/${plan.total} done - ${plan.nextStep}</p>
+    </div>
+    <p>${plan.headline}</p>
+    <div class="practice-plan-grid">
+      ${plan.formats
+        .map((format) => `<div>
+          <span>${format.order}</span>
+          <strong>${format.label} x ${format.count}</strong>
+          <small>${format.role}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <strong>${plan.promise}</strong>
   </section>`;
 }
 
