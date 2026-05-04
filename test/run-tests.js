@@ -1448,6 +1448,8 @@ function testDailyMissions() {
   assert.equal(missions.every((mission) => mission.done), true);
   assert.ok(missions.find((mission) => mission.id === "bank-phrase").done);
   assert.ok(missions.find((mission) => mission.id === "sample-role").done);
+  assert.ok(missions.every((mission) => mission.reason.length > 0));
+  assert.ok(missions.find((mission) => mission.id === "sample-role").reason.includes("job-facing"));
 }
 
 function testDailyQuestSnapshot() {
@@ -1458,6 +1460,7 @@ function testDailyQuestSnapshot() {
   assert.equal(snapshot.totalCount, 5);
   assert.equal(snapshot.percent, 0);
   assert.ok(snapshot.nextStep.includes("還差"));
+  assert.ok(snapshot.activeReason.includes("recognition"));
 
   const questions = flattenQuestions().filter((item) => item.type === "single");
   for (const question of questions.slice(0, 5)) {
@@ -1466,6 +1469,7 @@ function testDailyQuestSnapshot() {
   snapshot = dailyQuestSnapshot(progress, now);
   assert.equal(snapshot.completedCount, 3);
   assert.ok(snapshot.percent > 0);
+  assert.ok(snapshot.activeReason.includes("micro lesson"));
 
   completeLesson(progress, flattenLessons()[0].id, now);
   completeBossQuiz(progress, "agent-basics", 7, 8, now);

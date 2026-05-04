@@ -999,6 +999,7 @@ function renderDailyQuestSnapshot(snapshot) {
       <p class="eyebrow">Daily Quest</p>
       <h3>${snapshot.completedCount}/${snapshot.totalCount} 今日任務完成</h3>
       <p>${snapshot.nextStep}</p>
+      <small>${snapshot.activeReason}</small>
     </div>
     <div class="quest-meter">
       <strong>${snapshot.percent}%</strong>

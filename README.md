@@ -290,6 +290,7 @@
 
 - The home screen shows today's mission completion count, total progress percent, and nearest next step.
 - The snapshot is derived from the same daily missions used in the detailed progress area.
+- The active mission now explains the learning signal it creates, including role sampling as job-facing exploration.
 - This adds a game-like "one more small step" loop without adding harder work.
 
 ## Recall Combo

@@ -2751,6 +2751,7 @@ export function dailyQuestSnapshot(progress, now = Date.now()) {
     totalCount: missions.length,
     percent,
     activeTitle: active?.title ?? "今日任務",
+    activeReason: active?.reason ?? "Every tiny step should create a visible signal.",
     nextStep: completedCount === missions.length ? "今日任務已完成，接著可以複習錯題或練 pitch。" : `${active.title} 還差 ${remaining} 步。`
   };
 }
@@ -3136,35 +3137,40 @@ export function dailyMissions(progress, now = Date.now()) {
       title: "答 5 題",
       current: Math.min(activity.answers, 5),
       target: 5,
-      done: activity.answers >= 5
+      done: activity.answers >= 5,
+      reason: "Build fast recognition through tiny prompts."
     },
     {
       id: "bank-phrase",
       title: "Bank 1 phrase",
       current: Math.min(activity.answers, 1),
       target: 1,
-      done: activity.answers >= 1
+      done: activity.answers >= 1,
+      reason: "Turn one answer into reusable wording."
     },
     {
       id: "sample-role",
       title: "Sample 1 role",
       current: Math.min(roleSamples, 1),
       target: 1,
-      done: roleSamples >= 1
+      done: roleSamples >= 1,
+      reason: "Try a job-facing path without choosing a lane yet."
     },
     {
       id: "finish-lesson",
       title: "完成 1 課",
       current: Math.min(activity.lessonsCompleted, 1),
       target: 1,
-      done: activity.lessonsCompleted >= 1
+      done: activity.lessonsCompleted >= 1,
+      reason: "Finish one choice-first micro lesson."
     },
     {
       id: "beat-boss",
       title: "通關 1 個 Boss Quiz",
       current: Math.min(activity.bossPasses, 1),
       target: 1,
-      done: activity.bossPasses >= 1
+      done: activity.bossPasses >= 1,
+      reason: "Convert practice into defended evidence."
     }
   ];
 }
