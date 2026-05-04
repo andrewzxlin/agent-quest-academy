@@ -18,6 +18,7 @@ import {
   answerEvidenceClip,
   answerInterviewLineCard,
   answerLootCard,
+  answerMemoryHookCard,
   answerOutcomeCard,
   answerProofLine,
   answerRecallCue,
@@ -186,6 +187,7 @@ const tests = [
   ["learning receipt reel turns answers into visible evidence", testLearningReceiptReel],
   ["signal preview shows the reward before starting", testSignalPreviewCard],
   ["answer recall cues turn answers into next-time signals", testAnswerRecallCues],
+  ["answer memory hook turns feedback into a recall shortcut", testAnswerMemoryHookCard],
   ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
@@ -1650,6 +1652,34 @@ function testAnswerRecallCues() {
   assert.ok(singleCue.body.includes(single.choices[single.answer]));
   assert.ok(multiCue.body.includes(multi.choiceFeedback.find((item) => item.correct).choice));
   assert.ok(shortCue.body.includes(short.keywords[0]));
+}
+
+function testAnswerMemoryHookCard() {
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  let card = answerMemoryHookCard(single, gradeQuestion(single, single.answer));
+  assert.equal(card.title, "Memory Hook");
+  assert.equal(card.status, "saved");
+  assert.equal(card.stage, "Recognize");
+  assert.ok(card.anchor.length > 0);
+  assert.ok(card.cue.includes("workflow"));
+  assert.deepEqual(card.hooks.map((hook) => hook.id), ["trigger", "shortcut", "review"]);
+  assert.ok(card.hooks.find((hook) => hook.id === "trigger").text.includes(card.anchor));
+  assert.ok(card.hooks.find((hook) => hook.id === "review").text.includes("Spaced review"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = answerMemoryHookCard(multi, gradeQuestion(multi, []));
+  assert.equal(card.status, "repair");
+  assert.equal(card.stage, "Connect");
+  assert.ok(card.anchor.includes("+") || card.anchor.includes("workflow"));
+  assert.ok(card.hooks.find((hook) => hook.id === "review").text.includes("replay"));
+
+  card = answerMemoryHookCard(short, gradeQuestion(short, short.keywords[0]));
+  assert.equal(card.stage, "Explain");
+  assert.ok(card.anchor.includes(short.keywords[0]));
+  assert.ok(card.hooks.find((hook) => hook.id === "shortcut").text.includes("keyword"));
 }
 
 function testMistakeRescuePrompts() {

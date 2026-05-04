@@ -6181,6 +6181,76 @@ h1 {
   margin: 8px 0 0;
 }
 
+.answer-memory-hook-card {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(37 99 235 / 0.24);
+  border-radius: 10px;
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.answer-memory-hook-card.repair {
+  border-color: rgb(234 88 12 / 0.3);
+}
+
+.answer-memory-hook-card span,
+.answer-memory-hook-card strong,
+.answer-memory-hook-card small,
+.memory-hook-grid b {
+  display: block;
+}
+
+.answer-memory-hook-card span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-memory-hook-card.repair span {
+  color: #c2410c;
+}
+
+.answer-memory-hook-card strong {
+  margin-top: 5px;
+}
+
+.answer-memory-hook-card small {
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.answer-memory-hook-card p {
+  color: var(--ink);
+  margin: 8px 0 0;
+}
+
+.memory-hook-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.memory-hook-grid em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.35;
+  padding: 10px;
+}
+
+.memory-hook-grid b {
+  color: var(--ink);
+  font-size: 10px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
 .answer-proof-line {
   background: rgb(255 255 255 / 0.78);
   border: 1px solid rgb(22 163 74 / 0.28);
@@ -6926,6 +6996,7 @@ button:disabled {
   .answer-loot-badges,
   .answer-run-chain-meters,
   .answer-interview-steps,
+  .memory-hook-grid,
   .answer-evidence-clip,
   .proof-booster-card,
   .puzzle-grid,

@@ -6,6 +6,7 @@ import {
   answerEvidenceClip,
   answerInterviewLineCard,
   answerLootCard,
+  answerMemoryHookCard,
   answerProofLine,
   answerRecallCue,
   answerRunChainCard,
@@ -2499,6 +2500,7 @@ function renderFeedback(question, result, progressState) {
     ${renderAnswerProofLine(answerProofLine(question, result))}
     ${renderQuestionMasterySignal(questionMasterySignal(progressState, question))}
     ${renderRecallCue(answerRecallCue(question, result))}
+    ${renderAnswerMemoryHookCard(answerMemoryHookCard(question, result))}
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
@@ -2648,6 +2650,25 @@ function renderRecallCue(cue) {
   return `<div class="recall-cue">
     <span>${cue.title}</span>
     <p>${cue.body}</p>
+  </div>`;
+}
+
+function renderAnswerMemoryHookCard(card) {
+  return `<div class="answer-memory-hook-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.stage} / ${card.anchor}</small>
+      <p>${card.cue}</p>
+    </div>
+    <div class="memory-hook-grid">
+      ${card.hooks
+        .map((hook) => `<em>
+          <b>${hook.label}</b>
+          ${hook.text}
+        </em>`)
+        .join("")}
+    </div>
   </div>`;
 }
 

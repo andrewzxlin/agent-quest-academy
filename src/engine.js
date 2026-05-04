@@ -1591,6 +1591,51 @@ export function answerRecallCue(question, result) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function answerMemoryHookCard(question, result) {
+  const stage = questionMasteryStage(question);
+  const cue = answerRecallCue(question, result);
+  const status = result.correct ? "saved" : "repair";
+  const anchor =
+    question.type === "single"
+      ? (question.choiceFeedback?.[result.expected]?.choice ?? question.choices?.[result.expected] ?? "workflow signal")
+      : question.type === "multi"
+        ? (question.choiceFeedback ?? [])
+            .filter((item) => item.correct)
+            .map((item) => item.choice)
+            .slice(0, 2)
+            .join(" + ") || "workflow parts"
+        : (result.matches?.[0] ?? question.keywords?.[0] ?? "core concept");
+
+  return {
+    title: "Memory Hook",
+    status,
+    headline: result.correct ? "Keep this signal easy to recall" : "Turn the miss into a recall hook",
+    stage: stage.label,
+    anchor,
+    cue: cue.body,
+    hooks: [
+      {
+        id: "trigger",
+        label: "Trigger",
+        text: `When you see ${stage.label.toLowerCase()} practice, look for ${anchor}.`
+      },
+      {
+        id: "shortcut",
+        label: "Shortcut",
+        text:
+          question.type === "short"
+            ? "Say one keyword, then explain why it changes the workflow."
+            : "Ask whether the option changes state, tools, retrieval, risk, or feedback."
+      },
+      {
+        id: "review",
+        label: "Review",
+        text: result.correct ? "Spaced review will bring it back later." : "Review will replay this pattern soon."
+      }
+    ]
+  };
+}
+
 export function answerProofLine(question, result) {
   const stage = questionMasteryStage(question);
   if (question.type === "single") {
