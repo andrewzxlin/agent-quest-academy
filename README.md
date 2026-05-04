@@ -137,6 +137,12 @@
 - Learners can tap "I'm not sure yet" to safely send the question into review.
 - This keeps the quiz low-pressure while preserving accurate grading.
 
+## Review Rhythm
+
+- The home screen now shows due reviews, reviews coming in the next 24 hours, reviews coming this week, and current mistake count.
+- Wrong answers return first, while correct answers reappear later as spaced recall.
+- This makes periodic review visible and low-pressure without adding any implementation assignments.
+
 ## Lesson Micro Skill Cards
 
 - Every lesson now shows the exact micro-skill being practiced before the quiz.

@@ -731,6 +731,71 @@ h1 {
   margin-top: 4px;
 }
 
+.review-rhythm-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.review-rhythm-card.due {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.review-rhythm-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.review-rhythm-card p {
+  color: var(--muted);
+}
+
+.review-rhythm-card strong {
+  display: block;
+  margin-top: 10px;
+}
+
+.rhythm-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 82px);
+  gap: 10px;
+}
+
+.rhythm-grid div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.rhythm-grid span,
+.rhythm-grid small {
+  display: block;
+}
+
+.rhythm-grid span {
+  color: #c2410c;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.review-rhythm-card.calm .rhythm-grid span {
+  color: #0f766e;
+}
+
+.rhythm-grid small {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 .mistake-focus-card {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -1929,6 +1994,7 @@ button:disabled {
   .exercise-scope-card,
   .daily-quest-snapshot,
   .daily-momentum-card,
+  .review-rhythm-card,
   .mistake-focus-card,
   .onboarding-card.compact-card,
   .job-scenario-card,
@@ -1942,6 +2008,7 @@ button:disabled {
   .readiness-grid,
   .glossary-grid,
   .momentum-grid,
+  .rhythm-grid,
   .puzzle-grid,
   .skill-grid,
   .pitch-grid,

@@ -416,6 +416,42 @@ export function reviewStats(progress, now = Date.now()) {
   };
 }
 
+export function reviewRhythmCard(progress, now = Date.now()) {
+  const day = 24 * 60 * 60 * 1000;
+  const stats = reviewStats(progress, now);
+  const dueNow = progress.reviewQueue.filter((item) => item.dueAt <= now).length;
+  const next24h = progress.reviewQueue.filter((item) => item.dueAt > now && item.dueAt <= now + day).length;
+  const next7d = progress.reviewQueue.filter((item) => item.dueAt > now + day && item.dueAt <= now + 7 * day).length;
+  const status =
+    dueNow > 0
+      ? "Review ready now"
+      : next24h > 0
+        ? "Review coming soon"
+        : stats.scheduledCount > 0
+          ? "Review rhythm set"
+          : "No review debt";
+  const nextAction =
+    dueNow > 0
+      ? "Clear the due review stack before starting new lessons."
+      : next24h > 0
+        ? "Check back within 24 hours to replay the scheduled questions."
+        : stats.scheduledCount > 0
+          ? "Keep learning; the next review will reappear automatically."
+          : "Answer a few questions; mistakes and correct answers will create future review.";
+
+  return {
+    headline: "Review Rhythm",
+    status,
+    dueNow,
+    next24h,
+    next7d,
+    scheduledCount: stats.scheduledCount,
+    wrongCount: stats.wrongCount,
+    nextAction,
+    proofLine: "Wrong answers return first; correct answers come back later for spaced recall."
+  };
+}
+
 export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
   const questionsByKey = new Map(reviewableQuestions().map((question) => [questionKey(question), question]));
   const reviewByKey = new Map(progress.reviewQueue.map((item) => [item.questionKey, item]));

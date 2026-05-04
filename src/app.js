@@ -38,6 +38,7 @@ import {
   onboardingState,
   pitchPracticeCard,
   questionCoachHint,
+  reviewRhythmCard,
   reviewStats,
   resetProgress,
   saveProgress,
@@ -84,6 +85,7 @@ function render() {
   const summaries = chapterSummaryCards(progress);
   const proofs = abilityProofCards(progress);
   const stats = reviewStats(progress, Date.now());
+  const reviewRhythm = reviewRhythmCard(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const roleFit = jobRoleFitCard(progress);
@@ -170,6 +172,7 @@ function render() {
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMomentumCard(momentum)}
+        ${renderReviewRhythmCard(reviewRhythm)}
         ${renderMistakeFocusCard(mistakeFocus)}
         ${renderLearningPuzzleBoard(puzzle)}
         ${renderRecommendationCard(recommendation)}
@@ -528,6 +531,35 @@ function renderDailyMomentumCard(momentum) {
       <div>
         <span>${momentum.correctRate}%</span>
         <small>今日正確率</small>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderReviewRhythmCard(card) {
+  return `<section class="review-rhythm-card ${card.dueNow > 0 ? "due" : "calm"}">
+    <div>
+      <p class="eyebrow">${card.headline}</p>
+      <h3>${card.status}</h3>
+      <p>${card.proofLine}</p>
+      <strong>${card.nextAction}</strong>
+    </div>
+    <div class="rhythm-grid">
+      <div>
+        <span>${card.dueNow}</span>
+        <small>due now</small>
+      </div>
+      <div>
+        <span>${card.next24h}</span>
+        <small>next 24h</small>
+      </div>
+      <div>
+        <span>${card.next7d}</span>
+        <small>next 7d</small>
+      </div>
+      <div>
+        <span>${card.wrongCount}</span>
+        <small>mistakes</small>
       </div>
     </div>
   </section>`;

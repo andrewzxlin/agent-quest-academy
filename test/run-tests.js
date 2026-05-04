@@ -51,6 +51,7 @@ import {
   onboardingState,
   pitchPracticeCard,
   questionCoachHint,
+  reviewRhythmCard,
   reviewStats,
   selectLearnerProfile,
   shortAnswerSupport
@@ -86,6 +87,7 @@ const tests = [
   ["fresh session questions keep stable keys", testFreshSessionQuestionKeys],
   ["review mode returns only due questions", testReviewModeOnlyDue],
   ["review stats separate due and scheduled", testReviewStats],
+  ["review rhythm card explains spaced review timing", testReviewRhythmCard],
   ["boss quiz uses low-friction chapter questions", testBossQuizQuestions],
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
@@ -538,6 +540,39 @@ function testReviewStats() {
   assert.equal(stats.dueCount, 1);
   assert.equal(stats.scheduledCount, 2);
   assert.equal(stats.wrongCount, 1);
+}
+
+function testReviewRhythmCard() {
+  const now = 1000;
+  const day = 24 * 60 * 60 * 1000;
+  const progress = createInitialProgress(now);
+  let card = reviewRhythmCard(progress, now);
+  assert.equal(card.status, "No review debt");
+  assert.equal(card.dueNow, 0);
+  assert.equal(card.next24h, 0);
+  assert.equal(card.next7d, 0);
+  assert.ok(card.nextAction.includes("Answer a few questions"));
+  assert.ok(card.proofLine.includes("Wrong answers"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project/i);
+
+  const [wrongQuestion, firstCorrect, secondCorrect] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, wrongQuestion, 99, now);
+  answerQuestion(progress, firstCorrect, firstCorrect.answer, now);
+  answerQuestion(progress, secondCorrect, secondCorrect.answer, now);
+  answerQuestion(progress, secondCorrect, secondCorrect.answer, now + day);
+  card = reviewRhythmCard(progress, now);
+  assert.equal(card.status, "Review ready now");
+  assert.equal(card.dueNow, 1);
+  assert.equal(card.next24h, 1);
+  assert.equal(card.next7d, 1);
+  assert.equal(card.wrongCount, 1);
+  assert.equal(card.scheduledCount, 3);
+
+  progress.reviewQueue = progress.reviewQueue.filter((item) => item.dueAt > now);
+  card = reviewRhythmCard(progress, now);
+  assert.equal(card.status, "Review coming soon");
+  assert.equal(card.dueNow, 0);
+  assert.equal(card.next24h, 1);
 }
 
 function testBossQuizQuestions() {
