@@ -216,6 +216,12 @@
 - The arcade keeps choices first while making the small amount of short writing feel like the final unlock.
 - The active room shows the next tiny reward, so progress feels game-like without adding heavier work.
 
+## Beginner Skill Map
+
+- Beginner view now shows a compact route map before the full dashboard puzzle.
+- It highlights the current skill node, unlocked chapters, mastered nodes, and the next tiny action.
+- This gives the UI a clearer game path without adding project gates or heavier assignments.
+
 ## Zero-to-Landing Quest
 
 - Beginner view now compresses the path from first choice to interview line into five visible milestones.

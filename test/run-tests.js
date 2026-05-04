@@ -20,6 +20,7 @@ import {
   answerRecallCue,
   answerQuestion,
   beginnerGlossaryCards,
+  beginnerSkillMapCard,
   bossReadinessCard,
   buildReviewSessionQuestions,
   buildSessionQuestions,
@@ -128,6 +129,7 @@ const tests = [
   ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
   ["lesson pitch builder turns mastery into interview lines", testLessonPitchBuilder],
   ["learning puzzle board tracks job-readiness pieces", testLearningPuzzleBoard],
+  ["beginner skill map shows the route without full dashboard", testBeginnerSkillMapCard],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
@@ -724,6 +726,45 @@ function testLearningPuzzleBoard() {
   assert.equal(board[0].status, "complete");
   assert.equal(board[0].percent, 100);
   assert.equal(board[0].stages[2].done, true);
+}
+
+function testBeginnerSkillMapCard() {
+  const progress = createInitialProgress(1000);
+  let card = beginnerSkillMapCard(progress);
+  assert.equal(card.title, "Beginner Skill Map");
+  assert.equal(card.completedCount, 0);
+  assert.equal(card.totalCount, course.chapters.length);
+  assert.equal(card.unlockedCount, 1);
+  assert.equal(card.activeId, course.chapters[0].id);
+  assert.equal(card.nodes.length, 3);
+  assert.deepEqual(card.nodes.map((node) => node.status), ["new", "locked", "locked"]);
+  assert.ok(card.activeNext.includes("micro-lesson"));
+  assert.ok(card.promise.includes("no project gate"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const firstChapter = course.chapters[0];
+  const firstChapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === firstChapter.id);
+  for (const lesson of firstChapterLessons) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  card = beginnerSkillMapCard(progress);
+  assert.equal(card.activeId, firstChapter.id);
+  assert.ok(card.activeNext.includes("Boss"));
+
+  completeBossQuiz(progress, firstChapter.id, 8, 8, 1000);
+  card = beginnerSkillMapCard(progress);
+  assert.equal(card.unlockedCount, 2);
+  assert.equal(card.activeId, firstChapter.id);
+  assert.equal(card.nodes[0].status, "proven");
+
+  for (const question of interviewQuestionsForChapter(firstChapter.id)) {
+    const response = question.type === "multi" ? question.answer : question.answer ?? question.keywords[0];
+    answerQuestion(progress, question, response, 1000);
+  }
+  card = beginnerSkillMapCard(progress);
+  assert.equal(card.completedCount, 1);
+  assert.equal(card.activeId, course.chapters[1].id);
+  assert.equal(card.nodes[0].status, "complete");
 }
 
 function testInterviewScenarioCoverage() {

@@ -7,6 +7,7 @@ import {
   answerRecallCue,
   answerQuestion,
   beginnerGlossaryCards,
+  beginnerSkillMapCard,
   bossReadinessCard,
   buildReviewSessionQuestions,
   buildSessionQuestions,
@@ -164,6 +165,7 @@ function render() {
   const dashboardMode = dashboardModeCard(progress);
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
   const choiceArcade = choiceArcadeCard(progress);
+  const beginnerSkillMap = beginnerSkillMapCard(progress);
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
@@ -253,6 +255,7 @@ function render() {
         ${renderFirstFiveMinuteStartCard(firstFive)}
         ${renderPracticeDietCard(practiceDiet)}
         ${renderChoiceArcadeCard(choiceArcade)}
+        ${renderBeginnerSkillMapCard(beginnerSkillMap)}
         ${renderZeroToLandingQuestCard(zeroToLandingQuest)}
         ${renderRoleSamplerCard(roleSampler)}
         ${renderJargonShieldCard(jargonShield)}
@@ -643,6 +646,33 @@ function renderChoiceArcadeCard(card) {
         <small>${card.promise}</small>
       </div>
       <button class="primary compact" data-choice-arcade-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderBeginnerSkillMapCard(card) {
+  return `<section class="beginner-skill-map-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.completedCount}/${card.totalCount} mastered - ${card.unlockedCount} unlocked</p>
+    </div>
+    <div class="beginner-skill-map-nodes">
+      ${card.nodes.map((node) => `<div class="${node.status}">
+        <span>${node.order}</span>
+        <strong>${node.title}</strong>
+        <small>${node.label} - ${node.percent}%</small>
+      </div>`).join("")}
+    </div>
+    <div class="beginner-skill-map-action">
+      <div>
+        <strong>${card.activeSkill}</strong>
+        <small>${card.activeNext}</small>
+        <small>${card.promise}</small>
+      </div>
+      <button class="primary compact" data-beginner-skill-map-action="true">Continue map</button>
     </div>
   </section>`;
 }
@@ -2118,6 +2148,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-choice-arcade-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-beginner-skill-map-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

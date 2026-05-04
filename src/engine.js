@@ -2099,6 +2099,46 @@ export function learningPuzzleBoard(progress) {
   });
 }
 
+export function beginnerSkillMapCard(progress) {
+  const pieces = learningPuzzleBoard(progress);
+  const active = pieces.find((piece) => !["complete", "locked"].includes(piece.status)) ?? pieces.find((piece) => piece.status === "locked") ?? pieces[0];
+  const completedCount = pieces.filter((piece) => piece.status === "complete").length;
+  const unlockedCount = pieces.filter((piece) => piece.status !== "locked").length;
+  const visibleNodes = pieces.slice(0, Math.min(5, Math.max(3, unlockedCount + 1))).map((piece) => ({
+    id: piece.chapterId,
+    order: piece.order,
+    title: piece.chapterTitle,
+    skill: piece.title,
+    status: piece.status,
+    percent: piece.percent,
+    label:
+      piece.status === "locked"
+        ? "Locked"
+        : piece.status === "complete"
+          ? "Mastered"
+          : piece.status === "proven"
+            ? "Boss proof"
+            : piece.status === "boss_ready"
+              ? "Boss ready"
+              : piece.status === "learning"
+                ? "Learning"
+                : "Start"
+  }));
+
+  return {
+    title: "Beginner Skill Map",
+    headline: active ? `Current node: ${active.chapterTitle}` : "Start the first skill node.",
+    activeId: active?.chapterId ?? null,
+    activeSkill: active?.title ?? "Agentic workflow basics",
+    activeNext: active?.nextAction ?? "Start with one choice-first micro-lesson.",
+    completedCount,
+    totalCount: pieces.length,
+    unlockedCount,
+    promise: "The map moves through choices, Boss checks, and interview drills; no project gate here.",
+    nodes: visibleNodes
+  };
+}
+
 export function chapterSummaryCards(progress) {
   const skillsByChapter = new Map(jobReadinessSkills.map((skill) => [skill.chapterId, skill]));
   const wrongByChapter = wrongAnswerCountsByChapter(progress);

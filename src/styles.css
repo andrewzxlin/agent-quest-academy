@@ -545,6 +545,86 @@ h1 {
   margin-top: 14px;
 }
 
+.beginner-skill-map-card {
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.beginner-skill-map-card .section-title > p,
+.beginner-skill-map-nodes small,
+.beginner-skill-map-action small {
+  color: var(--muted);
+}
+
+.beginner-skill-map-nodes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+  margin-top: 14px;
+}
+
+.beginner-skill-map-nodes div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(124 58 237 / 0.14);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.beginner-skill-map-nodes div.learning,
+.beginner-skill-map-nodes div.new,
+.beginner-skill-map-nodes div.boss_ready {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgb(139 92 246 / 0.12);
+}
+
+.beginner-skill-map-nodes div.complete,
+.beginner-skill-map-nodes div.proven {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.beginner-skill-map-nodes div.locked {
+  opacity: 0.62;
+}
+
+.beginner-skill-map-nodes span,
+.beginner-skill-map-nodes strong,
+.beginner-skill-map-nodes small,
+.beginner-skill-map-action strong,
+.beginner-skill-map-action small {
+  display: block;
+}
+
+.beginner-skill-map-nodes span {
+  background: #ede9fe;
+  border-radius: 999px;
+  color: #6d28d9;
+  display: grid;
+  font-size: 12px;
+  font-weight: 900;
+  height: 26px;
+  place-items: center;
+  width: 26px;
+}
+
+.beginner-skill-map-nodes strong {
+  margin-top: 8px;
+}
+
+.beginner-skill-map-nodes small {
+  margin-top: 6px;
+}
+
+.beginner-skill-map-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
 .practice-diet-action {
   align-items: center;
   display: flex;
@@ -4902,6 +4982,7 @@ button:disabled {
   .dashboard-mode-card,
   .practice-diet-card,
   .choice-arcade-card,
+  .beginner-skill-map-card,
   .zero-landing-quest-card,
   .jargon-shield-card,
   .quest-compass,
@@ -4968,6 +5049,7 @@ button:disabled {
   .practice-diet-formats,
   .practice-diet-rules,
   .choice-arcade-rooms,
+  .beginner-skill-map-nodes,
   .zero-landing-milestones,
   .role-sampler-grid,
   .phrase-bank-steps,
@@ -5021,6 +5103,11 @@ button:disabled {
 
   .practice-diet-action,
   .choice-arcade-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .beginner-skill-map-action {
     align-items: stretch;
     flex-direction: column;
   }
