@@ -169,6 +169,50 @@ export function onboardingState(progress) {
   };
 }
 
+export function firstFiveMinuteStartCard(progress) {
+  const lessons = flattenLessons();
+  const lesson = lessons[progress.currentLessonIndex] ?? lessons[0];
+  if (!lesson) return null;
+  const diagram = conceptDiagramCard(lesson.id);
+  const choiceQuestion =
+    lesson.questions
+      .map((question) => withLessonMetadata(question, lesson))
+      .find((question) => question.type === "single" && !progress.answered[questionKey(question)]) ??
+    lesson.questions.map((question) => withLessonMetadata(question, lesson)).find((question) => question.type === "single");
+  const signal = choiceQuestion ? questionSignalPreview(choiceQuestion) : null;
+  const receipts = learningReceiptReel(progress, 1).receipts;
+  const started = receipts.length > 0;
+
+  return {
+    title: "First 5 Minutes",
+    headline: started ? "Your first proof loop is started" : "Start with one picture and one choice",
+    lessonId: lesson.id,
+    lessonTitle: lesson.title,
+    chapterTitle: lesson.chapterTitle,
+    status: started ? "started" : "new",
+    nextAction: started ? "Read the receipt, then continue the lesson route." : "Look at the map, then answer one single-choice question.",
+    steps: [
+      {
+        id: "map",
+        label: "1 map",
+        text: diagram?.bridgeLine ?? "Read the concept map before answering."
+      },
+      {
+        id: "choice",
+        label: "1 choice",
+        text: signal?.tinyMove ?? "Pick one workflow signal."
+      },
+      {
+        id: "receipt",
+        label: "1 receipt",
+        text: receipts[0]?.nextUse ?? "The first answer prints a proof or review seed."
+      }
+    ],
+    guardrail: "No setup, no project task, no blank page.",
+    reward: signal?.reward ?? "Decision signal"
+  };
+}
+
 export function beginnerGlossaryCards(chapterId) {
   const chapter = course.chapters.find((item) => item.id === chapterId);
   const glossary = beginnerGlossary.find((item) => item.chapterId === chapterId);

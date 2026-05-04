@@ -25,6 +25,7 @@ import {
   dailyQuestSnapshot,
   dailyMissions,
   exerciseScopeCard,
+  firstFiveMinuteStartCard,
   gradeQuestion,
   gradePitchPractice,
   isAnswerReady,
@@ -134,6 +135,7 @@ function render() {
   const dailyLandingStep = dailyLandingStepCard(progress, Date.now());
   const momentum = dailyMomentum(progress, Date.now());
   const onboarding = onboardingState(progress);
+  const firstFive = firstFiveMinuteStartCard(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
   const bossReadiness = bossReadinessCard(progress, chapter.id);
@@ -212,6 +214,7 @@ function render() {
           </div>
         </section>
         ${renderOnboardingCard(onboarding)}
+        ${renderFirstFiveMinuteStartCard(firstFive)}
         ${renderExerciseScopeCard(exerciseScope)}
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderJobRoleFitCard(roleFit)}
@@ -1035,6 +1038,32 @@ function renderOnboardingCard(onboarding) {
           <span>${profile.description}</span>
         </button>`)
         .join("")}
+    </div>
+  </section>`;
+}
+
+function renderFirstFiveMinuteStartCard(card) {
+  if (!card) return "";
+  return `<section class="first-five-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.nextAction}</p>
+    </div>
+    <div class="first-five-grid">
+      ${card.steps
+        .map((step) => `<div>
+          <span>${step.label}</span>
+          <strong>${step.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="first-five-footer">
+      <span>${card.chapterTitle} / ${card.lessonTitle}</span>
+      <strong>${card.reward}</strong>
+      <em>${card.guardrail}</em>
     </div>
   </section>`;
 }

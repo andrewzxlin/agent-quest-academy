@@ -38,6 +38,7 @@ import {
   dailyQuestSnapshot,
   dailyMissions,
   exerciseScopeCard,
+  firstFiveMinuteStartCard,
   getDueReviewQuestions,
   gradePitchPractice,
   gradeQuestion,
@@ -88,6 +89,7 @@ import {
 const tests = [
   ["course has MVP scope", testCourseScope],
   ["onboarding profile starts empty and can be selected", testOnboardingProfile],
+  ["first five minute start keeps first run tiny", testFirstFiveMinuteStartCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["beginner glossary covers every chapter with plain-language terms", testBeginnerGlossaryCoverage],
   ["chapter visuals cover every chapter", testChapterVisuals],
@@ -212,6 +214,29 @@ function testOnboardingProfile() {
   state = onboardingState(progress);
   assert.equal(state.completed, false);
   assert.equal(state.questSteps.length, 0);
+}
+
+function testFirstFiveMinuteStartCard() {
+  const progress = createInitialProgress(1000);
+  let card = firstFiveMinuteStartCard(progress);
+  assert.equal(card.title, "First 5 Minutes");
+  assert.equal(card.status, "new");
+  assert.equal(card.steps.length, 3);
+  assert.deepEqual(card.steps.map((step) => step.id), ["map", "choice", "receipt"]);
+  assert.ok(card.steps.find((step) => step.id === "map").text.includes("workflow"));
+  assert.ok(card.steps.find((step) => step.id === "choice").text.includes("Choose"));
+  assert.ok(card.steps.find((step) => step.id === "receipt").text.includes("proof"));
+  assert.equal(card.reward, "Decision signal");
+  assert.ok(card.guardrail.includes("No setup"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const lesson = flattenLessons()[0];
+  const question = lesson.questions.find((item) => item.type === "single");
+  answerQuestion(progress, { ...question, lessonId: lesson.id }, question.answer, 1000);
+  card = firstFiveMinuteStartCard(progress);
+  assert.equal(card.status, "started");
+  assert.ok(card.headline.includes("proof loop"));
+  assert.ok(card.steps.find((step) => step.id === "receipt").text.includes("evidence"));
 }
 
 function testCourseCoverage() {

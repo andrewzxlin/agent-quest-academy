@@ -118,6 +118,12 @@
 - Complete beginners, AI users, and interview-focused learners see different routes after choosing a profile.
 - The routes keep the first steps concrete: glossary, micro-lessons, review, Boss, interview drill, and pitch practice.
 
+## First 5 Minutes
+
+- New learners now get a tiny first-run path: one concept map, one single-choice question, and one receipt.
+- The card makes the first useful loop visible before the learner has to understand the full app.
+- It keeps onboarding low-pressure with no setup, project task, or blank page.
+
 ## Ability Proof Cards
 
 - Progress is translated into "I can judge..." ability statements.
