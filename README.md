@@ -187,6 +187,12 @@
 - The line converts the current question into a reusable explanation of what the learner can recognize, connect, or explain.
 - This helps small quiz wins become interview-ready language without adding extra assignments.
 
+## Question Mastery Signals
+
+- After checking an answer, feedback now shows whether the question is in review, first pass, strengthening, or stable.
+- The signal is derived from the same correct and wrong counts used by spaced review.
+- This makes repeated practice feel visible without adding harder exercises.
+
 ## Lesson Pitch Builder
 
 - Every lesson now turns Recognize, Connect, and Explain progress into a three-line pitch.

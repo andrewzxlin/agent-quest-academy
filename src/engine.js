@@ -577,6 +577,41 @@ export function answerProofLine(question, result) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function questionMasterySignal(progress, question) {
+  const state = progress.answered[questionKey(question)];
+  if (!state) return null;
+  const stage = questionMasteryStage(question);
+  const level =
+    state.lastResult === "wrong"
+      ? "review"
+      : state.correctCount >= 3
+        ? "stable"
+        : state.correctCount >= 2
+          ? "strengthening"
+          : "first-pass";
+  const titleByLevel = {
+    review: "Review signal",
+    "first-pass": "First clear pass",
+    strengthening: "Recall strengthening",
+    stable: "Stable signal"
+  };
+  const bodyByLevel = {
+    review: `This ${stage.label} question is now in review, so it will come back before it becomes a weak spot.`,
+    "first-pass": `You have one clean ${stage.label} pass. The next review will check whether it sticks.`,
+    strengthening: `You have repeated this ${stage.label} signal correctly. Keep it short and automatic.`,
+    stable: `This ${stage.label} signal is becoming stable enough to use in a job-facing explanation.`
+  };
+
+  return {
+    level,
+    title: titleByLevel[level],
+    body: bodyByLevel[level],
+    correctCount: state.correctCount,
+    wrongCount: state.wrongCount,
+    nextReviewAt: state.nextReviewAt
+  };
+}
+
 export function mistakeRescuePrompt(question, result) {
   if (result.correct) return null;
   if (question.type === "single") {

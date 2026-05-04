@@ -57,6 +57,7 @@ import {
   onboardingState,
   pitchPracticeCard,
   questionCoachHint,
+  questionMasterySignal,
   questionMasteryStage,
   reviewRhythmCard,
   reviewStats,
@@ -85,6 +86,7 @@ const tests = [
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
+  ["question mastery signals show recall progress", testQuestionMasterySignals],
   ["answer recall cues turn answers into next-time signals", testAnswerRecallCues],
   ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
   ["single choice grading works", testSingleChoice],
@@ -534,6 +536,35 @@ function testAnswerProofLines() {
     assert.ok(proof.body.includes("workflow"));
     assert.doesNotMatch(`${proof.title} ${proof.body}`, /repo|project implementation|build a project/i);
   }
+}
+
+function testQuestionMasterySignals() {
+  const progress = createInitialProgress(1000);
+  const question = flattenQuestions().find((item) => item.type === "single");
+  assert.equal(questionMasterySignal(progress, question), null);
+
+  answerQuestion(progress, question, 99, 1000);
+  let signal = questionMasterySignal(progress, question);
+  assert.equal(signal.level, "review");
+  assert.equal(signal.correctCount, 0);
+  assert.equal(signal.wrongCount, 1);
+  assert.ok(signal.body.includes("review"));
+  assert.doesNotMatch(JSON.stringify(signal), /repo|project implementation|build a project/i);
+
+  answerQuestion(progress, question, question.answer, 1000);
+  signal = questionMasterySignal(progress, question);
+  assert.equal(signal.level, "first-pass");
+  assert.equal(signal.correctCount, 1);
+  assert.equal(signal.wrongCount, 1);
+
+  answerQuestion(progress, question, question.answer, 2000);
+  signal = questionMasterySignal(progress, question);
+  assert.equal(signal.level, "strengthening");
+
+  answerQuestion(progress, question, question.answer, 3000);
+  signal = questionMasterySignal(progress, question);
+  assert.equal(signal.level, "stable");
+  assert.ok(signal.body.includes("job-facing explanation"));
 }
 
 function testAnswerRecallCues() {

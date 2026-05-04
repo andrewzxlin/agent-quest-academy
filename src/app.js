@@ -44,6 +44,7 @@ import {
   onboardingState,
   pitchPracticeCard,
   questionCoachHint,
+  questionMasterySignal,
   questionMasteryStage,
   reviewRhythmCard,
   reviewStats,
@@ -212,7 +213,7 @@ function render() {
           ${renderQuestionCoach(questionCoachHint(question))}
           ${renderChoiceEliminationHint(choiceEliminationHint(question))}
           ${renderQuestion(question)}
-          ${checked ? renderFeedback(question, lastResult) : ""}
+          ${checked ? renderFeedback(question, lastResult, progress) : ""}
           <div class="actions">
             <button class="primary" data-check="true" ${checked || !answerReady ? "disabled" : ""}>檢查答案</button>
             <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
@@ -902,12 +903,13 @@ function renderShortAnswerSupport(support) {
   </div>`;
 }
 
-function renderFeedback(question, result) {
+function renderFeedback(question, result, progressState) {
   const tone = result.correct ? "correct" : "wrong";
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
     ${renderAnswerProofLine(answerProofLine(question, result))}
+    ${renderQuestionMasterySignal(questionMasterySignal(progressState, question))}
     ${renderRecallCue(answerRecallCue(question, result))}
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
@@ -919,6 +921,15 @@ function renderAnswerProofLine(proof) {
   return `<div class="answer-proof-line">
     <span>${proof.title}</span>
     <p>${proof.body}</p>
+  </div>`;
+}
+
+function renderQuestionMasterySignal(signal) {
+  if (!signal) return "";
+  return `<div class="question-mastery-signal ${signal.level}">
+    <span>${signal.title}</span>
+    <p>${signal.body}</p>
+    <small>${signal.correctCount} correct / ${signal.wrongCount} review misses</small>
   </div>`;
 }
 
