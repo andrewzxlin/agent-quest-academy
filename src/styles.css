@@ -407,6 +407,10 @@ h1 {
   font-weight: 800;
 }
 
+.role-fit-action {
+  margin-top: 10px;
+}
+
 .role-fit-track.building-evidence,
 .role-fit-track.interview-ready {
   background: #f0fdf4;

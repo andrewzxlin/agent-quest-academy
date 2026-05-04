@@ -707,6 +707,8 @@ export function careerReadinessSnapshot(progress, now = Date.now()) {
 
 export function jobRoleFitCard(progress) {
   const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
+  const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
+  const gatesByChapter = new Map(chapterGateMap(progress).map((gate) => [gate.chapterId, gate]));
   const tracks = ROLE_FIT_TRACKS.map((track) => {
     const pieces = track.chapterIds.map((chapterId) => proofsByChapter.get(chapterId)).filter(Boolean);
     const readyPieces = pieces.filter((piece) => ["proven", "interview_ready"].includes(piece.status));
@@ -728,6 +730,7 @@ export function jobRoleFitCard(progress) {
       total: pieces.length,
       level,
       nextGap: next?.title ?? "All role signals are ready",
+      recommendedPractice: roleFitRecommendedPractice(progress, next, chaptersById, gatesByChapter),
       nextAction: next
         ? `Next: make ${next.title} Boss-proven, then explain it in interview practice.`
         : "Next: rehearse the strongest 60-second pitch."
@@ -741,6 +744,36 @@ export function jobRoleFitCard(progress) {
     summary: strongest.readyCount > 0 ? `Strongest path now: ${strongest.title}` : "Start with any path; all begin with low-friction drills.",
     tracks
   };
+}
+
+function roleFitRecommendedPractice(progress, next, chaptersById, gatesByChapter) {
+  if (!next) return { type: "pitch", chapterId: progress.bossResults?.find((item) => item.passed)?.chapterId ?? "agent-basics", cta: "練 60 秒 pitch" };
+  const chapter = chaptersById.get(next.chapterId);
+  const gate = gatesByChapter.get(next.chapterId);
+  if (gate?.lessonsUnlocked === false) {
+    return roleFitPrerequisitePractice(progress, next.chapterId, chaptersById);
+  }
+  if (chapter && chapter.completedLessons < chapter.totalLessons) {
+    const lessonIndex = flattenLessons().findIndex((lesson) => lesson.chapterId === next.chapterId && !progress.completedLessons.includes(lesson.id));
+    return { type: "lesson", chapterId: next.chapterId, lessonIndex: Math.max(0, lessonIndex), cta: "練這條路線" };
+  }
+  if (!chapter?.bossPassed) {
+    return { type: "boss", chapterId: next.chapterId, cta: "挑戰 Boss" };
+  }
+  return { type: "interview", chapterId: next.chapterId, cta: "練面試情境" };
+}
+
+function roleFitPrerequisitePractice(progress, targetChapterId, chaptersById) {
+  const targetIndex = course.chapters.findIndex((chapter) => chapter.id === targetChapterId);
+  const prerequisite = course.chapters.slice(0, Math.max(0, targetIndex)).find((chapter) => !chaptersById.get(chapter.id)?.bossPassed);
+  if (!prerequisite) return { type: "locked", chapterId: targetChapterId, cta: "先解鎖前置章節" };
+
+  const chapter = chaptersById.get(prerequisite.id);
+  if (chapter.completedLessons < chapter.totalLessons) {
+    const lessonIndex = flattenLessons().findIndex((lesson) => lesson.chapterId === prerequisite.id && !progress.completedLessons.includes(lesson.id));
+    return { type: "lesson", chapterId: prerequisite.id, lessonIndex: Math.max(0, lessonIndex), cta: "先補前置短課" };
+  }
+  return { type: "boss", chapterId: prerequisite.id, cta: "先通過前置 Boss" };
 }
 
 export function jobEvidenceBrief(progress, now = Date.now()) {

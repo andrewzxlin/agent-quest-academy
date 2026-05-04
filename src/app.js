@@ -417,6 +417,7 @@ function renderJobRoleFitCard(card) {
           <small>${track.readyCount}/${track.total} ready · ${track.practicingCount} practicing</small>
           <em>${track.nextGap}</em>
           <small>${track.nextAction}</small>
+          <button class="secondary compact role-fit-action" data-role-practice="${index}" ${track.recommendedPractice.type === "locked" ? "disabled" : ""}>${track.recommendedPractice.cta}</button>
         </div>`)
         .join("")}
     </div>
@@ -871,6 +872,14 @@ function bindEvents() {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 
+  document.querySelectorAll("[data-role-practice]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const roleFit = jobRoleFitCard(progress);
+      const track = roleFit.tracks[Number(button.dataset.rolePractice)];
+      startRecommendedPractice(track.recommendedPractice);
+    });
+  });
+
   document.querySelectorAll("[data-profile]").forEach((button) => {
     button.addEventListener("click", () => {
       progress = selectLearnerProfile(progress, button.dataset.profile);
@@ -1057,6 +1066,9 @@ function startRecommendedPractice(recommendation) {
     progress.currentLessonIndex = selectedLessonIndex;
     sessionMode = "lesson";
     sessionQuestions = [];
+  } else if (recommendation.type === "pitch") {
+    activePitch = pitchPracticeCard(progress, recommendation.chapterId);
+    pitchAnswer = "";
   }
 
   saveProgress(progress);

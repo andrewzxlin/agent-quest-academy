@@ -809,6 +809,9 @@ function testJobRoleFitCard() {
   assert.equal(card.tracks.length, 3);
   assert.ok(card.tracks.every((track) => track.readyCount === 0));
   assert.ok(card.tracks.every((track) => track.total === 4));
+  assert.ok(card.tracks.every((track) => track.recommendedPractice.cta.length > 0));
+  assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").recommendedPractice.type, "lesson");
+  assert.equal(card.tracks.find((track) => track.id === "agent-reliability-builder").recommendedPractice.type, "lesson");
   assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|專案實作/i);
 
   const chapter = course.chapters[0];
@@ -820,6 +823,9 @@ function testJobRoleFitCard() {
   assert.ok(card.summary.includes("AI App Builder") || card.summary.includes("Agent Workflow Builder"));
   assert.ok(card.tracks.some((track) => track.readyCount === 1));
   assert.ok(card.tracks.some((track) => track.nextAction.includes("Boss-proven")));
+  assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").recommendedPractice.type, "lesson");
+  assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").recommendedPractice.type, "lesson");
+  assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").recommendedPractice.chapterId, "tools");
 }
 
 function testJobEvidenceBrief() {
