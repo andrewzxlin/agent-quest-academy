@@ -734,6 +734,102 @@ h1 {
   line-height: 1.35;
 }
 
+.mission-dock-card {
+  background: #ffffff;
+  border: 1px solid #bae6fd;
+  border-radius: 14px;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.mission-dock-copy {
+  align-items: end;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.mission-dock-copy h3 {
+  font-size: 22px;
+  margin-top: 4px;
+}
+
+.mission-dock-copy p,
+.mission-dock-card small,
+.mission-dock-card span {
+  color: var(--muted);
+}
+
+.mission-dock-lanes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.mission-dock-lanes > div {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  display: grid;
+  gap: 5px;
+  min-height: 118px;
+  padding: 11px;
+}
+
+.mission-dock-lanes > div.active {
+  background: #eff6ff;
+  border-color: #60a5fa;
+}
+
+.mission-dock-lanes > div.done,
+.mission-dock-lanes > div.started,
+.mission-dock-lanes > div.ready,
+.mission-dock-lanes > div.scheduled {
+  border-color: #86efac;
+}
+
+.mission-dock-lanes > div.due {
+  border-color: #fdba74;
+}
+
+.mission-dock-lanes span,
+.mission-dock-lanes strong,
+.mission-dock-lanes small,
+.mission-dock-action span,
+.mission-dock-action strong,
+.mission-dock-action small {
+  display: block;
+}
+
+.mission-dock-lanes span,
+.mission-dock-action span {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mission-dock-lanes strong {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.mission-dock-action {
+  align-items: center;
+  background: #f0f9ff;
+  border: 1px solid rgb(14 165 233 / 0.16);
+  border-radius: 10px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.mission-dock-action strong,
+.mission-dock-action small {
+  margin-top: 4px;
+}
+
 .quest-brief-card {
   align-items: stretch;
   background: #0f172a;
@@ -7726,6 +7822,7 @@ button:disabled {
   .quest-brief-card,
   .landing-mission-strip,
   .start-here-card,
+  .mission-dock-copy,
   .completion-card,
   .recommendation-card,
   .dashboard-mode-card,
@@ -7816,6 +7913,7 @@ button:disabled {
   .image-quest-panels,
   .landing-mission-route,
   .start-here-steps,
+  .mission-dock-lanes,
   .quest-brief-lanes,
   .beginner-skill-gate-path,
   .beginner-route-rail,
@@ -7954,6 +8052,11 @@ button:disabled {
   }
 
   .role-quest-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mission-dock-action {
     align-items: stretch;
     flex-direction: column;
   }

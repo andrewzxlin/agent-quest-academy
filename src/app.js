@@ -14,6 +14,7 @@ import {
   answerRunChainCard,
   answerQuestion,
   beginnerGlossaryCards,
+  beginnerMissionDockCard,
   beginnerSkillMapCard,
   bossGateTeaserCard,
   bossReadinessCard,
@@ -197,6 +198,7 @@ function render() {
   const firstFive = firstFiveMinuteStartCard(progress);
   const focusGuard = focusGuardCard(progress, Date.now());
   const startHere = startHereCard(progress, Date.now());
+  const missionDock = beginnerMissionDockCard(progress, Date.now());
   const questBrief = questBriefCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
@@ -317,6 +319,7 @@ function render() {
         ${renderQuestBriefCard(questBrief)}
         ${renderLandingMissionStripCard(landingMission)}
         ${renderStartHereCard(startHere)}
+        ${renderBeginnerMissionDockCard(missionDock)}
         ${renderDashboardModeCard(dashboardMode)}
         ${renderOnboardingCard(onboarding)}
         ${renderFocusGuardCard(focusGuard)}
@@ -806,6 +809,37 @@ function renderStartHereCard(card) {
     <button class="primary" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
       ${card.actionLabel}
     </button>
+  </section>`;
+}
+
+function renderBeginnerMissionDockCard(card) {
+  return `<section class="mission-dock-card">
+    <div class="mission-dock-copy">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.summary}</p>
+    </div>
+    <div class="mission-dock-lanes">
+      ${card.lanes
+        .map((lane) => `<div class="${lane.status}">
+          <span>${lane.label}</span>
+          <strong>${lane.value}</strong>
+          <small>${lane.detail}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="mission-dock-action">
+      <div>
+        <span>${card.progressLabel}</span>
+        <strong>${card.nextMove}</strong>
+        <small>${card.reassurance}</small>
+      </div>
+      <button class="primary compact" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
+        ${card.actionLabel}
+      </button>
+    </div>
   </section>`;
 }
 

@@ -321,6 +321,78 @@ export function startHereCard(progress, now = Date.now()) {
   };
 }
 
+export function beginnerMissionDockCard(progress, now = Date.now()) {
+  const start = startHereCard(progress, now);
+  const minimum = dailyMinimumCard(progress, now);
+  const landing = landingMissionStripCard(progress, now);
+  const role = roleQuestBoardCard(progress, now);
+  const packet = jobPacketPreviewCard(progress, now);
+  const review = reviewOrbitCard(progress, now);
+  const roleStarted = role.tracks.some((track) => track.sampled || ["started", "boss-proven", "complete"].includes(track.status));
+  const activeId =
+    start.action.kind === "profile" || start.mode === "first-step"
+      ? "start"
+      : review.mode === "due"
+        ? "review"
+        : minimum.status !== "done"
+          ? "daily"
+          : !roleStarted
+            ? "role"
+            : packet.status !== "ready"
+              ? "packet"
+              : "start";
+  const lanes = [
+    {
+      id: "start",
+      label: "Start",
+      status: activeId === "start" ? "active" : landing.percent > 0 ? "done" : "open",
+      value: start.steps[0].text,
+      detail: start.promise
+    },
+    {
+      id: "daily",
+      label: "Daily",
+      status: activeId === "daily" ? "active" : minimum.status,
+      value: minimum.headline,
+      detail: `${minimum.doneCount}/${minimum.totalCount} checks`
+    },
+    {
+      id: "role",
+      label: "Role",
+      status: activeId === "role" ? "active" : roleStarted ? "started" : "open",
+      value: role.activeRole,
+      detail: role.activeMove
+    },
+    {
+      id: "packet",
+      label: "Packet",
+      status: activeId === "packet" ? "active" : packet.status,
+      value: packet.headline,
+      detail: `${packet.readyCount}/${packet.totalCount} pieces`
+    },
+    {
+      id: "review",
+      label: "Review",
+      status: activeId === "review" ? "active" : review.mode,
+      value: review.headline,
+      detail: review.nextAction
+    }
+  ];
+
+  return {
+    title: "Mission Dock",
+    headline: "One glance shows the next playable move",
+    summary: "Start, daily practice, role fit, job packet, and review stay in one compact control strip.",
+    action: start.action,
+    actionLabel: start.actionLabel,
+    activeId,
+    nextMove: lanes.find((lane) => lane.id === activeId)?.value ?? start.steps[0].text,
+    progressLabel: `${landing.percent}% landing / ${packet.readyCount}/${packet.totalCount} packet`,
+    reassurance: "The dock points to one tiny action; every other lane can wait.",
+    lanes
+  };
+}
+
 export function questBriefCard(progress, now = Date.now()) {
   const next = nextPracticeRecommendation(progress, now);
   const packet = jobPacketPreviewCard(progress, now);
