@@ -43,6 +43,7 @@
 - Cards summarize the result, the relevant job-facing skill, and the next recommended action.
 - Cards also show which role path the completed step supports.
 - Cards now include a reward strip for XP, role signal, and next unlock so each session feels like a small quest turn-in.
+- Cards now include a Saved / Reuse / Next exit ticket, so a learner leaves each run with one banked proof, one reusable role signal, and one tiny next step.
 - This keeps the loop game-like while still pointing back to interview-ready explanations.
 
 ## Next Practice Recommendation

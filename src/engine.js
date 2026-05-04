@@ -2057,6 +2057,8 @@ export function dailyMomentum(progress, now = Date.now()) {
 export function completionCard(progress, event) {
   const summariesByChapter = new Map(chapterSummaryCards(progress).map((item) => [item.chapterId, item]));
   const summary = event.chapterId ? summariesByChapter.get(event.chapterId) : null;
+  const roleSignal = roleFitCompletionLine(event.chapterId);
+  const nextAction = summary?.nextAction ?? "Keep going with the next tiny practice step.";
   const titleByType = {
     lesson: "Micro-lesson cleared",
     boss: event.passed ? "Boss cleared" : "Boss needs another run",
@@ -2075,12 +2077,9 @@ export function completionCard(progress, event) {
         : event.type === "review"
           ? "錯題與間隔複習已更新"
           : "進度、XP 與複習排程已更新",
-    roleSignal: roleFitCompletionLine(event.chapterId),
-    rewards: completionRewards(
-      event,
-      roleFitCompletionLine(event.chapterId),
-      summary?.nextAction ?? "Keep going with the next tiny practice step."
-    ),
+    roleSignal,
+    rewards: completionRewards(event, roleSignal, nextAction),
+    exitTicket: completionExitTicket(event, roleSignal, nextAction),
     nextAction: summary?.nextAction ?? "繼續下一個低阻力練習。"
   };
 }
@@ -2118,6 +2117,37 @@ function completionRewards(event, roleSignal, nextAction) {
       id: "next",
       label: "Next unlock",
       detail: nextAction
+    }
+  ];
+}
+
+function completionExitTicket(event, roleSignal, nextAction) {
+  const saved =
+    event.type === "review"
+      ? "A weak pattern was moved back into recall."
+      : event.type === "boss"
+        ? event.passed
+          ? "A chapter proof was saved."
+          : "A retry target was saved."
+        : event.type === "interview"
+          ? "One interview wording pass was saved."
+          : "One micro-lesson receipt was saved.";
+
+  return [
+    {
+      id: "saved",
+      label: "Saved",
+      text: saved
+    },
+    {
+      id: "reuse",
+      label: "Reuse",
+      text: roleSignal
+    },
+    {
+      id: "next",
+      label: "Next",
+      text: nextAction
     }
   ];
 }

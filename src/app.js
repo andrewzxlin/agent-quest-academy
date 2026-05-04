@@ -444,6 +444,14 @@ function renderCompletionCard(card) {
           </div>`)
           .join("")}
       </div>
+      <div class="completion-exit-ticket">
+        ${(card.exitTicket ?? [])
+          .map((item) => `<div>
+            <span>${item.label}</span>
+            <small>${item.text}</small>
+          </div>`)
+          .join("")}
+      </div>
       <span>${card.nextAction}</span>
       <button class="secondary compact" data-dismiss-completion="true">繼續練習</button>
     </div>

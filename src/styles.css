@@ -294,6 +294,32 @@ h1 {
   margin-top: 4px;
 }
 
+.completion-exit-ticket {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.completion-exit-ticket div {
+  border-left: 3px solid rgb(22 163 74 / 0.55);
+  padding-left: 10px;
+}
+
+.completion-exit-ticket span {
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.completion-exit-ticket small {
+  color: var(--muted);
+  display: block;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
 .completion-card.boss {
   background: #eff6ff;
   border-color: #bfdbfe;
