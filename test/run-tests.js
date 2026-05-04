@@ -32,6 +32,7 @@ import {
   getDueReviewQuestions,
   gradePitchPractice,
   gradeQuestion,
+  isAnswerReady,
   jobReadinessMap,
   jobScenarioCard,
   masteryForLesson,
@@ -62,6 +63,7 @@ const tests = [
   ["choice feedback covers every selectable option", testChoiceFeedback],
   ["short answer keyword grading works", testShortAnswer],
   ["short answer feedback includes matches missing keywords and sample answer", testShortAnswerFeedback],
+  ["empty answers are not treated as correct", testEmptyAnswersAreNotCorrect],
   ["wrong answer is added to due review", testWrongAnswerReview],
   ["correct answer schedules future review", testCorrectAnswerReview],
   ["lesson completion advances progress", testLessonCompletion],
@@ -304,6 +306,23 @@ function testShortAnswerFeedback() {
     assert.equal(result.missing.length, question.keywords.length - 1);
     assert.equal(result.expected, question.keywords);
   }
+}
+
+function testEmptyAnswersAreNotCorrect() {
+  const single = flattenQuestions().find((item) => item.type === "single" && item.answer === 0);
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  assert.equal(isAnswerReady(single, null), false);
+  assert.equal(gradeQuestion(single, null).correct, false);
+  assert.equal(isAnswerReady(multi, []), false);
+  assert.equal(gradeQuestion(multi, []).correct, false);
+  assert.equal(isAnswerReady(short, ""), false);
+  assert.equal(gradeQuestion(short, "").correct, false);
+
+  const progress = createInitialProgress(1000);
+  answerQuestion(progress, single, null, 1000);
+  assert.equal(getDueReviewQuestions(progress, 1000, 1)[0].id, single.id);
 }
 
 function testWrongAnswerReview() {

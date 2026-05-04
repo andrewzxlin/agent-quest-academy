@@ -18,6 +18,7 @@ import {
   dailyMissions,
   gradeQuestion,
   gradePitchPractice,
+  isAnswerReady,
   jobReadinessMap,
   jobScenarioCard,
   loadProgress,
@@ -81,6 +82,7 @@ function render() {
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
   const isBossMode = sessionMode === "boss";
+  const answerReady = isAnswerReady(question, getResponse(question));
 
   root.innerHTML = `
     <div class="shell">
@@ -166,7 +168,8 @@ function render() {
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult) : ""}
           <div class="actions">
-            <button class="primary" data-check="true" ${checked ? "disabled" : ""}>檢查答案</button>
+            <button class="primary" data-check="true" ${checked || !answerReady ? "disabled" : ""}>檢查答案</button>
+            <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
             <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : isBossMode ? "結算 Boss" : "完成本課") : "下一題"}</button>
           </div>
         </section>
@@ -705,17 +708,11 @@ function bindEvents() {
   });
 
   document.querySelector("[data-check]")?.addEventListener("click", () => {
-    const question = sessionQuestions[currentIndex];
-    const response = getResponse(question);
-    lastResult = gradeQuestion(question, response);
-    const answered = answerQuestion(progress, question, response);
-    progress = answered.progress;
-    if (sessionMode === "boss" && lastResult.correct) {
-      bossScore += 1;
-    }
-    checked = true;
-    saveProgress(progress);
-    render();
+    submitCurrentAnswer(getResponse(sessionQuestions[currentIndex]));
+  });
+
+  document.querySelector("[data-unsure]")?.addEventListener("click", () => {
+    submitCurrentAnswer(getUnsureResponse(sessionQuestions[currentIndex]));
   });
 
   document.querySelector("[data-next]")?.addEventListener("click", () => {
@@ -829,6 +826,25 @@ function getResponse(question) {
   if (question.type === "single") return selectedSingle;
   if (question.type === "multi") return [...selectedMulti];
   return shortAnswer;
+}
+
+function getUnsureResponse(question) {
+  if (question.type === "multi") return [];
+  if (question.type === "short") return "";
+  return null;
+}
+
+function submitCurrentAnswer(response) {
+  const question = sessionQuestions[currentIndex];
+  lastResult = gradeQuestion(question, response);
+  const answered = answerQuestion(progress, question, response);
+  progress = answered.progress;
+  if (sessionMode === "boss" && lastResult.correct) {
+    bossScore += 1;
+  }
+  checked = true;
+  saveProgress(progress);
+  render();
 }
 
 function clearAnswerState() {

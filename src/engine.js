@@ -125,7 +125,7 @@ export function selectLearnerProfile(progress, profileId) {
 export function gradeQuestion(question, response) {
   if (question.type === "single") {
     return {
-      correct: Number(response) === question.answer,
+      correct: isAnswerReady(question, response) && Number(response) === question.answer,
       expected: question.answer
     };
   }
@@ -133,7 +133,7 @@ export function gradeQuestion(question, response) {
     const expected = [...question.answer].sort((a, b) => a - b);
     const actual = [...(response ?? [])].map(Number).sort((a, b) => a - b);
     return {
-      correct: JSON.stringify(expected) === JSON.stringify(actual),
+      correct: isAnswerReady(question, response) && JSON.stringify(expected) === JSON.stringify(actual),
       expected
     };
   }
@@ -146,6 +146,19 @@ export function gradeQuestion(question, response) {
       matches,
       missing: question.keywords.filter((keyword) => !matches.includes(keyword))
     };
+  }
+  throw new Error(`Unknown question type: ${question.type}`);
+}
+
+export function isAnswerReady(question, response) {
+  if (question.type === "single") {
+    return response !== null && response !== undefined && response !== "";
+  }
+  if (question.type === "multi") {
+    return Array.isArray(response) && response.length > 0;
+  }
+  if (question.type === "short") {
+    return `${response ?? ""}`.trim().length > 0;
   }
   throw new Error(`Unknown question type: ${question.type}`);
 }
