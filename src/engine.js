@@ -1562,6 +1562,53 @@ export function dailyMinimumCard(progress, now = Date.now()) {
   };
 }
 
+export function questCompass(progress, now = Date.now()) {
+  const next = nextPracticeRecommendation(progress, now);
+  const receiptCount = learningReceiptReel(progress, 3).receipts.length;
+  const rewardByType = {
+    review: "Repair one weak signal before learning anything new.",
+    lesson: "Add one fresh Recognize / Connect / Explain receipt.",
+    boss: "Convert a chapter into Boss-proven evidence.",
+    interview: "Turn proven judgment into interview-ready language.",
+    done: "Keep the loop warm with review or pitch rehearsal."
+  };
+  const unlockByType = {
+    review: "Cleaner recall",
+    lesson: "New receipt",
+    boss: "Proof gate",
+    interview: "Interview line",
+    done: "Maintenance rhythm"
+  };
+
+  return {
+    title: "Quest Compass",
+    missionType: next.type,
+    target: next.title,
+    cta: next.cta,
+    why: next.reason,
+    reward: rewardByType[next.type] ?? rewardByType.lesson,
+    unlock: unlockByType[next.type] ?? unlockByType.lesson,
+    receiptCount,
+    steps: [
+      {
+        id: "start",
+        label: "Start",
+        text: "Take the recommended action."
+      },
+      {
+        id: "capture",
+        label: "Capture",
+        text: "Let the answer become a proof or review receipt."
+      },
+      {
+        id: "reuse",
+        label: "Reuse",
+        text: "Use that receipt as one job-facing explanation seed."
+      }
+    ]
+  };
+}
+
 export function dailyMomentum(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   const activeToday = isActiveDay(activity);

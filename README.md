@@ -51,6 +51,12 @@
 - Due review is prioritized first, then unfinished lessons, Boss checks, and interview practice.
 - The recommendation removes decision friction so beginners can keep moving without planning the curriculum themselves.
 
+## Quest Compass
+
+- The recommended action now becomes a small game-like quest compass.
+- It shows the target, reward, unlock, and a three-step loop: Start, Capture, Reuse.
+- The compass reuses existing lessons, review, Boss, and interview drills rather than adding extra assignments.
+
 ## 60-Second Pitch Practice
 
 - Chapter summary cards can open a lightweight interview pitch drill.

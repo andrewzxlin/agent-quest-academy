@@ -27,6 +27,7 @@ import {
   gradeQuestion,
   gradePitchPractice,
   isAnswerReady,
+  questCompass,
   jobReadinessMap,
   jobEvidenceBrief,
   landingReadinessChecklist,
@@ -101,6 +102,7 @@ function render() {
   const stats = reviewStats(progress, Date.now());
   const reviewRhythm = reviewRhythmCard(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
+  const compass = questCompass(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const roleFit = jobRoleFitCard(progress);
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
@@ -201,6 +203,7 @@ function render() {
         ${renderMistakeFocusCard(mistakeFocus)}
         ${renderLearningPuzzleBoard(puzzle)}
         ${renderRecommendationCard(recommendation)}
+        ${renderQuestCompass(compass)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
         ${renderJobScenarioCard(jobScenario)}
@@ -431,6 +434,28 @@ function renderRecommendationCard(recommendation) {
       <p>${recommendation.reason}</p>
     </div>
     <button class="primary compact" data-recommend="true" ${recommendation.type === "done" ? "disabled" : ""}>${recommendation.cta}</button>
+  </section>`;
+}
+
+function renderQuestCompass(compass) {
+  return `<section class="quest-compass ${compass.missionType}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${compass.title}</p>
+        <h3>${compass.target}</h3>
+      </div>
+      <p>${compass.receiptCount} recent receipts - unlock: ${compass.unlock}</p>
+    </div>
+    <p>${compass.why}</p>
+    <strong>${compass.reward}</strong>
+    <div class="compass-steps">
+      ${compass.steps
+        .map((step) => `<div>
+          <span>${step.label}</span>
+          <small>${step.text}</small>
+        </div>`)
+        .join("")}
+    </div>
   </section>`;
 }
 

@@ -44,6 +44,7 @@ import {
   jobReadinessMap,
   jobEvidenceBrief,
   landingReadinessChecklist,
+  questCompass,
   jobRoleFitCard,
   jobScenarioCard,
   lessonAnalogyBridge,
@@ -119,6 +120,7 @@ const tests = [
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
   ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
+  ["quest compass turns recommendation into a game-like next step", testQuestCompass],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
@@ -956,6 +958,36 @@ function testDailyMinimumCard() {
   assert.equal(card.doneCount, 3);
   assert.equal(card.checks.find((check) => check.id === "answer-one").done, true);
   assert.ok(card.headline.includes("banked"));
+}
+
+function testQuestCompass() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let compass = questCompass(progress, now);
+  assert.equal(compass.title, "Quest Compass");
+  assert.equal(compass.missionType, "lesson");
+  assert.equal(compass.unlock, "New receipt");
+  assert.equal(compass.receiptCount, 0);
+  assert.deepEqual(compass.steps.map((step) => step.id), ["start", "capture", "reuse"]);
+  assert.ok(compass.reward.includes("Recognize"));
+  assert.doesNotMatch(JSON.stringify(compass), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, 99, now);
+  compass = questCompass(progress, now);
+  assert.equal(compass.missionType, "review");
+  assert.equal(compass.unlock, "Cleaner recall");
+  assert.equal(compass.receiptCount, 1);
+  assert.ok(compass.reward.includes("Repair"));
+
+  const bossProgress = createInitialProgress(now);
+  const chapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(bossProgress, lesson.id, now);
+  }
+  compass = questCompass(bossProgress, now);
+  assert.equal(compass.missionType, "boss");
+  assert.equal(compass.unlock, "Proof gate");
 }
 
 function testDailyMomentum() {

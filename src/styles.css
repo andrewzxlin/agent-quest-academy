@@ -349,6 +349,59 @@ h1 {
   border-color: #86efac;
 }
 
+.quest-compass {
+  background: #0f172a;
+  border: 1px solid rgb(148 163 184 / 0.34);
+  border-radius: 14px;
+  color: white;
+  padding: 20px;
+}
+
+.quest-compass .eyebrow,
+.quest-compass h3,
+.quest-compass strong {
+  color: white;
+}
+
+.quest-compass p {
+  color: rgb(226 232 240 / 0.82);
+}
+
+.quest-compass > strong {
+  display: block;
+  margin-top: 10px;
+}
+
+.compass-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.compass-steps div {
+  background: rgb(255 255 255 / 0.08);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.compass-steps span,
+.compass-steps small {
+  display: block;
+}
+
+.compass-steps span {
+  color: #facc15;
+  font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.compass-steps small {
+  color: rgb(226 232 240 / 0.86);
+}
+
 .career-snapshot {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -2777,6 +2830,7 @@ button:disabled {
   .hero-card,
   .completion-card,
   .recommendation-card,
+  .quest-compass,
   .career-snapshot,
   .landing-checklist-card,
   .job-evidence-brief,
@@ -2808,6 +2862,7 @@ button:disabled {
   .landing-checklist-grid,
   .evidence-story-seeds,
   .receipt-grid,
+  .compass-steps,
   .practice-plan-grid,
   .warmup-step-grid,
   .analogy-bridge-grid,
