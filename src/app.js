@@ -53,6 +53,7 @@ import {
   jobReadinessMap,
   jobEvidenceBrief,
   jobPacketPreviewCard,
+  jobPacketShowcaseCard,
   jobSignalPassport,
   landingGapRadar,
   landingReadinessChecklist,
@@ -198,6 +199,7 @@ function render() {
   const interviewPreview = interviewUnlockPreviewCard(progress);
   const pitchPreview = pitchUnlockPreviewCard(progress);
   const jobPacketPreview = jobPacketPreviewCard(progress, Date.now());
+  const jobPacketShowcase = jobPacketShowcaseCard(progress, Date.now());
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
@@ -303,6 +305,7 @@ function render() {
           interviewPreview,
           pitchPreview,
           jobPacketPreview,
+          jobPacketShowcase,
           zeroToLandingQuest,
           roleSampler,
           jargonShield,
@@ -955,6 +958,7 @@ function renderBeginnerCommandCenter(cards) {
         ${renderInterviewUnlockPreviewCard(cards.interviewPreview)}
         ${renderPitchUnlockPreviewCard(cards.pitchPreview)}
         ${renderJobPacketPreviewCard(cards.jobPacketPreview)}
+        ${renderJobPacketShowcaseCard(cards.jobPacketShowcase)}
         ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
         ${renderRoleSamplerCard(cards.roleSampler)}
         ${renderJargonShieldCard(cards.jargonShield)}
@@ -1201,6 +1205,33 @@ function renderJobPacketPreviewCard(card) {
     <div class="job-packet-action">
       <small>${card.promise}</small>
       <button class="primary compact" data-job-packet-action="${card.action.chapterId ?? ""}">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderJobPacketShowcaseCard(card) {
+  if (!card) return "";
+  return `<section class="job-packet-showcase-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.status}</p>
+    </div>
+    <p class="showcase-summary">${card.summary}</p>
+    <div class="packet-showcase-lines">
+      ${card.lines
+        .map((line, index) => `<div>
+          <span>${String(index + 1).padStart(2, "0")}</span>
+          <strong>${line.label}</strong>
+          <small>${line.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="packet-showcase-rehearsal">
+      <strong>${card.rehearsal}</strong>
+      <small>${card.promise}</small>
     </div>
   </section>`;
 }

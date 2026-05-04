@@ -3021,6 +3021,46 @@ export function jobPacketPreviewCard(progress, now = Date.now()) {
   };
 }
 
+export function jobPacketShowcaseCard(progress, now = Date.now()) {
+  const packet = jobPacketPreviewCard(progress, now);
+  const passport = jobSignalPassport(progress, now);
+  const receipts = learningReceiptReel(progress, 1).receipts;
+  const roleStamp = passport.stamps.find((stamp) => stamp.id === "role");
+  const evidenceItem = packet.items.find((item) => item.id === "evidence");
+  const latestReceipt = receipts[0] ?? null;
+  const ready = packet.status === "ready";
+
+  return {
+    title: "Packet Showcase",
+    status: packet.status,
+    headline: ready ? "Three lines are ready to say out loud" : `${packet.readyCount}/${packet.totalCount} proof lines started`,
+    summary: "The app turns quiz receipts, role signals, and Boss evidence into plain job-facing language.",
+    lines: [
+      {
+        id: "identity",
+        label: "Identity",
+        text: packet.status !== "starter" && roleStamp && !roleStamp.value.includes("pending")
+          ? `I am practicing toward ${roleStamp.value}.`
+          : "I am learning agentic workflow through tiny judgment drills."
+      },
+      {
+        id: "evidence",
+        label: "Evidence",
+        text: evidenceItem?.done
+          ? evidenceItem.text
+          : "I am collecting Boss-level evidence one chapter at a time."
+      },
+      {
+        id: "latest",
+        label: "Latest receipt",
+        text: latestReceipt?.evidenceLine ?? "Answer one low-friction prompt to create the first reusable line."
+      }
+    ],
+    rehearsal: ready ? "Read the three lines once, then open pitch practice." : packet.nextAction,
+    promise: "No separate artifact work required here; the showcase grows from practice signals."
+  };
+}
+
 export function jobReadinessMap(progress) {
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
   return jobReadinessSkills.map((skill) => {

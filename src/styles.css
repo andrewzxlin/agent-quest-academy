@@ -842,6 +842,7 @@ h1 {
 .beginner-command-grid .interview-preview-card,
 .beginner-command-grid .pitch-unlock-preview-card,
 .beginner-command-grid .job-packet-preview-card,
+.beginner-command-grid .job-packet-showcase-card,
 .beginner-command-grid .role-sampler-card,
 .beginner-command-grid .jargon-shield-card,
 .beginner-command-grid .daily-run-meter-card,
@@ -1334,6 +1335,85 @@ h1 {
   gap: 12px;
   justify-content: space-between;
   margin-top: 14px;
+}
+
+.job-packet-showcase-card {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.job-packet-showcase-card.building {
+  background: #fff1f2;
+  border-color: #fecdd3;
+}
+
+.job-packet-showcase-card.ready {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.job-packet-showcase-card .section-title > p,
+.job-packet-showcase-card .showcase-summary,
+.packet-showcase-lines small,
+.packet-showcase-rehearsal small {
+  color: var(--muted);
+}
+
+.packet-showcase-lines {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.packet-showcase-lines div {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.packet-showcase-lines span,
+.packet-showcase-lines strong,
+.packet-showcase-lines small,
+.packet-showcase-rehearsal strong,
+.packet-showcase-rehearsal small {
+  display: block;
+}
+
+.packet-showcase-lines span {
+  align-items: center;
+  background: #ffedd5;
+  border: 1px solid #fed7aa;
+  border-radius: 999px;
+  color: #9a3412;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 28px;
+  justify-content: center;
+  width: 36px;
+}
+
+.job-packet-showcase-card.ready .packet-showcase-lines span {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #15803d;
+}
+
+.packet-showcase-rehearsal {
+  align-items: center;
+  background: rgb(255 255 255 / 0.74);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  display: grid;
+  gap: 4px;
+  margin-top: 14px;
+  padding: 12px;
 }
 
 .practice-diet-action {
@@ -6979,6 +7059,7 @@ button:disabled {
   .interview-preview-card,
   .pitch-unlock-preview-card,
   .job-packet-preview-card,
+  .job-packet-showcase-card,
   .zero-landing-quest-card,
   .jargon-shield-card,
   .quest-compass,
@@ -7081,6 +7162,7 @@ button:disabled {
   .interview-preview-steps,
   .pitch-preview-lines,
   .job-packet-items,
+  .packet-showcase-lines,
   .zero-landing-milestones,
   .role-sampler-grid,
   .phrase-bank-steps,
