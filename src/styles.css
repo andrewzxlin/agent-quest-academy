@@ -387,6 +387,127 @@ h1 {
   margin: 5px 0;
 }
 
+.now-playing-hud {
+  background: #ffffff;
+  border: 1px solid #bfdbfe;
+  border-left: 6px solid #2563eb;
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgb(15 23 42 / 0.07);
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.now-playing-hud.ready,
+.now-playing-hud.saved {
+  border-color: #86efac;
+  border-left-color: #16a34a;
+}
+
+.now-playing-hud.repair {
+  border-color: #fdba74;
+  border-left-color: #ea580c;
+}
+
+.now-playing-main {
+  align-items: start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr auto;
+}
+
+.now-playing-main h3 {
+  font-size: 24px;
+  margin: 4px 0;
+}
+
+.now-playing-main p,
+.now-playing-action small,
+.now-playing-progress small,
+.now-playing-lanes em {
+  color: var(--muted);
+}
+
+.now-playing-progress {
+  background: #f8fafc;
+  border: 1px solid rgb(37 99 235 / 0.16);
+  border-radius: 12px;
+  min-width: 150px;
+  padding: 12px;
+}
+
+.now-playing-progress span,
+.now-playing-progress small,
+.now-playing-progress i,
+.now-playing-lanes b,
+.now-playing-action span,
+.now-playing-action small {
+  display: block;
+}
+
+.now-playing-progress span {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.now-playing-progress i {
+  background: linear-gradient(90deg, #2563eb var(--now-progress), #dbeafe var(--now-progress));
+  border-radius: 999px;
+  height: 8px;
+  margin-top: 10px;
+}
+
+.now-playing-hud > strong {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.now-playing-lanes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.now-playing-lanes em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  font-size: 13px;
+  font-style: normal;
+  padding: 12px;
+}
+
+.now-playing-lanes em.current,
+.now-playing-lanes em.ready,
+.now-playing-lanes em.saved {
+  border-color: #86efac;
+}
+
+.now-playing-lanes em.repair {
+  border-color: #fdba74;
+}
+
+.now-playing-lanes b {
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.now-playing-action {
+  align-items: center;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.now-playing-action span {
+  color: #1d4ed8;
+  font-weight: 900;
+}
+
 .start-here-card {
   align-items: center;
   background: #eef2ff;
@@ -7295,6 +7416,7 @@ button:disabled {
   .first-five-card,
   .chapter-gate-strip,
   .hero-mission-lanes,
+  .now-playing-main,
   .session-rhythm-card,
   .ability-shard-card,
   .question-mini-diagram-card,
@@ -7336,6 +7458,7 @@ button:disabled {
   .lesson-ladder-strip,
   .lesson-ladder-steps,
   .session-rhythm-steps,
+  .now-playing-lanes,
   .start-here-steps,
   .quest-brief-lanes,
   .beginner-skill-gate-path,
@@ -7476,6 +7599,15 @@ button:disabled {
   .job-packet-action {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .now-playing-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .now-playing-progress {
+    min-width: 0;
   }
 
   .main {

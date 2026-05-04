@@ -80,6 +80,7 @@ import {
   mistakeNotebook,
   nextStepNudgeCard,
   nextPracticeRecommendation,
+  nowPlayingHudCard,
   onboardingState,
   oneLineCoachCard,
   pitchPracticeCard,
@@ -232,6 +233,18 @@ function render() {
   const miniDiagram = questionMiniDiagramCard(question);
   const plainDecoder = questionPlainDecoderCard(question);
   const heroMission = heroMissionPanelCard(progress, question, answerReady, checked, lastResult, Date.now());
+  const nowPlaying = nowPlayingHudCard(
+    progress,
+    lesson,
+    question,
+    currentIndex,
+    sessionQuestions.length,
+    sessionMode,
+    answerReady,
+    checked,
+    lastResult,
+    Date.now()
+  );
 
   root.innerHTML = `
     <div class="shell">
@@ -360,6 +373,7 @@ function render() {
         }
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
+        ${renderNowPlayingHudCard(nowPlaying)}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -830,6 +844,37 @@ function renderHeroMissionPanelCard(card) {
     </div>
     <em>${card.reassurance}</em>
   </div>`;
+}
+
+function renderNowPlayingHudCard(card) {
+  if (!card) return "";
+  return `<section class="now-playing-hud ${card.status}">
+    <div class="now-playing-main">
+      <div>
+        <p class="eyebrow">${card.title} / ${card.modeLabel}</p>
+        <h3>${card.headline}</h3>
+        <p>${card.chapterTitle} / ${card.lessonTitle}</p>
+      </div>
+      <div class="now-playing-progress">
+        <span>${card.questionLabel}</span>
+        <small>current prompt</small>
+        <i style="--now-progress: ${card.percent}%"></i>
+      </div>
+    </div>
+    <strong>${card.prompt}</strong>
+    <div class="now-playing-lanes">
+      ${card.lanes
+        .map((lane) => `<em class="${lane.status}">
+          <b>${lane.label}</b>
+          ${lane.text}
+        </em>`)
+        .join("")}
+    </div>
+    <div class="now-playing-action">
+      <span>${card.action}</span>
+      <small>${card.reward} / ${card.nextUse}</small>
+    </div>
+  </section>`;
 }
 
 function renderQuestion(question) {

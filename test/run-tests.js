@@ -93,6 +93,7 @@ import {
   mistakeNotebook,
   nextStepNudgeCard,
   nextPracticeRecommendation,
+  nowPlayingHudCard,
   onboardingState,
   oneLineCoachCard,
   pitchPracticeCard,
@@ -140,6 +141,7 @@ const tests = [
   ["start here card turns the homepage into one obvious action", testStartHereCard],
   ["quest brief makes the first screen action reward and packet clear", testQuestBriefCard],
   ["hero mission panel ties the first screen to skill proof", testHeroMissionPanelCard],
+  ["now playing HUD makes the active prompt feel like the main quest", testNowPlayingHudCard],
   ["learning HUD makes the next unlock visible", testLearningHud],
   ["dashboard mode defaults to beginner and can switch full", testDashboardModeCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
@@ -437,6 +439,46 @@ function testHeroMissionPanelCard() {
   card = heroMissionPanelCard(progress, question, true, true, { correct: false }, now);
   assert.equal(card.status, "repair");
   assert.ok(card.subline.includes("review"));
+}
+
+function testNowPlayingHudCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  const lesson = flattenLessons()[0];
+  const session = buildSessionQuestions(progress, lesson, now);
+  const question = session[0];
+  let card = nowPlayingHudCard(progress, lesson, question, 0, session.length, "lesson", false, false, null, now);
+
+  assert.equal(card.title, "Now Playing");
+  assert.equal(card.modeLabel, "Lesson run");
+  assert.equal(card.status, "choosing");
+  assert.equal(card.questionLabel, `1/${session.length}`);
+  assert.ok(card.percent > 0);
+  assert.ok(card.headline.includes("signal"));
+  assert.ok(card.reward.includes("Collect"));
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["stage", "gate", "review"]);
+  assert.equal(card.lanes.find((lane) => lane.id === "stage").status, "current");
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = nowPlayingHudCard(progress, lesson, question, 1, session.length, "lesson", true, false, null, now);
+  assert.equal(card.status, "ready");
+  assert.equal(card.headline, "Ready to check");
+  assert.ok(card.action.includes("Check"));
+
+  const result = gradeQuestion(question, question.answer);
+  answerQuestion(progress, question, question.answer, now);
+  card = nowPlayingHudCard(progress, lesson, question, 1, session.length, "lesson", true, true, result, now);
+  assert.equal(card.status, "saved");
+  assert.equal(card.lanes.find((lane) => lane.id === "stage").status, "done");
+  assert.ok(card.nextUse.includes("gate unlock"));
+
+  const wrong = session.find((item) => item.type === "multi");
+  const wrongResult = gradeQuestion(wrong, []);
+  answerQuestion(progress, wrong, [], now);
+  card = nowPlayingHudCard(progress, lesson, wrong, 2, session.length, "review", true, true, wrongResult, now);
+  assert.equal(card.modeLabel, "Review rescue");
+  assert.equal(card.status, "repair");
+  assert.ok(card.nextUse.includes("Review"));
 }
 
 function testLearningHud() {

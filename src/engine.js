@@ -412,6 +412,86 @@ export function heroMissionPanelCard(progress, question, answerReady = false, ch
   };
 }
 
+export function nowPlayingHudCard(
+  progress,
+  lesson,
+  question,
+  currentIndex = 0,
+  total = 1,
+  mode = "lesson",
+  answerReady = false,
+  checked = false,
+  result = null,
+  now = Date.now()
+) {
+  const stage = questionMasteryStage(question);
+  const mission = questionMissionStrip(question, answerReady, checked, result);
+  const shard = abilityShardCard(progress, question);
+  const gate = chapterGateStrip(progress, question.chapterId ?? lesson?.chapterId);
+  const stats = reviewStats(progress, now);
+  const safeTotal = Math.max(total, 1);
+  const safeIndex = Math.min(Math.max(currentIndex + 1, 1), safeTotal);
+  const percent = Math.round((safeIndex / safeTotal) * 100);
+  const status = checked ? (result?.correct ? "saved" : "repair") : answerReady ? "ready" : "choosing";
+  const modeLabelByType = {
+    lesson: "Lesson run",
+    review: "Review rescue",
+    boss: "Boss gate",
+    interview: "Interview drill"
+  };
+  const activeGate =
+    mode === "interview"
+      ? gate?.steps.find((step) => step.id === "interview")
+      : mode === "boss"
+        ? gate?.steps.find((step) => step.id === "boss")
+        : gate?.steps.find((step) => !step.done) ?? gate?.steps[0];
+
+  return {
+    title: "Now Playing",
+    status,
+    mode,
+    modeLabel: modeLabelByType[mode] ?? modeLabelByType.lesson,
+    chapterTitle: question.chapterTitle ?? lesson?.chapterTitle ?? "Current chapter",
+    lessonTitle: question.lessonTitle ?? lesson?.title ?? "Current lesson",
+    questionLabel: `${safeIndex}/${safeTotal}`,
+    percent,
+    headline: checked
+      ? result?.correct
+        ? "Signal saved to the route"
+        : "Miss saved as a review seed"
+      : answerReady
+        ? "Ready to check"
+        : "Pick the smallest clear signal",
+    prompt: question.prompt,
+    action: checked ? "Use the feedback, then move forward." : answerReady ? "Check the answer now." : mission.action,
+    reward: checked ? mission.reward : `Collect ${shard.shard}`,
+    lanes: [
+      {
+        id: "stage",
+        label: stage.label,
+        text: stage.proof,
+        status: checked ? "done" : "current"
+      },
+      {
+        id: "gate",
+        label: activeGate?.label ?? "Gate",
+        text: activeGate?.text ?? "Gate progress pending",
+        status: activeGate?.done ? "done" : status
+      },
+      {
+        id: "review",
+        label: "Review",
+        text: stats.dueCount > 0 ? `${stats.dueCount} due cards` : "No due cards",
+        status: stats.dueCount > 0 ? "repair" : "calm"
+      }
+    ],
+    nextUse:
+      mode === "review"
+        ? "Review turns weak memory into a cleaner route."
+        : "This tiny answer becomes proof, review timing, or a gate unlock."
+  };
+}
+
 export function learningHud(progress, now = Date.now()) {
   const badges = achievements(progress);
   const unlockedBadges = badges.filter((badge) => badge.unlocked);
