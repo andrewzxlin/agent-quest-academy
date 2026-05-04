@@ -4,6 +4,7 @@ import {
   buildReviewSessionQuestions,
   buildSessionQuestions,
   chapterMap,
+  chapterSummaryCards,
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
@@ -48,6 +49,7 @@ function render() {
   const mistakes = mistakeNotebook(progress, Date.now(), 5);
   const map = chapterMap(progress);
   const readiness = jobReadinessMap(progress);
+  const summaries = chapterSummaryCards(progress);
   const stats = reviewStats(progress, Date.now());
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
@@ -218,6 +220,25 @@ function render() {
                   <strong>${skill.title}</strong>
                   <p>${skill.signal}</p>
                   <small>${skill.chapterTitle} / ${skill.lessonPercent}% / ${skill.evidence}</small>
+                </div>`
+              )
+              .join("")}
+          </div>
+        </section>
+        <section class="summary-map">
+          <div class="section-title">
+            <h3>章節總結卡</h3>
+            <p>把每章學到的能力、常見錯因與面試說法整理成可以反覆看的短卡。</p>
+          </div>
+          <div class="summary-grid">
+            ${summaries
+              .map(
+                (item) => `<div class="summary-card ${item.status}">
+                  <span>${item.title}</span>
+                  <strong>${item.ability}</strong>
+                  <p>${item.interviewPitch}</p>
+                  <small>${item.commonMistake}</small>
+                  <em>${item.nextAction}</em>
                 </div>`
               )
               .join("")}

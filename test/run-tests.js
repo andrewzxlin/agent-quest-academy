@@ -15,6 +15,7 @@ import {
   buildReviewSessionQuestions,
   buildSessionQuestions,
   chapterMap,
+  chapterSummaryCards,
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
@@ -53,6 +54,7 @@ const tests = [
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
+  ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["job readiness map derives status from progress", testJobReadinessMap],
   ["interview questions work with answer and review flow", testInterviewQuestionFlow]
 ];
@@ -327,6 +329,28 @@ function testChapterMap() {
   assert.equal(firstChapter.lessonPercent, 33);
   assert.equal(firstChapter.bossPassed, true);
   assert.equal(firstChapter.status, "cleared");
+}
+
+function testChapterSummaryCards() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  const chapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === chapter.id);
+  const wrongQuestion = flattenQuestions().find((question) => question.chapterId === chapter.id && question.type === "single");
+
+  answerQuestion(progress, wrongQuestion, 99, 1000);
+  completeLesson(progress, chapterLessons[0].id, 1000);
+  const summaries = chapterSummaryCards(progress);
+  const first = summaries[0];
+
+  assert.equal(summaries.length, course.chapters.length);
+  assert.equal(first.chapterId, chapter.id);
+  assert.ok(first.ability.includes("agentic workflow") || first.ability.length > 20);
+  assert.ok(first.interviewPitch.includes("我能說明"));
+  assert.ok(first.commonMistake.includes("1"));
+  assert.ok(first.nextAction.includes("Boss Quiz"));
+
+  completeBossQuiz(progress, chapter.id, 7, 8, 1000);
+  assert.ok(chapterSummaryCards(progress)[0].nextAction.includes("面試情境題"));
 }
 
 function testJobReadinessMap() {

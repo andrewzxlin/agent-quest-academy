@@ -246,6 +246,33 @@ export function jobReadinessMap(progress) {
   });
 }
 
+export function chapterSummaryCards(progress) {
+  const skillsByChapter = new Map(jobReadinessSkills.map((skill) => [skill.chapterId, skill]));
+  const wrongByChapter = wrongAnswerCountsByChapter(progress);
+  return chapterMap(progress).map((chapter) => {
+    const skill = skillsByChapter.get(chapter.chapterId);
+    const wrongCount = wrongByChapter.get(chapter.chapterId) ?? 0;
+    const interviewPitch = skill
+      ? `我能說明 ${skill.title} 在 agentic workflow 中的角色，並用具體風險或取捨解釋設計。`
+      : `我能說明 ${chapter.title} 在 agentic workflow 中的角色。`;
+    const nextAction = chapter.bossPassed
+      ? "用面試情境題練 60 秒口頭說明。"
+      : chapter.completedLessons > 0
+        ? "完成剩餘 micro-lessons，再挑戰 Boss Quiz。"
+        : "先完成本章第一個 micro-lesson。";
+
+    return {
+      chapterId: chapter.chapterId,
+      title: chapter.title,
+      status: chapter.status,
+      ability: skill?.signal ?? chapter.theme,
+      interviewPitch,
+      commonMistake: wrongCount > 0 ? `目前有 ${wrongCount} 個錯題需要複習。` : "目前沒有累積錯題。",
+      nextAction
+    };
+  });
+}
+
 export function dailyMissions(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   return [
@@ -349,6 +376,17 @@ function recordDailyActivity(progress, now, patch) {
 
 function reviewableQuestions() {
   return [...flattenQuestions(), ...flattenInterviewQuestions()];
+}
+
+function wrongAnswerCountsByChapter(progress) {
+  const questionsByKey = new Map(reviewableQuestions().map((question) => [questionKey(question), question]));
+  return Object.entries(progress.answered).reduce((counts, [key, state]) => {
+    if (state.wrongCount <= 0) return counts;
+    const question = questionsByKey.get(key);
+    if (!question) return counts;
+    counts.set(question.chapterId, (counts.get(question.chapterId) ?? 0) + 1);
+    return counts;
+  }, new Map());
 }
 
 function getDailyActivity(progress, now) {
