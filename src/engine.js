@@ -3609,6 +3609,48 @@ export function dailyQuestSnapshot(progress, now = Date.now()) {
   };
 }
 
+export function dailyRunMeterCard(progress, now = Date.now()) {
+  const minimum = dailyMinimumCard(progress, now);
+  const ticket = dailySkillTicketCard(progress, now);
+  const landing = dailyLandingStepCard(progress, now);
+  const steps = [
+    {
+      id: "start",
+      label: "Start",
+      done: minimum.checks.find((check) => check.id === "answer-one")?.done ?? false,
+      text: "Answer one low-friction question"
+    },
+    {
+      id: "stamp",
+      label: "Stamp",
+      done: ticket.completedCount > 0,
+      text: ticket.completedCount > 0 ? `${ticket.completedCount}/${ticket.totalCount} skill stamps` : "Earn the first skill stamp"
+    },
+    {
+      id: "landing",
+      label: "Landing",
+      done: landing.status === "done",
+      text: landing.status === "done" ? "Today is linked to job evidence" : landing.minimumAction
+    }
+  ];
+  const doneCount = steps.filter((step) => step.done).length;
+  const active = steps.find((step) => !step.done) ?? steps[steps.length - 1];
+
+  return {
+    title: "Daily Run Meter",
+    status: doneCount === steps.length ? "done" : doneCount > 0 ? "live" : "open",
+    headline: doneCount === steps.length ? "Tiny daily run banked" : "Make today count with one tiny run",
+    percent: Math.round((doneCount / steps.length) * 100),
+    doneCount,
+    totalCount: steps.length,
+    activeId: active.id,
+    activeLabel: active.label,
+    nextAction: doneCount === steps.length ? "Stop here or keep the chain warm." : active.text,
+    promise: "One answer can start the daily loop; extra cards are optional.",
+    steps
+  };
+}
+
 export function dailyMinimumCard(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   const next = nextPracticeRecommendation(progress, now);

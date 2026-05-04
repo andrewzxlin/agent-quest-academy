@@ -844,6 +844,7 @@ h1 {
 .beginner-command-grid .job-packet-preview-card,
 .beginner-command-grid .role-sampler-card,
 .beginner-command-grid .jargon-shield-card,
+.beginner-command-grid .daily-run-meter-card,
 .beginner-command-grid .daily-landing-step-card,
 .beginner-command-grid .daily-phrase-bank-card {
   grid-column: 1 / -1;
@@ -2378,6 +2379,95 @@ h1 {
 .quest-meter strong {
   color: #15803d;
   font-size: 30px;
+}
+
+.daily-run-meter-card {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.daily-run-meter-card.live {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.daily-run-meter-card.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.daily-run-meter-card .section-title > p,
+.daily-run-footer small {
+  color: var(--muted);
+}
+
+.daily-run-track {
+  background: rgb(15 23 42 / 0.08);
+  border-radius: 999px;
+  height: 10px;
+  margin-top: 14px;
+  overflow: hidden;
+}
+
+.daily-run-track span {
+  background: linear-gradient(90deg, #0ea5e9, #22c55e);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  width: var(--daily-run-percent);
+}
+
+.daily-run-steps {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.daily-run-steps div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(14 165 233 / 0.16);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.daily-run-steps div.active {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgb(14 165 233 / 0.12);
+}
+
+.daily-run-steps div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.daily-run-steps span,
+.daily-run-steps strong,
+.daily-run-footer strong,
+.daily-run-footer small {
+  display: block;
+}
+
+.daily-run-steps span {
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.daily-run-steps strong {
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.daily-run-footer {
+  margin-top: 14px;
+}
+
+.daily-run-footer strong {
+  color: #0369a1;
 }
 
 .daily-minimum-card {
@@ -6221,6 +6311,7 @@ button:disabled {
   .job-evidence-brief,
   .one-line-coach-card,
   .exercise-scope-card,
+  .daily-run-meter-card,
   .daily-quest-snapshot,
   .daily-minimum-card,
   .daily-skill-ticket-card,
@@ -6259,6 +6350,7 @@ button:disabled {
   .rhythm-grid,
   .review-orbit-rings,
   .daily-skill-ticket-lanes,
+  .daily-run-steps,
   .daily-landing-route,
   .rescue-quest-grid,
   .mistake-safety-steps,

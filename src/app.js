@@ -31,6 +31,7 @@ import {
   dashboardModeCard,
   dailyMinimumCard,
   dailyLandingStepCard,
+  dailyRunMeterCard,
   dailySkillTicketCard,
   dailyMomentum,
   dailyPhraseBankCard,
@@ -170,6 +171,7 @@ function render() {
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const dailyMinimum = dailyMinimumCard(progress, Date.now());
+  const dailyRunMeter = dailyRunMeterCard(progress, Date.now());
   const dailySkillTicket = dailySkillTicketCard(progress, Date.now());
   const dailyLandingStep = dailyLandingStepCard(progress, Date.now());
   const dailyPhraseBank = dailyPhraseBankCard(progress);
@@ -292,6 +294,7 @@ function render() {
           jargonShield,
           dailyQuest,
           dailyMinimum,
+          dailyRunMeter,
           dailySkillTicket,
           dailyLandingStep,
           dailyPhraseBank,
@@ -851,6 +854,7 @@ function renderBeginnerCommandCenter(cards) {
         <p>Stop after the minimum or keep the proof trail warm.</p>
       </div>
       <div class="beginner-command-grid daily">
+        ${renderDailyRunMeterCard(cards.dailyRunMeter)}
         ${renderDailyQuestSnapshot(cards.dailyQuest)}
         ${renderDailyMinimumCard(cards.dailyMinimum)}
         ${renderDailySkillTicketCard(cards.dailySkillTicket)}
@@ -1483,6 +1487,34 @@ function renderDailyQuestSnapshot(snapshot) {
     <div class="quest-meter">
       <strong>${snapshot.percent}%</strong>
       <span>${snapshot.activeTitle}</span>
+    </div>
+  </section>`;
+}
+
+function renderDailyRunMeterCard(card) {
+  return `<section class="daily-run-meter-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.doneCount}/${card.totalCount} steps - ${card.percent}%</p>
+    </div>
+    <div class="daily-run-track" style="--daily-run-percent: ${card.percent}%">
+      <span></span>
+    </div>
+    <div class="daily-run-steps">
+      ${card.steps
+        .map((step) => `<div class="${step.done ? "done" : step.id === card.activeId ? "active" : ""}">
+          <span>${step.label}</span>
+          <strong>${step.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="daily-run-footer">
+      <strong>${card.activeLabel}</strong>
+      <small>${card.nextAction}</small>
+      <small>${card.promise}</small>
     </div>
   </section>`;
 }

@@ -44,6 +44,7 @@ import {
   dashboardModeCard,
   dailyMinimumCard,
   dailyLandingStepCard,
+  dailyRunMeterCard,
   dailySkillTicketCard,
   dailyMomentum,
   dailyPhraseBankCard,
@@ -195,6 +196,7 @@ const tests = [
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
+  ["daily run meter visualizes the smallest useful daily loop", testDailyRunMeterCard],
   ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
   ["daily skill ticket stamps one tiny type loop", testDailySkillTicketCard],
   ["daily landing step maps tiny practice to job value", testDailyLandingStepCard],
@@ -1819,6 +1821,28 @@ function testDailyQuestSnapshot() {
   assert.equal(snapshot.completedCount, 5);
   assert.equal(snapshot.percent, 100);
   assert.ok(snapshot.nextStep.includes("已完成"));
+}
+
+function testDailyRunMeterCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = dailyRunMeterCard(progress, now);
+  assert.equal(card.title, "Daily Run Meter");
+  assert.equal(card.status, "open");
+  assert.equal(card.percent, 0);
+  assert.equal(card.activeId, "start");
+  assert.deepEqual(card.steps.map((step) => step.id), ["start", "stamp", "landing"]);
+  assert.ok(card.promise.includes("One answer"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const single = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, single, single.answer, now);
+  card = dailyRunMeterCard(progress, now);
+  assert.equal(card.status, "done");
+  assert.equal(card.percent, 100);
+  assert.equal(card.doneCount, 3);
+  assert.ok(card.steps.every((step) => step.done));
+  assert.ok(card.nextAction.includes("Stop here"));
 }
 
 function testDailyMinimumCard() {
