@@ -38,6 +38,7 @@ import {
   isAnswerReady,
   jobReadinessMap,
   jobEvidenceBrief,
+  jobRoleFitCard,
   jobScenarioCard,
   lessonSkillCard,
   learningPuzzleBoard,
@@ -97,6 +98,7 @@ const tests = [
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
   ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
+  ["job role fit card maps progress to role paths", testJobRoleFitCard],
   ["job evidence brief turns progress into an interview line", testJobEvidenceBrief],
   ["exercise scope card keeps practice low-friction", testExerciseScopeCard],
   ["completion cards summarize finished sessions", testCompletionCards],
@@ -798,6 +800,26 @@ function testCareerReadinessSnapshot() {
   assert.equal(snapshot.provenCount, 1);
   assert.equal(snapshot.percent, 13);
   assert.ok(["Skill-building track", "Explanation signal track"].includes(snapshot.level));
+}
+
+function testJobRoleFitCard() {
+  const progress = createInitialProgress(1000);
+  let card = jobRoleFitCard(progress);
+  assert.equal(card.headline, "Role Fit Map");
+  assert.equal(card.tracks.length, 3);
+  assert.ok(card.tracks.every((track) => track.readyCount === 0));
+  assert.ok(card.tracks.every((track) => track.total === 4));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|專案實作/i);
+
+  const chapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, 1000);
+  card = jobRoleFitCard(progress);
+  assert.ok(card.summary.includes("AI App Builder") || card.summary.includes("Agent Workflow Builder"));
+  assert.ok(card.tracks.some((track) => track.readyCount === 1));
+  assert.ok(card.tracks.some((track) => track.nextAction.includes("Boss-proven")));
 }
 
 function testJobEvidenceBrief() {

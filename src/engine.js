@@ -10,6 +10,26 @@ import {
 
 const STORAGE_KEY = "agentQuestProgress:v1";
 const QUESTION_TYPE_ORDER = { single: 0, multi: 1, short: 2 };
+const ROLE_FIT_TRACKS = [
+  {
+    id: "ai-app-builder",
+    title: "AI App Builder",
+    description: "能把 agent、tool、RAG 和框架選型說成可落地的產品流程。",
+    chapterIds: ["agent-basics", "tools", "rag", "frameworks"]
+  },
+  {
+    id: "agent-workflow-builder",
+    title: "Agent Workflow Builder",
+    description: "能拆解多步任務、狀態、記憶、人工核准和 graph workflow。",
+    chapterIds: ["agent-basics", "memory", "guardrails", "frameworks"]
+  },
+  {
+    id: "agent-reliability-builder",
+    title: "Agent Reliability Builder",
+    description: "能用 guardrails、evals、observability 和 grounded retrieval 提升可靠度。",
+    chapterIds: ["rag", "guardrails", "evals", "observability"]
+  }
+];
 
 const LEARNER_PROFILES = [
   {
@@ -682,6 +702,44 @@ export function careerReadinessSnapshot(progress, now = Date.now()) {
     practicingCount: counts.practicing,
     nextGap: next.type === "done" ? "All current chapters are cleared." : next.title,
     nextAction: next.cta
+  };
+}
+
+export function jobRoleFitCard(progress) {
+  const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
+  const tracks = ROLE_FIT_TRACKS.map((track) => {
+    const pieces = track.chapterIds.map((chapterId) => proofsByChapter.get(chapterId)).filter(Boolean);
+    const readyPieces = pieces.filter((piece) => ["proven", "interview_ready"].includes(piece.status));
+    const practicingPieces = pieces.filter((piece) => piece.status === "practicing");
+    const next = pieces.find((piece) => !["proven", "interview_ready"].includes(piece.status)) ?? null;
+    const level =
+      readyPieces.length === pieces.length
+        ? "interview-ready"
+        : readyPieces.length > 0
+          ? "building evidence"
+          : practicingPieces.length > 0
+            ? "warming up"
+            : "starter";
+
+    return {
+      ...track,
+      readyCount: readyPieces.length,
+      practicingCount: practicingPieces.length,
+      total: pieces.length,
+      level,
+      nextGap: next?.title ?? "All role signals are ready",
+      nextAction: next
+        ? `Next: make ${next.title} Boss-proven, then explain it in interview practice.`
+        : "Next: rehearse the strongest 60-second pitch."
+    };
+  });
+
+  const strongest = [...tracks].sort((a, b) => b.readyCount - a.readyCount || b.practicingCount - a.practicingCount)[0];
+
+  return {
+    headline: "Role Fit Map",
+    summary: strongest.readyCount > 0 ? `Strongest path now: ${strongest.title}` : "Start with any path; all begin with low-friction drills.",
+    tracks
   };
 }
 

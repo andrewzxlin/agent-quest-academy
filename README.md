@@ -103,6 +103,12 @@
 - The snapshot derives its level from real ability proof progress.
 - It keeps the learner oriented toward job-facing readiness without adding planning overhead.
 
+## Role Fit Map
+
+- The home screen maps chapter proof into three job-facing paths: AI App Builder, Agent Workflow Builder, and Agent Reliability Builder.
+- Each path shows ready evidence, practicing evidence, and the next chapter gap.
+- The map stays low-friction: it uses existing lesson, Boss, and interview progress instead of adding project tasks.
+
 ## Mistake Rescue Prompts
 
 - Wrong answers now show a short rescue prompt before the detailed explanation.

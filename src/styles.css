@@ -356,6 +356,63 @@ h1 {
   margin: 4px 0;
 }
 
+.job-role-fit-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.role-fit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.role-fit-track {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.role-fit-track span {
+  display: inline-flex;
+  background: #e2e8f0;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+}
+
+.role-fit-track strong,
+.role-fit-track small,
+.role-fit-track em {
+  display: block;
+  margin-top: 8px;
+}
+
+.role-fit-track p,
+.role-fit-track small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.role-fit-track em {
+  color: var(--ink);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.role-fit-track.building-evidence,
+.role-fit-track.interview-ready {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
 .job-evidence-brief {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -1806,6 +1863,7 @@ button:disabled {
   .pitch-grid,
   .profile-grid,
   .proof-grid,
+  .role-fit-grid,
   .summary-grid {
     grid-template-columns: 1fr;
   }

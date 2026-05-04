@@ -24,6 +24,7 @@ import {
   isAnswerReady,
   jobReadinessMap,
   jobEvidenceBrief,
+  jobRoleFitCard,
   jobScenarioCard,
   lessonSkillCard,
   learningPuzzleBoard,
@@ -84,6 +85,7 @@ function render() {
   const stats = reviewStats(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
+  const roleFit = jobRoleFitCard(progress);
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
@@ -161,6 +163,7 @@ function render() {
         ${renderOnboardingCard(onboarding)}
         ${renderExerciseScopeCard(exerciseScope)}
         ${renderCareerSnapshot(careerSnapshot)}
+        ${renderJobRoleFitCard(roleFit)}
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMomentumCard(momentum)}
@@ -392,6 +395,30 @@ function renderCareerSnapshot(snapshot) {
       <strong>${snapshot.percent}%</strong>
       <span>下一個缺口：${snapshot.nextGap}</span>
       <small>${snapshot.nextAction}</small>
+    </div>
+  </section>`;
+}
+
+function renderJobRoleFitCard(card) {
+  return `<section class="job-role-fit-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.headline}</p>
+        <h3>${card.summary}</h3>
+      </div>
+      <p>每條路線都只用選擇題、少量簡答、Boss 和面試情境題累積證據。</p>
+    </div>
+    <div class="role-fit-grid">
+      ${card.tracks
+        .map((track) => `<div class="role-fit-track ${track.level.replaceAll(" ", "-")}">
+          <span>${track.level}</span>
+          <strong>${track.title}</strong>
+          <p>${track.description}</p>
+          <small>${track.readyCount}/${track.total} ready · ${track.practicingCount} practicing</small>
+          <em>${track.nextGap}</em>
+          <small>${track.nextAction}</small>
+        </div>`)
+        .join("")}
     </div>
   </section>`;
 }
