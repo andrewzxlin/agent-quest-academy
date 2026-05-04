@@ -219,6 +219,36 @@ export function chapterMap(progress) {
   });
 }
 
+export function chapterGateMap(progress) {
+  const chapters = chapterMap(progress);
+  return chapters.map((chapter, index) => {
+    const previous = index === 0 ? null : chapters[index - 1];
+    const chapterUnlocked = index === 0 || previous?.bossPassed === true;
+    const lessonsUnlocked = chapterUnlocked;
+    const bossUnlocked = chapterUnlocked && chapter.completedLessons === chapter.totalLessons;
+    const interviewUnlocked = chapterUnlocked && chapter.bossPassed;
+    const pitchUnlocked = interviewUnlocked;
+    const gate = !chapterUnlocked ? "locked" : chapter.bossPassed ? "cleared" : "current";
+    const gateLabel = !chapterUnlocked
+      ? "先通關前一章 Boss"
+      : chapter.bossPassed
+        ? "已解鎖面試練習"
+        : chapter.completedLessons === chapter.totalLessons
+          ? "可挑戰 Boss"
+          : "先完成本章短課";
+
+    return {
+      chapterId: chapter.chapterId,
+      gate,
+      gateLabel,
+      lessonsUnlocked,
+      bossUnlocked,
+      interviewUnlocked,
+      pitchUnlocked
+    };
+  });
+}
+
 export function jobReadinessMap(progress) {
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
   return jobReadinessSkills.map((skill) => {

@@ -14,6 +14,7 @@ import {
   answerQuestion,
   buildReviewSessionQuestions,
   buildSessionQuestions,
+  chapterGateMap,
   chapterMap,
   chapterSummaryCards,
   completionCard,
@@ -58,6 +59,7 @@ const tests = [
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
+  ["chapter gate map stages lessons boss interview and pitch unlocks", testChapterGateMap],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["completion cards summarize finished sessions", testCompletionCards],
   ["next practice recommendation picks the highest-value next step", testNextPracticeRecommendation],
@@ -336,6 +338,32 @@ function testChapterMap() {
   assert.equal(firstChapter.lessonPercent, 33);
   assert.equal(firstChapter.bossPassed, true);
   assert.equal(firstChapter.status, "cleared");
+}
+
+function testChapterGateMap() {
+  const progress = createInitialProgress(1000);
+  let gates = chapterGateMap(progress);
+  assert.equal(gates[0].gate, "current");
+  assert.equal(gates[0].lessonsUnlocked, true);
+  assert.equal(gates[0].bossUnlocked, false);
+  assert.equal(gates[1].gate, "locked");
+  assert.equal(gates[1].lessonsUnlocked, false);
+
+  const firstChapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === firstChapter.id)) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  gates = chapterGateMap(progress);
+  assert.equal(gates[0].bossUnlocked, true);
+  assert.equal(gates[0].interviewUnlocked, false);
+
+  completeBossQuiz(progress, firstChapter.id, 7, 8, 1000);
+  gates = chapterGateMap(progress);
+  assert.equal(gates[0].gate, "cleared");
+  assert.equal(gates[0].interviewUnlocked, true);
+  assert.equal(gates[0].pitchUnlocked, true);
+  assert.equal(gates[1].gate, "current");
+  assert.equal(gates[1].lessonsUnlocked, true);
 }
 
 function testChapterSummaryCards() {

@@ -3,6 +3,7 @@ import {
   answerQuestion,
   buildReviewSessionQuestions,
   buildSessionQuestions,
+  chapterGateMap,
   chapterMap,
   chapterSummaryCards,
   completionCard,
@@ -55,6 +56,8 @@ function render() {
   const badges = achievements(progress);
   const mistakes = mistakeNotebook(progress, Date.now(), 5);
   const map = chapterMap(progress);
+  const gates = chapterGateMap(progress);
+  const gatesByChapter = new Map(gates.map((item) => [item.chapterId, item]));
   const readiness = jobReadinessMap(progress);
   const summaries = chapterSummaryCards(progress);
   const stats = reviewStats(progress, Date.now());
@@ -83,11 +86,11 @@ function render() {
           <strong>錯題複習</strong>
           <span>${dueCount === 0 ? "目前沒有到期題" : `立即刷 ${dueCount} 題到期題`}</span>
         </button>
-        <button class="boss-button" data-boss="true">
+        <button class="boss-button" data-boss="true" ${gatesByChapter.get(chapter.id)?.bossUnlocked ? "" : "disabled"}>
           <strong>章節 Boss Quiz</strong>
           <span>${bossResult ? `${bossResult.passed ? "已通關" : "待重戰"}：${bossResult.score}/${bossResult.total}` : `${chapter.title} 挑戰`}</span>
         </button>
-        <button class="interview-button" data-interview="true">
+        <button class="interview-button" data-interview="true" ${gatesByChapter.get(chapter.id)?.interviewUnlocked ? "" : "disabled"}>
           <strong>面試情境題</strong>
           <span>${chapter.title} 設計判斷</span>
         </button>
@@ -96,10 +99,12 @@ function render() {
             .map((item, index) => {
               const active = index === selectedLessonIndex ? "active" : "";
               const done = progress.completedLessons.includes(item.id) ? "done" : "";
-              return `<button class="lesson-pill ${active} ${done}" data-lesson="${index}">
+              const gate = gatesByChapter.get(item.chapterId);
+              const locked = gate?.lessonsUnlocked ? "" : "locked";
+              return `<button class="lesson-pill ${active} ${done} ${locked}" data-lesson="${index}" ${locked ? "disabled" : ""}>
                 <span>${index + 1}</span>
                 <strong>${item.title}</strong>
-                <small>${item.chapterTitle}</small>
+                <small>${locked ? gate.gateLabel : item.chapterTitle}</small>
               </button>`;
             })
             .join("")}
@@ -207,7 +212,8 @@ function render() {
             ${map
               .map((item, index) => {
                 const visual = chapterVisuals[item.chapterId] ?? chapterVisuals["agent-basics"];
-                return `<div class="chapter-node ${item.status}" style="--node-accent: ${visual.accent}">
+                const gate = gatesByChapter.get(item.chapterId);
+                return `<div class="chapter-node ${item.status} ${gate?.gate}" style="--node-accent: ${visual.accent}">
                 <span>${index + 1}</span>
                 <b>${visual.mark}</b>
                 <strong>${item.title}</strong>
@@ -250,7 +256,7 @@ function render() {
                   <p>${item.interviewPitch}</p>
                   <small>${item.commonMistake}</small>
                   <em>${item.nextAction}</em>
-                  <button class="secondary compact" data-pitch="${item.chapterId}">練 60 秒回答</button>
+                  <button class="secondary compact" ${gatesByChapter.get(item.chapterId)?.pitchUnlocked ? `data-pitch="${item.chapterId}"` : "disabled"}>${gatesByChapter.get(item.chapterId)?.pitchUnlocked ? "練 60 秒回答" : "Boss 通關後解鎖"}</button>
                 </div>`
               )
               .join("")}

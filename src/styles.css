@@ -195,6 +195,11 @@ h1 {
   color: #15803d;
 }
 
+.lesson-pill.locked {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
 .main {
   padding: 32px;
   display: flex;
@@ -722,6 +727,15 @@ button:disabled {
 .chapter-node.cleared span {
   background: #22c55e;
   color: white;
+}
+
+.chapter-node.locked {
+  opacity: 0.62;
+  background: #f1f5f9;
+}
+
+.chapter-node.current {
+  border-color: #93c5fd;
 }
 
 .readiness-map {
