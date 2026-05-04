@@ -181,6 +181,12 @@
 - The combo also shows stable signals and repaired misses, so review progress feels visible.
 - It stays low-friction by using existing choice and short-answer quiz data.
 
+## Signal Preview
+
+- The home screen now previews what the next tiny practice run can unlock.
+- The preview connects the next recommended action to a reward such as cleaner recall, a receipt, Boss evidence, or interview wording.
+- It helps learners understand why one small quiz run matters before they start.
+
 ## Daily Minimum Card
 
 - The home screen now shows a 3-minute minimum: one question is enough to bank today's smallest useful practice.

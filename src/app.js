@@ -61,6 +61,7 @@ import {
   resetProgress,
   saveProgress,
   selectLearnerProfile,
+  signalPreviewCard,
   shortAnswerSupport,
   uncertaintySafetyCard
 } from "./engine.js";
@@ -114,6 +115,7 @@ function render() {
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
   const receiptReel = learningReceiptReel(progress);
   const recallCombo = recallComboCard(progress);
+  const signalPreview = signalPreviewCard(progress, Date.now());
   const gapRadar = landingGapRadar(progress, Date.now());
   const landingChecklist = landingReadinessChecklist(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
@@ -210,6 +212,7 @@ function render() {
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyMomentumCard(momentum)}
         ${renderRecallComboCard(recallCombo)}
+        ${renderSignalPreviewCard(signalPreview)}
         ${renderReviewRhythmCard(reviewRhythm)}
         ${renderReviewSprintCard(reviewSprint)}
         ${renderMistakeFocusCard(mistakeFocus)}
@@ -736,6 +739,33 @@ function renderRecallComboCard(combo) {
           <small>${meter.label}</small>
         </div>`)
         .join("")}
+    </div>
+  </section>`;
+}
+
+function renderSignalPreviewCard(preview) {
+  return `<section class="signal-preview-card ${preview.mode}">
+    <div>
+      <p class="eyebrow">${preview.title}</p>
+      <h3>${preview.headline}</h3>
+      <p>${preview.reason}</p>
+      <strong>${preview.reuse}</strong>
+    </div>
+    <div>
+      <span>${preview.nextAction}</span>
+      <div class="signal-preview-stats">
+        <small>${preview.receiptCount} receipts</small>
+        <small>${preview.cleanRun} clean run</small>
+        <small>${preview.passportStatus}</small>
+      </div>
+      <div class="signal-preview-steps">
+        ${preview.steps
+          .map((step) => `<em>
+            <b>${step.label}</b>
+            ${step.text}
+          </em>`)
+          .join("")}
+      </div>
     </div>
   </section>`;
 }

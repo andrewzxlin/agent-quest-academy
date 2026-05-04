@@ -1063,6 +1063,46 @@ export function recallComboCard(progress) {
   };
 }
 
+export function signalPreviewCard(progress, now = Date.now()) {
+  const next = nextPracticeRecommendation(progress, now);
+  const receipts = learningReceiptReel(progress, 3).receipts;
+  const combo = recallComboCard(progress);
+  const passport = jobSignalPassport(progress, now);
+  const rewardByType = {
+    review: "Cleaner recall",
+    lesson: "New learning receipt",
+    boss: "Boss-proven evidence",
+    interview: "Interview-ready wording",
+    done: "Fresh proof loop"
+  };
+  const reuseByType = {
+    review: "A repaired weak signal is easier to explain later.",
+    lesson: "A new receipt can become one tiny proof line.",
+    boss: "A Boss pass turns chapter knowledge into stronger evidence.",
+    interview: "A finished drill becomes reusable interview language.",
+    done: "A maintenance loop keeps proof from getting stale."
+  };
+
+  return {
+    title: "Signal Preview",
+    mode: next.type,
+    headline: `This run can unlock: ${rewardByType[next.type] ?? "Learning signal"}`,
+    nextTitle: next.title,
+    nextAction: next.cta,
+    reason: next.reason,
+    reward: rewardByType[next.type] ?? "Learning signal",
+    reuse: reuseByType[next.type] ?? "Save the result as a small proof signal.",
+    receiptCount: receipts.length,
+    cleanRun: combo.cleanRun,
+    passportStatus: passport.status,
+    steps: [
+      { id: "start", label: "Start", text: "Do the smallest recommended practice." },
+      { id: "signal", label: "Signal", text: "Let the answer become recall, proof, or wording." },
+      { id: "reuse", label: "Reuse", text: "Bring the signal back in review or interview practice." }
+    ]
+  };
+}
+
 export function chapterMap(progress) {
   const lessons = flattenLessons();
   return course.chapters.map((chapter) => {

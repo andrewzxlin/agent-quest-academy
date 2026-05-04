@@ -72,6 +72,7 @@ import {
   reviewSprintCard,
   reviewStats,
   selectLearnerProfile,
+  signalPreviewCard,
   shortAnswerSupport,
   uncertaintySafetyCard
 } from "../src/engine.js";
@@ -102,6 +103,7 @@ const tests = [
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["question mastery signals show recall progress", testQuestionMasterySignals],
   ["learning receipt reel turns answers into visible evidence", testLearningReceiptReel],
+  ["signal preview shows the reward before starting", testSignalPreviewCard],
   ["answer recall cues turn answers into next-time signals", testAnswerRecallCues],
   ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
   ["single choice grading works", testSingleChoice],
@@ -669,6 +671,37 @@ function testLearningReceiptReel() {
   assert.ok(reel.receipts.every((receipt) => receipt.proof.includes(receipt.chapterTitle)));
   assert.ok(reel.receipts.every((receipt) => receipt.nextUse.length >= 30));
   assert.doesNotMatch(JSON.stringify(reel), /repo|project implementation|build a project|coding task/i);
+}
+
+function testSignalPreviewCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let preview = signalPreviewCard(progress, now);
+  assert.equal(preview.title, "Signal Preview");
+  assert.equal(preview.mode, "lesson");
+  assert.equal(preview.reward, "New learning receipt");
+  assert.equal(preview.receiptCount, 0);
+  assert.equal(preview.cleanRun, 0);
+  assert.deepEqual(preview.steps.map((step) => step.id), ["start", "signal", "reuse"]);
+  assert.ok(preview.headline.includes("unlock"));
+  assert.doesNotMatch(JSON.stringify(preview), /repo|project implementation|build a project|coding task/i);
+
+  const [question] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, question, 99, now);
+  preview = signalPreviewCard(progress, now);
+  assert.equal(preview.mode, "review");
+  assert.equal(preview.reward, "Cleaner recall");
+  assert.equal(preview.receiptCount, 1);
+  assert.ok(preview.reuse.includes("repaired weak signal"));
+
+  progress.reviewQueue = [];
+  const chapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  preview = signalPreviewCard(progress, now);
+  assert.equal(preview.mode, "boss");
+  assert.equal(preview.reward, "Boss-proven evidence");
 }
 
 function testAnswerRecallCues() {
