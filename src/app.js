@@ -3,6 +3,7 @@ import {
   answerQuestion,
   buildReviewSessionQuestions,
   buildSessionQuestions,
+  chapterMap,
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
@@ -43,6 +44,7 @@ function render() {
   const missions = dailyMissions(progress, Date.now());
   const badges = achievements(progress);
   const mistakes = mistakeNotebook(progress, Date.now(), 5);
+  const map = chapterMap(progress);
   const stats = reviewStats(progress, Date.now());
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
@@ -172,6 +174,22 @@ function render() {
                       .join("")
               }
             </div>
+          </div>
+        </section>
+
+        <section class="chapter-map">
+          <div class="section-title">
+            <h3>章節通關地圖</h3>
+            <p>每一章都是 Agentic Workflow 的一塊拼圖。完成課程只是理解，通過 Boss 才算真正通關。</p>
+          </div>
+          <div class="chapter-track">
+            ${map
+              .map((item, index) => `<div class="chapter-node ${item.status}">
+                <span>${index + 1}</span>
+                <strong>${item.title}</strong>
+                <small>${item.completedLessons}/${item.totalLessons} 課 · ${item.lessonPercent}% · Boss ${item.bossPassed ? "已通關" : item.bossScore ?? "未挑戰"}</small>
+              </div>`)
+              .join("")}
           </div>
         </section>
       </main>

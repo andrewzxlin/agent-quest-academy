@@ -4,6 +4,7 @@ import {
   answerQuestion,
   buildReviewSessionQuestions,
   buildSessionQuestions,
+  chapterMap,
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
@@ -34,7 +35,8 @@ const tests = [
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["achievements unlock from real progress", testAchievements],
-  ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook]
+  ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
+  ["chapter map summarizes lesson and boss progress", testChapterMap]
 ];
 
 let failed = 0;
@@ -221,6 +223,23 @@ function testMistakeNotebook() {
   assert.equal(notebook[0].due, true);
   assert.equal(notebook[0].wrongCount, 1);
   assert.equal(notebook.some((item) => item.question.id === correctOnly.id), false);
+}
+
+function testChapterMap() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  const chapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === chapter.id);
+  completeLesson(progress, chapterLessons[0].id, 1000);
+  completeBossQuiz(progress, chapter.id, 7, 8, 1000);
+  const map = chapterMap(progress);
+  const firstChapter = map[0];
+  assert.equal(map.length, course.chapters.length);
+  assert.equal(firstChapter.chapterId, chapter.id);
+  assert.equal(firstChapter.completedLessons, 1);
+  assert.equal(firstChapter.totalLessons, chapterLessons.length);
+  assert.equal(firstChapter.lessonPercent, 33);
+  assert.equal(firstChapter.bossPassed, true);
+  assert.equal(firstChapter.status, "cleared");
 }
 
 function countBy(items, keyFn) {

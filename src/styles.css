@@ -401,6 +401,77 @@ button:disabled {
   margin-top: 3px;
 }
 
+.chapter-map {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.section-title p {
+  max-width: 560px;
+  color: var(--muted);
+}
+
+.chapter-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.chapter-node {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+.chapter-node span {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #e2e8f0;
+  color: var(--ink);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.chapter-node strong,
+.chapter-node small {
+  display: block;
+}
+
+.chapter-node small {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.chapter-node.in_progress {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.chapter-node.cleared {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.chapter-node.cleared span {
+  background: #22c55e;
+  color: white;
+}
+
 @media (max-width: 900px) {
   .shell {
     grid-template-columns: 1fr;
@@ -415,6 +486,14 @@ button:disabled {
   .explain-grid,
   .mission-grid {
     grid-template-columns: 1fr;
+  }
+
+  .chapter-track {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title {
+    display: block;
   }
 
   .main {

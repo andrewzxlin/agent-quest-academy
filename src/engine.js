@@ -1,4 +1,4 @@
-import { flattenLessons, flattenQuestions } from "./course.js";
+import { course, flattenLessons, flattenQuestions } from "./course.js";
 
 const STORAGE_KEY = "agentQuestProgress:v1";
 
@@ -194,6 +194,28 @@ export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
       };
     })
     .filter((item) => item.question);
+}
+
+export function chapterMap(progress) {
+  const lessons = flattenLessons();
+  return course.chapters.map((chapter) => {
+    const chapterLessons = lessons.filter((lesson) => lesson.chapterId === chapter.id);
+    const completedLessons = chapterLessons.filter((lesson) => progress.completedLessons.includes(lesson.id)).length;
+    const bossResult = (progress.bossResults ?? []).find((item) => item.chapterId === chapter.id);
+    const lessonPercent = chapterLessons.length === 0 ? 0 : Math.round((completedLessons / chapterLessons.length) * 100);
+    const status = bossResult?.passed ? "cleared" : completedLessons > 0 ? "in_progress" : "new";
+    return {
+      chapterId: chapter.id,
+      title: chapter.title,
+      theme: chapter.theme,
+      completedLessons,
+      totalLessons: chapterLessons.length,
+      lessonPercent,
+      bossPassed: bossResult?.passed ?? false,
+      bossScore: bossResult ? `${bossResult.score}/${bossResult.total}` : null,
+      status
+    };
+  });
 }
 
 export function dailyMissions(progress, now = Date.now()) {
