@@ -1181,6 +1181,7 @@ export function jobRoleFitCard(progress) {
       total: pieces.length,
       level,
       proofLine: roleFitProofLine(track, readyPieces, practicingPieces),
+      skillChips: roleFitSkillChips(pieces),
       nextGap: next?.title ?? "All role signals are ready",
       recommendedPractice: roleFitRecommendedPractice(progress, next, chaptersById, gatesByChapter),
       nextAction: next
@@ -1196,6 +1197,32 @@ export function jobRoleFitCard(progress) {
     summary: strongest.readyCount > 0 ? `Strongest path now: ${strongest.title}` : "Start with any path; all begin with low-friction drills.",
     tracks
   };
+}
+
+function roleFitSkillChips(pieces) {
+  return pieces.map((piece) => {
+    const state =
+      piece.status === "interview_ready"
+        ? "interview-ready"
+        : piece.status === "proven"
+          ? "boss-proven"
+          : piece.status === "practicing"
+            ? "practicing"
+            : "next";
+    return {
+      chapterId: piece.chapterId,
+      label: piece.title,
+      state,
+      detail:
+        state === "interview-ready"
+          ? "ready to explain"
+          : state === "boss-proven"
+            ? "Boss proof"
+            : state === "practicing"
+              ? "micro-lessons started"
+              : "not started"
+    };
+  });
 }
 
 function roleFitProofLine(track, readyPieces, practicingPieces) {

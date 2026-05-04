@@ -115,6 +115,7 @@
 
 - The home screen maps chapter proof into three job-facing paths: AI App Builder, Agent Workflow Builder, and Agent Reliability Builder.
 - Each path shows ready evidence, practicing evidence, and the next chapter gap.
+- Each path now shows skill chips for the chapters that make up the role path, labeled as not started, practicing, Boss-proven, or interview-ready.
 - Each path turns progress into one proof line that can be reused in interview-style answers.
 - Each path includes a low-friction practice button for the next available lesson, Boss, interview drill, or pitch.
 - The map stays low-friction: it uses existing lesson, Boss, and interview progress instead of adding project tasks.

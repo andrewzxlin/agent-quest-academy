@@ -440,6 +440,50 @@ h1 {
   font-weight: 800;
 }
 
+.role-skill-chips {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.role-skill-chips small {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+}
+
+.role-skill-chips small.boss-proven,
+.role-skill-chips small.interview-ready {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.role-skill-chips small.practicing {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+}
+
+.role-skill-chips span,
+.role-skill-chips em {
+  display: block;
+}
+
+.role-skill-chips span {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.role-skill-chips em {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 800;
+}
+
 .role-fit-track em {
   color: var(--ink);
   font-size: 12px;

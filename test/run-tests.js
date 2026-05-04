@@ -1098,6 +1098,9 @@ function testJobRoleFitCard() {
   assert.ok(card.tracks.every((track) => track.readyCount === 0));
   assert.ok(card.tracks.every((track) => track.total === 4));
   assert.ok(card.tracks.every((track) => track.proofLine.includes("low-friction")));
+  assert.ok(card.tracks.every((track) => track.skillChips.length === track.total));
+  assert.ok(card.tracks.every((track) => track.skillChips.every((chip) => chip.state === "next")));
+  assert.ok(card.tracks.every((track) => track.skillChips.every((chip) => chip.detail.length > 0)));
   assert.ok(card.tracks.every((track) => track.recommendedPractice.cta.length > 0));
   assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").recommendedPractice.type, "lesson");
   assert.equal(card.tracks.find((track) => track.id === "agent-reliability-builder").recommendedPractice.type, "lesson");
@@ -1112,6 +1115,7 @@ function testJobRoleFitCard() {
   assert.ok(card.summary.includes("AI App Builder") || card.summary.includes("Agent Workflow Builder"));
   assert.ok(card.tracks.some((track) => track.readyCount === 1));
   assert.ok(card.tracks.some((track) => track.nextAction.includes("Boss-proven")));
+  assert.ok(card.tracks.some((track) => track.skillChips.some((chip) => chip.state === "boss-proven")));
   assert.ok(card.tracks.find((track) => track.id === "ai-app-builder").proofLine.includes("Agent 基礎直覺"));
   assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").recommendedPractice.type, "lesson");
   assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").recommendedPractice.type, "lesson");

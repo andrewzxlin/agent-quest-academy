@@ -454,6 +454,14 @@ function renderJobRoleFitCard(card) {
           <strong>${track.title}</strong>
           <p>${track.description}</p>
           <p class="role-proof-line">${track.proofLine}</p>
+          <div class="role-skill-chips">
+            ${track.skillChips
+              .map((chip) => `<small class="${chip.state}">
+                <span>${chip.label}</span>
+                <em>${chip.detail}</em>
+              </small>`)
+              .join("")}
+          </div>
           <small>${track.readyCount}/${track.total} ready · ${track.practicingCount} practicing</small>
           <em>${track.nextGap}</em>
           <small>${track.nextAction}</small>
