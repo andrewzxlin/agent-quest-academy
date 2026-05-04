@@ -16,6 +16,7 @@ import {
   loadProgress,
   masteryForLesson,
   mistakeNotebook,
+  nextPracticeRecommendation,
   reviewStats,
   resetProgress,
   saveProgress
@@ -53,6 +54,7 @@ function render() {
   const readiness = jobReadinessMap(progress);
   const summaries = chapterSummaryCards(progress);
   const stats = reviewStats(progress, Date.now());
+  const recommendation = nextPracticeRecommendation(progress, Date.now());
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -116,6 +118,7 @@ function render() {
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
+        ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
 
         <section class="quiz-card">
@@ -283,6 +286,17 @@ function renderCompletionCard(card) {
   </section>`;
 }
 
+function renderRecommendationCard(recommendation) {
+  return `<section class="recommendation-card ${recommendation.type}">
+    <div>
+      <p class="eyebrow">今日推薦</p>
+      <h3>${recommendation.title}</h3>
+      <p>${recommendation.reason}</p>
+    </div>
+    <button class="primary compact" data-recommend="true" ${recommendation.type === "done" ? "disabled" : ""}>${recommendation.cta}</button>
+  </section>`;
+}
+
 function renderFeedback(question, result) {
   const tone = result.correct ? "correct" : "wrong";
   return `<div class="feedback ${tone}">
@@ -399,6 +413,10 @@ function bindEvents() {
     render();
   });
 
+  document.querySelector("[data-recommend]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
   document.querySelectorAll("[data-single]").forEach((button) => {
     button.addEventListener("click", () => {
       selectedSingle = Number(button.dataset.single);
@@ -497,6 +515,39 @@ function bindEvents() {
     latestCompletion = null;
     render();
   });
+}
+
+function startRecommendedPractice(recommendation) {
+  const lessons = flattenLessons();
+  latestCompletion = null;
+  bossScore = 0;
+  currentIndex = 0;
+  clearAnswerState();
+
+  if (recommendation.type === "review") {
+    sessionMode = "review";
+    sessionQuestions = buildReviewSessionQuestions(progress, Date.now(), 7);
+  } else if (recommendation.type === "boss") {
+    const lessonIndex = lessons.findIndex((lesson) => lesson.chapterId === recommendation.chapterId);
+    selectedLessonIndex = Math.max(0, lessonIndex);
+    progress.currentLessonIndex = selectedLessonIndex;
+    sessionMode = "boss";
+    sessionQuestions = bossQuestionsForChapter(recommendation.chapterId, 8);
+  } else if (recommendation.type === "interview") {
+    const lessonIndex = lessons.findIndex((lesson) => lesson.chapterId === recommendation.chapterId);
+    selectedLessonIndex = Math.max(0, lessonIndex);
+    progress.currentLessonIndex = selectedLessonIndex;
+    sessionMode = "interview";
+    sessionQuestions = interviewQuestionsForChapter(recommendation.chapterId);
+  } else if (recommendation.type === "lesson") {
+    selectedLessonIndex = recommendation.lessonIndex ?? progress.currentLessonIndex;
+    progress.currentLessonIndex = selectedLessonIndex;
+    sessionMode = "lesson";
+    sessionQuestions = [];
+  }
+
+  saveProgress(progress);
+  render();
 }
 
 function getResponse(question) {

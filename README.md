@@ -36,6 +36,12 @@
 - Cards summarize the result, the relevant job-facing skill, and the next recommended action.
 - This keeps the loop game-like while still pointing back to interview-ready explanations.
 
+## Next Practice Recommendation
+
+- The home screen recommends one next action based on due reviews, lesson progress, Boss status, and interview drills.
+- Due review is prioritized first, then unfinished lessons, Boss checks, and interview practice.
+- The recommendation removes decision friction so beginners can keep moving without planning the curriculum themselves.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

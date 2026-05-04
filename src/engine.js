@@ -298,6 +298,79 @@ export function completionCard(progress, event) {
   };
 }
 
+export function nextPracticeRecommendation(progress, now = Date.now()) {
+  const stats = reviewStats(progress, now);
+  if (stats.dueCount > 0) {
+    return {
+      type: "review",
+      title: "先清到期複習",
+      reason: `有 ${stats.dueCount} 題已到期，先重刷最能防止遺忘。`,
+      cta: "開始複習"
+    };
+  }
+
+  const lessons = flattenLessons();
+  const chapters = chapterMap(progress);
+  const bossCandidate = chapters.find((chapter) => chapter.completedLessons === chapter.totalLessons && !chapter.bossPassed);
+  if (bossCandidate) {
+    return {
+      type: "boss",
+      chapterId: bossCandidate.chapterId,
+      title: "挑戰章節 Boss",
+      reason: `${bossCandidate.title} 的短課已完成，現在適合用低阻力題檢查整章理解。`,
+      cta: "挑戰 Boss"
+    };
+  }
+
+  const interviewCandidate = chapters.find((chapter) => {
+    if (!chapter.bossPassed) return false;
+    return flattenInterviewQuestions()
+      .filter((question) => question.chapterId === chapter.chapterId)
+      .some((question) => !progress.answered[questionKey(question)]);
+  });
+  if (interviewCandidate) {
+    return {
+      type: "interview",
+      chapterId: interviewCandidate.chapterId,
+      title: "練一組面試情境題",
+      reason: `${interviewCandidate.title} 已通關，現在把概念轉成面試時說得出口的判斷。`,
+      cta: "練面試題"
+    };
+  }
+
+  const lesson = lessons[progress.currentLessonIndex] ?? lessons.find((item) => !progress.completedLessons.includes(item.id));
+  const chapter = chapters.find((item) => item.chapterId === lesson?.chapterId);
+  if (lesson && chapter && !progress.completedLessons.includes(lesson.id)) {
+    return {
+      type: "lesson",
+      chapterId: chapter.chapterId,
+      lessonIndex: lessons.indexOf(lesson),
+      title: "繼續下一個 micro-lesson",
+      reason: `${chapter.title} 還有 ${chapter.totalLessons - chapter.completedLessons} 個短課未完成。`,
+      cta: "繼續學"
+    };
+  }
+
+  const nextChapterLesson = lessons.find((item) => !progress.completedLessons.includes(item.id));
+  if (nextChapterLesson) {
+    return {
+      type: "lesson",
+      chapterId: nextChapterLesson.chapterId,
+      lessonIndex: lessons.indexOf(nextChapterLesson),
+      title: "前進下一章",
+      reason: `${nextChapterLesson.chapterTitle} 還沒開始，接著補下一塊能力拼圖。`,
+      cta: "開始下一章"
+    };
+  }
+
+  return {
+    type: "done",
+    title: "今天改練口頭總結",
+    reason: "主線短課都已完成，可以用章節總結卡練 60 秒面試回答。",
+    cta: "查看總結"
+  };
+}
+
 export function dailyMissions(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   return [

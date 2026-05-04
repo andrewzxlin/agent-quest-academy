@@ -27,6 +27,7 @@ import {
   jobReadinessMap,
   masteryForLesson,
   mistakeNotebook,
+  nextPracticeRecommendation,
   reviewStats
 } from "../src/engine.js";
 
@@ -57,6 +58,7 @@ const tests = [
   ["chapter map summarizes lesson and boss progress", testChapterMap],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["completion cards summarize finished sessions", testCompletionCards],
+  ["next practice recommendation picks the highest-value next step", testNextPracticeRecommendation],
   ["job readiness map derives status from progress", testJobReadinessMap],
   ["interview questions work with answer and review flow", testInterviewQuestionFlow]
 ];
@@ -387,6 +389,41 @@ function testCompletionCards() {
   const reviewCard = completionCard(progress, { type: "review", title: "錯題複習" });
   assert.equal(reviewCard.title, "Review session complete");
   assert.ok(reviewCard.result.includes("複習"));
+}
+
+function testNextPracticeRecommendation() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  const [wrongQuestion] = flattenQuestions().filter((question) => question.type === "single");
+
+  answerQuestion(progress, wrongQuestion, 99, now);
+  assert.equal(nextPracticeRecommendation(progress, now).type, "review");
+  progress.reviewQueue = [];
+
+  let recommendation = nextPracticeRecommendation(progress, now);
+  assert.equal(recommendation.type, "lesson");
+  assert.equal(recommendation.lessonIndex, progress.currentLessonIndex);
+
+  const firstChapter = course.chapters[0];
+  const firstChapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === firstChapter.id);
+  for (const lesson of firstChapterLessons) {
+    completeLesson(progress, lesson.id, now);
+  }
+  recommendation = nextPracticeRecommendation(progress, now);
+  assert.equal(recommendation.type, "boss");
+  assert.equal(recommendation.chapterId, firstChapter.id);
+
+  completeBossQuiz(progress, firstChapter.id, 7, 8, now);
+  recommendation = nextPracticeRecommendation(progress, now);
+  assert.equal(recommendation.type, "interview");
+  assert.equal(recommendation.chapterId, firstChapter.id);
+
+  for (const question of flattenInterviewQuestions().filter((item) => item.chapterId === firstChapter.id)) {
+    answerQuestion(progress, question, question.type === "multi" ? question.answer : question.answer ?? question.keywords[0], now);
+  }
+  recommendation = nextPracticeRecommendation(progress, now);
+  assert.equal(recommendation.type, "lesson");
+  assert.notEqual(recommendation.chapterId, firstChapter.id);
 }
 
 function testJobReadinessMap() {

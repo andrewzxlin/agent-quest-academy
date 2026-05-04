@@ -269,6 +269,46 @@ h1 {
   border-color: #fed7aa;
 }
 
+.recommendation-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.recommendation-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.recommendation-card p {
+  color: var(--muted);
+}
+
+.recommendation-card.review {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.recommendation-card.boss {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.recommendation-card.interview {
+  background: #f5f3ff;
+  border-color: #c4b5fd;
+}
+
+.recommendation-card.lesson {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
 .visual-card {
   min-height: 180px;
   border-radius: 12px;
@@ -777,6 +817,7 @@ button:disabled {
 
   .hero-card,
   .completion-card,
+  .recommendation-card,
   .explain-grid,
   .mission-grid {
     grid-template-columns: 1fr;
