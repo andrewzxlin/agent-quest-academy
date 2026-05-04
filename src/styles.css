@@ -3663,6 +3663,64 @@ h1 {
   color: #7f1d1d;
 }
 
+.answer-evidence-clip {
+  background: rgb(255 255 255 / 0.84);
+  border: 1px solid rgb(22 163 74 / 0.34);
+  border-radius: 10px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr auto;
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.answer-evidence-clip.repair {
+  border-color: rgb(234 88 12 / 0.34);
+}
+
+.answer-evidence-clip span,
+.answer-evidence-clip strong,
+.answer-evidence-clip small,
+.answer-evidence-clip em,
+.answer-evidence-clip b {
+  display: block;
+}
+
+.answer-evidence-clip span {
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-evidence-clip.repair span {
+  color: #c2410c;
+}
+
+.answer-evidence-clip strong,
+.answer-evidence-clip p {
+  margin-top: 7px;
+}
+
+.answer-evidence-clip p {
+  color: var(--ink);
+  margin-bottom: 0;
+}
+
+.answer-evidence-clip small,
+.answer-evidence-clip em,
+.answer-evidence-clip b {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  margin-top: 5px;
+  text-align: right;
+}
+
+.answer-evidence-clip b {
+  color: var(--ink);
+}
+
 .proof-booster-card {
   background: rgb(255 255 255 / 0.78);
   border: 1px solid rgb(22 163 74 / 0.28);
@@ -4435,6 +4493,7 @@ button:disabled {
   .question-signal-steps,
   .session-rhythm-steps,
   .short-recipe-steps,
+  .answer-evidence-clip,
   .proof-booster-card,
   .puzzle-grid,
   .skill-grid,

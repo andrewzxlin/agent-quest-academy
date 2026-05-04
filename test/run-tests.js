@@ -15,6 +15,7 @@ import {
 import {
   abilityShardCard,
   abilityProofCards,
+  answerEvidenceClip,
   answerProofLine,
   answerRecallCue,
   answerQuestion,
@@ -134,6 +135,7 @@ const tests = [
   ["ability shard card turns each prompt into a collectible piece", testAbilityShardCard],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["short answer recipe turns writing into three tiny steps", testShortAnswerRecipe],
+  ["answer evidence clips turn every checked answer into a reusable signal", testAnswerEvidenceClips],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["proof booster turns feedback into immediate proof or review", testProofBoosterCard],
   ["question mastery signals show recall progress", testQuestionMasterySignals],
@@ -941,6 +943,32 @@ function testShortAnswerRecipe() {
   assert.ok(recipe.steps[1].text.includes("workflow"));
   assert.ok(recipe.promise.includes("One useful sentence"));
   assert.doesNotMatch(JSON.stringify(recipe), /repo|project implementation|build a project|coding task/i);
+}
+
+function testAnswerEvidenceClips() {
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  const savedClip = answerEvidenceClip(single, gradeQuestion(single, single.answer));
+  assert.equal(savedClip.title, "Evidence Clip");
+  assert.equal(savedClip.status, "saved");
+  assert.equal(savedClip.stage, "Recognize");
+  assert.ok(savedClip.headline.includes("reusable signal"));
+  assert.ok(savedClip.line.startsWith("I can "));
+  assert.ok(savedClip.useCase.includes("interview"));
+  assert.ok(savedClip.nextAction.includes("next tiny prompt"));
+
+  const repairClip = answerEvidenceClip(multi, gradeQuestion(multi, []));
+  assert.equal(repairClip.status, "repair");
+  assert.equal(repairClip.stage, "Connect");
+  assert.ok(repairClip.headline.includes("repair target"));
+  assert.ok(repairClip.useCase.includes("Review"));
+
+  const shortClip = answerEvidenceClip(short, gradeQuestion(short, short.keywords[0]));
+  assert.equal(shortClip.stage, "Explain");
+  assert.ok(shortClip.line.includes(short.keywords[0]));
+  assert.doesNotMatch(JSON.stringify([savedClip, repairClip, shortClip]), /repo|project implementation|build a project|coding task/i);
 }
 
 function testAnswerProofLines() {

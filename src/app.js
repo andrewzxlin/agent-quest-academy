@@ -2,6 +2,7 @@ import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interv
 import {
   abilityShardCard,
   abilityProofCards,
+  answerEvidenceClip,
   answerProofLine,
   answerRecallCue,
   answerQuestion,
@@ -1740,6 +1741,7 @@ function renderFeedback(question, result, progressState) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderAnswerEvidenceClip(answerEvidenceClip(question, result))}
     ${renderProofBoosterCard(proofBoosterCard(question, result, progressState))}
     ${renderAnswerProofLine(answerProofLine(question, result))}
     ${renderQuestionMasterySignal(questionMasterySignal(progressState, question))}
@@ -1747,6 +1749,21 @@ function renderFeedback(question, result, progressState) {
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+  </div>`;
+}
+
+function renderAnswerEvidenceClip(clip) {
+  return `<div class="answer-evidence-clip ${clip.status}">
+    <div>
+      <span>${clip.title}</span>
+      <strong>${clip.headline}</strong>
+      <p>${clip.line}</p>
+    </div>
+    <div>
+      <small>${clip.stage}</small>
+      <em>${clip.useCase}</em>
+      <b>${clip.nextAction}</b>
+    </div>
   </div>`;
 }
 

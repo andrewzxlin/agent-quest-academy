@@ -1142,6 +1142,23 @@ export function answerProofLine(question, result) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function answerEvidenceClip(question, result) {
+  const proof = answerProofLine(question, result);
+  const stage = questionMasteryStage(question);
+  const status = result.correct ? "saved" : "repair";
+  return {
+    title: "Evidence Clip",
+    status,
+    stage: stage.label,
+    headline: result.correct ? "Saved as a reusable signal." : "Saved as a repair target.",
+    line: proof.body,
+    useCase: result.correct
+      ? "Use this later as a short interview or portfolio explanation."
+      : "Review will replay this pattern until the signal becomes clean.",
+    nextAction: result.correct ? "Bank it and move to the next tiny prompt." : "Read the correction, then let review bring it back."
+  };
+}
+
 export function questionMasterySignal(progress, question) {
   const state = progress.answered[questionKey(question)];
   if (!state) return null;

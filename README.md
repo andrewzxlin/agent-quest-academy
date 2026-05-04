@@ -19,6 +19,12 @@
 - This turns mistakes into architecture judgment practice instead of simple right/wrong memorization.
 - Every checked answer includes a next-time recall cue so learners know what signal to look for in review.
 
+## Evidence Clips
+
+- Every checked answer now produces a compact Evidence Clip at the top of feedback.
+- Correct answers become reusable interview signals; misses become visible repair targets.
+- This keeps the loop game-like while turning small questions into a job-facing proof trail.
+
 ## Session Rhythm
 
 - The quiz card now shows the current run as Recognize, Connect, and Explain steps.
