@@ -26,6 +26,12 @@
 - This keeps the loop game-like while turning small questions into a job-facing proof trail.
 - The receipt reel now reuses these clip lines, so saved answers become a visible phrase bank.
 
+## Today Phrase Bank
+
+- Beginner view now shows the latest reusable line without opening the full dashboard.
+- The card counts saved proof lines and repair targets, then points to the next tiny prompt.
+- It makes the evidence loop visible from day one while staying choice-first and no-project.
+
 ## Session Rhythm
 
 - The quiz card now shows the current run as Recognize, Connect, and Explain steps.

@@ -1629,6 +1629,26 @@ export function learningReceiptReel(progress, limit = 4) {
   };
 }
 
+export function dailyPhraseBankCard(progress) {
+  const reel = learningReceiptReel(progress, 5);
+  const proofCount = reel.receipts.filter((receipt) => receipt.status === "proof").length;
+  const repairCount = reel.receipts.filter((receipt) => receipt.status === "review").length;
+  const latest = reel.receipts[0] ?? null;
+  const hasPhrases = reel.receipts.length > 0;
+
+  return {
+    title: "Today Phrase Bank",
+    status: hasPhrases ? "started" : "empty",
+    headline: hasPhrases ? `${reel.receipts.length} reusable lines started` : "Your first line is one answer away",
+    latestLine: latest?.evidenceLine ?? "Answer one low-friction question to create the first reusable line.",
+    latestUse: latest?.evidenceUseCase ?? "No writing assignment needed; the app turns the answer into a short signal.",
+    proofCount,
+    repairCount,
+    nextAction: hasPhrases ? "Use the newest line in the one-line coach or keep answering tiny prompts." : "Start with one choice question.",
+    promise: "This bank grows from choice questions and tiny short answers, not project work."
+  };
+}
+
 export function recallComboCard(progress) {
   const answered = Object.values(progress.answered ?? {}).sort((a, b) => (b.lastAnsweredAt ?? 0) - (a.lastAnsweredAt ?? 0));
   const latestCleanRun = answered.findIndex((item) => item.lastResult !== "correct");

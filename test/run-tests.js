@@ -39,6 +39,7 @@ import {
   dailyMinimumCard,
   dailyLandingStepCard,
   dailyMomentum,
+  dailyPhraseBankCard,
   dailyQuestSnapshot,
   dailyMissions,
   exerciseScopeCard,
@@ -167,6 +168,7 @@ const tests = [
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
   ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
   ["daily landing step maps tiny practice to job value", testDailyLandingStepCard],
+  ["daily phrase bank makes reusable lines visible in beginner flow", testDailyPhraseBankCard],
   ["zero to landing quest compresses the beginner route", testZeroToLandingQuestCard],
   ["quest compass turns recommendation into a game-like next step", testQuestCompass],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
@@ -1517,6 +1519,31 @@ function testDailyLandingStepCard() {
   card = dailyLandingStepCard(progress, now + 1);
   assert.equal(card.minimumAction, "Rescue one weak signal");
   assert.equal(card.abilityPiece, "recall stability");
+}
+
+function testDailyPhraseBankCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = dailyPhraseBankCard(progress);
+  assert.equal(card.title, "Today Phrase Bank");
+  assert.equal(card.status, "empty");
+  assert.equal(card.proofCount, 0);
+  assert.equal(card.repairCount, 0);
+  assert.ok(card.latestLine.includes("one low-friction question"));
+  assert.ok(card.promise.includes("choice questions"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const [single, multi] = flattenQuestions().filter((item) => ["single", "multi"].includes(item.type));
+  answerQuestion(progress, single, single.answer, now);
+  answerQuestion(progress, multi, [], now + 1);
+  card = dailyPhraseBankCard(progress);
+  assert.equal(card.status, "started");
+  assert.equal(card.proofCount, 1);
+  assert.equal(card.repairCount, 1);
+  assert.ok(card.headline.includes("reusable lines"));
+  assert.ok(card.latestLine.startsWith("I can "));
+  assert.ok(card.latestUse.includes("Review"));
+  assert.ok(card.nextAction.includes("one-line coach"));
 }
 
 function testZeroToLandingQuestCard() {

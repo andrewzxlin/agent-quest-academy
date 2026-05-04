@@ -1563,6 +1563,59 @@ h1 {
   margin-top: 12px;
 }
 
+.daily-phrase-bank-card {
+  align-items: center;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 14px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr auto;
+  padding: 20px;
+}
+
+.daily-phrase-bank-card.started {
+  background: #ecfeff;
+  border-color: #67e8f9;
+}
+
+.daily-phrase-bank-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.daily-phrase-bank-card p,
+.daily-phrase-bank-card small,
+.daily-phrase-bank-card em,
+.daily-phrase-bank-card span {
+  color: var(--muted);
+}
+
+.daily-phrase-bank-card p {
+  color: var(--ink);
+}
+
+.daily-phrase-bank-card strong,
+.daily-phrase-bank-card span {
+  display: block;
+  text-align: right;
+}
+
+.daily-phrase-bank-card strong {
+  color: #0891b2;
+  font-size: 24px;
+}
+
+.daily-phrase-bank-card em {
+  font-style: normal;
+  font-weight: 800;
+}
+
+.daily-phrase-bank-card > em,
+.daily-phrase-bank-card > small {
+  grid-column: 1 / -1;
+}
+
 .daily-momentum-card {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -4468,6 +4521,7 @@ button:disabled {
   .daily-quest-snapshot,
   .daily-minimum-card,
   .daily-landing-step-card,
+  .daily-phrase-bank-card,
   .daily-momentum-card,
   .recall-combo-card,
   .signal-preview-card,

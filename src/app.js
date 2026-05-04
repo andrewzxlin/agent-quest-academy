@@ -26,6 +26,7 @@ import {
   dailyMinimumCard,
   dailyLandingStepCard,
   dailyMomentum,
+  dailyPhraseBankCard,
   dailyQuestSnapshot,
   dailyMissions,
   exerciseScopeCard,
@@ -149,6 +150,7 @@ function render() {
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const dailyMinimum = dailyMinimumCard(progress, Date.now());
   const dailyLandingStep = dailyLandingStepCard(progress, Date.now());
+  const dailyPhraseBank = dailyPhraseBankCard(progress);
   const momentum = dailyMomentum(progress, Date.now());
   const onboarding = onboardingState(progress);
   const firstFive = firstFiveMinuteStartCard(progress);
@@ -247,6 +249,7 @@ function render() {
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyLandingStepCard(dailyLandingStep)}
+        ${renderDailyPhraseBankCard(dailyPhraseBank)}
         ${renderMistakeSafetyNetCard(mistakeSafetyNet)}
         ${renderReviewRescueQuest(rescueQuest)}
         ${renderMistakeFocusCard(mistakeFocus)}
@@ -1013,6 +1016,25 @@ function renderDailyLandingStepCard(card) {
       <span>${card.abilityPiece}</span>
       <span>${card.jobUse}</span>
     </div>
+    <small>${card.promise}</small>
+  </section>`;
+}
+
+function renderDailyPhraseBankCard(card) {
+  return `<section class="daily-phrase-bank-card ${card.status}">
+    <div>
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.latestLine}</p>
+      <small>${card.latestUse}</small>
+    </div>
+    <div>
+      <strong>${card.proofCount}</strong>
+      <span>saved</span>
+      <strong>${card.repairCount}</strong>
+      <span>repair</span>
+    </div>
+    <em>${card.nextAction}</em>
     <small>${card.promise}</small>
   </section>`;
 }
