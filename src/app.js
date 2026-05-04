@@ -37,6 +37,7 @@ import {
   lessonPracticePlan,
   lessonSkillCard,
   lessonMasteryLadder,
+  lessonWarmupCard,
   learningPuzzleBoard,
   loadProgress,
   masteryForLesson,
@@ -112,6 +113,7 @@ function render() {
   const bossReadiness = bossReadinessCard(progress, chapter.id);
   const skillCard = lessonSkillCard(progress, lesson.id);
   const practicePlan = lessonPracticePlan(progress, lesson.id);
+  const warmupCard = lessonWarmupCard(progress, lesson.id);
   const analogyBridge = lessonAnalogyBridge(lesson.id);
   const conceptDiagram = conceptDiagramCard(lesson.id);
   const masteryLadder = lessonMasteryLadder(progress, lesson.id);
@@ -202,6 +204,7 @@ function render() {
         ${renderGlossaryCard(glossary)}
         ${renderLessonSkillCard(skillCard)}
         ${renderLessonPracticePlan(practicePlan)}
+        ${renderLessonWarmupCard(warmupCard)}
         ${renderLessonAnalogyBridge(analogyBridge)}
         ${renderConceptDiagramCard(conceptDiagram)}
         ${renderLessonMasteryLadder(masteryLadder)}
@@ -821,6 +824,29 @@ function renderLessonPracticePlan(plan) {
         .join("")}
     </div>
     <strong>${plan.promise}</strong>
+  </section>`;
+}
+
+function renderLessonWarmupCard(card) {
+  if (!card) return "";
+  return `<section class="lesson-warmup-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Warmup</p>
+        <h3>${card.title}</h3>
+      </div>
+      <p>${card.mastery}% ready - next: ${card.nextLabel}</p>
+    </div>
+    <p>${card.headline}</p>
+    <div class="warmup-step-grid">
+      ${card.steps
+        .map((step) => `<div>
+          <span>${step.label}</span>
+          <strong>${step.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
+    <small>${card.reassurance}</small>
   </section>`;
 }
 

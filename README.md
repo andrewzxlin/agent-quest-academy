@@ -175,6 +175,12 @@
 - Learners see that the session starts with single-choice recognition, moves to multi-select connection, and ends with one tiny short answer.
 - The plan makes it explicit that the current phase uses quick judgment practice, not coding tasks.
 
+## Lesson Warmup Cards
+
+- Every lesson now adds a zero-friction warmup before the analogy and quiz.
+- The warmup breaks the first move into Look, Choose, and Say so beginners do not face a blank page.
+- It points to the next smallest visible action while keeping the session focused on recognition, connection, and one short explanation.
+
 ## Lesson Analogy Bridges
 
 - Every lesson now turns the built-in analogy into a three-part bridge: picture it, workflow meaning, and job signal.

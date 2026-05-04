@@ -277,6 +277,50 @@ export function lessonPracticePlan(progress, lessonId) {
   };
 }
 
+export function lessonWarmupCard(progress, lessonId) {
+  const lesson = flattenLessons().find((item) => item.id === lessonId);
+  if (!lesson) return null;
+  const plan = lessonPracticePlan(progress, lessonId);
+  const mastery = masteryForLesson(progress, lesson);
+  const firstUntried = lesson.questions.find((question) => !progress.answered[questionKey({ ...question, lessonId })]);
+  const nextType = firstUntried?.type ?? "review";
+  const nextLabel =
+    nextType === "single"
+      ? "pick one signal"
+      : nextType === "multi"
+        ? "connect several signals"
+        : nextType === "short"
+          ? "write one sentence"
+          : "replay due review";
+
+  return {
+    lessonId,
+    chapterId: lesson.chapterId,
+    title: "Zero-friction warmup",
+    headline: "Start by noticing, not building.",
+    mastery,
+    nextLabel,
+    steps: [
+      {
+        id: "look",
+        label: "Look",
+        text: `Read the concept map for ${lesson.title} before touching the answers.`
+      },
+      {
+        id: "choose",
+        label: "Choose",
+        text: `${plan.formats.find((format) => format.type === "single")?.count ?? 0} single-choice prompts train fast recognition.`
+      },
+      {
+        id: "say",
+        label: "Say",
+        text: "The final short answer is only one job-facing sentence, not a build assignment."
+      }
+    ],
+    reassurance: "No setup and no blank page. The next move is simply to answer the smallest visible question."
+  };
+}
+
 export function lessonAnalogyBridge(lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;

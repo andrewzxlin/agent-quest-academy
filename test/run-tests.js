@@ -51,6 +51,7 @@ import {
   lessonPracticePlan,
   lessonSkillCard,
   lessonMasteryLadder,
+  lessonWarmupCard,
   learningPuzzleBoard,
   masteryForLesson,
   mistakeFocusCard,
@@ -78,6 +79,7 @@ const tests = [
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
   ["lesson practice plans show choice-first sequence", testLessonPracticePlans],
+  ["lesson warmup cards remove first-step friction", testLessonWarmupCards],
   ["lesson analogy bridges explain concepts in plain language", testLessonAnalogyBridges],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
   ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
@@ -306,6 +308,30 @@ function testLessonPracticePlans() {
   assert.equal(updated.attempted, 1);
   assert.equal(updated.formats.find((format) => format.type === "single").attempted, 1);
   assert.equal(lessonPracticePlan(progress, "missing-lesson"), null);
+}
+
+function testLessonWarmupCards() {
+  const progress = createInitialProgress(1000);
+  for (const lesson of flattenLessons()) {
+    const card = lessonWarmupCard(progress, lesson.id);
+    assert.equal(card.lessonId, lesson.id);
+    assert.equal(card.chapterId, lesson.chapterId);
+    assert.equal(card.title, "Zero-friction warmup");
+    assert.equal(card.steps.length, 3);
+    assert.deepEqual(card.steps.map((step) => step.id), ["look", "choose", "say"]);
+    assert.ok(card.headline.includes("noticing"));
+    assert.ok(card.nextLabel.includes("pick one signal"));
+    assert.ok(card.steps.find((step) => step.id === "say").text.includes("one job-facing sentence"));
+    assert.ok(card.reassurance.includes("no blank page"));
+    assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+  }
+
+  const lesson = flattenLessons()[0];
+  answerQuestion(progress, { ...lesson.questions[0], lessonId: lesson.id }, lesson.questions[0].answer, 1000);
+  const updated = lessonWarmupCard(progress, lesson.id);
+  assert.match(updated.nextLabel, /pick one signal|connect several signals|write one sentence|replay due review/);
+  assert.notEqual(updated.nextLabel, "pick one signal");
+  assert.equal(lessonWarmupCard(progress, "missing-lesson"), null);
 }
 
 function testLessonAnalogyBridges() {
