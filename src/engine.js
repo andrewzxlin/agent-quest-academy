@@ -273,6 +273,31 @@ export function chapterSummaryCards(progress) {
   });
 }
 
+export function completionCard(progress, event) {
+  const summariesByChapter = new Map(chapterSummaryCards(progress).map((item) => [item.chapterId, item]));
+  const summary = event.chapterId ? summariesByChapter.get(event.chapterId) : null;
+  const titleByType = {
+    lesson: "Micro-lesson cleared",
+    boss: event.passed ? "Boss cleared" : "Boss needs another run",
+    interview: "Interview drill complete",
+    review: "Review session complete"
+  };
+
+  return {
+    type: event.type,
+    title: titleByType[event.type] ?? "Session complete",
+    headline: event.title ?? summary?.title ?? "Progress saved",
+    ability: summary?.ability ?? "你正在把 agentic workflow 拆成可判斷、可解釋、可複習的能力。",
+    result:
+      event.type === "boss"
+        ? `${event.score}/${event.total}，${event.passed ? "已達通關線" : "還沒到 80% 通關線"}`
+        : event.type === "review"
+          ? "錯題與間隔複習已更新"
+          : "進度、XP 與複習排程已更新",
+    nextAction: summary?.nextAction ?? "繼續下一個低阻力練習。"
+  };
+}
+
 export function dailyMissions(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   return [

@@ -5,6 +5,7 @@ import {
   buildSessionQuestions,
   chapterMap,
   chapterSummaryCards,
+  completionCard,
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
@@ -31,6 +32,7 @@ let checked = false;
 let lastResult = null;
 let sessionMode = "lesson";
 let bossScore = 0;
+let latestCompletion = null;
 
 const root = document.querySelector("#app");
 
@@ -114,6 +116,7 @@ function render() {
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
+        ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -265,6 +268,21 @@ function renderQuestion(question) {
   return `<textarea class="short-input" placeholder="用一句話回答即可，不需要寫程式。">${shortAnswer}</textarea>`;
 }
 
+function renderCompletionCard(card) {
+  return `<section class="completion-card ${card.type}">
+    <div>
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.ability}</p>
+    </div>
+    <div>
+      <strong>${card.result}</strong>
+      <span>${card.nextAction}</span>
+      <button class="secondary compact" data-dismiss-completion="true">繼續練習</button>
+    </div>
+  </section>`;
+}
+
 function renderFeedback(question, result) {
   const tone = result.correct ? "correct" : "wrong";
   return `<div class="feedback ${tone}">
@@ -338,6 +356,7 @@ function bindEvents() {
       progress.currentLessonIndex = selectedLessonIndex;
       sessionMode = "lesson";
       bossScore = 0;
+      latestCompletion = null;
       sessionQuestions = [];
       currentIndex = 0;
       clearAnswerState();
@@ -351,6 +370,7 @@ function bindEvents() {
     sessionQuestions = buildReviewSessionQuestions(progress, Date.now(), 7);
     currentIndex = 0;
     bossScore = 0;
+    latestCompletion = null;
     clearAnswerState();
     render();
   });
@@ -362,6 +382,7 @@ function bindEvents() {
     sessionQuestions = bossQuestionsForChapter(lesson.chapterId, 8);
     currentIndex = 0;
     bossScore = 0;
+    latestCompletion = null;
     clearAnswerState();
     render();
   });
@@ -373,6 +394,7 @@ function bindEvents() {
     sessionQuestions = interviewQuestionsForChapter(lesson.chapterId);
     currentIndex = 0;
     bossScore = 0;
+    latestCompletion = null;
     clearAnswerState();
     render();
   });
@@ -416,16 +438,36 @@ function bindEvents() {
   document.querySelector("[data-next]")?.addEventListener("click", () => {
     if (currentIndex === sessionQuestions.length - 1) {
       if (sessionMode === "review" || sessionMode === "interview") {
+        const lessons = flattenLessons();
+        const lesson = lessons[selectedLessonIndex] ?? lessons[0];
+        latestCompletion = completionCard(progress, {
+          type: sessionMode,
+          chapterId: sessionMode === "interview" ? lesson.chapterId : null,
+          title: sessionMode === "interview" ? `${lesson.chapterTitle} 面試情境題` : "錯題複習"
+        });
         sessionMode = "lesson";
       } else if (sessionMode === "boss") {
         const lessons = flattenLessons();
         const lesson = lessons[selectedLessonIndex] ?? lessons[0];
         progress = completeBossQuiz(progress, lesson.chapterId, bossScore, sessionQuestions.length);
+        latestCompletion = completionCard(progress, {
+          type: "boss",
+          chapterId: lesson.chapterId,
+          title: `${lesson.chapterTitle} Boss Quiz`,
+          score: bossScore,
+          total: sessionQuestions.length,
+          passed: sessionQuestions.length > 0 && bossScore / sessionQuestions.length >= 0.8
+        });
         sessionMode = "lesson";
         bossScore = 0;
       } else {
         const lesson = flattenLessons()[selectedLessonIndex];
         progress = completeLesson(progress, lesson.id);
+        latestCompletion = completionCard(progress, {
+          type: "lesson",
+          chapterId: lesson.chapterId,
+          title: lesson.title
+        });
         selectedLessonIndex = progress.currentLessonIndex;
       }
       sessionQuestions = [];
@@ -444,9 +486,15 @@ function bindEvents() {
     selectedLessonIndex = 0;
     sessionMode = "lesson";
     bossScore = 0;
+    latestCompletion = null;
     sessionQuestions = [];
     currentIndex = 0;
     clearAnswerState();
+    render();
+  });
+
+  document.querySelector("[data-dismiss-completion]")?.addEventListener("click", () => {
+    latestCompletion = null;
     render();
   });
 }

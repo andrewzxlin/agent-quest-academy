@@ -16,6 +16,7 @@ import {
   buildSessionQuestions,
   chapterMap,
   chapterSummaryCards,
+  completionCard,
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
@@ -55,6 +56,7 @@ const tests = [
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
+  ["completion cards summarize finished sessions", testCompletionCards],
   ["job readiness map derives status from progress", testJobReadinessMap],
   ["interview questions work with answer and review flow", testInterviewQuestionFlow]
 ];
@@ -351,6 +353,40 @@ function testChapterSummaryCards() {
 
   completeBossQuiz(progress, chapter.id, 7, 8, 1000);
   assert.ok(chapterSummaryCards(progress)[0].nextAction.includes("面試情境題"));
+}
+
+function testCompletionCards() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  const lesson = flattenLessons().find((item) => item.chapterId === chapter.id);
+
+  completeLesson(progress, lesson.id, 1000);
+  const lessonCard = completionCard(progress, {
+    type: "lesson",
+    chapterId: chapter.id,
+    title: lesson.title
+  });
+  assert.equal(lessonCard.type, "lesson");
+  assert.equal(lessonCard.headline, lesson.title);
+  assert.ok(lessonCard.ability.length > 20);
+  assert.ok(lessonCard.nextAction.includes("Boss Quiz"));
+
+  completeBossQuiz(progress, chapter.id, 7, 8, 1000);
+  const bossCard = completionCard(progress, {
+    type: "boss",
+    chapterId: chapter.id,
+    title: `${chapter.title} Boss Quiz`,
+    score: 7,
+    total: 8,
+    passed: true
+  });
+  assert.equal(bossCard.title, "Boss cleared");
+  assert.ok(bossCard.result.includes("7/8"));
+  assert.ok(bossCard.nextAction.includes("面試情境題"));
+
+  const reviewCard = completionCard(progress, { type: "review", title: "錯題複習" });
+  assert.equal(reviewCard.title, "Review session complete");
+  assert.ok(reviewCard.result.includes("複習"));
 }
 
 function testJobReadinessMap() {

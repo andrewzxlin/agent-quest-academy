@@ -223,6 +223,52 @@ h1 {
   margin: 8px 0;
 }
 
+.completion-card {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  align-items: center;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.completion-card h3 {
+  font-size: 24px;
+  margin: 6px 0;
+}
+
+.completion-card p,
+.completion-card span {
+  color: var(--muted);
+}
+
+.completion-card strong,
+.completion-card span {
+  display: block;
+}
+
+.completion-card strong {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.completion-card.boss {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.completion-card.interview {
+  background: #f5f3ff;
+  border-color: #c4b5fd;
+}
+
+.completion-card.review {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
 .visual-card {
   min-height: 180px;
   border-radius: 12px;
@@ -414,6 +460,11 @@ h1 {
 .secondary {
   background: var(--green);
   color: white;
+}
+
+.compact {
+  margin-top: 12px;
+  padding: 10px 14px;
 }
 
 .ghost {
@@ -725,6 +776,7 @@ button:disabled {
   }
 
   .hero-card,
+  .completion-card,
   .explain-grid,
   .mission-grid {
     grid-template-columns: 1fr;

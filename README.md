@@ -30,6 +30,12 @@
 - Cards are derived from real progress, Boss results, and answered mistakes.
 - The cards help learners translate small daily drills into job-facing explanations.
 
+## Completion Cards
+
+- Finishing a lesson, Boss Quiz, interview drill, or review session now shows an immediate completion card.
+- Cards summarize the result, the relevant job-facing skill, and the next recommended action.
+- This keeps the loop game-like while still pointing back to interview-ready explanations.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。
