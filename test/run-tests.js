@@ -12,6 +12,8 @@ import {
 
 const tests = [
   ["course has MVP scope", testCourseScope],
+  ["course covers job-ready agentic workflow map", testCourseCoverage],
+  ["course stays low-friction", testLowFrictionQuestionTypes],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
   ["short answer keyword grading works", testShortAnswer],
@@ -42,9 +44,28 @@ if (failed > 0) {
 }
 
 function testCourseScope() {
-  assert.equal(course.chapters.length, 3);
-  assert.equal(flattenLessons().length, 9);
-  assert.equal(flattenQuestions().length, 45);
+  assert.equal(course.chapters.length, 8);
+  assert.equal(flattenLessons().length, 24);
+  assert.equal(flattenQuestions().length, 120);
+}
+
+function testCourseCoverage() {
+  const text = JSON.stringify(course);
+  for (const topic of ["Tool", "RAG", "Memory", "Guardrails", "Evals", "Observability", "LangChain", "LangGraph"]) {
+    assert.ok(text.includes(topic), `missing topic: ${topic}`);
+  }
+}
+
+function testLowFrictionQuestionTypes() {
+  const questions = flattenQuestions();
+  const typeCounts = countBy(questions, (question) => question.type);
+  assert.equal(typeCounts.single, 72);
+  assert.equal(typeCounts.multi, 24);
+  assert.equal(typeCounts.short, 24);
+  for (const question of questions) {
+    assert.ok(["single", "multi", "short"].includes(question.type));
+    assert.doesNotMatch(question.prompt, /實作專案|請寫程式|建立 repo/i);
+  }
 }
 
 function testSingleChoice() {
@@ -106,4 +127,12 @@ function testFreshSessionQuestionKeys() {
   answerQuestion(progress, session[0], session[0].answer, 1000);
   assert.ok(progress.answered[`${lesson.id}:${session[0].id}`]);
   assert.equal(progress.answered[`undefined:${session[0].id}`], undefined);
+}
+
+function countBy(items, keyFn) {
+  return items.reduce((counts, item) => {
+    const key = keyFn(item);
+    counts[key] = (counts[key] ?? 0) + 1;
+    return counts;
+  }, {});
 }

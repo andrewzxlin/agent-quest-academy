@@ -4,25 +4,26 @@
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。
 
-## MVP 內容
+## 目前內容
 
-- 3 個章節：Agent 基礎、Tool Calling、RAG
-- 9 個 micro-lessons
-- 45 題低阻力題目：單選、複選、少量簡答
+- 8 個章節：Agent 基礎、Tool Calling、RAG、Memory、Guardrails、Evals、Observability、LangChain / LangGraph
+- 24 個 micro-lessons
+- 120 題低阻力題目：單選、複選、少量簡答
 - 答錯立即進入 review queue
 - 答對後排入間隔複習
 - 即時回饋、XP、streak、熟練度
 - 使用 `localStorage` 保存進度
-- 暫不包含專案實作題，先專注建立直覺
+- 暫不包含專案實作題，先專注建立判斷力與概念直覺
 
 ## 為什麼這對 Agentic Workflow 重要
 
-很多人一開始卡住，不是因為不會寫 LangChain 或 LangGraph，而是還沒分清楚：
+很多人一開始卡住，不是因為不會背 LangChain 或 LangGraph API，而是還沒分清楚：
 
-1. agent、workflow、tool、RAG 各自解決什麼問題
-2. 什麼時候該讓模型自由推理，什麼時候該用固定流程約束
-3. retrieval、guardrails、evals、observability 為什麼會變成真實產品的核心
-4. 從 prompt 到 tool calling，再到 stateful graph 的學習順序
+1. agent、workflow、tool、RAG、memory 各自解決什麼問題
+2. 什麼時候該讓模型自由判斷，什麼時候該用固定流程約束
+3. guardrails、evals、observability 為什麼會變成真實產品的核心
+4. LangChain 是元件組裝層，LangGraph 是 stateful workflow 執行層
+5. 真實 agent 系統如何在速度、成本、安全、可恢復性與可測試性之間取捨
 
 這個專案把學習拼圖切小，讓初學者先建立可重複辨識的判斷力，再進入程式碼與專案實作。
 
@@ -36,6 +37,16 @@
   -> 答對題目排入間隔複習
   -> 用熟練度推進下一課
 ```
+
+## 參考脈絡
+
+課程內容參考了目前主流 agent 系統的分工方式：
+
+- LangChain agents：models、tools、agent loop 與 graph-based runtime
+- LangGraph durable execution：用 state persistence 支援中斷後恢復、human-in-the-loop 與長任務
+- OpenAI Agents SDK guardrails：input、output、tool guardrails 與 tripwire
+- OpenAI Agents SDK tracing：trace/span 追蹤 LLM generation、tool calls、guardrails、handoffs
+- Spacing and retrieval practice：用間隔複習與主動回想降低遺忘
 
 ## 使用方式
 
@@ -63,6 +74,8 @@ npm test
 測試覆蓋：
 
 - 課程總數與題目總數
+- 是否涵蓋 Tool、RAG、Memory、Guardrails、Evals、Observability、LangChain、LangGraph
+- 題型是否仍維持單選、複選、少量簡答
 - 單選、複選、簡答評分
 - 答錯後加入錯題複習
 - 答對後排入間隔複習
@@ -72,7 +85,6 @@ npm test
 
 ## 接下來可以補的拼圖
 
-- 加入 Memory、Guardrails、LangChain、LangGraph、Evals、Observability 章節
 - 用 Image 2.0 產生角色、流程圖、卡牌、概念圖，讓每個知識點更像遊戲關卡
 - 加入更精細的 spaced repetition 演算法
 - 加入每日任務與錯題本

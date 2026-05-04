@@ -8,7 +8,6 @@ import {
   gradeQuestion,
   loadProgress,
   masteryForLesson,
-  questionKey,
   resetProgress,
   saveProgress
 } from "./engine.js";
@@ -47,7 +46,7 @@ function render() {
         </div>
         <div class="stats">
           <div><span>${progress.xp}</span><small>XP</small></div>
-          <div><span>${progress.streak}</span><small>通關</small></div>
+          <div><span>${progress.streak}</span><small>連續課</small></div>
           <div><span>${dueCount}</span><small>待複習</small></div>
         </div>
         <div class="map">
@@ -95,19 +94,19 @@ function render() {
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult) : ""}
           <div class="actions">
-            <button class="primary" data-check="true" ${checked ? "disabled" : ""}>確認答案</button>
+            <button class="primary" data-check="true" ${checked ? "disabled" : ""}>檢查答案</button>
             <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? "完成本課" : "下一題"}</button>
           </div>
         </section>
 
         <section class="explain-grid">
           <div>
-            <h3>低阻力規則</h3>
-            <p>先選擇題建立辨識能力，再用少量簡答練主動回想。答錯會在本課結尾或下次練習重現。</p>
+            <h3>學習節奏</h3>
+            <p>先用選擇題建立直覺，答錯會立刻排入複習；答對也會在未來回來，避免只是當下猜對。</p>
           </div>
           <div>
-            <h3>上岸路線</h3>
-            <p>現在先懂概念；之後才進入 LangChain、LangGraph、RAG、Guardrails、Evals、Observability 的實作任務。</p>
+            <h3>目前拼圖</h3>
+            <p>課程涵蓋 Agent、Tool Calling、RAG、Memory、Guardrails、Evals、Observability、LangChain 與 LangGraph。</p>
           </div>
         </section>
       </main>
@@ -126,15 +125,15 @@ function renderQuestion(question) {
   if (question.type === "multi") {
     return `<div class="choices">${question.choices
       .map((choice, index) => `<button class="choice ${selectedMulti.has(index) ? "selected" : ""}" data-multi="${index}">${choice}</button>`)
-      .join("")}</div><p class="hint">可複選。選出所有正確項目。</p>`;
+      .join("")}</div><p class="hint">可複選，選完再檢查。</p>`;
   }
-  return `<textarea class="short-input" placeholder="用自己的話回答，短短一句就好。">${shortAnswer}</textarea>`;
+  return `<textarea class="short-input" placeholder="用一句話回答即可，不需要寫程式。">${shortAnswer}</textarea>`;
 }
 
 function renderFeedback(question, result) {
   const tone = result.correct ? "correct" : "wrong";
   return `<div class="feedback ${tone}">
-    <strong>${result.correct ? "答對了" : "先不急，這題會再出現"}</strong>
+    <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
   </div>`;
 }
