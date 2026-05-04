@@ -1161,6 +1161,13 @@ h1 {
   border: 1px solid #fed7aa;
 }
 
+.sentence-template {
+  justify-self: start;
+  margin-top: 0;
+  color: #c2410c;
+  border-color: #fed7aa;
+}
+
 .feedback {
   margin-top: 14px;
   border-radius: 12px;

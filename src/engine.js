@@ -227,11 +227,13 @@ export function questionCoachHint(question) {
 
 export function shortAnswerSupport(question) {
   if (question.type !== "short") return null;
+  const concepts = question.keywords.slice(0, Math.max(1, question.minMatches));
   return {
     title: "概念積木",
     prompt: "先選 1-2 個概念放進答案，再用自己的話補成一句完整說明。",
     concepts: question.keywords,
-    needed: question.minMatches
+    needed: question.minMatches,
+    sentenceTemplate: `我會先看 ${concepts.join(" 和 ")}，因為 agentic workflow 需要把任務、工具和風險說清楚。`
   };
 }
 

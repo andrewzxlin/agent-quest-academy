@@ -677,6 +677,7 @@ function renderShortAnswerSupport(support) {
     <div class="concept-chip-row">
       ${support.concepts.map((concept, index) => `<button class="concept-chip" data-short-concept="${index}">${concept}</button>`).join("")}
     </div>
+    <button class="starter-chip sentence-template" data-short-template="true">套用一句完整說法</button>
     <small>至少命中 ${support.needed} 個概念即可，不需要寫程式。</small>
   </div>`;
 }
@@ -882,6 +883,14 @@ function bindEvents() {
       const support = shortAnswerSupport(sessionQuestions[currentIndex]);
       const concept = support?.concepts[Number(button.dataset.shortConcept)];
       shortAnswer = appendConcept(shortAnswer, concept);
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-short-template]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const support = shortAnswerSupport(sessionQuestions[currentIndex]);
+      shortAnswer = support?.sentenceTemplate ?? shortAnswer;
       render();
     });
   });

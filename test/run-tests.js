@@ -345,7 +345,10 @@ function testShortAnswerSupport() {
   assert.deepEqual(support.concepts, short.keywords);
   assert.equal(support.needed, short.minMatches);
   assert.ok(support.prompt.includes("自己的話"));
-  assert.doesNotMatch(`${support.prompt} ${support.concepts.join(" ")}`, /請寫程式|建立 repo|project implementation/i);
+  assert.ok(support.sentenceTemplate.includes(short.keywords[0]));
+  assert.ok(support.sentenceTemplate.includes("agentic workflow"));
+  assert.equal(gradeQuestion(short, support.sentenceTemplate).correct, true);
+  assert.doesNotMatch(`${support.prompt} ${support.sentenceTemplate} ${support.concepts.join(" ")}`, /請寫程式|建立 repo|project implementation/i);
 }
 
 function testMistakeRescuePrompts() {
