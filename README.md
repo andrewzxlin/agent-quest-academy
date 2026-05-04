@@ -163,6 +163,7 @@
 
 - Main lessons, Boss Quiz, interview drills, and review sessions stay limited to single choice, multi-select, and short answer questions.
 - Short answers are explanation prompts, not implementation assignments.
+- Fresh lesson sessions show choice questions before the short-answer prompt.
 - Project builds, repo tasks, code-writing prompts, and LangGraph build tasks are intentionally out of scope for this learning phase.
 
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。

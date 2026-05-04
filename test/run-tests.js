@@ -76,6 +76,7 @@ const tests = [
   ["correct answer schedules future review", testCorrectAnswerReview],
   ["lesson completion advances progress", testLessonCompletion],
   ["session includes due review first", testSessionReview],
+  ["fresh lesson sessions put choice questions before short answers", testFreshSessionChoiceFirst],
   ["fresh session questions keep stable keys", testFreshSessionQuestionKeys],
   ["review mode returns only due questions", testReviewModeOnlyDue],
   ["review stats separate due and scheduled", testReviewStats],
@@ -447,6 +448,21 @@ function testSessionReview() {
   const session = buildSessionQuestions(progress, lesson, 1000);
   assert.equal(session[0].id, question.id);
   assert.ok(masteryForLesson(progress, lesson) >= 0);
+}
+
+function testFreshSessionChoiceFirst() {
+  for (const lesson of flattenLessons()) {
+    const progress = createInitialProgress(1000);
+    const session = buildSessionQuestions(progress, lesson, 1000);
+    const typeCounts = countBy(session, (question) => question.type);
+    const firstShortIndex = session.findIndex((question) => question.type === "short");
+
+    assert.equal(typeCounts.single, 3);
+    assert.equal(typeCounts.multi, 1);
+    assert.equal(typeCounts.short, 1);
+    assert.equal(firstShortIndex, session.length - 1);
+    assert.ok(session.slice(0, firstShortIndex).every((question) => ["single", "multi"].includes(question.type)));
+  }
 }
 
 function testFreshSessionQuestionKeys() {

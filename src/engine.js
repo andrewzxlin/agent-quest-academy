@@ -9,6 +9,7 @@ import {
 } from "./course.js";
 
 const STORAGE_KEY = "agentQuestProgress:v1";
+const QUESTION_TYPE_ORDER = { single: 0, multi: 1, short: 2 };
 
 const LEARNER_PROFILES = [
   {
@@ -341,7 +342,7 @@ export function buildSessionQuestions(progress, lesson, now = Date.now()) {
   const fresh = lesson.questions
     .map((question) => withLessonMetadata(question, lesson))
     .filter((question) => !dueKeys.has(questionKey(question)));
-  return [...due, ...fresh].slice(0, 7);
+  return [...due, ...lowFrictionQuestionOrder(fresh)].slice(0, 7);
 }
 
 export function buildReviewSessionQuestions(progress, now = Date.now(), limit = 7) {
@@ -971,6 +972,10 @@ function withLessonMetadata(question, lesson) {
     chapterId: lesson.chapterId,
     chapterTitle: lesson.chapterTitle
   };
+}
+
+function lowFrictionQuestionOrder(questions) {
+  return [...questions].sort((a, b) => (QUESTION_TYPE_ORDER[a.type] ?? 99) - (QUESTION_TYPE_ORDER[b.type] ?? 99));
 }
 
 function recordDailyActivity(progress, now, patch) {
