@@ -39,6 +39,7 @@ import {
   lessonSkillCard,
   learningPuzzleBoard,
   masteryForLesson,
+  mistakeFocusCard,
   mistakeRescuePrompt,
   mistakeNotebook,
   nextPracticeRecommendation,
@@ -83,6 +84,7 @@ const tests = [
   ["daily momentum derives real active-day streaks", testDailyMomentum],
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
+  ["mistake focus card picks the highest-priority wrong answer", testMistakeFocusCard],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
   ["chapter gate map stages lessons boss interview and pitch unlocks", testChapterGateMap],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
@@ -603,6 +605,25 @@ function testMistakeNotebook() {
   assert.ok(notebook[0].rescue.title.length > 0);
   assert.ok(notebook[0].rescue.body.length >= 20);
   assert.equal(notebook.some((item) => item.question.id === correctOnly.id), false);
+}
+
+function testMistakeFocusCard() {
+  const progress = createInitialProgress(1000);
+  assert.equal(mistakeFocusCard(progress, 1000), null);
+
+  const [firstWrong, secondWrong] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, firstWrong, 99, 1000);
+  answerQuestion(progress, secondWrong, 99, 2000);
+  answerQuestion(progress, secondWrong, 99, 3000);
+
+  const focus = mistakeFocusCard(progress, 3000);
+  assert.equal(focus.prompt, secondWrong.prompt);
+  assert.equal(focus.wrongCount, 2);
+  assert.equal(focus.due, true);
+  assert.equal(focus.dueCount, 2);
+  assert.equal(focus.totalWrong, 3);
+  assert.ok(focus.rescue.body.length >= 20);
+  assert.ok(focus.nextAction.includes("複習"));
 }
 
 function testChapterMap() {

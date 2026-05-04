@@ -26,6 +26,7 @@ import {
   learningPuzzleBoard,
   loadProgress,
   masteryForLesson,
+  mistakeFocusCard,
   mistakeRescuePrompt,
   mistakeNotebook,
   nextPracticeRecommendation,
@@ -68,6 +69,7 @@ function render() {
   const missions = dailyMissions(progress, Date.now());
   const badges = achievements(progress);
   const mistakes = mistakeNotebook(progress, Date.now(), 5);
+  const mistakeFocus = mistakeFocusCard(progress, Date.now());
   const map = chapterMap(progress);
   const gates = chapterGateMap(progress);
   const gatesByChapter = new Map(gates.map((item) => [item.chapterId, item]));
@@ -154,6 +156,7 @@ function render() {
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMomentumCard(momentum)}
+        ${renderMistakeFocusCard(mistakeFocus)}
         ${renderLearningPuzzleBoard(puzzle)}
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
@@ -418,6 +421,23 @@ function renderDailyMomentumCard(momentum) {
         <span>${momentum.correctRate}%</span>
         <small>今日正確率</small>
       </div>
+    </div>
+  </section>`;
+}
+
+function renderMistakeFocusCard(card) {
+  if (!card) return "";
+  return `<section class="mistake-focus-card ${card.due ? "due" : "scheduled"}">
+    <div>
+      <p class="eyebrow">Mistake Focus</p>
+      <h3>${card.chapterTitle}</h3>
+      <p>${card.prompt}</p>
+      ${card.rescue ? `<strong>${card.rescue.body}</strong>` : ""}
+    </div>
+    <div class="mistake-focus-meter">
+      <span>${card.dueCount}</span>
+      <small>到期錯題</small>
+      <em>${card.nextAction}</em>
     </div>
   </section>`;
 }

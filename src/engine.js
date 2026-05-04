@@ -384,6 +384,28 @@ export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
     .filter((item) => item.question);
 }
 
+export function mistakeFocusCard(progress, now = Date.now()) {
+  const mistakes = mistakeNotebook(progress, now, 20);
+  if (mistakes.length === 0) return null;
+  const focus = [...mistakes].sort((a, b) => Number(b.due) - Number(a.due) || b.wrongCount - a.wrongCount)[0];
+  const dueCount = mistakes.filter((item) => item.due).length;
+  const totalWrong = mistakes.reduce((sum, item) => sum + item.wrongCount, 0);
+  return {
+    key: focus.key,
+    chapterTitle: focus.chapterTitle,
+    lessonTitle: focus.lessonTitle,
+    prompt: focus.question.prompt,
+    due: focus.due,
+    dueCount,
+    totalWrong,
+    wrongCount: focus.wrongCount,
+    rescue: focus.rescue,
+    nextAction: focus.due
+      ? "先做這題的複習，不急著往下一課衝。"
+      : "先讀提示，等排程到期後再回來複習。"
+  };
+}
+
 export function chapterMap(progress) {
   const lessons = flattenLessons();
   return course.chapters.map((chapter) => {

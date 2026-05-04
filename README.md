@@ -146,6 +146,12 @@
 - The rescue prompt tells learners what to look for next time, turning review into a guided micro-coaching loop.
 - This keeps wrong answers useful without adding harder exercises.
 
+## Mistake Focus
+
+- The home screen now highlights one highest-priority wrong answer.
+- Due mistakes and repeated misses are prioritized before less urgent scheduled reviews.
+- This gives learners one concrete repair target instead of a noisy list.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

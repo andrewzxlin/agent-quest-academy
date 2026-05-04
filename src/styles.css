@@ -448,6 +448,64 @@ h1 {
   margin-top: 4px;
 }
 
+.mistake-focus-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.mistake-focus-card.scheduled {
+  background: #f8fafc;
+  border-color: var(--line);
+}
+
+.mistake-focus-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.mistake-focus-card p {
+  color: var(--muted);
+}
+
+.mistake-focus-card strong {
+  display: block;
+  margin-top: 10px;
+}
+
+.mistake-focus-meter {
+  min-width: 150px;
+  text-align: right;
+}
+
+.mistake-focus-meter span,
+.mistake-focus-meter small,
+.mistake-focus-meter em {
+  display: block;
+}
+
+.mistake-focus-meter span {
+  color: #c2410c;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.mistake-focus-meter small,
+.mistake-focus-meter em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.mistake-focus-meter em {
+  margin-top: 8px;
+}
+
 .learning-puzzle-board {
   background: #fff7ed;
   border: 1px solid #fed7aa;
@@ -1516,6 +1574,7 @@ button:disabled {
   .career-snapshot,
   .daily-quest-snapshot,
   .daily-momentum-card,
+  .mistake-focus-card,
   .onboarding-card.compact-card,
   .job-scenario-card,
   .lesson-skill-card,
