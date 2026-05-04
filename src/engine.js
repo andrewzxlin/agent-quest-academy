@@ -299,6 +299,47 @@ export function lessonMasteryLadder(progress, lessonId) {
   };
 }
 
+export function lessonPitchBuilder(progress, lessonId) {
+  const lesson = flattenLessons().find((item) => item.id === lessonId);
+  if (!lesson) return null;
+  const skill = jobReadinessSkills.find((item) => item.chapterId === lesson.chapterId);
+  const ladder = lessonMasteryLadder(progress, lessonId);
+  const nextStage = ladder.stages.find((stage) => !stage.done) ?? null;
+  const readyStages = ladder.doneCount;
+
+  return {
+    lessonId,
+    chapterId: lesson.chapterId,
+    title: "3-line lesson pitch",
+    readiness:
+      readyStages === ladder.totalCount
+        ? "ready to rehearse"
+        : readyStages > 0
+          ? "drafting"
+          : "starter",
+    readyStages,
+    totalStages: ladder.totalCount,
+    nextAction: nextStage ? `Finish ${nextStage.label} to strengthen this pitch.` : "Read the three lines out loud once.",
+    lines: [
+      {
+        id: "problem",
+        label: "Problem",
+        text: `This lesson helps me judge ${skill?.title ?? lesson.chapterTitle} in an agentic workflow.`
+      },
+      {
+        id: "workflow",
+        label: "Workflow Role",
+        text: `I can connect the workflow signal to ${lesson.focus ?? lesson.concept}.`
+      },
+      {
+        id: "tradeoff",
+        label: "Risk / Tradeoff",
+        text: "I can explain the risk, boundary, or next check instead of only naming the concept."
+      }
+    ]
+  };
+}
+
 export function questionMasteryStage(question) {
   if (question.type === "single") {
     return {

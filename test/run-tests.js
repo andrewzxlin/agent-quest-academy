@@ -43,6 +43,7 @@ import {
   landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
+  lessonPitchBuilder,
   lessonSkillCard,
   lessonMasteryLadder,
   learningPuzzleBoard,
@@ -72,6 +73,7 @@ const tests = [
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
   ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
+  ["lesson pitch builder turns mastery into interview lines", testLessonPitchBuilder],
   ["learning puzzle board tracks job-readiness pieces", testLearningPuzzleBoard],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
@@ -317,6 +319,35 @@ function testLessonMasteryLadder() {
   assert.equal(ladder.level, "Ready to teach");
   assert.ok(ladder.nextAction.includes("60-second"));
   assert.equal(lessonMasteryLadder(progress, "missing-lesson"), null);
+}
+
+function testLessonPitchBuilder() {
+  const progress = createInitialProgress(1000);
+  const lesson = flattenLessons()[0];
+
+  for (const currentLesson of flattenLessons()) {
+    const card = lessonPitchBuilder(progress, currentLesson.id);
+    assert.equal(card.lessonId, currentLesson.id);
+    assert.equal(card.title, "3-line lesson pitch");
+    assert.equal(card.readiness, "starter");
+    assert.equal(card.readyStages, 0);
+    assert.equal(card.totalStages, 3);
+    assert.deepEqual(card.lines.map((line) => line.id), ["problem", "workflow", "tradeoff"]);
+    assert.equal(card.lines.length, 3);
+    assert.ok(card.lines.every((line) => line.label.length > 0 && line.text.length >= 30));
+    assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project/i);
+  }
+
+  for (const question of lesson.questions) {
+    const response = question.type === "short" ? question.keywords[0] : question.answer;
+    answerQuestion(progress, { ...question, lessonId: lesson.id }, response, 1000);
+  }
+
+  const readyCard = lessonPitchBuilder(progress, lesson.id);
+  assert.equal(readyCard.readyStages, 3);
+  assert.equal(readyCard.readiness, "ready to rehearse");
+  assert.ok(readyCard.nextAction.includes("Read"));
+  assert.equal(lessonPitchBuilder(progress, "missing-lesson"), null);
 }
 
 function testLearningPuzzleBoard() {

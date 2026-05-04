@@ -29,6 +29,7 @@ import {
   landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
+  lessonPitchBuilder,
   lessonSkillCard,
   lessonMasteryLadder,
   learningPuzzleBoard,
@@ -104,6 +105,7 @@ function render() {
   const skillCard = lessonSkillCard(progress, lesson.id);
   const conceptDiagram = conceptDiagramCard(lesson.id);
   const masteryLadder = lessonMasteryLadder(progress, lesson.id);
+  const lessonPitch = lessonPitchBuilder(progress, lesson.id);
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -189,6 +191,7 @@ function render() {
         ${renderLessonSkillCard(skillCard)}
         ${renderConceptDiagramCard(conceptDiagram)}
         ${renderLessonMasteryLadder(masteryLadder)}
+        ${renderLessonPitchBuilder(lessonPitch)}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -778,6 +781,28 @@ function renderLessonMasteryLadder(card) {
           <span>${index + 1}</span>
           <strong>${stage.label}</strong>
           <small>${stage.current}/${stage.target} - ${stage.proof}</small>
+        </div>`)
+        .join("")}
+    </div>
+  </section>`;
+}
+
+function renderLessonPitchBuilder(card) {
+  if (!card) return "";
+  const readinessClass = card.readiness.replaceAll(" ", "-");
+  return `<section class="lesson-pitch-builder ${readinessClass}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Pitch Builder</p>
+        <h3>${card.title}</h3>
+      </div>
+      <p>${card.readyStages}/${card.totalStages} stages ready - ${card.nextAction}</p>
+    </div>
+    <div class="lesson-pitch-lines">
+      ${card.lines
+        .map((line) => `<div>
+          <span>${line.label}</span>
+          <strong>${line.text}</strong>
         </div>`)
         .join("")}
     </div>

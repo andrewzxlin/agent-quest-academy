@@ -1257,6 +1257,47 @@ h1 {
   margin-top: 8px;
 }
 
+.lesson-pitch-builder {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.lesson-pitch-builder.ready-to-rehearse {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.lesson-pitch-lines {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.lesson-pitch-lines div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.lesson-pitch-lines span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(15 118 110 / 0.12);
+  color: #0f766e;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+}
+
+.lesson-pitch-lines strong {
+  display: block;
+  margin-top: 10px;
+}
+
 .job-scenario-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2205,6 +2246,7 @@ button:disabled {
   .landing-checklist-grid,
   .diagram-flow,
   .mastery-ladder-grid,
+  .lesson-pitch-lines,
   .summary-grid {
     grid-template-columns: 1fr;
   }

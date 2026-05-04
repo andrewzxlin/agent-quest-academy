@@ -175,6 +175,12 @@
 - The line converts the current question into a reusable explanation of what the learner can recognize, connect, or explain.
 - This helps small quiz wins become interview-ready language without adding extra assignments.
 
+## Lesson Pitch Builder
+
+- Every lesson now turns Recognize, Connect, and Explain progress into a three-line pitch.
+- The pitch has problem, workflow role, and risk or tradeoff lines.
+- It helps learners rehearse interview language from the same low-friction questions.
+
 ## Learning Puzzle Board
 
 - The home screen now shows 8 job-readiness puzzle pieces across the full agentic workflow path.
