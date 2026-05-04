@@ -4316,12 +4316,18 @@ button:disabled {
 .mission span,
 .badge span,
 .badge small,
+.badge em,
 .mistake-card span,
 .mistake-card small,
 .empty-note {
   display: block;
   color: var(--muted);
   font-size: 12px;
+}
+
+.badge em {
+  font-style: normal;
+  margin-top: 8px;
 }
 
 .mission strong,

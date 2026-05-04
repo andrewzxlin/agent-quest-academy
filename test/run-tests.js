@@ -1760,11 +1760,13 @@ function testAchievements() {
   completeLesson(progress, flattenLessons()[0].id, 1000);
   completeBossQuiz(progress, "agent-basics", 7, 8, 1000);
   const badges = achievements(progress);
+  assert.ok(badges.every((badge) => badge.proofLine.startsWith("I can ")));
   assert.equal(badges.find((badge) => badge.id === "first-lesson").unlocked, true);
   assert.equal(badges.find((badge) => badge.id === "mistake-hunter").unlocked, true);
   assert.equal(badges.find((badge) => badge.id === "boss-clear").unlocked, true);
   assert.equal(badges.find((badge) => badge.id === "role-explorer").unlocked, true);
   assert.ok(badges.find((badge) => badge.id === "role-explorer").description.includes("choice-first"));
+  assert.ok(badges.find((badge) => badge.id === "role-explorer").proofLine.includes("job-facing"));
 }
 
 function testMistakeNotebook() {

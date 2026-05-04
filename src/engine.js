@@ -3184,30 +3184,35 @@ export function achievements(progress) {
       id: "first-lesson",
       title: "踏出第一步",
       description: "完成任一 micro-lesson",
+      proofLine: "I can finish a choice-first micro lesson and explain what signal it trained.",
       unlocked: progress.completedLessons.length > 0
     },
     {
       id: "mistake-hunter",
       title: "錯題獵人",
       description: "至少留下 1 題可複習的錯題",
+      proofLine: "I can turn a miss into a scheduled review target instead of guessing again.",
       unlocked: wrongAnswers > 0
     },
     {
       id: "boss-clear",
       title: "章節通關",
       description: "通過任一章節 Boss Quiz",
+      proofLine: "I can defend a chapter-level agentic workflow judgment under a checkpoint.",
       unlocked: passedBosses > 0
     },
     {
       id: "role-explorer",
       title: "Role Explorer",
       description: "Sample one job-facing role path with choice-first practice",
+      proofLine: "I can compare a job-facing agent role through tiny workflow choices.",
       unlocked: roleSamples > 0
     },
     {
       id: "hundred-xp",
       title: "100 XP",
       description: "累積 100 XP",
+      proofLine: "I can keep a steady practice loop long enough to build recall evidence.",
       unlocked: progress.xp >= 100
     }
   ];

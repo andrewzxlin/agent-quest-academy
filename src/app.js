@@ -353,6 +353,7 @@ function render() {
                   <span>${badge.unlocked ? "已解鎖" : "未解鎖"}</span>
                   <strong>${badge.title}</strong>
                   <small>${badge.description}</small>
+                  <em>${badge.proofLine}</em>
                 </div>`)
                 .join("")}
             </div>

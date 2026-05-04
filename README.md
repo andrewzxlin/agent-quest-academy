@@ -44,6 +44,11 @@
 - Sampling the first role path now unlocks a Role Explorer achievement.
 - The sampler keeps role exploration choice-first with no setup, project task, or long writing.
 
+## Achievement Proof Lines
+
+- Every achievement now carries a short "I can" proof line.
+- Badges stay playful while also creating wording that can feed interview and portfolio explanations.
+
 ## Session Rhythm
 
 - The quiz card now shows the current run as Recognize, Connect, and Explain steps.
