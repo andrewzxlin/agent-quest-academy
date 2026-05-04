@@ -32,6 +32,7 @@ import {
   gradeQuestion,
   gradePitchPractice,
   isAnswerReady,
+  jargonShieldCard,
   questCompass,
   jobReadinessMap,
   jobEvidenceBrief,
@@ -151,6 +152,7 @@ function render() {
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const showFullDashboard = dashboardMode.mode === "full";
   const glossary = beginnerGlossaryCards(chapter.id);
+  const jargonShield = jargonShieldCard(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
   const bossReadiness = bossReadinessCard(progress, chapter.id);
   const skillCard = lessonSkillCard(progress, lesson.id);
@@ -235,6 +237,7 @@ function render() {
         ${renderFirstFiveMinuteStartCard(firstFive)}
         ${renderPracticeDietCard(practiceDiet)}
         ${renderZeroToLandingQuestCard(zeroToLandingQuest)}
+        ${renderJargonShieldCard(jargonShield)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyLandingStepCard(dailyLandingStep)}
@@ -619,6 +622,28 @@ function renderZeroToLandingQuestCard(card) {
         <small>${card.promise}</small>
       </div>
       <button class="primary compact" data-zero-landing-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderJargonShieldCard(card) {
+  return `<section class="jargon-shield-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.promise}</p>
+    </div>
+    <p>${card.body}</p>
+    <div class="jargon-shield-terms">
+      ${card.terms
+        .map((term) => `<div>
+          <strong>${term.term}</strong>
+          <p>${term.plain}</p>
+          <small>${term.cue}</small>
+        </div>`)
+        .join("")}
     </div>
   </section>`;
 }

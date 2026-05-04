@@ -46,6 +46,7 @@ import {
   gradePitchPractice,
   gradeQuestion,
   isAnswerReady,
+  jargonShieldCard,
   jobReadinessMap,
   jobEvidenceBrief,
   jobSignalPassport,
@@ -102,6 +103,7 @@ const tests = [
   ["dashboard mode defaults to beginner and can switch full", testDashboardModeCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["beginner glossary covers every chapter with plain-language terms", testBeginnerGlossaryCoverage],
+  ["jargon shield brings plain terms into beginner view", testJargonShieldCard],
   ["chapter visuals cover every chapter", testChapterVisuals],
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
@@ -329,6 +331,22 @@ function testBeginnerGlossaryCoverage() {
     const card = beginnerGlossaryCards(glossary.chapterId);
     assert.equal(card.terms.length, 3);
     assert.ok(card.chapterTitle.length > 0);
+  }
+}
+
+function testJargonShieldCard() {
+  for (const chapter of course.chapters) {
+    const card = jargonShieldCard(chapter.id);
+    assert.equal(card.title, "Jargon Shield");
+    assert.equal(card.chapterId, chapter.id);
+    assert.equal(card.terms.length, 3);
+    assert.ok(card.headline.includes(chapter.title));
+    assert.ok(card.body.includes("plain meanings"));
+    assert.ok(card.promise.includes("No prior AI vocabulary"));
+    assert.ok(card.terms.every((term) => term.term.length > 0));
+    assert.ok(card.terms.every((term) => term.plain.length >= 20));
+    assert.ok(card.terms.every((term) => term.cue.length >= 20));
+    assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
   }
 }
 

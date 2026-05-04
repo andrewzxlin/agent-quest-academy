@@ -100,6 +100,12 @@
 - The cards explain what the term means and why it matters in an agentic workflow.
 - This reduces jargon friction while keeping the learning loop focused on choice questions, multi-select, and short answers.
 
+## Jargon Shield
+
+- Beginner view now shows the current chapter's three plain-language terms before the quiz area.
+- It reuses the existing glossary but keeps the wording visible without opening the full dashboard.
+- This protects zero-background learners from vocabulary friction before they answer low-friction prompts.
+
 ## Question Coach Hints
 
 - Every question now shows a small hint before answering.

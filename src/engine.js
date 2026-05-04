@@ -311,6 +311,23 @@ export function beginnerGlossaryCards(chapterId) {
   };
 }
 
+export function jargonShieldCard(chapterId) {
+  const glossary = beginnerGlossaryCards(chapterId);
+  return {
+    title: "Jargon Shield",
+    chapterId: glossary.chapterId,
+    chapterTitle: glossary.chapterTitle,
+    headline: `${glossary.chapterTitle}: 3 words before the quiz`,
+    body: "Read these plain meanings first; then answer by recognition, not memorization.",
+    promise: "No prior AI vocabulary required.",
+    terms: glossary.terms.map((term) => ({
+      term: term.term,
+      plain: term.plain,
+      cue: term.whyItMatters
+    }))
+  };
+}
+
 export function jobScenarioCard(chapterId) {
   const chapter = course.chapters.find((item) => item.id === chapterId);
   const scenario = jobScenarioCards.find((item) => item.chapterId === chapterId);

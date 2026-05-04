@@ -559,6 +559,52 @@ h1 {
   margin-top: 14px;
 }
 
+.jargon-shield-card {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.jargon-shield-card > p,
+.jargon-shield-card .section-title > p,
+.jargon-shield-terms small {
+  color: var(--muted);
+}
+
+.jargon-shield-terms {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.jargon-shield-terms div {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(234 88 12 / 0.14);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.jargon-shield-terms strong,
+.jargon-shield-terms p,
+.jargon-shield-terms small {
+  display: block;
+}
+
+.jargon-shield-terms strong {
+  color: #c2410c;
+}
+
+.jargon-shield-terms p {
+  color: var(--ink);
+  margin-top: 6px;
+}
+
+.jargon-shield-terms small {
+  margin-top: 6px;
+}
+
 .quest-compass {
   background: #0f172a;
   border: 1px solid rgb(148 163 184 / 0.34);
@@ -4097,6 +4143,7 @@ button:disabled {
   .dashboard-mode-card,
   .practice-diet-card,
   .zero-landing-quest-card,
+  .jargon-shield-card,
   .quest-compass,
   .career-snapshot,
   .skill-profile-card,
@@ -4151,6 +4198,7 @@ button:disabled {
   .practice-diet-formats,
   .practice-diet-rules,
   .zero-landing-milestones,
+  .jargon-shield-terms,
   .skill-profile-metrics,
   .skill-profile-highlights,
   .skill-profile-lines,
