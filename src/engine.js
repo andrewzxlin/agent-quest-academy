@@ -1044,6 +1044,44 @@ export function questionSignalPreview(question) {
   };
 }
 
+export function questionPlainDecoderCard(question) {
+  const stage = questionMasteryStage(question);
+  const skill = jobReadinessSkills.find((item) => item.chapterId === question.chapterId);
+  const configByType = {
+    single: {
+      plainAsk: "Which option changes the agent workflow most clearly?",
+      notAsking: "It is not asking for the fanciest wording.",
+      tinyRule: "Pick one workflow-changing signal."
+    },
+    multi: {
+      plainAsk: "Which options are real parts of the workflow?",
+      notAsking: "It is not asking you to stop after the first true option.",
+      tinyRule: "Keep every real workflow part; drop nice-to-have extras."
+    },
+    short: {
+      plainAsk: "Can you explain the workflow idea in one useful sentence?",
+      notAsking: "It is not asking for an essay or a perfect interview answer.",
+      tinyRule: "Use one keyword, then say why it matters."
+    }
+  };
+  const config = configByType[question.type] ?? configByType.single;
+
+  return {
+    title: "Plain-English Decoder",
+    stage: stage.label,
+    headline: `${stage.label} without jargon`,
+    plainAsk: config.plainAsk,
+    notAsking: config.notAsking,
+    tinyRule: config.tinyRule,
+    skillTitle: skill?.title ?? question.chapterTitle ?? "Agentic workflow",
+    chips: [
+      { id: "ask", label: "Actually asking", text: config.plainAsk },
+      { id: "avoid", label: "Not asking", text: config.notAsking },
+      { id: "move", label: "Tiny move", text: config.tinyRule }
+    ]
+  };
+}
+
 export function questionRoleSignalCard(question) {
   const skill = jobReadinessSkills.find((item) => item.chapterId === question.chapterId);
   const stage = questionMasteryStage(question);

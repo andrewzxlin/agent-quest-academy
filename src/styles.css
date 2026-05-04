@@ -4778,6 +4778,64 @@ h1 {
   margin-top: 5px;
 }
 
+.question-plain-decoder-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 0.75fr 1.25fr;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.question-plain-decoder-card span,
+.question-plain-decoder-card strong,
+.question-plain-decoder-card small,
+.plain-decoder-chips b {
+  display: block;
+}
+
+.question-plain-decoder-card span {
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.question-plain-decoder-card strong {
+  margin-top: 4px;
+}
+
+.question-plain-decoder-card small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.plain-decoder-chips {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.plain-decoder-chips em {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(22 163 74 / 0.14);
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.35;
+  padding: 10px;
+}
+
+.plain-decoder-chips b {
+  color: #15803d;
+  font-size: 10px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
 .question-comfort-meter {
   align-items: center;
   background: #ecfeff;
@@ -6819,6 +6877,7 @@ button:disabled {
   .session-rhythm-card,
   .ability-shard-card,
   .question-mini-diagram-card,
+  .question-plain-decoder-card,
   .question-role-signal-card,
   .question-comfort-meter,
   .question-timebox-card,
@@ -6847,6 +6906,7 @@ button:disabled {
   .choice-lens-steps,
   .question-signal-steps,
   .mini-diagram-nodes,
+  .plain-decoder-chips,
   .question-role-chips,
   .comfort-lanes,
   .timebox-lanes,

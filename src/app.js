@@ -88,6 +88,7 @@ import {
   questionMasteryStage,
   questionMiniDiagramCard,
   questionMissionStrip,
+  questionPlainDecoderCard,
   questionRoleSignalCard,
   questionSignalPreview,
   questionTimeboxCard,
@@ -223,6 +224,7 @@ function render() {
   const comfortMeter = questionComfortMeterCard(question, answerReady, checked, lastResult);
   const timebox = questionTimeboxCard(question, currentIndex, sessionQuestions.length, checked, lastResult);
   const miniDiagram = questionMiniDiagramCard(question);
+  const plainDecoder = questionPlainDecoderCard(question);
 
   root.innerHTML = `
     <div class="shell">
@@ -366,6 +368,7 @@ function render() {
           ${renderSessionRhythmCard(sessionRhythm)}
           ${renderAbilityShardCard(abilityShard)}
           ${renderQuestionMiniDiagramCard(miniDiagram)}
+          ${renderQuestionPlainDecoderCard(plainDecoder)}
           ${renderQuestionRoleSignalCard(roleSignal)}
           ${renderQuestionComfortMeterCard(comfortMeter)}
           ${renderQuestionTimeboxCard(timebox)}
@@ -642,6 +645,24 @@ function renderQuestionMiniDiagramCard(card) {
         .join("")}
     </div>
     <p><b>${card.mark}</b>${card.proofUse}</p>
+  </div>`;
+}
+
+function renderQuestionPlainDecoderCard(card) {
+  return `<div class="question-plain-decoder-card">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.skillTitle}</small>
+    </div>
+    <div class="plain-decoder-chips">
+      ${card.chips
+        .map((chip) => `<em>
+          <b>${chip.label}</b>
+          ${chip.text}
+        </em>`)
+        .join("")}
+    </div>
   </div>`;
 }
 

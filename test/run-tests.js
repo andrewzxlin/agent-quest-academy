@@ -102,6 +102,7 @@ import {
   questionMasteryStage,
   questionMiniDiagramCard,
   questionMissionStrip,
+  questionPlainDecoderCard,
   questionRoleSignalCard,
   questionSignalPreview,
   questionTimeboxCard,
@@ -158,6 +159,7 @@ const tests = [
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
+  ["question plain decoder translates prompts before answering", testQuestionPlainDecoderCard],
   ["choice elimination hints reduce option overload", testChoiceEliminationHints],
   ["choice lens cards make selection practice feel guided", testChoiceLensCards],
   ["question hint deck keeps deeper guidance optional", testQuestionHintDeck],
@@ -971,6 +973,35 @@ function testQuestionCoachHints() {
       assert.equal(hint.starter, null);
     }
   }
+}
+
+function testQuestionPlainDecoderCard() {
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  let card = questionPlainDecoderCard(single);
+  assert.equal(card.title, "Plain-English Decoder");
+  assert.equal(card.stage, "Recognize");
+  assert.ok(card.headline.includes("without jargon"));
+  assert.ok(card.plainAsk.includes("Which option"));
+  assert.ok(card.notAsking.includes("fanciest wording"));
+  assert.ok(card.tinyRule.includes("Pick one"));
+  assert.deepEqual(card.chips.map((chip) => chip.id), ["ask", "avoid", "move"]);
+  assert.ok(card.skillTitle.length > 0);
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = questionPlainDecoderCard(multi);
+  assert.equal(card.stage, "Connect");
+  assert.ok(card.plainAsk.includes("Which options"));
+  assert.ok(card.notAsking.includes("first true option"));
+  assert.ok(card.tinyRule.includes("every real workflow part"));
+
+  card = questionPlainDecoderCard(short);
+  assert.equal(card.stage, "Explain");
+  assert.ok(card.plainAsk.includes("one useful sentence"));
+  assert.ok(card.notAsking.includes("essay"));
+  assert.ok(card.tinyRule.includes("keyword"));
 }
 
 function testChoiceEliminationHints() {
