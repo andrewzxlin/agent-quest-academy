@@ -66,6 +66,12 @@
 - The first view keeps attention on onboarding, today's recommendation, and the active low-friction drill.
 - The full progression remains available without overwhelming complete beginners.
 
+## Beginner Glossary Cards
+
+- Every chapter starts with three plain-language terms before the quiz.
+- The cards explain what the term means and why it matters in an agentic workflow.
+- This reduces jargon friction while keeping the learning loop focused on choice questions, multi-select, and short answers.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

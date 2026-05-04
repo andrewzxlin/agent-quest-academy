@@ -1,4 +1,4 @@
-import { course, flattenInterviewQuestions, flattenLessons, flattenQuestions, jobReadinessSkills } from "./course.js";
+import { beginnerGlossary, course, flattenInterviewQuestions, flattenLessons, flattenQuestions, jobReadinessSkills } from "./course.js";
 
 const STORAGE_KEY = "agentQuestProgress:v1";
 
@@ -66,6 +66,16 @@ export function onboardingState(progress) {
     options: LEARNER_PROFILES,
     headline: selected ? selected.title : "先選你的起點",
     guidance: selected?.coachLine ?? "不用先做專案，先用低阻力題目建立 Agentic Workflow 的直覺。"
+  };
+}
+
+export function beginnerGlossaryCards(chapterId) {
+  const chapter = course.chapters.find((item) => item.id === chapterId);
+  const glossary = beginnerGlossary.find((item) => item.chapterId === chapterId);
+  return {
+    chapterId,
+    chapterTitle: chapter?.title ?? chapterId,
+    terms: glossary?.terms ?? []
   };
 }
 

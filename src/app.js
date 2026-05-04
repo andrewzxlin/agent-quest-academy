@@ -1,6 +1,7 @@
 import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interviewQuestionsForChapter } from "./course.js";
 import {
   answerQuestion,
+  beginnerGlossaryCards,
   buildReviewSessionQuestions,
   buildSessionQuestions,
   chapterGateMap,
@@ -65,6 +66,7 @@ function render() {
   const stats = reviewStats(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const onboarding = onboardingState(progress);
+  const glossary = beginnerGlossaryCards(chapter.id);
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -134,6 +136,7 @@ function render() {
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
+        ${renderGlossaryCard(glossary)}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -373,6 +376,29 @@ function renderPitchPracticeCard(card) {
     </div>
     <textarea class="pitch-input" placeholder="用自己的話寫一段 60 秒回答。">${pitchAnswer}</textarea>
     <p class="sample-answer">示範方向：${card.sampleAnswer}</p>
+  </section>`;
+}
+
+function renderGlossaryCard(glossary) {
+  return `<section class="glossary-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Beginner Glossary</p>
+        <h3>${glossary.chapterTitle} 的 3 個先懂詞</h3>
+      </div>
+      <p>先用白話抓住術語，再進入選擇題與少量簡答。</p>
+    </div>
+    <div class="glossary-grid">
+      ${glossary.terms
+        .map(
+          (item) => `<div>
+            <strong>${item.term}</strong>
+            <p>${item.plain}</p>
+            <span>${item.whyItMatters}</span>
+          </div>`
+        )
+        .join("")}
+    </div>
   </section>`;
 }
 

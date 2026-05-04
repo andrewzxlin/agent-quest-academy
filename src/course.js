@@ -1056,6 +1056,169 @@ export const interviewScenarios = [
   }
 ];
 
+export const beginnerGlossary = [
+  {
+    chapterId: "agent-basics",
+    terms: [
+      {
+        term: "Agent",
+        plain: "不是比較會聊天的模型，而是會照目標選步驟、用工具、檢查結果的工作流程。",
+        whyItMatters: "先分清 agent、workflow、chatbot，後面才不會把所有 AI 功能都叫 agent。"
+      },
+      {
+        term: "State",
+        plain: "流程的記憶板，記住目前做到哪一步、已拿到什麼資料、下一步要做什麼。",
+        whyItMatters: "沒有 state，agent 很容易忘記上下文，或重複做同一件事。"
+      },
+      {
+        term: "Human-in-the-loop",
+        plain: "在高風險步驟前請人確認，例如付款、刪資料、寄出正式信件。",
+        whyItMatters: "真正可用的 agent 不是全自動到底，而是知道哪些地方要交給人。"
+      }
+    ]
+  },
+  {
+    chapterId: "tools",
+    terms: [
+      {
+        term: "Tool Calling",
+        plain: "模型決定要呼叫哪個函式或 API，讓 agent 能查資料、改資料、執行動作。",
+        whyItMatters: "Tool 是 agent 從回答問題走向完成任務的關鍵。"
+      },
+      {
+        term: "Schema",
+        plain: "工具的填表規則，定義需要哪些欄位、型別，以及哪些資料必填。",
+        whyItMatters: "schema 清楚，模型比較不會亂塞參數或呼叫錯工具。"
+      },
+      {
+        term: "Retry / Fallback",
+        plain: "工具失敗時不要直接放棄，可以重試、改走備用工具，或交給人處理。",
+        whyItMatters: "真實系統一定會 timeout 或 API 失敗，agent 必須能恢復。"
+      }
+    ]
+  },
+  {
+    chapterId: "rag",
+    terms: [
+      {
+        term: "RAG",
+        plain: "先檢索可靠資料，再把資料交給模型回答，降低胡說與過期資訊。",
+        whyItMatters: "多數商業 agent 都需要接公司文件、知識庫或資料庫。"
+      },
+      {
+        term: "Chunk",
+        plain: "把長文件切成適合搜尋的小段，讓 retriever 更容易找到相關內容。",
+        whyItMatters: "切太大找不準，切太小又失去上下文，會直接影響回答品質。"
+      },
+      {
+        term: "Citation",
+        plain: "回答時附上來源或依據，讓使用者能檢查 agent 的答案從哪裡來。",
+        whyItMatters: "可追溯比看起來很有自信更重要，使用者才能驗證答案。"
+      }
+    ]
+  },
+  {
+    chapterId: "memory",
+    terms: [
+      {
+        term: "Short-term Memory",
+        plain: "這次對話或這次任務中的暫時資訊，例如使用者剛剛選了哪個方案。",
+        whyItMatters: "短期記憶讓 agent 在同一輪任務中保持連貫。"
+      },
+      {
+        term: "Long-term Memory",
+        plain: "跨會話保存的偏好、歷史決策或重要背景，讓下次任務能延續脈絡。",
+        whyItMatters: "長期記憶有用，但也會帶來隱私、過期與誤用風險。"
+      },
+      {
+        term: "Memory Policy",
+        plain: "決定什麼可以記、記多久、何時刪、使用者能不能修改。",
+        whyItMatters: "記憶不是越多越好，規則清楚才安全，也才方便使用者信任。"
+      }
+    ]
+  },
+  {
+    chapterId: "guardrails",
+    terms: [
+      {
+        term: "Guardrail",
+        plain: "限制 agent 不能做危險、越權或不符合規則的事。",
+        whyItMatters: "agent 能行動後，安全邊界會比單純回答更重要。"
+      },
+      {
+        term: "Policy",
+        plain: "明確寫出哪些行為允許、哪些要拒絕、哪些要升級給人。",
+        whyItMatters: "模糊的安全要求很難測試，也很難交給團隊維護。"
+      },
+      {
+        term: "Approval Gate",
+        plain: "在敏感動作前暫停，要求使用者或管理者確認。",
+        whyItMatters: "它把不可逆操作變成可控流程，降低 agent 自動行動的風險。"
+      }
+    ]
+  },
+  {
+    chapterId: "evals",
+    terms: [
+      {
+        term: "Eval",
+        plain: "用固定題組和評分標準檢查 agent 是否真的變好。",
+        whyItMatters: "只靠感覺測試，很容易錯過退步，也無法說明改版是否變好。"
+      },
+      {
+        term: "Rubric",
+        plain: "評分規則，定義什麼叫好答案、壞答案、部分正確。",
+        whyItMatters: "rubric 讓人與模型的評分更一致，也讓錯誤回饋可以被比較。"
+      },
+      {
+        term: "Regression Case",
+        plain: "以前出錯過的案例，之後每次改版都要重測。",
+        whyItMatters: "這能防止修好 A 又弄壞 B，是維持 agent 品質的基本防線。"
+      }
+    ]
+  },
+  {
+    chapterId: "observability",
+    terms: [
+      {
+        term: "Trace",
+        plain: "記錄一次 agent run 走過哪些步驟、呼叫哪些工具、花了多久。",
+        whyItMatters: "沒有 trace，出錯時只能猜問題在哪。"
+      },
+      {
+        term: "Span",
+        plain: "trace 裡的一小段，例如一次 retrieval、一次 tool call、一次模型生成。",
+        whyItMatters: "span 讓你把慢、貴、錯的步驟拆出來看。"
+      },
+      {
+        term: "Metric",
+        plain: "可量化的觀察值，例如 latency、token cost、tool failure rate。",
+        whyItMatters: "能量化，才知道 agent 是否真的可用。"
+      }
+    ]
+  },
+  {
+    chapterId: "frameworks",
+    terms: [
+      {
+        term: "LangChain",
+        plain: "一組把模型、工具、retriever、prompt 串起來的開發積木。",
+        whyItMatters: "它適合快速組合常見 LLM app 能力。"
+      },
+      {
+        term: "LangGraph",
+        plain: "用 graph 表達 stateful workflow，支援分支、循環、暫停與恢復。",
+        whyItMatters: "複雜 agent 更像流程圖，不只是一次性 chain。"
+      },
+      {
+        term: "Durable Execution",
+        plain: "流程中斷後能保存狀態，稍後從正確位置繼續。",
+        whyItMatters: "長任務與人工審核都需要能暫停再接回來，否則流程很難可靠。"
+      }
+    ]
+  }
+];
+
 export function interviewQuestionsForChapter(chapterId) {
   const scenario = interviewScenarios.find((item) => item.chapterId === chapterId);
   if (!scenario) return [];

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
   bossQuestionsForChapter,
+  beginnerGlossary,
   chapterVisuals,
   course,
   flattenInterviewQuestions,
@@ -12,6 +13,7 @@ import {
 } from "../src/course.js";
 import {
   answerQuestion,
+  beginnerGlossaryCards,
   buildReviewSessionQuestions,
   buildSessionQuestions,
   chapterGateMap,
@@ -40,6 +42,7 @@ const tests = [
   ["course has MVP scope", testCourseScope],
   ["onboarding profile starts empty and can be selected", testOnboardingProfile],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
+  ["beginner glossary covers every chapter with plain-language terms", testBeginnerGlossaryCoverage],
   ["chapter visuals cover every chapter", testChapterVisuals],
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
@@ -117,6 +120,24 @@ function testCourseCoverage() {
   const text = JSON.stringify(course);
   for (const topic of ["Tool", "RAG", "Memory", "Guardrails", "Evals", "Observability", "LangChain", "LangGraph"]) {
     assert.ok(text.includes(topic), `missing topic: ${topic}`);
+  }
+}
+
+function testBeginnerGlossaryCoverage() {
+  assert.equal(beginnerGlossary.length, course.chapters.length);
+  const chapterIds = new Set(course.chapters.map((chapter) => chapter.id));
+  for (const glossary of beginnerGlossary) {
+    assert.ok(chapterIds.has(glossary.chapterId), `unknown chapter for ${glossary.chapterId}`);
+    assert.equal(glossary.terms.length, 3);
+    for (const term of glossary.terms) {
+      assert.ok(term.term.length > 0);
+      assert.ok(term.plain.length >= 20);
+      assert.ok(term.whyItMatters.length >= 20);
+      assert.doesNotMatch(`${term.plain} ${term.whyItMatters}`, /repo|project implementation|專案實作/i);
+    }
+    const card = beginnerGlossaryCards(glossary.chapterId);
+    assert.equal(card.terms.length, 3);
+    assert.ok(card.chapterTitle.length > 0);
   }
 }
 
