@@ -320,6 +320,53 @@ export function startHereCard(progress, now = Date.now()) {
   };
 }
 
+export function learningHud(progress, now = Date.now()) {
+  const badges = achievements(progress);
+  const unlockedBadges = badges.filter((badge) => badge.unlocked);
+  const nextBadge = badges.find((badge) => !badge.unlocked) ?? badges[badges.length - 1];
+  const momentum = dailyMomentum(progress, now);
+  const readiness = careerReadinessSnapshot(progress, now);
+  const next = nextPracticeRecommendation(progress, now);
+  const rank =
+    readiness.percent >= 75
+      ? "Landing-ready"
+      : readiness.percent >= 35
+        ? "Proof builder"
+        : progress.completedLessons.length > 0 || progress.xp > 0
+          ? "Path starter"
+          : "Zero-friction start";
+
+  return {
+    title: "Learning HUD",
+    rank,
+    readinessPercent: readiness.percent,
+    nextUnlock: nextBadge?.title ?? "Next proof",
+    nextUnlockDetail: nextBadge?.description ?? "Keep one tiny learning signal warm.",
+    nextAction: next.cta,
+    proofLine:
+      unlockedBadges.length > 0
+        ? unlockedBadges[unlockedBadges.length - 1].proofLine
+        : "I can start with one tiny choice before any project work.",
+    meters: [
+      {
+        id: "xp",
+        label: "XP",
+        value: progress.xp
+      },
+      {
+        id: "streak",
+        label: "Streak",
+        value: momentum.streakDays
+      },
+      {
+        id: "badges",
+        label: "Badges",
+        value: `${unlockedBadges.length}/${badges.length}`
+      }
+    ]
+  };
+}
+
 export function dashboardModeCard(progress) {
   const mode = progress.dashboardMode === "full" ? "full" : "beginner";
   return {

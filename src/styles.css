@@ -106,6 +106,78 @@ h1 {
   font-size: 12px;
 }
 
+.learning-hud {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.learning-hud p,
+.learning-hud small,
+.learning-hud em {
+  color: var(--muted);
+}
+
+.learning-hud p,
+.hud-unlock span {
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.learning-hud strong,
+.learning-hud small,
+.learning-hud em {
+  display: block;
+}
+
+.learning-hud > div > strong {
+  font-size: 18px;
+  margin: 4px 0;
+}
+
+.hud-meters {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.hud-meters span {
+  background: #ffffff;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.hud-meters b {
+  display: block;
+  font-size: 16px;
+}
+
+.hud-unlock {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.hud-unlock span {
+  color: #4338ca;
+}
+
+.hud-unlock strong {
+  margin-top: 4px;
+}
+
+.hud-unlock em {
+  font-size: 12px;
+  font-style: normal;
+  margin: 8px 0;
+}
+
 .review-button,
 .boss-button,
 .interview-button {

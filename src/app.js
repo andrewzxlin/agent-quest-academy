@@ -56,6 +56,7 @@ import {
   lessonWarmupCard,
   learningReceiptReel,
   learningPuzzleBoard,
+  learningHud,
   loadProgress,
   masteryForLesson,
   mistakeFocusCard,
@@ -129,6 +130,7 @@ function render() {
   const map = chapterMap(progress);
   const gates = chapterGateMap(progress);
   const gatesByChapter = new Map(gates.map((item) => [item.chapterId, item]));
+  const hud = learningHud(progress, Date.now());
   const readiness = jobReadinessMap(progress);
   const puzzle = learningPuzzleBoard(progress);
   const summaries = chapterSummaryCards(progress);
@@ -206,6 +208,7 @@ function render() {
           <div><span>${momentum.streakDays}</span><small>連續天</small></div>
           <div><span>${dueCount}</span><small>待複習</small></div>
         </div>
+        ${renderLearningHud(hud)}
         <button class="review-button" data-review="true" ${dueCount === 0 ? "disabled" : ""}>
           <strong>錯題複習</strong>
           <span>${dueCount === 0 ? "目前沒有到期題" : `立即刷 ${dueCount} 題到期題`}</span>
@@ -516,6 +519,31 @@ function renderAbilityShardCard(card) {
       <small>${card.nextUse}</small>
     </div>
   </div>`;
+}
+
+function renderLearningHud(hud) {
+  return `<section class="learning-hud">
+    <div>
+      <p>${hud.title}</p>
+      <strong>${hud.rank}</strong>
+      <small>${hud.readinessPercent}% landing readiness</small>
+    </div>
+    <div class="hud-meters">
+      ${hud.meters
+        .map((meter) => `<span>
+          <b>${meter.value}</b>
+          <small>${meter.label}</small>
+        </span>`)
+        .join("")}
+    </div>
+    <div class="hud-unlock">
+      <span>Next unlock</span>
+      <strong>${hud.nextUnlock}</strong>
+      <small>${hud.nextUnlockDetail}</small>
+      <em>${hud.proofLine}</em>
+      <small>${hud.nextAction}</small>
+    </div>
+  </section>`;
 }
 
 function renderStartHereCard(card) {

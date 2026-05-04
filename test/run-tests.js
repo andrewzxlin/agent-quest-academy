@@ -70,6 +70,7 @@ import {
   lessonWarmupCard,
   learningReceiptReel,
   learningPuzzleBoard,
+  learningHud,
   masteryForLesson,
   mistakeFocusCard,
   mistakeSafetyNetCard,
@@ -113,6 +114,7 @@ const tests = [
   ["first five minute start keeps first run tiny", testFirstFiveMinuteStartCard],
   ["focus guard shows one primary beginner action", testFocusGuardCard],
   ["start here card turns the homepage into one obvious action", testStartHereCard],
+  ["learning HUD makes the next unlock visible", testLearningHud],
   ["dashboard mode defaults to beginner and can switch full", testDashboardModeCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["beginner glossary covers every chapter with plain-language terms", testBeginnerGlossaryCoverage],
@@ -336,6 +338,27 @@ function testStartHereCard() {
   assert.equal(card.mode, "rescue");
   assert.equal(card.action.kind, "review");
   assert.ok(card.steps.find((step) => step.label === "Signal").text.includes("review card"));
+}
+
+function testLearningHud() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let hud = learningHud(progress, now);
+  assert.equal(hud.title, "Learning HUD");
+  assert.equal(hud.rank, "Zero-friction start");
+  assert.equal(hud.readinessPercent, 0);
+  assert.deepEqual(hud.meters.map((meter) => meter.id), ["xp", "streak", "badges"]);
+  assert.ok(hud.nextUnlock.length > 0);
+  assert.ok(hud.nextAction.length > 0);
+  assert.ok(hud.proofLine.startsWith("I can "));
+  assert.doesNotMatch(JSON.stringify(hud), /repo|project implementation|build a project|coding task/i);
+
+  const lesson = flattenLessons()[0];
+  completeLesson(progress, lesson.id, now);
+  hud = learningHud(progress, now);
+  assert.equal(hud.rank, "Path starter");
+  assert.equal(hud.meters.find((meter) => meter.id === "badges").value, "2/5");
+  assert.ok(hud.proofLine.includes("micro lesson") || hud.proofLine.includes("job-facing"));
 }
 
 function testDashboardModeCard() {
