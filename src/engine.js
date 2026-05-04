@@ -792,6 +792,34 @@ export function questionSignalPreview(question) {
   };
 }
 
+export function questionHintDeck(question) {
+  const summaryByType = {
+    single: "Open this only if you want a nudge before choosing one answer.",
+    multi: "Open this only if you want a checklist before choosing several signals.",
+    short: "Open this only if you want a nudge before writing one sentence."
+  };
+  const primaryByType = {
+    single: "Try the choice first; hints stay optional.",
+    multi: "Try the checklist first; hints stay optional.",
+    short: "Try one sentence first; hints stay optional."
+  };
+  const cardIdsByType = {
+    single: ["stage", "signal", "coach", "choice-lens", "elimination", "safety"],
+    multi: ["stage", "signal", "coach", "choice-lens", "elimination", "safety"],
+    short: ["stage", "signal", "coach", "safety"]
+  };
+  if (!summaryByType[question.type]) throw new Error(`Unknown question type: ${question.type}`);
+
+  return {
+    title: "Hint Deck",
+    mode: question.type,
+    summary: summaryByType[question.type],
+    primaryNudge: primaryByType[question.type],
+    cardIds: cardIdsByType[question.type],
+    promise: "The question is still answerable without opening this deck."
+  };
+}
+
 export function sessionRhythmCard(questions, currentIndex = 0) {
   const safeIndex = Math.min(Math.max(currentIndex, 0), Math.max(questions.length - 1, 0));
   const labelByType = {

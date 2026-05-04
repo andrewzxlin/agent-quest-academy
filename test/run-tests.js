@@ -77,6 +77,7 @@ import {
   practiceDietCard,
   proofBoosterCard,
   questionCoachHint,
+  questionHintDeck,
   questionKey,
   questionMasterySignal,
   questionMasteryStage,
@@ -125,6 +126,7 @@ const tests = [
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
   ["choice elimination hints reduce option overload", testChoiceEliminationHints],
   ["choice lens cards make selection practice feel guided", testChoiceLensCards],
+  ["question hint deck keeps deeper guidance optional", testQuestionHintDeck],
   ["uncertainty safety cards normalize unsure answers", testUncertaintySafetyCards],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
@@ -764,6 +766,30 @@ function testChoiceLensCards() {
       assert.ok(card.steps.some((step) => step.text.includes("human feedback")));
     }
   }
+}
+
+function testQuestionHintDeck() {
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  const singleDeck = questionHintDeck(single);
+  assert.equal(singleDeck.title, "Hint Deck");
+  assert.equal(singleDeck.mode, "single");
+  assert.ok(singleDeck.summary.includes("one answer"));
+  assert.ok(singleDeck.primaryNudge.includes("optional"));
+  assert.deepEqual(singleDeck.cardIds, ["stage", "signal", "coach", "choice-lens", "elimination", "safety"]);
+
+  const multiDeck = questionHintDeck(multi);
+  assert.equal(multiDeck.mode, "multi");
+  assert.ok(multiDeck.summary.includes("several signals"));
+  assert.ok(multiDeck.cardIds.includes("choice-lens"));
+
+  const shortDeck = questionHintDeck(short);
+  assert.equal(shortDeck.mode, "short");
+  assert.ok(shortDeck.summary.includes("one sentence"));
+  assert.deepEqual(shortDeck.cardIds, ["stage", "signal", "coach", "safety"]);
+  assert.doesNotMatch(JSON.stringify([singleDeck, multiDeck, shortDeck]), /repo|project implementation|build a project|coding task/i);
 }
 
 function testUncertaintySafetyCards() {

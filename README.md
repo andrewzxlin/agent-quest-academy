@@ -118,6 +118,12 @@
 - Single-choice and multi-select hints teach how to spot workflow-relevant options.
 - Short-answer hints include a sentence starter so beginners can begin without staring at a blank box.
 
+## Hint Deck
+
+- Deeper per-question guidance now sits inside an optional Hint Deck.
+- The first view keeps the learner on the prompt, rhythm, ability shard, and answer controls.
+- Learners can open the deck only when they want stage, signal, coach, lens, elimination, and safety nudges.
+
 ## Choice Elimination Hints
 
 - Single-choice and multi-select questions now show a tiny elimination hint before the learner answers.

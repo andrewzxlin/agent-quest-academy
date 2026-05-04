@@ -3092,6 +3092,84 @@ h1 {
   margin: 8px 0 0;
 }
 
+.question-hint-deck {
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #f9fafb;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.question-hint-deck summary {
+  cursor: pointer;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  list-style: none;
+  padding: 12px 14px;
+}
+
+.question-hint-deck summary::-webkit-details-marker {
+  display: none;
+}
+
+.question-hint-deck summary::after {
+  color: var(--muted);
+  content: "Open hints";
+  font-size: 12px;
+  font-weight: 800;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  justify-self: end;
+}
+
+.question-hint-deck[open] summary::after {
+  content: "Hide hints";
+}
+
+.question-hint-deck summary span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(75 85 99 / 0.12);
+  color: #374151;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  width: max-content;
+}
+
+.question-hint-deck summary strong,
+.question-hint-deck summary small {
+  margin: 0;
+}
+
+.question-hint-deck summary strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.question-hint-deck summary small,
+.hint-deck-promise {
+  color: var(--muted);
+}
+
+.question-hint-stack {
+  border-top: 1px solid #e5e7eb;
+  display: grid;
+  gap: 0;
+  padding: 12px 14px;
+}
+
+.question-hint-stack > *:last-child {
+  margin-bottom: 0;
+}
+
+.hint-deck-promise {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .elimination-hint {
   display: grid;
   gap: 10px;

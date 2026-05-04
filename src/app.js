@@ -64,6 +64,7 @@ import {
   practiceDietCard,
   proofBoosterCard,
   questionCoachHint,
+  questionHintDeck,
   questionMasterySignal,
   questionMasteryStage,
   questionSignalPreview,
@@ -298,12 +299,7 @@ function render() {
           </div>
           ${renderSessionRhythmCard(sessionRhythm)}
           ${renderAbilityShardCard(abilityShard)}
-          ${renderQuestionMasteryStage(questionMasteryStage(question))}
-          ${renderQuestionSignalPreview(questionSignalPreview(question))}
-          ${renderQuestionCoach(questionCoachHint(question))}
-          ${renderChoiceLensCard(choiceLensCard(question))}
-          ${renderChoiceEliminationHint(choiceEliminationHint(question))}
-          ${renderUncertaintySafetyCard(uncertaintySafetyCard(question))}
+          ${renderQuestionHintDeck(questionHintDeck(question), question)}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
           <div class="actions">
@@ -1632,6 +1628,25 @@ function renderChoiceEliminationHint(hint) {
       ${hint.checks.map((check) => `<small>${check}</small>`).join("")}
     </div>
   </div>`;
+}
+
+function renderQuestionHintDeck(deck, question) {
+  return `<details class="question-hint-deck">
+    <summary>
+      <span>${deck.title}</span>
+      <strong>${deck.primaryNudge}</strong>
+      <small>${deck.summary}</small>
+    </summary>
+    <div class="question-hint-stack">
+      ${renderQuestionMasteryStage(questionMasteryStage(question))}
+      ${renderQuestionSignalPreview(questionSignalPreview(question))}
+      ${renderQuestionCoach(questionCoachHint(question))}
+      ${renderChoiceLensCard(choiceLensCard(question))}
+      ${renderChoiceEliminationHint(choiceEliminationHint(question))}
+      ${renderUncertaintySafetyCard(uncertaintySafetyCard(question))}
+      <small class="hint-deck-promise">${deck.promise}</small>
+    </div>
+  </details>`;
 }
 
 function renderChoiceLensCard(card) {
