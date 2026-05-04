@@ -50,6 +50,7 @@ import {
   mistakeNotebook,
   nextPracticeRecommendation,
   onboardingState,
+  oneLineCoachCard,
   pitchPracticeCard,
   questionCoachHint,
   questionMasterySignal,
@@ -113,6 +114,7 @@ function render() {
   const roleFit = jobRoleFitCard(progress);
   const signalPassport = jobSignalPassport(progress, Date.now());
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
+  const oneLineCoach = oneLineCoachCard(progress, Date.now());
   const receiptReel = learningReceiptReel(progress);
   const recallCombo = recallComboCard(progress);
   const signalPreview = signalPreviewCard(progress, Date.now());
@@ -207,6 +209,7 @@ function render() {
         ${renderLandingGapRadar(gapRadar)}
         ${renderLandingReadinessChecklist(landingChecklist)}
         ${renderJobEvidenceBrief(evidenceBrief)}
+        ${renderOneLineCoachCard(oneLineCoach)}
         ${renderLearningReceiptReel(receiptReel)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
@@ -617,6 +620,28 @@ function renderJobEvidenceBrief(brief) {
       <small>ready evidence</small>
       <em>${brief.nextGap} · ${brief.nextAction}</em>
     </div>
+  </section>`;
+}
+
+function renderOneLineCoachCard(card) {
+  if (!card) return "";
+  return `<section class="one-line-coach-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.cue}</p>
+    </div>
+    <div class="one-line-grid">
+      ${card.lines
+        .map((line) => `<div>
+          <span>${line.label}</span>
+          <strong>${line.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
+    <small>${card.proofLink}</small>
   </section>`;
 }
 

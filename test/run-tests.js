@@ -63,6 +63,7 @@ import {
   mistakeNotebook,
   nextPracticeRecommendation,
   onboardingState,
+  oneLineCoachCard,
   pitchPracticeCard,
   questionCoachHint,
   questionMasterySignal,
@@ -144,6 +145,7 @@ const tests = [
   ["landing gap radar highlights the closest job-readiness gap", testLandingGapRadar],
   ["landing checklist tracks job-readiness gates", testLandingReadinessChecklist],
   ["job evidence brief turns progress into an interview line", testJobEvidenceBrief],
+  ["one-line coach turns progress into tiny interview wording", testOneLineCoachCard],
   ["exercise scope card keeps practice low-friction", testExerciseScopeCard],
   ["completion cards summarize finished sessions", testCompletionCards],
   ["next practice recommendation picks the highest-value next step", testNextPracticeRecommendation],
@@ -1508,6 +1510,37 @@ function testJobEvidenceBrief() {
   assert.equal(brief.strongestStatus, "interview_ready");
   assert.ok(brief.headline.includes("interview-ready"));
   assert.ok(brief.storySeeds.find((seed) => seed.id === "signal").text.includes("interview answer"));
+}
+
+function testOneLineCoachCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let card = oneLineCoachCard(progress, now);
+  assert.equal(card.title, "One-Line Coach");
+  assert.equal(card.lines.length, 3);
+  assert.deepEqual(card.lines.map((line) => line.id), ["skill", "judgment", "next"]);
+  assert.ok(card.headline.includes(card.lines[0].text.match(/explain (.*?) as/)?.[1] ?? "Agent"));
+  assert.ok(card.cue.includes("one sentence"));
+  assert.ok(card.lines[0].text.includes("agentic workflow"));
+  assert.ok(card.lines[1].text.includes("agent"));
+  assert.ok(card.lines[2].text.includes(card.nextAction));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const chapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, now);
+  card = oneLineCoachCard(progress, now);
+  assert.equal(card.readinessLabel, "Boss-proven");
+  assert.ok(card.lines[0].text.includes("Boss-proven"));
+
+  for (const question of interviewQuestionsForChapter(chapter.id)) {
+    const response = question.type === "multi" ? question.answer : question.answer ?? question.keywords[0];
+    answerQuestion(progress, question, response, now);
+  }
+  card = oneLineCoachCard(progress, now);
+  assert.equal(card.readinessLabel, "interview-ready");
 }
 
 function testExerciseScopeCard() {

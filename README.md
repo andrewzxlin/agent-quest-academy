@@ -187,6 +187,12 @@
 - The preview connects the next recommended action to a reward such as cleaner recall, a receipt, Boss evidence, or interview wording.
 - It helps learners understand why one small quiz run matters before they start.
 
+## One-Line Coach
+
+- The home screen now turns current progress into three tiny interview sentence starters.
+- The coach gives one line for skill, one for judgment, and one for the next small step.
+- It prepares learners for pitch practice without asking them to write a full answer first.
+
 ## Daily Minimum Card
 
 - The home screen now shows a 3-minute minimum: one question is enough to bank today's smallest useful practice.

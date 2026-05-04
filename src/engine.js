@@ -1705,6 +1705,50 @@ export function jobEvidenceBrief(progress, now = Date.now()) {
   };
 }
 
+export function oneLineCoachCard(progress, now = Date.now()) {
+  const brief = jobEvidenceBrief(progress, now);
+  const proofs = abilityProofCards(progress);
+  const next = nextPracticeRecommendation(progress, now);
+  const rank = { interview_ready: 4, proven: 3, practicing: 2, new: 1 };
+  const strongest = [...proofs].sort((a, b) => rank[b.status] - rank[a.status])[0] ?? null;
+  if (!brief || !strongest) return null;
+
+  const readinessLabel =
+    strongest.status === "interview_ready"
+      ? "interview-ready"
+      : strongest.status === "proven"
+        ? "Boss-proven"
+        : strongest.status === "practicing"
+          ? "practicing"
+          : "starting";
+
+  return {
+    title: "One-Line Coach",
+    headline: `Say one useful line about ${strongest.title}`,
+    readinessLabel,
+    nextAction: next.cta,
+    cue: "Use this before a 60-second pitch: one sentence is enough.",
+    lines: [
+      {
+        id: "skill",
+        label: "Skill",
+        text: `I can explain ${strongest.title} as a ${readinessLabel} part of agentic workflow.`
+      },
+      {
+        id: "judgment",
+        label: "Judgment",
+        text: "I practiced deciding what the agent should do, what tool or memory it needs, and what risk to check."
+      },
+      {
+        id: "next",
+        label: "Next",
+        text: `My next small step is: ${next.cta}.`
+      }
+    ],
+    proofLink: brief.proof
+  };
+}
+
 export function exerciseScopeCard() {
   const questions = [...flattenQuestions(), ...flattenInterviewQuestions()];
   const counts = questions.reduce(
