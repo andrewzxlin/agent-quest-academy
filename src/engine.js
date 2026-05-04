@@ -2076,6 +2076,56 @@ export function dailyMinimumCard(progress, now = Date.now()) {
   };
 }
 
+export function dailyLandingStepCard(progress, now = Date.now()) {
+  const minimum = dailyMinimumCard(progress, now);
+  const next = nextPracticeRecommendation(progress, now);
+  const brief = jobEvidenceBrief(progress, now);
+  const actionByType = {
+    review: "Rescue one weak signal",
+    lesson: "Clear one tiny lesson step",
+    boss: "Try one Boss checkpoint",
+    interview: "Practice one interview line",
+    done: "Rehearse one saved proof"
+  };
+  const abilityByType = {
+    review: "recall stability",
+    lesson: "Recognize / Connect / Explain progress",
+    boss: "chapter-level proof",
+    interview: "interview wording",
+    done: "proof fluency"
+  };
+
+  return {
+    title: "Daily Landing Step",
+    status: minimum.status,
+    headline: minimum.status === "done" ? "Today already moved your landing path" : "Three minutes can still move the path",
+    minimumAction: actionByType[next.type] ?? "Answer one tiny prompt",
+    abilityPiece: abilityByType[next.type] ?? "agentic workflow judgment",
+    jobUse: brief
+      ? `Use it for: ${brief.strongestTitle} evidence.`
+      : "Use it for: your first agentic workflow evidence line.",
+    nextAction: minimum.nextAction,
+    route: [
+      {
+        id: "today",
+        label: "Today",
+        text: minimum.status === "done" ? "One recall signal is already banked." : "Answer one low-friction question."
+      },
+      {
+        id: "piece",
+        label: "Piece",
+        text: `Bank ${abilityByType[next.type] ?? "one workflow judgment"}.`
+      },
+      {
+        id: "landing",
+        label: "Landing",
+        text: brief?.nextGap ?? next.title
+      }
+    ],
+    promise: "One small quiz move can still become job-facing evidence later."
+  };
+}
+
 export function questCompass(progress, now = Date.now()) {
   const next = nextPracticeRecommendation(progress, now);
   const receiptCount = learningReceiptReel(progress, 3).receipts.length;

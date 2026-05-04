@@ -20,6 +20,7 @@ import {
   createInitialProgress,
   achievements,
   dailyMinimumCard,
+  dailyLandingStepCard,
   dailyMomentum,
   dailyQuestSnapshot,
   dailyMissions,
@@ -130,6 +131,7 @@ function render() {
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const dailyMinimum = dailyMinimumCard(progress, Date.now());
+  const dailyLandingStep = dailyLandingStepCard(progress, Date.now());
   const momentum = dailyMomentum(progress, Date.now());
   const onboarding = onboardingState(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
@@ -222,6 +224,7 @@ function render() {
         ${renderLearningReceiptReel(receiptReel)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
+        ${renderDailyLandingStepCard(dailyLandingStep)}
         ${renderDailyMomentumCard(momentum)}
         ${renderRecallComboCard(recallCombo)}
         ${renderSignalPreviewCard(signalPreview)}
@@ -770,6 +773,32 @@ function renderDailyMinimumCard(card) {
           .join("")}
       </div>
     </div>
+  </section>`;
+}
+
+function renderDailyLandingStepCard(card) {
+  return `<section class="daily-landing-step-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.nextAction}</p>
+    </div>
+    <div class="daily-landing-route">
+      ${card.route
+        .map((step) => `<div>
+          <span>${step.label}</span>
+          <strong>${step.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="daily-landing-proof">
+      <span>${card.minimumAction}</span>
+      <span>${card.abilityPiece}</span>
+      <span>${card.jobUse}</span>
+    </div>
+    <small>${card.promise}</small>
   </section>`;
 }
 

@@ -225,6 +225,12 @@
 - The card confirms the learner has saved one recall signal and still knows the next move.
 - This gives busy beginners a clear stop line without adding project work or heavier assignments.
 
+## Daily Landing Step
+
+- The home screen now connects the 3-minute minimum to a concrete landing step.
+- It shows today's smallest action, the ability piece it banks, and how that piece can become job-facing evidence.
+- This keeps the daily loop useful even when the learner only has time for one quick question.
+
 ## Unsure Answer Flow
 
 - Empty answers are no longer treated as valid answers.

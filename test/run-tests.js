@@ -33,6 +33,7 @@ import {
   createInitialProgress,
   achievements,
   dailyMinimumCard,
+  dailyLandingStepCard,
   dailyMomentum,
   dailyQuestSnapshot,
   dailyMissions,
@@ -138,6 +139,7 @@ const tests = [
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
   ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
+  ["daily landing step maps tiny practice to job value", testDailyLandingStepCard],
   ["quest compass turns recommendation into a game-like next step", testQuestCompass],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
   ["recall combo card rewards clean low-friction runs", testRecallComboCard],
@@ -1166,6 +1168,33 @@ function testDailyMinimumCard() {
   assert.equal(card.doneCount, 3);
   assert.equal(card.checks.find((check) => check.id === "answer-one").done, true);
   assert.ok(card.headline.includes("banked"));
+}
+
+function testDailyLandingStepCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = dailyLandingStepCard(progress, now);
+  assert.equal(card.title, "Daily Landing Step");
+  assert.equal(card.status, "open");
+  assert.equal(card.minimumAction, "Clear one tiny lesson step");
+  assert.ok(card.abilityPiece.includes("Recognize"));
+  assert.ok(card.jobUse.includes("evidence"));
+  assert.deepEqual(card.route.map((step) => step.id), ["today", "piece", "landing"]);
+  assert.ok(card.route.find((step) => step.id === "today").text.includes("low-friction"));
+  assert.ok(card.promise.includes("job-facing evidence"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = dailyLandingStepCard(progress, now);
+  assert.equal(card.status, "done");
+  assert.ok(card.headline.includes("landing path"));
+  assert.ok(card.route.find((step) => step.id === "today").text.includes("banked"));
+
+  answerQuestion(progress, question, 99, now + 1);
+  card = dailyLandingStepCard(progress, now + 1);
+  assert.equal(card.minimumAction, "Rescue one weak signal");
+  assert.equal(card.abilityPiece, "recall stability");
 }
 
 function testQuestCompass() {
