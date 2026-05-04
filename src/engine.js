@@ -877,6 +877,66 @@ export function reviewRhythmCard(progress, now = Date.now()) {
   };
 }
 
+export function reviewSprintCard(progress, now = Date.now()) {
+  const stats = reviewStats(progress, now);
+  const due = getDueReviewQuestions(progress, now, 3);
+  const recentMistakes = mistakeNotebook(progress, now, 3);
+  const focus = due[0] ?? recentMistakes[0]?.question ?? null;
+  const mode = due.length > 0 ? "ready" : stats.scheduledCount > 0 ? "scheduled" : "empty";
+
+  return {
+    title: "Review Sprint",
+    mode,
+    headline:
+      mode === "ready"
+        ? "Replay one weak pattern now"
+        : mode === "scheduled"
+          ? "Review is waiting for the right time"
+          : "Create the first review seed",
+    queueLabel:
+      mode === "ready"
+        ? `${due.length} due card${due.length === 1 ? "" : "s"} ready`
+        : mode === "scheduled"
+          ? `${stats.scheduledCount} card${stats.scheduledCount === 1 ? "" : "s"} scheduled`
+          : "No review cards yet",
+    dueCount: stats.dueCount,
+    scheduledCount: stats.scheduledCount,
+    wrongCount: stats.wrongCount,
+    focus: focus
+      ? {
+          prompt: focus.prompt,
+          lessonTitle: focus.lessonTitle,
+          chapterTitle: focus.chapterTitle,
+          type: focus.type
+        }
+      : null,
+    primaryAction:
+      mode === "ready"
+        ? "Start the due review queue."
+        : mode === "scheduled"
+          ? "Answer one new choice question while review waits."
+          : "Answer one single-choice question; misses come back first.",
+    proofLine: "A sprint is tiny on purpose: recognize, choose, then save the recall signal.",
+    steps: [
+      {
+        id: "peek",
+        label: "Peek",
+        text: mode === "ready" ? "Look at the next due pattern." : "Let the system pick the next small prompt."
+      },
+      {
+        id: "choose",
+        label: "Choose",
+        text: "Make one choice or write one short sentence."
+      },
+      {
+        id: "loop",
+        label: "Loop",
+        text: "Correct answers move later; misses return sooner."
+      }
+    ]
+  };
+}
+
 export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
   const questionsByKey = new Map(reviewableQuestions().map((question) => [questionKey(question), question]));
   const reviewByKey = new Map(progress.reviewQueue.map((item) => [item.questionKey, item]));

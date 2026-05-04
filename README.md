@@ -163,6 +163,12 @@
 - The prompt tells the learner what to look for next time, instead of only marking the answer wrong.
 - This keeps mistake replay supportive and low-friction.
 
+## Review Sprint
+
+- The home screen now turns due review into a tiny three-step loop: peek, choose, and loop.
+- The sprint card keeps spaced review concrete without adding project implementation tasks.
+- It helps beginners clear weak patterns through quick choices and short answers before learning more new material.
+
 ## Daily Quest Snapshot
 
 - The home screen shows today's mission completion count, total progress percent, and nearest next step.

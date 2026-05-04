@@ -55,6 +55,7 @@ import {
   questionMasterySignal,
   questionMasteryStage,
   reviewRhythmCard,
+  reviewSprintCard,
   reviewStats,
   resetProgress,
   saveProgress,
@@ -103,6 +104,7 @@ function render() {
   const proofs = abilityProofCards(progress);
   const stats = reviewStats(progress, Date.now());
   const reviewRhythm = reviewRhythmCard(progress, Date.now());
+  const reviewSprint = reviewSprintCard(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const compass = questCompass(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
@@ -206,6 +208,7 @@ function render() {
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyMomentumCard(momentum)}
         ${renderReviewRhythmCard(reviewRhythm)}
+        ${renderReviewSprintCard(reviewSprint)}
         ${renderMistakeFocusCard(mistakeFocus)}
         ${renderLearningPuzzleBoard(puzzle)}
         ${renderRecommendationCard(recommendation)}
@@ -739,6 +742,29 @@ function renderReviewRhythmCard(card) {
       <div>
         <span>${card.wrongCount}</span>
         <small>mistakes</small>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderReviewSprintCard(card) {
+  return `<section class="review-sprint-card ${card.mode}">
+    <div>
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.proofLine}</p>
+      ${card.focus ? `<strong>${card.focus.prompt}</strong>` : ""}
+    </div>
+    <div>
+      <span>${card.queueLabel}</span>
+      <em>${card.primaryAction}</em>
+      <div class="review-sprint-steps">
+        ${card.steps
+          .map((step) => `<small>
+            <b>${step.label}</b>
+            ${step.text}
+          </small>`)
+          .join("")}
       </div>
     </div>
   </section>`;

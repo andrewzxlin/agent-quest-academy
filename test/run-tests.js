@@ -68,6 +68,7 @@ import {
   questionMasterySignal,
   questionMasteryStage,
   reviewRhythmCard,
+  reviewSprintCard,
   reviewStats,
   selectLearnerProfile,
   shortAnswerSupport,
@@ -117,6 +118,7 @@ const tests = [
   ["review mode returns only due questions", testReviewModeOnlyDue],
   ["review stats separate due and scheduled", testReviewStats],
   ["review rhythm card explains spaced review timing", testReviewRhythmCard],
+  ["review sprint card turns review into a tiny loop", testReviewSprintCard],
   ["boss quiz uses low-friction chapter questions", testBossQuizQuestions],
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
@@ -881,6 +883,41 @@ function testReviewRhythmCard() {
   assert.equal(card.status, "Review coming soon");
   assert.equal(card.dueNow, 0);
   assert.equal(card.next24h, 1);
+}
+
+function testReviewSprintCard() {
+  const now = 1000;
+  const day = 24 * 60 * 60 * 1000;
+  const progress = createInitialProgress(now);
+  let card = reviewSprintCard(progress, now);
+  assert.equal(card.title, "Review Sprint");
+  assert.equal(card.mode, "empty");
+  assert.equal(card.dueCount, 0);
+  assert.equal(card.scheduledCount, 0);
+  assert.equal(card.focus, null);
+  assert.deepEqual(card.steps.map((step) => step.id), ["peek", "choose", "loop"]);
+  assert.ok(card.primaryAction.includes("single-choice"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const [wrongQuestion, correctQuestion] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, wrongQuestion, 99, now);
+  card = reviewSprintCard(progress, now);
+  assert.equal(card.mode, "ready");
+  assert.equal(card.dueCount, 1);
+  assert.equal(card.focus.prompt, wrongQuestion.prompt);
+  assert.ok(card.queueLabel.includes("due"));
+  assert.ok(card.primaryAction.includes("review queue"));
+
+  answerQuestion(progress, wrongQuestion, wrongQuestion.answer, now);
+  answerQuestion(progress, correctQuestion, correctQuestion.answer, now);
+  card = reviewSprintCard(progress, now + 1);
+  assert.equal(card.mode, "scheduled");
+  assert.equal(card.dueCount, 0);
+  assert.ok(card.scheduledCount >= 1);
+
+  card = reviewSprintCard(progress, now + day);
+  assert.equal(card.mode, "ready");
+  assert.ok(card.dueCount >= 1);
 }
 
 function testBossQuizQuestions() {
