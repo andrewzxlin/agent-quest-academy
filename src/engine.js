@@ -3129,6 +3129,7 @@ export function gradePitchPractice(card, response) {
 
 export function dailyMissions(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
+  const roleSamples = roleSamplerCard(progress).sampledCount;
   return [
     {
       id: "answer-five",
@@ -3143,6 +3144,13 @@ export function dailyMissions(progress, now = Date.now()) {
       current: Math.min(activity.answers, 1),
       target: 1,
       done: activity.answers >= 1
+    },
+    {
+      id: "sample-role",
+      title: "Sample 1 role",
+      current: Math.min(roleSamples, 1),
+      target: 1,
+      done: roleSamples >= 1
     },
     {
       id: "finish-lesson",

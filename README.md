@@ -33,7 +33,7 @@
 - It makes the evidence loop visible from day one while staying choice-first and no-project.
 - Each phrase includes a Read / Trim / Say rehearsal path so learners can reuse it without open-ended writing.
 - The bank labels the strongest role signal, so each phrase points toward a job-facing path.
-- Daily Quest now includes banking one phrase, so the daily loop rewards reusable wording as well as answer volume.
+- Daily Quest now includes banking one phrase and sampling one role, so the daily loop rewards reusable wording and career-path exploration as well as answer volume.
 
 ## Role Sampler
 

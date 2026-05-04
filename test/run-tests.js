@@ -1447,6 +1447,7 @@ function testDailyMissions() {
   const missions = dailyMissions(progress, now);
   assert.equal(missions.every((mission) => mission.done), true);
   assert.ok(missions.find((mission) => mission.id === "bank-phrase").done);
+  assert.ok(missions.find((mission) => mission.id === "sample-role").done);
 }
 
 function testDailyQuestSnapshot() {
@@ -1454,7 +1455,7 @@ function testDailyQuestSnapshot() {
   const progress = createInitialProgress(now);
   let snapshot = dailyQuestSnapshot(progress, now);
   assert.equal(snapshot.completedCount, 0);
-  assert.equal(snapshot.totalCount, 4);
+  assert.equal(snapshot.totalCount, 5);
   assert.equal(snapshot.percent, 0);
   assert.ok(snapshot.nextStep.includes("還差"));
 
@@ -1463,13 +1464,13 @@ function testDailyQuestSnapshot() {
     answerQuestion(progress, question, question.answer, now);
   }
   snapshot = dailyQuestSnapshot(progress, now);
-  assert.equal(snapshot.completedCount, 2);
+  assert.equal(snapshot.completedCount, 3);
   assert.ok(snapshot.percent > 0);
 
   completeLesson(progress, flattenLessons()[0].id, now);
   completeBossQuiz(progress, "agent-basics", 7, 8, now);
   snapshot = dailyQuestSnapshot(progress, now);
-  assert.equal(snapshot.completedCount, 4);
+  assert.equal(snapshot.completedCount, 5);
   assert.equal(snapshot.percent, 100);
   assert.ok(snapshot.nextStep.includes("已完成"));
 }
