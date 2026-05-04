@@ -38,7 +38,8 @@ import {
   reviewStats,
   resetProgress,
   saveProgress,
-  selectLearnerProfile
+  selectLearnerProfile,
+  shortAnswerSupport
 } from "./engine.js";
 
 let progress = loadProgress();
@@ -349,7 +350,8 @@ function renderQuestion(question) {
       .map((choice, index) => `<button class="choice ${selectedMulti.has(index) ? "selected" : ""}" data-multi="${index}">${choice}</button>`)
       .join("")}</div><p class="hint">可複選，選完再檢查。</p>`;
   }
-  return `<textarea class="short-input" placeholder="用一句話回答即可，不需要寫程式。">${shortAnswer}</textarea>`;
+  return `${renderShortAnswerSupport(shortAnswerSupport(question))}
+    <textarea class="short-input" placeholder="用一句話回答即可，不需要寫程式。">${shortAnswer}</textarea>`;
 }
 
 function renderCompletionCard(card) {
@@ -665,6 +667,20 @@ function renderQuestionCoach(hint) {
   </div>`;
 }
 
+function renderShortAnswerSupport(support) {
+  if (!support) return "";
+  return `<div class="short-support">
+    <div>
+      <span>${support.title}</span>
+      <p>${support.prompt}</p>
+    </div>
+    <div class="concept-chip-row">
+      ${support.concepts.map((concept, index) => `<button class="concept-chip" data-short-concept="${index}">${concept}</button>`).join("")}
+    </div>
+    <small>至少命中 ${support.needed} 個概念即可，不需要寫程式。</small>
+  </div>`;
+}
+
 function renderFeedback(question, result) {
   const tone = result.correct ? "correct" : "wrong";
   return `<div class="feedback ${tone}">
@@ -861,6 +877,15 @@ function bindEvents() {
     });
   });
 
+  document.querySelectorAll("[data-short-concept]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const support = shortAnswerSupport(sessionQuestions[currentIndex]);
+      const concept = support?.concepts[Number(button.dataset.shortConcept)];
+      shortAnswer = appendConcept(shortAnswer, concept);
+      render();
+    });
+  });
+
   const pitchTextarea = document.querySelector(".pitch-input");
   if (pitchTextarea) {
     pitchTextarea.addEventListener("input", (event) => {
@@ -1003,6 +1028,12 @@ function getUnsureResponse(question) {
   if (question.type === "multi") return [];
   if (question.type === "short") return "";
   return null;
+}
+
+function appendConcept(answer, concept) {
+  const cleanAnswer = `${answer ?? ""}`.trim();
+  if (!concept || cleanAnswer.toLowerCase().includes(concept.toLowerCase())) return cleanAnswer;
+  return cleanAnswer ? `${cleanAnswer} ${concept}` : concept;
 }
 
 function submitCurrentAnswer(response) {

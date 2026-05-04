@@ -1122,6 +1122,45 @@ h1 {
   resize: vertical;
 }
 
+.short-support {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  background: #fff7ed;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.short-support span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(249 115 22 / 0.12);
+  color: #c2410c;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.short-support p,
+.short-support small {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.concept-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.concept-chip {
+  padding: 8px 10px;
+  background: var(--panel);
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
 .feedback {
   margin-top: 14px;
   border-radius: 12px;

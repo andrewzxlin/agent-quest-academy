@@ -49,7 +49,8 @@ import {
   pitchPracticeCard,
   questionCoachHint,
   reviewStats,
-  selectLearnerProfile
+  selectLearnerProfile,
+  shortAnswerSupport
 } from "../src/engine.js";
 
 const tests = [
@@ -65,6 +66,7 @@ const tests = [
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
+  ["short answer support provides concept chips", testShortAnswerSupport],
   ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
@@ -330,6 +332,20 @@ function testQuestionCoachHints() {
       assert.equal(hint.starter, null);
     }
   }
+}
+
+function testShortAnswerSupport() {
+  const short = flattenQuestions().find((item) => item.type === "short");
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const support = shortAnswerSupport(short);
+
+  assert.equal(shortAnswerSupport(single), null);
+  assert.equal(support.title, "概念積木");
+  assert.equal(support.concepts.length, short.keywords.length);
+  assert.deepEqual(support.concepts, short.keywords);
+  assert.equal(support.needed, short.minMatches);
+  assert.ok(support.prompt.includes("自己的話"));
+  assert.doesNotMatch(`${support.prompt} ${support.concepts.join(" ")}`, /請寫程式|建立 repo|project implementation/i);
 }
 
 function testMistakeRescuePrompts() {

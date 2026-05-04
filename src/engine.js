@@ -225,6 +225,16 @@ export function questionCoachHint(question) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function shortAnswerSupport(question) {
+  if (question.type !== "short") return null;
+  return {
+    title: "概念積木",
+    prompt: "先選 1-2 個概念放進答案，再用自己的話補成一句完整說明。",
+    concepts: question.keywords,
+    needed: question.minMatches
+  };
+}
+
 export function mistakeRescuePrompt(question, result) {
   if (result.correct) return null;
   if (question.type === "single") {

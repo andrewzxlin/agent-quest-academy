@@ -163,6 +163,7 @@
 
 - Main lessons, Boss Quiz, interview drills, and review sessions stay limited to single choice, multi-select, and short answer questions.
 - Short answers are explanation prompts, not implementation assignments.
+- Short-answer prompts show concept chips so learners can assemble an answer before writing freely.
 - Fresh lesson sessions show choice questions before the short-answer prompt.
 - Project builds, repo tasks, code-writing prompts, and LangGraph build tasks are intentionally out of scope for this learning phase.
 
