@@ -559,6 +559,82 @@ h1 {
   margin-top: 14px;
 }
 
+.role-sampler-card {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.role-sampler-card .section-title > p,
+.role-sampler-card small,
+.role-sampler-card em,
+.role-sampler-action span {
+  color: var(--muted);
+}
+
+.role-sampler-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.role-sampler-grid div {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.role-sampler-grid span,
+.role-sampler-grid strong,
+.role-sampler-grid small,
+.role-sampler-action strong,
+.role-sampler-action span,
+.role-sampler-action small {
+  display: block;
+}
+
+.role-sampler-grid span {
+  color: #0f766e;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.role-sampler-grid strong {
+  margin-top: 6px;
+}
+
+.role-sampler-grid p {
+  margin-top: 8px;
+}
+
+.role-sampler-grid small {
+  margin-top: 8px;
+}
+
+.role-sampler-action {
+  background: #ecfeff;
+  border: 1px solid #a5f3fc;
+  border-radius: 10px;
+  margin-top: 14px;
+  padding: 12px;
+}
+
+.role-sampler-action span,
+.role-sampler-action small {
+  margin-top: 6px;
+}
+
+.role-sampler-card em {
+  display: block;
+  font-style: normal;
+  font-weight: 800;
+  margin-top: 12px;
+}
+
 .jargon-shield-card {
   background: #fff7ed;
   border: 1px solid #fed7aa;
@@ -4624,6 +4700,7 @@ button:disabled {
   .practice-diet-formats,
   .practice-diet-rules,
   .zero-landing-milestones,
+  .role-sampler-grid,
   .phrase-bank-steps,
   .jargon-shield-terms,
   .skill-profile-metrics,

@@ -2305,6 +2305,51 @@ export function zeroToLandingQuestCard(progress, now = Date.now()) {
   };
 }
 
+export function roleSamplerCard(progress) {
+  const roleFit = jobRoleFitCard(progress);
+  const answeredCount = Object.keys(progress.answered ?? {}).length;
+  const samplesByRole = {
+    "ai-app-builder": {
+      choiceMove: "Pick the option that makes the AI product useful, bounded, and testable.",
+      samplePrompt: "Which feature changes the user's workflow instead of only sounding impressive?"
+    },
+    "agent-workflow-builder": {
+      choiceMove: "Pick the option that keeps agent state, tools, and feedback connected.",
+      samplePrompt: "Which step should the agent remember before choosing the next tool?"
+    },
+    "agent-reliability-builder": {
+      choiceMove: "Pick the option that catches risk before the agent acts with confidence.",
+      samplePrompt: "Which check would stop a bad answer from reaching the user?"
+    }
+  };
+  const tracks = roleFit.tracks.map((track) => {
+    const sample = samplesByRole[track.id] ?? {
+      choiceMove: "Pick the option that changes a real workflow decision.",
+      samplePrompt: "Which choice creates the clearest agentic workflow signal?"
+    };
+    return {
+      id: track.id,
+      title: track.title,
+      level: track.level,
+      nextGap: track.nextGap,
+      choiceMove: sample.choiceMove,
+      samplePrompt: sample.samplePrompt
+    };
+  });
+  const active = tracks.find((track) => track.level !== "interview-ready") ?? tracks[0];
+
+  return {
+    title: "Role Sampler",
+    headline: answeredCount > 0 ? "Your tiny choices are already pointing somewhere." : "Try a role path with one choice.",
+    summary: "No need to choose a career lane yet. Sample each path through quick judgment prompts first.",
+    activeRole: active?.title ?? "Agentic Workflow Builder",
+    activeMove: active?.choiceMove ?? "Pick one workflow signal.",
+    nextAction: "Answer one single-choice question, then compare which role signal felt natural.",
+    promise: "Sampling stays choice-first: no project task, no setup, no long writing.",
+    tracks
+  };
+}
+
 export function jobRoleFitCard(progress) {
   const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));

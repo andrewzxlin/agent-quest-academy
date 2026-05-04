@@ -89,6 +89,7 @@ import {
   reviewRhythmCard,
   reviewSprintCard,
   reviewStats,
+  roleSamplerCard,
   selectLearnerProfile,
   setDashboardMode,
   sevenDayLandingPath,
@@ -170,6 +171,7 @@ const tests = [
   ["daily landing step maps tiny practice to job value", testDailyLandingStepCard],
   ["daily phrase bank makes reusable lines visible in beginner flow", testDailyPhraseBankCard],
   ["zero to landing quest compresses the beginner route", testZeroToLandingQuestCard],
+  ["role sampler turns role paths into choice-first samples", testRoleSamplerCard],
   ["quest compass turns recommendation into a game-like next step", testQuestCompass],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
   ["recall combo card rewards clean low-friction runs", testRecallComboCard],
@@ -1595,6 +1597,27 @@ function testZeroToLandingQuestCard() {
   assert.equal(card.milestones.find((milestone) => milestone.id === "boss-proof").status, "done");
   assert.equal(card.milestones.find((milestone) => milestone.id === "role-signal").status, "done");
   assert.equal(card.activeId, "interview-line");
+}
+
+function testRoleSamplerCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = roleSamplerCard(progress);
+  assert.equal(card.title, "Role Sampler");
+  assert.equal(card.tracks.length, 3);
+  assert.equal(card.activeRole, "AI App Builder");
+  assert.ok(card.headline.includes("one choice"));
+  assert.ok(card.nextAction.includes("single-choice"));
+  assert.ok(card.promise.includes("choice-first"));
+  assert.ok(card.tracks.every((track) => track.samplePrompt.includes("?")));
+  assert.ok(card.tracks.every((track) => track.choiceMove.includes("Pick")));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = roleSamplerCard(progress);
+  assert.ok(card.headline.includes("pointing"));
+  assert.ok(card.activeMove.length > 0);
 }
 
 function testQuestCompass() {

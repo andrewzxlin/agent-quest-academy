@@ -35,6 +35,12 @@
 - The bank labels the strongest role signal, so each phrase points toward a job-facing path.
 - Daily Quest now includes banking one phrase, so the daily loop rewards reusable wording as well as answer volume.
 
+## Role Sampler
+
+- Beginner view now previews AI App Builder, Agent Workflow Builder, and Agent Reliability Builder as lightweight samples.
+- Each path is framed as one choice-style judgment, so learners can try a role signal before committing to a lane.
+- The sampler keeps role exploration choice-first with no setup, project task, or long writing.
+
 ## Session Rhythm
 
 - The quiz card now shows the current run as Recognize, Connect, and Explain steps.

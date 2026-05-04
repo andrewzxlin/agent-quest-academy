@@ -76,6 +76,7 @@ import {
   reviewSprintCard,
   reviewStats,
   resetProgress,
+  roleSamplerCard,
   saveProgress,
   selectLearnerProfile,
   setDashboardMode,
@@ -158,6 +159,7 @@ function render() {
   const dashboardMode = dashboardModeCard(progress);
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
+  const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
   const glossary = beginnerGlossaryCards(chapter.id);
   const jargonShield = jargonShieldCard(chapter.id);
@@ -245,6 +247,7 @@ function render() {
         ${renderFirstFiveMinuteStartCard(firstFive)}
         ${renderPracticeDietCard(practiceDiet)}
         ${renderZeroToLandingQuestCard(zeroToLandingQuest)}
+        ${renderRoleSamplerCard(roleSampler)}
         ${renderJargonShieldCard(jargonShield)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
@@ -630,6 +633,32 @@ function renderZeroToLandingQuestCard(card) {
       </div>
       <button class="primary compact" data-zero-landing-action="true">${card.nextAction}</button>
     </div>
+  </section>`;
+}
+
+function renderRoleSamplerCard(card) {
+  return `<section class="role-sampler-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.summary}</p>
+    </div>
+    <div class="role-sampler-grid">
+      ${card.tracks.map((track) => `<div>
+        <span>${track.level}</span>
+        <strong>${track.title}</strong>
+        <p>${track.samplePrompt}</p>
+        <small>${track.choiceMove}</small>
+      </div>`).join("")}
+    </div>
+    <div class="role-sampler-action">
+      <strong>${card.activeRole}</strong>
+      <span>${card.activeMove}</span>
+      <small>${card.nextAction}</small>
+    </div>
+    <em>${card.promise}</em>
   </section>`;
 }
 
