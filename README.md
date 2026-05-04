@@ -132,6 +132,12 @@
 - Each piece is derived from real progress: micro-lessons, Boss proof, and interview drill completion.
 - Every piece includes one small next action so learners always know the next low-friction move.
 
+## Daily Momentum
+
+- The sidebar streak now reflects real consecutive active learning days instead of completed lesson count.
+- The home screen shows today's answers, correct rate, and a tiny next nudge.
+- Momentum is derived from existing daily activity, so learners get game-like feedback without extra setup.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

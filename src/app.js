@@ -14,6 +14,7 @@ import {
   completeLesson,
   createInitialProgress,
   achievements,
+  dailyMomentum,
   dailyQuestSnapshot,
   dailyMissions,
   gradeQuestion,
@@ -78,6 +79,7 @@ function render() {
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
+  const momentum = dailyMomentum(progress, Date.now());
   const onboarding = onboardingState(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
@@ -100,7 +102,7 @@ function render() {
         </div>
         <div class="stats">
           <div><span>${progress.xp}</span><small>XP</small></div>
-          <div><span>${progress.streak}</span><small>連續課</small></div>
+          <div><span>${momentum.streakDays}</span><small>連續天</small></div>
           <div><span>${dueCount}</span><small>待複習</small></div>
         </div>
         <button class="review-button" data-review="true" ${dueCount === 0 ? "disabled" : ""}>
@@ -151,6 +153,7 @@ function render() {
         ${renderOnboardingCard(onboarding)}
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderDailyQuestSnapshot(dailyQuest)}
+        ${renderDailyMomentumCard(momentum)}
         ${renderLearningPuzzleBoard(puzzle)}
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
@@ -390,6 +393,30 @@ function renderDailyQuestSnapshot(snapshot) {
     <div class="quest-meter">
       <strong>${snapshot.percent}%</strong>
       <span>${snapshot.activeTitle}</span>
+    </div>
+  </section>`;
+}
+
+function renderDailyMomentumCard(momentum) {
+  return `<section class="daily-momentum-card ${momentum.activeToday ? "active" : "idle"}">
+    <div>
+      <p class="eyebrow">Daily Momentum</p>
+      <h3>${momentum.level}</h3>
+      <p>${momentum.nextNudge}</p>
+    </div>
+    <div class="momentum-grid">
+      <div>
+        <span>${momentum.streakDays}</span>
+        <small>連續天</small>
+      </div>
+      <div>
+        <span>${momentum.answersToday}</span>
+        <small>今日答題</small>
+      </div>
+      <div>
+        <span>${momentum.correctRate}%</span>
+        <small>今日正確率</small>
+      </div>
     </div>
   </section>`;
 }

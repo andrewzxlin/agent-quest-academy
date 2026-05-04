@@ -392,6 +392,62 @@ h1 {
   font-size: 30px;
 }
 
+.daily-momentum-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.daily-momentum-card.active {
+  background: #ecfeff;
+  border-color: #a5f3fc;
+}
+
+.daily-momentum-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.daily-momentum-card p {
+  color: var(--muted);
+}
+
+.momentum-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 90px);
+  gap: 10px;
+}
+
+.momentum-grid div {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.78);
+  padding: 12px;
+  text-align: center;
+}
+
+.momentum-grid span,
+.momentum-grid small {
+  display: block;
+}
+
+.momentum-grid span {
+  color: #0e7490;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.momentum-grid small {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 .learning-puzzle-board {
   background: #fff7ed;
   border: 1px solid #fed7aa;
@@ -1453,6 +1509,7 @@ button:disabled {
   .recommendation-card,
   .career-snapshot,
   .daily-quest-snapshot,
+  .daily-momentum-card,
   .onboarding-card.compact-card,
   .job-scenario-card,
   .lesson-skill-card,
@@ -1464,6 +1521,7 @@ button:disabled {
   .chapter-track,
   .readiness-grid,
   .glossary-grid,
+  .momentum-grid,
   .puzzle-grid,
   .skill-grid,
   .pitch-grid,

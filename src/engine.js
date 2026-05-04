@@ -640,6 +640,40 @@ export function dailyQuestSnapshot(progress, now = Date.now()) {
   };
 }
 
+export function dailyMomentum(progress, now = Date.now()) {
+  const activity = getDailyActivity(progress, now);
+  const activeToday = isActiveDay(activity);
+  const streakDays = countActiveDays(progress.dailyActivity ?? {}, now);
+  const correctRate = activity.answers === 0 ? 0 : Math.round((activity.correctAnswers / activity.answers) * 100);
+  const level =
+    streakDays >= 7
+      ? "Weekly rhythm"
+      : activeToday && activity.answers >= 5
+        ? "Daily quest live"
+        : activeToday
+          ? "Started today"
+          : "Fresh start";
+  const nextNudge = !activeToday
+    ? "先答 1 題，把今天的學習迴圈啟動。"
+    : activity.answers < 5
+      ? `再答 ${5 - activity.answers} 題，就完成今日答題任務。`
+      : activity.lessonsCompleted < 1
+        ? "完成目前 micro-lesson，讓今天有一個清楚進度。"
+        : "今天節奏已經成立；有空再補錯題或 Boss。";
+
+  return {
+    activeToday,
+    streakDays,
+    answersToday: activity.answers,
+    correctAnswersToday: activity.correctAnswers,
+    correctRate,
+    lessonsCompletedToday: activity.lessonsCompleted,
+    bossPassesToday: activity.bossPasses,
+    level,
+    nextNudge
+  };
+}
+
 export function completionCard(progress, event) {
   const summariesByChapter = new Map(chapterSummaryCards(progress).map((item) => [item.chapterId, item]));
   const summary = event.chapterId ? summariesByChapter.get(event.chapterId) : null;
@@ -894,6 +928,31 @@ function getDailyActivity(progress, now) {
     bossPasses: 0,
     ...((progress.dailyActivity ?? {})[dailyKey(now)] ?? {})
   };
+}
+
+function countActiveDays(dailyActivity, now) {
+  const day = 24 * 60 * 60 * 1000;
+  let cursor = startOfUtcDay(now);
+  const today = dailyActivity[dailyKey(cursor)];
+  if (!isActiveDay(today)) {
+    cursor -= day;
+  }
+
+  let count = 0;
+  while (isActiveDay(dailyActivity[dailyKey(cursor)])) {
+    count += 1;
+    cursor -= day;
+  }
+  return count;
+}
+
+function isActiveDay(activity = {}) {
+  return (activity.answers ?? 0) > 0 || (activity.lessonsCompleted ?? 0) > 0 || (activity.bossAttempts ?? 0) > 0;
+}
+
+function startOfUtcDay(now) {
+  const date = new Date(now);
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 }
 
 function dailyKey(now) {

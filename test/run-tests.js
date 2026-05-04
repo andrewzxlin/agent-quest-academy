@@ -27,6 +27,7 @@ import {
   completeLesson,
   createInitialProgress,
   achievements,
+  dailyMomentum,
   dailyQuestSnapshot,
   dailyMissions,
   getDueReviewQuestions,
@@ -79,6 +80,7 @@ const tests = [
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
+  ["daily momentum derives real active-day streaks", testDailyMomentum],
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
@@ -519,6 +521,41 @@ function testDailyQuestSnapshot() {
   assert.equal(snapshot.completedCount, 3);
   assert.equal(snapshot.percent, 100);
   assert.ok(snapshot.nextStep.includes("已完成"));
+}
+
+function testDailyMomentum() {
+  const day = 24 * 60 * 60 * 1000;
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let momentum = dailyMomentum(progress, now);
+  assert.equal(momentum.activeToday, false);
+  assert.equal(momentum.streakDays, 0);
+  assert.equal(momentum.correctRate, 0);
+  assert.ok(momentum.nextNudge.includes("1"));
+
+  const questions = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, questions[0], questions[0].answer, now);
+  momentum = dailyMomentum(progress, now);
+  assert.equal(momentum.activeToday, true);
+  assert.equal(momentum.streakDays, 1);
+  assert.equal(momentum.answersToday, 1);
+  assert.equal(momentum.correctRate, 100);
+  assert.ok(momentum.nextNudge.includes("4"));
+
+  answerQuestion(progress, questions[1], 99, now + day);
+  momentum = dailyMomentum(progress, now + day);
+  assert.equal(momentum.streakDays, 2);
+  assert.equal(momentum.correctRate, 0);
+
+  momentum = dailyMomentum(progress, now + 3 * day);
+  assert.equal(momentum.activeToday, false);
+  assert.equal(momentum.streakDays, 0);
+
+  completeLesson(progress, flattenLessons()[0].id, now + 3 * day);
+  momentum = dailyMomentum(progress, now + 3 * day);
+  assert.equal(momentum.activeToday, true);
+  assert.equal(momentum.streakDays, 1);
+  assert.equal(momentum.lessonsCompletedToday, 1);
 }
 
 function testAchievements() {
