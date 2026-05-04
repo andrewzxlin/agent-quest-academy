@@ -2191,6 +2191,85 @@ export function chapterGateMap(progress) {
   });
 }
 
+export function chapterGateStrip(progress, chapterId) {
+  const chapter = chapterMap(progress).find((item) => item.chapterId === chapterId);
+  if (!chapter) return null;
+  const gate = chapterGateMap(progress).find((item) => item.chapterId === chapterId);
+  const interviewQuestions = interviewQuestionsForChapter(chapterId);
+  const answered = progress.answered ?? {};
+  const answeredInterview = interviewQuestions.filter((question) => answered[questionKey(question)]).length;
+  const lessonsDone = chapter.completedLessons === chapter.totalLessons;
+  const bossDone = chapter.bossPassed;
+  const interviewDone = interviewQuestions.length > 0 && answeredInterview === interviewQuestions.length;
+  const pitchReady = gate?.pitchUnlocked && interviewDone;
+  const status = !gate?.lessonsUnlocked
+    ? "locked"
+    : pitchReady
+      ? "pitch-ready"
+      : bossDone
+        ? "interview-open"
+        : gate?.bossUnlocked
+          ? "boss-ready"
+          : "learning";
+  const steps = [
+    {
+      id: "lessons",
+      label: "Lessons",
+      done: lessonsDone,
+      current: chapter.completedLessons,
+      target: chapter.totalLessons,
+      text: `${chapter.completedLessons}/${chapter.totalLessons} micro-lessons`
+    },
+    {
+      id: "boss",
+      label: "Boss",
+      done: bossDone,
+      current: bossDone ? 1 : 0,
+      target: 1,
+      text: bossDone ? "Boss proof saved" : gate?.bossUnlocked ? "Boss unlocked" : "Finish lessons first"
+    },
+    {
+      id: "interview",
+      label: "Interview",
+      done: interviewDone,
+      current: answeredInterview,
+      target: interviewQuestions.length,
+      text: gate?.interviewUnlocked ? `${answeredInterview}/${interviewQuestions.length} prompts` : "Opens after Boss"
+    },
+    {
+      id: "pitch",
+      label: "Pitch",
+      done: Boolean(pitchReady),
+      current: pitchReady ? 1 : 0,
+      target: 1,
+      text: pitchReady ? "Pitch seed ready" : "Opens after interview"
+    }
+  ];
+  const active = steps.find((step) => !step.done) ?? steps[steps.length - 1];
+
+  return {
+    chapterId,
+    title: "Chapter Gate",
+    status,
+    chapterTitle: chapter.title,
+    activeId: active.id,
+    headline: `${active.label}: ${active.text}`,
+    nextAction:
+      status === "locked"
+        ? "Clear the previous Boss to open this chapter."
+        : pitchReady
+          ? "Turn the interview prompts into a 60-second pitch."
+          : active.id === "lessons"
+            ? "Keep clearing tiny choice-first lessons."
+            : active.id === "boss"
+              ? "Use the Boss as the chapter checkpoint."
+              : active.id === "interview"
+                ? "Convert Boss proof into interview wording."
+                : "Open pitch practice.",
+    steps
+  };
+}
+
 export function bossReadinessCard(progress, chapterId) {
   const chapter = chapterMap(progress).find((item) => item.chapterId === chapterId);
   if (!chapter) return null;

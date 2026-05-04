@@ -28,6 +28,7 @@ import {
   buildSessionQuestions,
   careerReadinessSnapshot,
   chapterGateMap,
+  chapterGateStrip,
   chapterMap,
   chapterSummaryCards,
   choiceArcadeCard,
@@ -204,6 +205,7 @@ const tests = [
   ["mistake focus card picks the highest-priority wrong answer", testMistakeFocusCard],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
   ["chapter gate map stages lessons boss interview and pitch unlocks", testChapterGateMap],
+  ["chapter gate strip keeps the current chapter route visible", testChapterGateStrip],
   ["boss gate teaser makes the next proof gate visible", testBossGateTeaserCard],
   ["interview unlock preview shows how Boss turns into interview practice", testInterviewUnlockPreviewCard],
   ["pitch unlock preview turns interview proof into a rehearseable answer", testPitchUnlockPreviewCard],
@@ -2188,6 +2190,48 @@ function testChapterGateMap() {
   assert.equal(gates[0].pitchUnlocked, true);
   assert.equal(gates[1].gate, "current");
   assert.equal(gates[1].lessonsUnlocked, true);
+}
+
+function testChapterGateStrip() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  let strip = chapterGateStrip(progress, chapter.id);
+
+  assert.equal(strip.title, "Chapter Gate");
+  assert.equal(strip.status, "learning");
+  assert.equal(strip.chapterId, chapter.id);
+  assert.equal(strip.activeId, "lessons");
+  assert.deepEqual(strip.steps.map((step) => step.id), ["lessons", "boss", "interview", "pitch"]);
+  assert.equal(strip.steps.find((step) => step.id === "lessons").done, false);
+  assert.ok(strip.headline.includes("Lessons"));
+  assert.doesNotMatch(JSON.stringify(strip), /repo|project implementation|build a project|coding task/i);
+
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  strip = chapterGateStrip(progress, chapter.id);
+  assert.equal(strip.status, "boss-ready");
+  assert.equal(strip.activeId, "boss");
+  assert.equal(strip.steps.find((step) => step.id === "lessons").done, true);
+  assert.ok(strip.steps.find((step) => step.id === "boss").text.includes("unlocked"));
+
+  completeBossQuiz(progress, chapter.id, 8, 8, 1000);
+  strip = chapterGateStrip(progress, chapter.id);
+  assert.equal(strip.status, "interview-open");
+  assert.equal(strip.activeId, "interview");
+  assert.equal(strip.steps.find((step) => step.id === "boss").done, true);
+  assert.equal(strip.steps.find((step) => step.id === "interview").current, 0);
+
+  for (const question of interviewQuestionsForChapter(chapter.id)) {
+    const response = question.type === "multi" ? question.answer : question.answer ?? question.keywords[0];
+    answerQuestion(progress, question, response, 1000);
+  }
+  strip = chapterGateStrip(progress, chapter.id);
+  assert.equal(strip.status, "pitch-ready");
+  assert.equal(strip.activeId, "pitch");
+  assert.equal(strip.steps.find((step) => step.id === "interview").done, true);
+  assert.equal(strip.steps.find((step) => step.id === "pitch").done, true);
+  assert.equal(chapterGateStrip(progress, "missing-chapter"), null);
 }
 
 function testBossGateTeaserCard() {

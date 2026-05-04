@@ -15,6 +15,7 @@ import {
   buildSessionQuestions,
   careerReadinessSnapshot,
   chapterGateMap,
+  chapterGateStrip,
   chapterMap,
   chapterSummaryCards,
   choiceArcadeCard,
@@ -138,6 +139,7 @@ function render() {
   const map = chapterMap(progress);
   const gates = chapterGateMap(progress);
   const gatesByChapter = new Map(gates.map((item) => [item.chapterId, item]));
+  const chapterGate = chapterGateStrip(progress, chapter.id);
   const hud = learningHud(progress, Date.now());
   const readiness = jobReadinessMap(progress);
   const puzzle = learningPuzzleBoard(progress);
@@ -344,6 +346,7 @@ function render() {
               <small>本課熟練度</small>
             </div>
           </div>
+          ${renderChapterGateStrip(chapterGate)}
           ${renderLessonLadderStrip(ladderStrip)}
           ${renderSessionRhythmCard(sessionRhythm)}
           ${renderAbilityShardCard(abilityShard)}
@@ -521,6 +524,26 @@ function renderSessionRhythmCard(card) {
         .join("")}
     </div>
     <small>${card.promise}</small>
+  </div>`;
+}
+
+function renderChapterGateStrip(card) {
+  if (!card) return "";
+  return `<div class="chapter-gate-strip ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.chapterTitle}</strong>
+      <small>${card.headline}</small>
+    </div>
+    <div class="chapter-gate-steps">
+      ${card.steps
+        .map((step) => `<em class="${step.done ? "done" : step.id === card.activeId ? "current" : ""}">
+          <b>${step.label}</b>
+          ${step.text}
+        </em>`)
+        .join("")}
+    </div>
+    <small>${card.nextAction}</small>
   </div>`;
 }
 
