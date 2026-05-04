@@ -512,6 +512,80 @@ h1 {
   margin: 4px 0;
 }
 
+.skill-profile-card {
+  background: #fdf4ff;
+  border: 1px solid #f0abfc;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.skill-profile-card > p,
+.skill-profile-card .skill-profile-next {
+  color: var(--muted);
+}
+
+.skill-profile-metrics,
+.skill-profile-highlights,
+.skill-profile-lines {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.skill-profile-metrics {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.skill-profile-highlights,
+.skill-profile-lines {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.skill-profile-metrics div,
+.skill-profile-highlights div,
+.skill-profile-lines div {
+  background: rgb(255 255 255 / 0.8);
+  border: 1px solid rgb(162 28 175 / 0.12);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.skill-profile-metrics span,
+.skill-profile-metrics small,
+.skill-profile-highlights span,
+.skill-profile-highlights strong,
+.skill-profile-highlights small,
+.skill-profile-lines span,
+.skill-profile-lines strong {
+  display: block;
+}
+
+.skill-profile-metrics span {
+  color: #a21caf;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.skill-profile-metrics small,
+.skill-profile-highlights small,
+.skill-profile-card .skill-profile-next {
+  display: block;
+  margin-top: 8px;
+}
+
+.skill-profile-highlights span,
+.skill-profile-lines span {
+  color: #a21caf;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.skill-profile-highlights strong,
+.skill-profile-lines strong {
+  margin-top: 6px;
+}
+
 .job-role-fit-card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -3744,6 +3818,7 @@ button:disabled {
   .dashboard-mode-card,
   .quest-compass,
   .career-snapshot,
+  .skill-profile-card,
   .job-signal-passport,
   .landing-gap-radar,
   .landing-checklist-card,
@@ -3789,6 +3864,9 @@ button:disabled {
   .proof-grid,
   .first-five-grid,
   .role-fit-grid,
+  .skill-profile-metrics,
+  .skill-profile-highlights,
+  .skill-profile-lines,
   .passport-stamps,
   .gap-radar-steps,
   .landing-checklist-grid,

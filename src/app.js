@@ -73,6 +73,7 @@ import {
   setDashboardMode,
   sevenDayLandingPath,
   signalPreviewCard,
+  skillProfileCard,
   shortAnswerSupport,
   uncertaintySafetyCard
 } from "./engine.js";
@@ -124,6 +125,7 @@ function render() {
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const roleFit = jobRoleFitCard(progress);
   const signalPassport = jobSignalPassport(progress, Date.now());
+  const skillProfile = skillProfileCard(progress, Date.now());
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
   const oneLineCoach = oneLineCoachCard(progress, Date.now());
   const receiptReel = learningReceiptReel(progress);
@@ -234,6 +236,7 @@ function render() {
           showFullDashboard
             ? `${renderExerciseScopeCard(exerciseScope)}
         ${renderCareerSnapshot(careerSnapshot)}
+        ${renderSkillProfileCard(skillProfile)}
         ${renderJobRoleFitCard(roleFit)}
         ${renderJobSignalPassport(signalPassport)}
         ${renderLandingGapRadar(gapRadar)}
@@ -541,6 +544,45 @@ function renderCareerSnapshot(snapshot) {
       <span>下一個缺口：${snapshot.nextGap}</span>
       <small>${snapshot.nextAction}</small>
     </div>
+  </section>`;
+}
+
+function renderSkillProfileCard(card) {
+  return `<section class="skill-profile-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.readiness}</p>
+    </div>
+    <p>${card.summaryLine}</p>
+    <div class="skill-profile-metrics">
+      ${card.metrics
+        .map((metric) => `<div>
+          <span>${metric.value}</span>
+          <small>${metric.label}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="skill-profile-highlights">
+      ${card.proofHighlights
+        .map((proof) => `<div class="${proof.status}">
+          <span>${proof.status}</span>
+          <strong>${proof.title}</strong>
+          <small>${proof.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="skill-profile-lines">
+      ${card.lines
+        .map((line) => `<div>
+          <span>${line.label}</span>
+          <strong>${line.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
+    <small class="skill-profile-next">${card.roleSignal} - ${card.nextProof.title}: ${card.nextProof.action}</small>
   </section>`;
 }
 

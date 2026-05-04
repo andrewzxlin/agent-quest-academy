@@ -1962,6 +1962,97 @@ export function jobSignalPassport(progress, now = Date.now()) {
   };
 }
 
+export function skillProfileCard(progress, now = Date.now()) {
+  const snapshot = careerReadinessSnapshot(progress, now);
+  const passport = jobSignalPassport(progress, now);
+  const checklist = landingReadinessChecklist(progress, now);
+  const proofs = abilityProofCards(progress);
+  const roleFit = jobRoleFitCard(progress);
+  const strongestTrack = [...roleFit.tracks].sort(
+    (a, b) => b.readyCount - a.readyCount || b.practicingCount - a.practicingCount
+  )[0];
+  const proofHighlights = proofs
+    .filter((proof) => proof.status !== "new")
+    .slice(0, 3)
+    .map((proof) => ({
+      id: proof.chapterId,
+      title: proof.title,
+      status: proof.status,
+      text: proof.abilityStatement
+    }));
+  const activeGate = checklist.items.find((item) => !item.done) ?? checklist.items[checklist.items.length - 1];
+
+  return {
+    title: "Agentic Workflow Skill Profile",
+    readiness: snapshot.level,
+    headline:
+      snapshot.provenCount > 0
+        ? `${snapshot.provenCount}/${snapshot.total} proof chapters ready`
+        : "First proof chapter is still forming",
+    summaryLine:
+      snapshot.provenCount > 0
+        ? `I can explain ${passport.stamps.find((stamp) => stamp.id === "evidence")?.value ?? "agentic workflow"} with visible practice evidence.`
+        : "I am building agentic workflow judgment through low-friction questions and review.",
+    roleSignal: strongestTrack?.title ?? "Role signal pending",
+    nextProof: activeGate
+      ? {
+          title: activeGate.title,
+          action: checklist.nextAction,
+          proof: activeGate.proof
+        }
+      : {
+          title: "Keep proof warm",
+          action: checklist.nextAction,
+          proof: "Rehearse one saved evidence line."
+        },
+    metrics: [
+      {
+        id: "proof",
+        label: "Proof chapters",
+        value: `${snapshot.provenCount}/${snapshot.total}`
+      },
+      {
+        id: "interview",
+        label: "Interview-ready",
+        value: `${snapshot.interviewReadyCount}/${snapshot.total}`
+      },
+      {
+        id: "landing",
+        label: "Landing gates",
+        value: `${checklist.completedCount}/${checklist.totalCount}`
+      }
+    ],
+    proofHighlights:
+      proofHighlights.length > 0
+        ? proofHighlights
+        : [
+            {
+              id: "starter",
+              title: "First proof pending",
+              status: "starter",
+              text: "Answer one choice question to start the first visible proof trail."
+            }
+          ],
+    lines: [
+      {
+        id: "skill",
+        label: "Skill",
+        text: `I can discuss agentic workflow at the ${snapshot.level.toLowerCase()} level.`
+      },
+      {
+        id: "evidence",
+        label: "Evidence",
+        text: passport.stamps.find((stamp) => stamp.id === "receipt")?.detail ?? "First receipt pending."
+      },
+      {
+        id: "next",
+        label: "Next proof",
+        text: `${activeGate?.title ?? "Keep proof warm"}: ${checklist.nextAction}`
+      }
+    ]
+  };
+}
+
 function roleFitSkillChips(pieces) {
   return pieces.map((piece) => {
     const state =

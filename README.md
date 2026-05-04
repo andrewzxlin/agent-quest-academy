@@ -148,6 +148,12 @@
 - The snapshot derives its level from real ability proof progress.
 - It keeps the learner oriented toward job-facing readiness without adding planning overhead.
 
+## Skill Profile
+
+- Full Dashboard now includes an Agentic Workflow Skill Profile built from existing choice, multi-select, short-answer, review, Boss, and interview progress.
+- It summarizes readiness, proof chapters, interview-ready chapters, landing gates, strongest role signal, and the next proof to strengthen.
+- The profile helps learners see a coherent ability story while keeping the current phase focused on low-friction questions and a few short explanations.
+
 ## Role Fit Map
 
 - The home screen maps chapter proof into three job-facing paths: AI App Builder, Agent Workflow Builder, and Agent Reliability Builder.

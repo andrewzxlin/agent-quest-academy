@@ -85,6 +85,7 @@ import {
   setDashboardMode,
   sevenDayLandingPath,
   signalPreviewCard,
+  skillProfileCard,
   shortAnswerSupport,
   uncertaintySafetyCard
 } from "../src/engine.js";
@@ -159,6 +160,7 @@ const tests = [
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
   ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
+  ["skill profile summarizes evidence into one page", testSkillProfileCard],
   ["job role fit card maps progress to role paths", testJobRoleFitCard],
   ["job signal passport summarizes current role evidence", testJobSignalPassport],
   ["landing gap radar highlights the closest job-readiness gap", testLandingGapRadar],
@@ -1582,6 +1584,37 @@ function testCareerReadinessSnapshot() {
   assert.equal(snapshot.provenCount, 1);
   assert.equal(snapshot.percent, 13);
   assert.ok(["Skill-building track", "Explanation signal track"].includes(snapshot.level));
+}
+
+function testSkillProfileCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let profile = skillProfileCard(progress, now);
+  assert.equal(profile.title, "Agentic Workflow Skill Profile");
+  assert.equal(profile.readiness, "Fresh start");
+  assert.deepEqual(profile.metrics.map((metric) => metric.id), ["proof", "interview", "landing"]);
+  assert.equal(profile.proofHighlights[0].id, "starter");
+  assert.deepEqual(profile.lines.map((line) => line.id), ["skill", "evidence", "next"]);
+  assert.ok(profile.summaryLine.includes("agentic workflow"));
+  assert.ok(profile.nextProof.title.length > 0);
+  assert.doesNotMatch(JSON.stringify(profile), /repo|project implementation|build a project|coding task/i);
+
+  const chapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, now);
+  profile = skillProfileCard(progress, now);
+  assert.ok(profile.headline.includes("1/8"));
+  assert.ok(profile.proofHighlights.some((proof) => proof.status === "proven"));
+  assert.ok(profile.roleSignal.includes("AI App Builder") || profile.roleSignal.includes("Agent Workflow Builder"));
+
+  for (const question of interviewQuestionsForChapter(chapter.id)) {
+    answerQuestion(progress, question, question.type === "multi" ? question.answer : question.answer ?? question.keywords[0], now);
+  }
+  profile = skillProfileCard(progress, now);
+  assert.ok(profile.metrics.find((metric) => metric.id === "interview").value.startsWith("1/"));
+  assert.ok(profile.proofHighlights.some((proof) => proof.status === "interview_ready"));
 }
 
 function testJobRoleFitCard() {
