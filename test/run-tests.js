@@ -104,6 +104,7 @@ import {
   questionCoachHint,
   questionComfortMeterCard,
   questionHintDeck,
+  questionImageQuestCard,
   questionKey,
   questionMasterySignal,
   questionMasteryStage,
@@ -160,6 +161,7 @@ const tests = [
   ["lesson analogy bridges explain concepts in plain language", testLessonAnalogyBridges],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
   ["question mini diagram maps each prompt to a visual workflow step", testQuestionMiniDiagramCard],
+  ["question image quest turns prompts into image generation briefs", testQuestionImageQuestCard],
   ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
   ["lesson ladder strip keeps the current mastery stage visible", testLessonLadderStrip],
   ["lesson pitch builder turns mastery into interview lines", testLessonPitchBuilder],
@@ -849,6 +851,36 @@ function testQuestionMiniDiagramCard() {
   assert.equal(card.stage, "Explain");
   assert.equal(card.nodes[3].status, "current");
   assert.ok(card.nodes.slice(0, 3).every((node) => node.status === "seen"));
+}
+
+function testQuestionImageQuestCard() {
+  const single = flattenQuestions().find((item) => item.type === "single" && item.chapterId === "agent-basics");
+  const multi = flattenQuestions().find((item) => item.type === "multi" && item.chapterId === "tools");
+  const short = flattenQuestions().find((item) => item.type === "short" && item.chapterId === "rag");
+
+  let card = questionImageQuestCard(single);
+  assert.equal(card.title, "Image 2.0 Brief");
+  assert.equal(card.stage, "Recognize");
+  assert.equal(card.panels.length, 3);
+  assert.match(card.accent, /^#[0-9a-f]{6}$/i);
+  assert.match(card.mark, /^[A-Z]{2}$/);
+  assert.ok(card.headline.includes(card.mark));
+  assert.ok(card.imagePrompt.includes("educational game card"));
+  assert.ok(card.imagePrompt.includes("beginner friendly"));
+  assert.ok(card.imagePrompt.includes("polished learning game UI"));
+  assert.ok(card.visualCue.length >= 20);
+  assert.ok(card.answerCue.length > 0);
+  assert.ok(card.proofUse.includes("signal"));
+  assert.ok(card.guardrail.includes("choice"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = questionImageQuestCard(multi);
+  assert.equal(card.stage, "Connect");
+  assert.ok(card.imagePrompt.includes(card.panels[1].label.toLowerCase()));
+
+  card = questionImageQuestCard(short);
+  assert.equal(card.stage, "Explain");
+  assert.ok(card.panels.find((panel) => panel.id === "answer").text.length > 0);
 }
 
 function testLessonMasteryLadder() {

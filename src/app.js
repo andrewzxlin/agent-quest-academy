@@ -91,6 +91,7 @@ import {
   questionCoachHint,
   questionComfortMeterCard,
   questionHintDeck,
+  questionImageQuestCard,
   questionMasterySignal,
   questionMasteryStage,
   questionMiniDiagramCard,
@@ -233,6 +234,7 @@ function render() {
   const comfortMeter = questionComfortMeterCard(question, answerReady, checked, lastResult);
   const timebox = questionTimeboxCard(question, currentIndex, sessionQuestions.length, checked, lastResult);
   const miniDiagram = questionMiniDiagramCard(question);
+  const imageQuest = questionImageQuestCard(question);
   const plainDecoder = questionPlainDecoderCard(question);
   const heroMission = heroMissionPanelCard(progress, question, answerReady, checked, lastResult, Date.now());
   const nowPlaying = nowPlayingHudCard(
@@ -402,6 +404,7 @@ function render() {
             ladderStrip,
             sessionRhythm,
             abilityShard,
+            imageQuest,
             miniDiagram,
             plainDecoder,
             roleSignal,
@@ -918,6 +921,7 @@ function renderLearningToolbox(cards) {
       <small>Optional help stays out of the way until you need it.</small>
     </summary>
     <div class="learning-toolbox-grid">
+      ${renderQuestionImageQuestCard(cards.imageQuest)}
       ${renderQuestionMiniDiagramCard(cards.miniDiagram)}
       ${renderQuestionPlainDecoderCard(cards.plainDecoder)}
       ${renderQuestionHintDeck(questionHintDeck(cards.question), cards.question)}
@@ -931,6 +935,32 @@ function renderLearningToolbox(cards) {
       ${renderChapterGateStrip(cards.chapterGate)}
     </div>
   </details>`;
+}
+
+function renderQuestionImageQuestCard(card) {
+  if (!card) return "";
+  return `<div class="question-image-quest-card" style="--image-quest-accent: ${card.accent}">
+    <div class="image-quest-preview">
+      <b>${card.mark}</b>
+      <span>${card.stage}</span>
+    </div>
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <p>${card.visualCue}</p>
+      <small>${card.guardrail}</small>
+    </div>
+    <div class="image-quest-panels">
+      ${card.panels
+        .map((panel) => `<em>
+          <b>${panel.label}</b>
+          ${panel.text}
+        </em>`)
+        .join("")}
+    </div>
+    <code>${card.imagePrompt}</code>
+    <small>${card.proofUse}</small>
+  </div>`;
 }
 
 function renderQuestion(question) {

@@ -982,6 +982,50 @@ export function questionMiniDiagramCard(question) {
   };
 }
 
+export function questionImageQuestCard(question) {
+  const visual = chapterVisuals[question.chapterId] ?? chapterVisuals["agent-basics"];
+  const stage = questionMasteryStage(question);
+  const nodes = CONCEPT_DIAGRAM_NODES[question.chapterId] ?? CONCEPT_DIAGRAM_NODES["agent-basics"];
+  const activeIndexByStage = {
+    recognize: 1,
+    connect: 2,
+    explain: 3
+  };
+  const activeIndex = Math.min(nodes.length - 1, activeIndexByStage[stage.id] ?? 1);
+  const activeNode = nodes[activeIndex];
+
+  return {
+    title: "Image 2.0 Brief",
+    chapterTitle: question.chapterTitle,
+    stage: stage.label,
+    mark: visual.mark,
+    accent: visual.accent,
+    headline: `${visual.mark} scene: ${activeNode.label}`,
+    imagePrompt: `${visual.imagePrompt}, focus on ${activeNode.label.toLowerCase()} step, beginner friendly, polished learning game UI`,
+    visualCue: activeNode.detail,
+    answerCue: stage.nextAction,
+    proofUse: stage.proof,
+    panels: [
+      {
+        id: "scene",
+        label: "Scene",
+        text: visual.caption
+      },
+      {
+        id: "focus",
+        label: activeNode.label,
+        text: activeNode.detail
+      },
+      {
+        id: "answer",
+        label: "Answer",
+        text: stage.nextAction
+      }
+    ],
+    guardrail: "Use the image to recognize the workflow step, then return to the choice."
+  };
+}
+
 export function lessonMasteryLadder(progress, lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;

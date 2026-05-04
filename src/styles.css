@@ -570,6 +570,107 @@ h1 {
   padding: 14px;
 }
 
+.question-image-quest-card {
+  background: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--image-quest-accent, #2563eb) 28%, #d9e2ef);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 180px 1fr;
+  padding: 14px;
+}
+
+.image-quest-preview {
+  background:
+    radial-gradient(circle at 78% 22%, color-mix(in srgb, var(--image-quest-accent, #2563eb) 35%, white), transparent 34%),
+    linear-gradient(135deg, #f8fafc, color-mix(in srgb, var(--image-quest-accent, #2563eb) 16%, white));
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  display: grid;
+  min-height: 150px;
+  padding: 14px;
+}
+
+.image-quest-preview b {
+  align-self: start;
+  background: var(--image-quest-accent, #2563eb);
+  border-radius: 999px;
+  color: #ffffff;
+  display: inline-grid;
+  height: 46px;
+  place-items: center;
+  width: 46px;
+}
+
+.image-quest-preview span {
+  align-self: end;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.question-image-quest-card span,
+.question-image-quest-card strong,
+.question-image-quest-card small,
+.image-quest-panels b {
+  display: block;
+}
+
+.question-image-quest-card > div:nth-child(2) > span {
+  color: var(--image-quest-accent, #2563eb);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.question-image-quest-card > div:nth-child(2) > strong {
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.question-image-quest-card p,
+.question-image-quest-card small,
+.image-quest-panels em {
+  color: var(--muted);
+}
+
+.question-image-quest-card p {
+  margin-top: 8px;
+}
+
+.image-quest-panels {
+  display: grid;
+  gap: 8px;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.image-quest-panels em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  font-size: 12px;
+  font-style: normal;
+  padding: 10px;
+}
+
+.image-quest-panels b {
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.question-image-quest-card code {
+  background: #0f172a;
+  border-radius: 8px;
+  color: #e0f2fe;
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  grid-column: 1 / -1;
+  line-height: 1.45;
+  padding: 10px;
+  white-space: normal;
+}
+
 .start-here-card {
   align-items: center;
   background: #eef2ff;
@@ -7570,6 +7671,7 @@ button:disabled {
   .chapter-gate-strip,
   .hero-mission-lanes,
   .now-playing-main,
+  .question-image-quest-card,
   .session-rhythm-card,
   .ability-shard-card,
   .question-mini-diagram-card,
@@ -7612,6 +7714,7 @@ button:disabled {
   .lesson-ladder-steps,
   .session-rhythm-steps,
   .now-playing-lanes,
+  .image-quest-panels,
   .landing-mission-route,
   .start-here-steps,
   .quest-brief-lanes,
