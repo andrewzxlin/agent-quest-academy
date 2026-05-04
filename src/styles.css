@@ -269,6 +269,31 @@ h1 {
   margin-bottom: 8px;
 }
 
+.completion-reward-strip {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.completion-reward-strip div {
+  background: rgb(255 255 255 / 0.76);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  padding: 9px 10px;
+}
+
+.completion-reward-strip span {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.completion-reward-strip small {
+  color: var(--muted);
+  display: block;
+  margin-top: 4px;
+}
+
 .completion-card.boss {
   background: #eff6ff;
   border-color: #bfdbfe;

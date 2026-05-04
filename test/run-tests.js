@@ -1180,6 +1180,11 @@ function testCompletionCards() {
   assert.ok(lessonCard.roleSignal.includes("AI App Builder"));
   assert.ok(lessonCard.roleSignal.includes("Agent Workflow Builder"));
   assert.ok(lessonCard.nextAction.includes("Boss Quiz"));
+  assert.deepEqual(lessonCard.rewards.map((reward) => reward.id), ["xp", "role", "next"]);
+  assert.ok(lessonCard.rewards[0].label.includes("Micro XP"));
+  assert.ok(lessonCard.rewards[1].detail.includes("AI App Builder"));
+  assert.ok(lessonCard.rewards[2].detail.includes("Boss Quiz"));
+  assert.doesNotMatch(JSON.stringify(lessonCard.rewards), /repo|project implementation|build a project/i);
 
   completeBossQuiz(progress, chapter.id, 7, 8, 1000);
   const bossCard = completionCard(progress, {
@@ -1193,12 +1198,14 @@ function testCompletionCards() {
   assert.equal(bossCard.title, "Boss cleared");
   assert.ok(bossCard.result.includes("7/8"));
   assert.ok(bossCard.roleSignal.includes("AI App Builder"));
+  assert.equal(bossCard.rewards[0].label, "Boss proof saved");
   assert.ok(bossCard.nextAction.includes("面試情境題"));
 
   const reviewCard = completionCard(progress, { type: "review", title: "錯題複習" });
   assert.equal(reviewCard.title, "Review session complete");
   assert.ok(reviewCard.result.includes("複習"));
   assert.ok(reviewCard.roleSignal.includes("every role path"));
+  assert.equal(reviewCard.rewards[0].label, "Recall strengthened");
 }
 
 function testNextPracticeRecommendation() {

@@ -1341,6 +1341,11 @@ export function completionCard(progress, event) {
           ? "錯題與間隔複習已更新"
           : "進度、XP 與複習排程已更新",
     roleSignal: roleFitCompletionLine(event.chapterId),
+    rewards: completionRewards(
+      event,
+      roleFitCompletionLine(event.chapterId),
+      summary?.nextAction ?? "Keep going with the next tiny practice step."
+    ),
     nextAction: summary?.nextAction ?? "繼續下一個低阻力練習。"
   };
 }
@@ -1350,6 +1355,36 @@ function roleFitCompletionLine(chapterId) {
   const roles = ROLE_FIT_TRACKS.filter((track) => track.chapterIds.includes(chapterId)).map((track) => track.title);
   if (roles.length === 0) return "This step adds one reusable agentic workflow judgment.";
   return `This step supports: ${roles.join(" / ")}.`;
+}
+
+function completionRewards(event, roleSignal, nextAction) {
+  const xpLabel =
+    event.type === "boss"
+      ? event.passed
+        ? "Boss proof saved"
+        : "Boss retry map saved"
+      : event.type === "review"
+        ? "Recall strengthened"
+        : event.type === "interview"
+          ? "Interview language saved"
+          : "Micro XP banked";
+  return [
+    {
+      id: "xp",
+      label: xpLabel,
+      detail: event.type === "review" ? "Old signals are easier to recall next time." : "This run now counts toward the learning path."
+    },
+    {
+      id: "role",
+      label: "Role signal",
+      detail: roleSignal
+    },
+    {
+      id: "next",
+      label: "Next unlock",
+      detail: nextAction
+    }
+  ];
 }
 
 export function nextPracticeRecommendation(progress, now = Date.now()) {

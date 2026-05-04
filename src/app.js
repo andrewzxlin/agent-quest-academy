@@ -392,6 +392,14 @@ function renderCompletionCard(card) {
     <div>
       <strong>${card.result}</strong>
       <em class="completion-role-signal">${card.roleSignal}</em>
+      <div class="completion-reward-strip">
+        ${card.rewards
+          .map((reward) => `<div>
+            <span>${reward.label}</span>
+            <small>${reward.detail}</small>
+          </div>`)
+          .join("")}
+      </div>
       <span>${card.nextAction}</span>
       <button class="secondary compact" data-dismiss-completion="true">繼續練習</button>
     </div>
