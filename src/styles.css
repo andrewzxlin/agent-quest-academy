@@ -3464,6 +3464,54 @@ h1 {
   border-color: #fed7aa;
 }
 
+.short-recipe {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.short-recipe span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(37 99 235 / 0.12);
+  color: #1d4ed8;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.short-recipe p {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.short-recipe-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.short-recipe-step {
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  background: var(--panel);
+  padding: 10px;
+}
+
+.short-recipe-step strong {
+  color: #1d4ed8;
+  font-size: 12px;
+}
+
+.short-recipe-step p {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .feedback {
   margin-top: 14px;
   border-radius: 12px;
@@ -4250,6 +4298,7 @@ button:disabled {
   .mistake-safety-steps,
   .question-signal-steps,
   .session-rhythm-steps,
+  .short-recipe-steps,
   .proof-booster-card,
   .puzzle-grid,
   .skill-grid,

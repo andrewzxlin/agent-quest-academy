@@ -1004,6 +1004,33 @@ export function shortAnswerSupport(question) {
   };
 }
 
+export function shortAnswerRecipe(question) {
+  if (question.type !== "short") return null;
+  const anchors = question.keywords.slice(0, Math.max(1, question.minMatches));
+  const firstAnchor = anchors[0] ?? question.keywords[0] ?? "the key concept";
+  return {
+    title: "One-Sentence Recipe",
+    promise: "No essay. One useful sentence is enough.",
+    steps: [
+      {
+        id: "pick",
+        label: "Pick",
+        text: `Use ${firstAnchor} as the first anchor.`
+      },
+      {
+        id: "link",
+        label: "Link",
+        text: "Say why it changes the workflow, tool choice, state, risk, or feedback."
+      },
+      {
+        id: "stop",
+        label: "Stop",
+        text: "Stop after one complete sentence in this phase."
+      }
+    ]
+  };
+}
+
 export function answerRecallCue(question, result) {
   if (question.type === "single") {
     const expected = question.choiceFeedback?.[result.expected];

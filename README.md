@@ -43,6 +43,12 @@
 - Keyword grading stays lenient so beginners can answer in plain language.
 - The goal is to build interview explanation muscle through short answers, not project implementation tasks.
 
+## Short Answer Recipe
+
+- Short answers now include a three-step Pick / Link / Stop recipe.
+- The recipe tells learners which concept to anchor on, how to connect it to workflow judgment, and when to stop.
+- This keeps short answers to one useful sentence rather than free-form writing.
+
 ## Chapter Summary Cards
 
 - Each chapter gets a compact summary card with the learned skill, interview pitch, current mistake signal, and next action.

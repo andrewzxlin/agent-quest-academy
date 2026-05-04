@@ -91,6 +91,7 @@ import {
   sessionRhythmCard,
   signalPreviewCard,
   skillProfileCard,
+  shortAnswerRecipe,
   shortAnswerSupport,
   uncertaintySafetyCard,
   zeroToLandingQuestCard
@@ -128,6 +129,7 @@ const tests = [
   ["session rhythm shows choices before tiny explanation", testSessionRhythmCard],
   ["ability shard card turns each prompt into a collectible piece", testAbilityShardCard],
   ["short answer support provides concept chips", testShortAnswerSupport],
+  ["short answer recipe turns writing into three tiny steps", testShortAnswerRecipe],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["proof booster turns feedback into immediate proof or review", testProofBoosterCard],
   ["question mastery signals show recall progress", testQuestionMasterySignals],
@@ -872,6 +874,20 @@ function testShortAnswerSupport() {
   assert.ok(support.sentenceTemplate.includes("agentic workflow"));
   assert.equal(gradeQuestion(short, support.sentenceTemplate).correct, true);
   assert.doesNotMatch(`${support.prompt} ${support.sentenceTemplate} ${support.concepts.join(" ")}`, /請寫程式|建立 repo|project implementation/i);
+}
+
+function testShortAnswerRecipe() {
+  const short = flattenQuestions().find((item) => item.type === "short");
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const recipe = shortAnswerRecipe(short);
+
+  assert.equal(shortAnswerRecipe(single), null);
+  assert.equal(recipe.title, "One-Sentence Recipe");
+  assert.deepEqual(recipe.steps.map((step) => step.id), ["pick", "link", "stop"]);
+  assert.ok(recipe.steps[0].text.includes(short.keywords[0]));
+  assert.ok(recipe.steps[1].text.includes("workflow"));
+  assert.ok(recipe.promise.includes("One useful sentence"));
+  assert.doesNotMatch(JSON.stringify(recipe), /repo|project implementation|build a project|coding task/i);
 }
 
 function testAnswerProofLines() {

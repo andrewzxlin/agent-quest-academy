@@ -79,6 +79,7 @@ import {
   sessionRhythmCard,
   signalPreviewCard,
   skillProfileCard,
+  shortAnswerRecipe,
   shortAnswerSupport,
   uncertaintySafetyCard,
   zeroToLandingQuestCard
@@ -506,6 +507,7 @@ function renderQuestion(question) {
       .join("")}</div><p class="hint">可複選，選完再檢查。</p>`;
   }
   return `${renderShortAnswerSupport(shortAnswerSupport(question))}
+    ${renderShortAnswerRecipe(shortAnswerRecipe(question))}
     <textarea class="short-input" placeholder="用一句話回答即可，不需要寫程式。">${shortAnswer}</textarea>`;
 }
 
@@ -1680,6 +1682,22 @@ function renderShortAnswerSupport(support) {
     </div>
     <button class="starter-chip sentence-template" data-short-template="true">套用一句完整說法</button>
     <small>至少命中 ${support.needed} 個概念即可，不需要寫程式。</small>
+  </div>`;
+}
+
+function renderShortAnswerRecipe(recipe) {
+  if (!recipe) return "";
+  return `<div class="short-recipe">
+    <div>
+      <span>${recipe.title}</span>
+      <p>${recipe.promise}</p>
+    </div>
+    <div class="short-recipe-steps">
+      ${recipe.steps.map((step) => `<div class="short-recipe-step">
+        <strong>${step.label}</strong>
+        <p>${step.text}</p>
+      </div>`).join("")}
+    </div>
   </div>`;
 }
 
