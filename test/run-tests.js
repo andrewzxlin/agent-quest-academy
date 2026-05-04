@@ -98,6 +98,7 @@ import {
   questionMasterySignal,
   questionMasteryStage,
   questionMissionStrip,
+  questionRoleSignalCard,
   questionSignalPreview,
   recallComboCard,
   questBriefCard,
@@ -157,6 +158,7 @@ const tests = [
   ["uncertainty safety cards normalize unsure answers", testUncertaintySafetyCards],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
+  ["question role signal connects each prompt to role evidence", testQuestionRoleSignalCard],
   ["question mission strip keeps pick check save visible", testQuestionMissionStrip],
   ["session rhythm shows choices before tiny explanation", testSessionRhythmCard],
   ["ability shard card turns each prompt into a collectible piece", testAbilityShardCard],
@@ -1063,6 +1065,33 @@ function testQuestionSignalPreview() {
     assert.equal(preview.steps[2].text, preview.reward);
     assert.doesNotMatch(JSON.stringify(preview), /repo|project implementation|build a project|coding task/i);
   }
+}
+
+function testQuestionRoleSignalCard() {
+  const single = flattenQuestions().find((item) => item.type === "single" && item.chapterId === "agent-basics");
+  const rag = flattenQuestions().find((item) => item.type === "multi" && item.chapterId === "rag");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  let card = questionRoleSignalCard(single);
+  assert.equal(card.title, "Role Signal");
+  assert.equal(card.skillTitle, "Agent Workflow Thinking");
+  assert.equal(card.stage, "Recognize");
+  assert.ok(card.headline.includes("Recognize"));
+  assert.ok(card.jobSignal.length >= 30);
+  assert.ok(card.roleText.includes("AI App Builder"));
+  assert.ok(card.roleText.includes("Agent Workflow Builder"));
+  assert.deepEqual(card.chips.map((chip) => chip.id), ["skill", "stage", "role"]);
+  assert.ok(card.tinyProof.includes("proof line"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = questionRoleSignalCard(rag);
+  assert.equal(card.skillTitle, "RAG / Grounding");
+  assert.equal(card.stage, "Connect");
+  assert.ok(card.roleText.includes("Agent Reliability Builder"));
+
+  card = questionRoleSignalCard(short);
+  assert.equal(card.stage, "Explain");
+  assert.ok(card.chips.find((chip) => chip.id === "stage").value.includes("Explain"));
 }
 
 function testQuestionMissionStrip() {

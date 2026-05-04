@@ -1018,6 +1018,29 @@ export function questionSignalPreview(question) {
   };
 }
 
+export function questionRoleSignalCard(question) {
+  const skill = jobReadinessSkills.find((item) => item.chapterId === question.chapterId);
+  const stage = questionMasteryStage(question);
+  const roleTracks = ROLE_FIT_TRACKS.filter((track) => track.chapterIds.includes(question.chapterId));
+  const roles = roleTracks.map((track) => track.title);
+  const roleText = roles.length > 0 ? roles.join(" / ") : "Agentic Workflow roles";
+
+  return {
+    title: "Role Signal",
+    skillTitle: skill?.title ?? question.chapterTitle ?? "Agentic workflow skill",
+    stage: stage.label,
+    headline: `${stage.label} practice for ${skill?.title ?? "agentic workflow judgment"}`,
+    jobSignal: skill?.signal ?? stage.proof,
+    roleText,
+    tinyProof: `This prompt can become one ${stage.label.toLowerCase()} proof line for ${roleText}.`,
+    chips: [
+      { id: "skill", label: "Skill", value: skill?.title ?? question.chapterTitle ?? "Workflow judgment" },
+      { id: "stage", label: "Stage", value: stage.label },
+      { id: "role", label: "Role path", value: roles[0] ?? "Agentic Workflow roles" }
+    ]
+  };
+}
+
 export function questionMissionStrip(question, answerReady = false, checked = false, result = null) {
   const preview = questionSignalPreview(question);
   const status = checked ? (result?.correct ? "saved" : "repair") : answerReady ? "ready" : "choosing";

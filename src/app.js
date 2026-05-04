@@ -84,6 +84,7 @@ import {
   questionMasterySignal,
   questionMasteryStage,
   questionMissionStrip,
+  questionRoleSignalCard,
   questionSignalPreview,
   recallComboCard,
   questBriefCard,
@@ -213,6 +214,7 @@ function render() {
   const sessionRhythm = sessionRhythmCard(sessionQuestions, currentIndex);
   const abilityShard = abilityShardCard(progress, question);
   const questionMission = questionMissionStrip(question, answerReady, checked, lastResult);
+  const roleSignal = questionRoleSignalCard(question);
 
   root.innerHTML = `
     <div class="shell">
@@ -355,6 +357,7 @@ function render() {
           ${renderLessonLadderStrip(ladderStrip)}
           ${renderSessionRhythmCard(sessionRhythm)}
           ${renderAbilityShardCard(abilityShard)}
+          ${renderQuestionRoleSignalCard(roleSignal)}
           ${renderQuestionMissionStrip(questionMission)}
           ${renderQuestionHintDeck(questionHintDeck(question), question)}
           ${renderQuestion(question)}
@@ -589,6 +592,25 @@ function renderAbilityShardCard(card) {
       <b>${card.progressLabel}</b>
       <small>${card.nextUse}</small>
     </div>
+  </div>`;
+}
+
+function renderQuestionRoleSignalCard(card) {
+  return `<div class="question-role-signal-card">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.jobSignal}</small>
+    </div>
+    <div class="question-role-chips">
+      ${card.chips
+        .map((chip) => `<em>
+          <b>${chip.label}</b>
+          ${chip.value}
+        </em>`)
+        .join("")}
+    </div>
+    <small>${card.tinyProof}</small>
   </div>`;
 }
 
