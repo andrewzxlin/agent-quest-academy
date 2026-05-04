@@ -386,17 +386,6 @@ function render() {
               <small>本課熟練度</small>
             </div>
           </div>
-          ${renderChapterGateStrip(chapterGate)}
-          ${renderLessonLadderStrip(ladderStrip)}
-          ${renderSessionRhythmCard(sessionRhythm)}
-          ${renderAbilityShardCard(abilityShard)}
-          ${renderQuestionMiniDiagramCard(miniDiagram)}
-          ${renderQuestionPlainDecoderCard(plainDecoder)}
-          ${renderQuestionRoleSignalCard(roleSignal)}
-          ${renderQuestionComfortMeterCard(comfortMeter)}
-          ${renderQuestionTimeboxCard(timebox)}
-          ${renderQuestionMissionStrip(questionMission)}
-          ${renderQuestionHintDeck(questionHintDeck(question), question)}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
           ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
@@ -405,6 +394,19 @@ function render() {
             <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
             <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : isBossMode ? "結算 Boss" : "完成本課") : "下一題"}</button>
           </div>
+          ${renderLearningToolbox({
+            chapterGate,
+            ladderStrip,
+            sessionRhythm,
+            abilityShard,
+            miniDiagram,
+            plainDecoder,
+            roleSignal,
+            comfortMeter,
+            timebox,
+            questionMission,
+            question
+          })}
         </section>
 
         <details class="learning-library">
@@ -875,6 +877,31 @@ function renderNowPlayingHudCard(card) {
       <small>${card.reward} / ${card.nextUse}</small>
     </div>
   </section>`;
+}
+
+function renderLearningToolbox(cards) {
+  return `<details class="learning-toolbox">
+    <summary>
+      <div>
+        <span>Learning Toolbox</span>
+        <strong>Open visual map, hints, and route support</strong>
+      </div>
+      <small>Optional help stays out of the way until you need it.</small>
+    </summary>
+    <div class="learning-toolbox-grid">
+      ${renderQuestionMiniDiagramCard(cards.miniDiagram)}
+      ${renderQuestionPlainDecoderCard(cards.plainDecoder)}
+      ${renderQuestionHintDeck(questionHintDeck(cards.question), cards.question)}
+      ${renderQuestionComfortMeterCard(cards.comfortMeter)}
+      ${renderQuestionTimeboxCard(cards.timebox)}
+      ${renderQuestionMissionStrip(cards.questionMission)}
+      ${renderQuestionRoleSignalCard(cards.roleSignal)}
+      ${renderAbilityShardCard(cards.abilityShard)}
+      ${renderSessionRhythmCard(cards.sessionRhythm)}
+      ${renderLessonLadderStrip(cards.ladderStrip)}
+      ${renderChapterGateStrip(cards.chapterGate)}
+    </div>
+  </details>`;
 }
 
 function renderQuestion(question) {

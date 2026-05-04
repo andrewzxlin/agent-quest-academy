@@ -508,6 +508,68 @@ h1 {
   font-weight: 900;
 }
 
+.learning-toolbox {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.1);
+  border-radius: 12px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.learning-toolbox summary {
+  align-items: center;
+  cursor: pointer;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr auto;
+  list-style: none;
+  padding: 14px;
+}
+
+.learning-toolbox summary::-webkit-details-marker {
+  display: none;
+}
+
+.learning-toolbox summary::after {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  content: "+";
+  display: grid;
+  font-weight: 900;
+  height: 30px;
+  place-items: center;
+  width: 30px;
+}
+
+.learning-toolbox[open] summary::after {
+  content: "-";
+}
+
+.learning-toolbox span,
+.learning-toolbox strong,
+.learning-toolbox small {
+  display: block;
+}
+
+.learning-toolbox span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.learning-toolbox small {
+  color: var(--muted);
+}
+
+.learning-toolbox-grid {
+  border-top: 1px solid rgb(15 23 42 / 0.08);
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
 .start-here-card {
   align-items: center;
   background: #eef2ff;
