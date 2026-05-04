@@ -137,6 +137,7 @@
 - The sidebar streak now reflects real consecutive active learning days instead of completed lesson count.
 - The home screen shows today's answers, correct rate, and a tiny next nudge.
 - Momentum is derived from existing daily activity, so learners get game-like feedback without extra setup.
+- Daily activity uses the learner's local calendar day, so late-night practice is counted against the expected day.
 
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 

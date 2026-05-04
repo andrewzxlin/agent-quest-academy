@@ -556,6 +556,16 @@ function testDailyMomentum() {
   assert.equal(momentum.activeToday, true);
   assert.equal(momentum.streakDays, 1);
   assert.equal(momentum.lessonsCompletedToday, 1);
+
+  const localLateNight = new Date(2026, 4, 8, 23, 55).getTime();
+  const localNextMorning = new Date(2026, 4, 9, 0, 5).getTime();
+  const localProgress = createInitialProgress(localLateNight);
+  answerQuestion(localProgress, questions[2], questions[2].answer, localLateNight);
+  assert.equal(dailyMomentum(localProgress, localLateNight).streakDays, 1);
+  assert.equal(dailyMomentum(localProgress, localNextMorning).activeToday, false);
+  assert.equal(dailyMomentum(localProgress, localNextMorning).streakDays, 1);
+  answerQuestion(localProgress, questions[3], questions[3].answer, localNextMorning);
+  assert.equal(dailyMomentum(localProgress, localNextMorning).streakDays, 2);
 }
 
 function testAchievements() {

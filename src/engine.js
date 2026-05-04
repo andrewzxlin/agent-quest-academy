@@ -931,17 +931,16 @@ function getDailyActivity(progress, now) {
 }
 
 function countActiveDays(dailyActivity, now) {
-  const day = 24 * 60 * 60 * 1000;
-  let cursor = startOfUtcDay(now);
+  let cursor = startOfLocalDay(now);
   const today = dailyActivity[dailyKey(cursor)];
   if (!isActiveDay(today)) {
-    cursor -= day;
+    cursor = addLocalDays(cursor, -1);
   }
 
   let count = 0;
   while (isActiveDay(dailyActivity[dailyKey(cursor)])) {
     count += 1;
-    cursor -= day;
+    cursor = addLocalDays(cursor, -1);
   }
   return count;
 }
@@ -950,13 +949,23 @@ function isActiveDay(activity = {}) {
   return (activity.answers ?? 0) > 0 || (activity.lessonsCompleted ?? 0) > 0 || (activity.bossAttempts ?? 0) > 0;
 }
 
-function startOfUtcDay(now) {
+function startOfLocalDay(now) {
   const date = new Date(now);
-  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+
+function addLocalDays(dayStart, offset) {
+  const date = new Date(dayStart);
+  date.setDate(date.getDate() + offset);
+  return date.getTime();
 }
 
 function dailyKey(now) {
-  return new Date(now).toISOString().slice(0, 10);
+  const date = new Date(now);
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function nextReviewTime({ correct, correctCount, wrongCount, now }) {
