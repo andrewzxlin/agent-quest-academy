@@ -1,5 +1,11 @@
 # Agent Quest Academy
 
+## Job Readiness Map
+
+- Maps each chapter to one concrete AI / Agent engineering skill signal.
+- Uses lesson completion and Boss results to derive status: new, learning, or job-ready.
+- Keeps the current learning flow low-friction: choice questions, multi-select, short answers, mistake review, and spaced review before project implementation tasks.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

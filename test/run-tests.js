@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, flattenQuestions } from "../src/course.js";
+import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, flattenQuestions, jobReadinessSkills } from "../src/course.js";
 import {
   answerQuestion,
   buildReviewSessionQuestions,
@@ -12,6 +12,7 @@ import {
   dailyMissions,
   getDueReviewQuestions,
   gradeQuestion,
+  jobReadinessMap,
   masteryForLesson,
   mistakeNotebook,
   reviewStats
@@ -21,6 +22,7 @@ const tests = [
   ["course has MVP scope", testCourseScope],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["chapter visuals cover every chapter", testChapterVisuals],
+  ["job readiness skills cover every chapter", testJobReadinessCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
@@ -37,7 +39,8 @@ const tests = [
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
-  ["chapter map summarizes lesson and boss progress", testChapterMap]
+  ["chapter map summarizes lesson and boss progress", testChapterMap],
+  ["job readiness map derives status from progress", testJobReadinessMap]
 ];
 
 let failed = 0;
@@ -81,6 +84,23 @@ function testChapterVisuals() {
     assert.ok(visual.caption.length > 0);
     assert.ok(visual.imagePrompt.includes("educational game card"));
     assert.ok(visual.imagePrompt.includes("no text"));
+  }
+}
+
+function testJobReadinessCoverage() {
+  assert.equal(jobReadinessSkills.length, course.chapters.length);
+  const chapterIds = new Set(course.chapters.map((chapter) => chapter.id));
+  for (const skill of jobReadinessSkills) {
+    assert.ok(chapterIds.has(skill.chapterId), `unknown chapter for ${skill.id}`);
+    assert.ok(skill.title.length > 0);
+    assert.ok(skill.signal.length > 0);
+  }
+  for (const chapter of course.chapters) {
+    assert.equal(
+      jobReadinessSkills.filter((skill) => skill.chapterId === chapter.id).length,
+      1,
+      `expected one skill for ${chapter.id}`
+    );
   }
 }
 
@@ -253,6 +273,28 @@ function testChapterMap() {
   assert.equal(firstChapter.lessonPercent, 33);
   assert.equal(firstChapter.bossPassed, true);
   assert.equal(firstChapter.status, "cleared");
+}
+
+function testJobReadinessMap() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  const chapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === chapter.id);
+
+  let readiness = jobReadinessMap(progress);
+  assert.equal(readiness.length, jobReadinessSkills.length);
+  assert.equal(readiness[0].status, "new");
+  assert.equal(readiness[0].lessonPercent, 0);
+
+  completeLesson(progress, chapterLessons[0].id, 1000);
+  readiness = jobReadinessMap(progress);
+  assert.equal(readiness[0].status, "learning");
+  assert.equal(readiness[0].lessonPercent, 33);
+
+  completeBossQuiz(progress, chapter.id, 7, 8, 1000);
+  readiness = jobReadinessMap(progress);
+  assert.equal(readiness[0].status, "job_ready");
+  assert.equal(readiness[0].bossPassed, true);
+  assert.equal(readiness[0].bossScore, "7/8");
 }
 
 function countBy(items, keyFn) {

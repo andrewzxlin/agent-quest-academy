@@ -1,4 +1,4 @@
-import { course, flattenLessons, flattenQuestions } from "./course.js";
+import { course, flattenLessons, flattenQuestions, jobReadinessSkills } from "./course.js";
 
 const STORAGE_KEY = "agentQuestProgress:v1";
 
@@ -214,6 +214,33 @@ export function chapterMap(progress) {
       bossPassed: bossResult?.passed ?? false,
       bossScore: bossResult ? `${bossResult.score}/${bossResult.total}` : null,
       status
+    };
+  });
+}
+
+export function jobReadinessMap(progress) {
+  const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
+  return jobReadinessSkills.map((skill) => {
+    const chapter = chaptersById.get(skill.chapterId);
+    const lessonPercent = chapter?.lessonPercent ?? 0;
+    const bossPassed = chapter?.bossPassed ?? false;
+    const status = bossPassed ? "job_ready" : lessonPercent > 0 ? "learning" : "new";
+    const evidence = bossPassed
+      ? "Boss cleared"
+      : chapter?.bossScore
+        ? `Boss ${chapter.bossScore}`
+        : lessonPercent > 0
+          ? `${lessonPercent}% lessons complete`
+          : "Not started";
+
+    return {
+      ...skill,
+      chapterTitle: chapter?.title ?? "Unknown chapter",
+      lessonPercent,
+      bossPassed,
+      bossScore: chapter?.bossScore ?? null,
+      status,
+      evidence
     };
   });
 }

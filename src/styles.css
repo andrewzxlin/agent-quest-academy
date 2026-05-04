@@ -500,6 +500,73 @@ button:disabled {
   color: white;
 }
 
+.readiness-map {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.readiness-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.readiness-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  background: #f8fafc;
+}
+
+.readiness-card span {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: #e2e8f0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.readiness-card strong,
+.readiness-card small {
+  display: block;
+}
+
+.readiness-card p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 8px 0 10px;
+}
+
+.readiness-card small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.readiness-card.learning {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.readiness-card.learning span {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.readiness-card.job_ready {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.readiness-card.job_ready span {
+  background: #dcfce7;
+  color: #15803d;
+}
+
 @media (max-width: 900px) {
   .shell {
     grid-template-columns: 1fr;
@@ -516,7 +583,8 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
-  .chapter-track {
+  .chapter-track,
+  .readiness-grid {
     grid-template-columns: 1fr;
   }
 

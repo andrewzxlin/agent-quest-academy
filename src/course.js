@@ -786,6 +786,57 @@ export const chapterVisuals = {
   }
 };
 
+export const jobReadinessSkills = [
+  {
+    id: "workflow-thinking",
+    title: "Agent Workflow Thinking",
+    chapterId: "agent-basics",
+    signal: "能分辨 chatbot、固定 workflow 與 agentic workflow，並說出 state、step、approval gate 的用途。"
+  },
+  {
+    id: "tool-calling",
+    title: "Tool Calling",
+    chapterId: "tools",
+    signal: "能設計 tool schema、辨認工具使用時機，並處理 timeout、retry、fallback。"
+  },
+  {
+    id: "rag-grounding",
+    title: "RAG / Grounding",
+    chapterId: "rag",
+    signal: "能解釋 retrieval、chunking、citations、confidence gate 如何降低胡說。"
+  },
+  {
+    id: "memory-state",
+    title: "Memory / State",
+    chapterId: "memory",
+    signal: "能區分短期 state 與長期 memory，並理解隱私、權限與記憶治理。"
+  },
+  {
+    id: "safety-guardrails",
+    title: "Safety / Guardrails",
+    chapterId: "guardrails",
+    signal: "能把輸入、輸出、工具與 policy routing 做成可測試的安全邊界。"
+  },
+  {
+    id: "evals-quality",
+    title: "Evals / Quality",
+    chapterId: "evals",
+    signal: "能用 eval dataset、scoring 與 regression cases 驗證 agent 是否真的變好。"
+  },
+  {
+    id: "observability-debugging",
+    title: "Observability / Debugging",
+    chapterId: "observability",
+    signal: "能用 traces、spans、latency、cost 與 failure taxonomy 定位 agent 問題。"
+  },
+  {
+    id: "framework-judgment",
+    title: "LangChain / LangGraph Judgment",
+    chapterId: "frameworks",
+    signal: "能說明何時使用 LangChain 元件、何時需要 LangGraph 的 stateful graph。"
+  }
+];
+
 export function flattenLessons() {
   return course.chapters.flatMap((chapter) =>
     chapter.lessons.map((item) => ({

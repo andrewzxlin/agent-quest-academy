@@ -10,6 +10,7 @@ import {
   achievements,
   dailyMissions,
   gradeQuestion,
+  jobReadinessMap,
   loadProgress,
   masteryForLesson,
   mistakeNotebook,
@@ -46,6 +47,7 @@ function render() {
   const badges = achievements(progress);
   const mistakes = mistakeNotebook(progress, Date.now(), 5);
   const map = chapterMap(progress);
+  const readiness = jobReadinessMap(progress);
   const stats = reviewStats(progress, Date.now());
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
@@ -199,6 +201,24 @@ function render() {
               .join("")}
           </div>
         </section>
+        <section class="readiness-map">
+          <div class="section-title">
+            <h3>求職能力地圖</h3>
+            <p>每一章都對應一塊 AI / Agent 工程會用到的能力；先看懂、會判斷，再逐步走向能做。</p>
+          </div>
+          <div class="readiness-grid">
+            ${readiness
+              .map(
+                (skill) => `<div class="readiness-card ${skill.status}">
+                  <span>${readinessStatusText(skill.status)}</span>
+                  <strong>${skill.title}</strong>
+                  <p>${skill.signal}</p>
+                  <small>${skill.chapterTitle} / ${skill.lessonPercent}% / ${skill.evidence}</small>
+                </div>`
+              )
+              .join("")}
+          </div>
+        </section>
       </main>
     </div>
   `;
@@ -226,6 +246,12 @@ function renderFeedback(question, result) {
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
   </div>`;
+}
+
+function readinessStatusText(status) {
+  if (status === "job_ready") return "可上場";
+  if (status === "learning") return "學習中";
+  return "未解鎖";
 }
 
 function bindEvents() {
