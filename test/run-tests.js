@@ -68,6 +68,7 @@ import {
   questionCoachHint,
   questionMasterySignal,
   questionMasteryStage,
+  questionSignalPreview,
   recallComboCard,
   reviewRhythmCard,
   reviewSprintCard,
@@ -100,6 +101,7 @@ const tests = [
   ["choice elimination hints reduce option overload", testChoiceEliminationHints],
   ["uncertainty safety cards normalize unsure answers", testUncertaintySafetyCards],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
+  ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["question mastery signals show recall progress", testQuestionMasterySignals],
@@ -583,6 +585,32 @@ function testQuestionMasteryStage() {
     assert.ok(stage.proof.includes("question"));
     assert.ok(stage.nextAction.length >= 20);
     assert.doesNotMatch(JSON.stringify(stage), /repo|project implementation|build a project/i);
+  }
+}
+
+function testQuestionSignalPreview() {
+  const expectedRewardByType = {
+    single: "Decision signal",
+    multi: "Workflow map signal",
+    short: "Interview wording signal"
+  };
+  const expectedFormatByType = {
+    single: "One choice",
+    multi: "Several defensible choices",
+    short: "One short sentence"
+  };
+  for (const question of [...flattenQuestions(), ...flattenInterviewQuestions()]) {
+    const preview = questionSignalPreview(question);
+    assert.equal(preview.title, "Question Signal");
+    assert.equal(preview.reward, expectedRewardByType[question.type]);
+    assert.equal(preview.format, expectedFormatByType[question.type]);
+    assert.ok(["Recognize", "Connect", "Explain"].includes(preview.stage));
+    assert.ok(preview.tinyMove.length >= 30);
+    assert.ok(preview.proofUse.includes(question.chapterTitle));
+    assert.deepEqual(preview.steps.map((step) => step.id), ["look", "answer", "save"]);
+    assert.equal(preview.steps[1].text, preview.format);
+    assert.equal(preview.steps[2].text, preview.reward);
+    assert.doesNotMatch(JSON.stringify(preview), /repo|project implementation|build a project|coding task/i);
   }
 }
 

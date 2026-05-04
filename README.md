@@ -193,6 +193,12 @@
 - The coach gives one line for skill, one for judgment, and one for the next small step.
 - It prepares learners for pitch practice without asking them to write a full answer first.
 
+## Question Signal Preview
+
+- Each quiz question now shows the tiny signal it can produce before the learner answers.
+- Single choice becomes a decision signal, multi choice becomes a workflow map signal, and short answer becomes interview wording.
+- This makes every low-friction question feel like a small job-facing win instead of a random quiz item.
+
 ## Daily Minimum Card
 
 - The home screen now shows a 3-minute minimum: one question is enough to bank today's smallest useful practice.

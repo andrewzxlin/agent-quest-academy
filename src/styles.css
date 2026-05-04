@@ -2420,6 +2420,68 @@ h1 {
   margin-top: 6px;
 }
 
+.question-signal-preview {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr auto;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+}
+
+.question-signal-preview span,
+.question-signal-preview strong,
+.question-signal-preview small {
+  display: block;
+}
+
+.question-signal-preview span {
+  color: #c2410c;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.question-signal-preview strong {
+  margin-top: 4px;
+}
+
+.question-signal-preview p {
+  color: var(--ink);
+  margin: 8px 0 0;
+}
+
+.question-signal-preview small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.question-signal-steps {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(3, minmax(72px, 1fr));
+}
+
+.question-signal-steps em {
+  background: rgb(255 255 255 / 0.72);
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  padding: 8px;
+}
+
+.question-signal-steps b {
+  color: #c2410c;
+  display: block;
+  font-size: 10px;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+}
+
 .starter-chip {
   margin-top: 10px;
   padding: 8px 10px;
@@ -3199,6 +3261,7 @@ button:disabled {
   .combo-meter-grid,
   .signal-preview-stats,
   .rhythm-grid,
+  .question-signal-steps,
   .puzzle-grid,
   .skill-grid,
   .pitch-grid,

@@ -55,6 +55,7 @@ import {
   questionCoachHint,
   questionMasterySignal,
   questionMasteryStage,
+  questionSignalPreview,
   recallComboCard,
   reviewRhythmCard,
   reviewSprintCard,
@@ -247,6 +248,7 @@ function render() {
             </div>
           </div>
           ${renderQuestionMasteryStage(questionMasteryStage(question))}
+          ${renderQuestionSignalPreview(questionSignalPreview(question))}
           ${renderQuestionCoach(questionCoachHint(question))}
           ${renderChoiceEliminationHint(choiceEliminationHint(question))}
           ${renderUncertaintySafetyCard(uncertaintySafetyCard(question))}
@@ -1227,6 +1229,25 @@ function renderQuestionMasteryStage(stage) {
     <span>${stage.label}</span>
     <p>${stage.proof}</p>
     <small>${stage.nextAction}</small>
+  </div>`;
+}
+
+function renderQuestionSignalPreview(preview) {
+  return `<div class="question-signal-preview">
+    <div>
+      <span>${preview.title}</span>
+      <strong>${preview.reward}</strong>
+      <p>${preview.tinyMove}</p>
+      <small>${preview.proofUse}</small>
+    </div>
+    <div class="question-signal-steps">
+      ${preview.steps
+        .map((step) => `<em>
+          <b>${step.label}</b>
+          ${step.text}
+        </em>`)
+        .join("")}
+    </div>
   </div>`;
 }
 

@@ -495,6 +495,39 @@ export function questionMasteryStage(question) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function questionSignalPreview(question) {
+  const stage = questionMasteryStage(question);
+  const rewardByStage = {
+    recognize: "Decision signal",
+    connect: "Workflow map signal",
+    explain: "Interview wording signal"
+  };
+  const formatByType = {
+    single: "One choice",
+    multi: "Several defensible choices",
+    short: "One short sentence"
+  };
+  const tinyMoveByType = {
+    single: "Choose the option that changes what the agent should do.",
+    multi: "Keep each part that affects state, tools, retrieval, checks, or feedback.",
+    short: "Use one concept chip, then say why it matters."
+  };
+
+  return {
+    title: "Question Signal",
+    stage: stage.label,
+    reward: rewardByStage[stage.id],
+    format: formatByType[question.type],
+    tinyMove: tinyMoveByType[question.type],
+    proofUse: `This answer can become a ${stage.label.toLowerCase()} receipt for ${question.chapterTitle}.`,
+    steps: [
+      { id: "look", label: "Look", text: "Find the workflow signal." },
+      { id: "answer", label: "Answer", text: formatByType[question.type] },
+      { id: "save", label: "Save", text: rewardByStage[stage.id] }
+    ]
+  };
+}
+
 export function selectLearnerProfile(progress, profileId) {
   const profile = LEARNER_PROFILES.find((item) => item.id === profileId);
   progress.learnerProfile = profile ? profile.id : null;
