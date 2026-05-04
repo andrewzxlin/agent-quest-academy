@@ -670,6 +670,11 @@ export function jobEvidenceBrief(progress, now = Date.now()) {
     strongestStatus: strongest.status,
     proof: strongest.proof,
     interviewLine: `我能說明 ${strongest.title} 在 agentic workflow 裡的作用，並用 ${strongest.interviewProgress} 作為目前練習證據。`,
+    scriptParts: [
+      `問題：${strongest.title} 幫我判斷 agentic workflow 的哪一塊能力。`,
+      `角色：我會說明它如何影響 state、tool、retrieval、guardrail 或 feedback loop。`,
+      `風險：我會補一句實務取捨，避免只背名詞。`
+    ],
     readyCount,
     practiceCount,
     total: proofs.length,

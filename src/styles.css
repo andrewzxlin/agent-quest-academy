@@ -381,6 +381,22 @@ h1 {
   margin-top: 10px;
 }
 
+.evidence-script {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.evidence-script span {
+  border: 1px solid rgb(109 40 217 / 0.16);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.66);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px;
+}
+
 .evidence-meter {
   min-width: 170px;
   text-align: right;

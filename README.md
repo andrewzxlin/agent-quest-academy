@@ -156,6 +156,7 @@
 
 - The home screen now turns current progress into one interview-ready evidence line.
 - It highlights the strongest proof so far and the next gap to close.
+- It breaks the evidence into a three-part script: problem, workflow role, and risk or tradeoff.
 - This helps learners connect low-friction drills to job-facing explanations.
 
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。

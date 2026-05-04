@@ -748,6 +748,10 @@ function testJobEvidenceBrief() {
   assert.equal(brief.readyCount, 0);
   assert.equal(brief.total, course.chapters.length);
   assert.ok(brief.interviewLine.includes("agentic workflow"));
+  assert.equal(brief.scriptParts.length, 3);
+  assert.ok(brief.scriptParts[0].includes("問題"));
+  assert.ok(brief.scriptParts[1].includes("角色"));
+  assert.ok(brief.scriptParts[2].includes("風險"));
   assert.ok(brief.nextGap.length > 0);
 
   const chapter = course.chapters[0];

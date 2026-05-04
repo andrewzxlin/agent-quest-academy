@@ -398,6 +398,9 @@ function renderJobEvidenceBrief(brief) {
       <h3>${brief.headline}</h3>
       <p>${brief.interviewLine}</p>
       <strong>${brief.proof}</strong>
+      <div class="evidence-script">
+        ${brief.scriptParts.map((part) => `<span>${part}</span>`).join("")}
+      </div>
     </div>
     <div class="evidence-meter">
       <span>${brief.readyCount}/${brief.total}</span>
