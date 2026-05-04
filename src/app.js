@@ -154,6 +154,12 @@ function render() {
           </div>
         </section>
 
+        <details class="learning-library">
+          <summary>
+            <strong>學習地圖與進度細節</strong>
+            <span>章節、錯題、成就、能力地圖與 pitch 練習</span>
+          </summary>
+
         <section class="explain-grid">
           <div>
             <h3>學習節奏</h3>
@@ -266,6 +272,7 @@ function render() {
               .join("")}
           </div>
         </section>
+        </details>
       </main>
     </div>
   `;

@@ -629,6 +629,63 @@ button:disabled {
   margin-bottom: 8px;
 }
 
+.learning-library {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.learning-library > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 22px;
+  cursor: pointer;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+}
+
+.learning-library > summary::-webkit-details-marker {
+  display: none;
+}
+
+.learning-library > summary strong,
+.learning-library > summary span {
+  display: block;
+}
+
+.learning-library > summary span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.learning-library > summary::after {
+  content: "+";
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.learning-library[open] > summary::after {
+  content: "-";
+}
+
+.learning-library[open] {
+  padding-bottom: 22px;
+}
+
+.learning-library[open] > section {
+  margin: 16px 0 0;
+}
+
+.learning-library[open] > section:last-child {
+  margin-bottom: 0;
+}
+
 .mission-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -945,6 +1002,16 @@ button:disabled {
 
   .section-title {
     display: block;
+  }
+
+  .learning-library > summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  .learning-library > summary::after {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 
   .main {

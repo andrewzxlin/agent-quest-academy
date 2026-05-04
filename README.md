@@ -60,6 +60,12 @@
 - The home screen shows a coach note matched to that profile.
 - The profile is stored in local progress and can be reset without affecting course progress.
 
+## Focused Home Screen
+
+- Secondary details such as maps, achievements, mistake notebook, readiness map, and summary cards are grouped into a collapsible learning library.
+- The first view keeps attention on onboarding, today's recommendation, and the active low-friction drill.
+- The full progression remains available without overwhelming complete beginners.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。
