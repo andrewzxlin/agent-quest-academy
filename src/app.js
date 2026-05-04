@@ -26,6 +26,7 @@ import {
   dailyMissions,
   exerciseScopeCard,
   firstFiveMinuteStartCard,
+  focusGuardCard,
   gradeQuestion,
   gradePitchPractice,
   isAnswerReady,
@@ -136,6 +137,7 @@ function render() {
   const momentum = dailyMomentum(progress, Date.now());
   const onboarding = onboardingState(progress);
   const firstFive = firstFiveMinuteStartCard(progress);
+  const focusGuard = focusGuardCard(progress, Date.now());
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
   const bossReadiness = bossReadinessCard(progress, chapter.id);
@@ -214,6 +216,7 @@ function render() {
           </div>
         </section>
         ${renderOnboardingCard(onboarding)}
+        ${renderFocusGuardCard(focusGuard)}
         ${renderFirstFiveMinuteStartCard(firstFive)}
         ${renderExerciseScopeCard(exerciseScope)}
         ${renderCareerSnapshot(careerSnapshot)}
@@ -1068,6 +1071,24 @@ function renderFirstFiveMinuteStartCard(card) {
   </section>`;
 }
 
+function renderFocusGuardCard(card) {
+  if (!card) return "";
+  return `<section class="focus-guard-card ${card.mode}">
+    <div>
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.reason}</p>
+      <small>${card.guardrail}</small>
+    </div>
+    <div>
+      <strong>${card.proof}</strong>
+      <button class="primary compact" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
+        ${card.action.label}
+      </button>
+    </div>
+  </section>`;
+}
+
 function renderQuestSteps(steps = []) {
   if (steps.length === 0) return "";
   return `<div class="quest-route">
@@ -1627,6 +1648,27 @@ function bindEvents() {
   });
 
   document.querySelector("[data-seven-day-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-focus-action]")?.addEventListener("click", (event) => {
+    const action = event.currentTarget.dataset.focusAction;
+    if (action === "profile") {
+      progress = selectLearnerProfile(progress, event.currentTarget.dataset.focusTarget);
+      saveProgress(progress);
+      render();
+      return;
+    }
+    if (action === "review") {
+      sessionMode = "review";
+      sessionQuestions = buildReviewSessionQuestions(progress, Date.now(), 7);
+      currentIndex = 0;
+      activePitch = null;
+      pitchAnswer = "";
+      clearAnswerState();
+      render();
+      return;
+    }
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

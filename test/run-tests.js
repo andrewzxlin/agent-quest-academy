@@ -39,6 +39,7 @@ import {
   dailyMissions,
   exerciseScopeCard,
   firstFiveMinuteStartCard,
+  focusGuardCard,
   getDueReviewQuestions,
   gradePitchPractice,
   gradeQuestion,
@@ -90,6 +91,7 @@ const tests = [
   ["course has MVP scope", testCourseScope],
   ["onboarding profile starts empty and can be selected", testOnboardingProfile],
   ["first five minute start keeps first run tiny", testFirstFiveMinuteStartCard],
+  ["focus guard shows one primary beginner action", testFocusGuardCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["beginner glossary covers every chapter with plain-language terms", testBeginnerGlossaryCoverage],
   ["chapter visuals cover every chapter", testChapterVisuals],
@@ -237,6 +239,37 @@ function testFirstFiveMinuteStartCard() {
   assert.equal(card.status, "started");
   assert.ok(card.headline.includes("proof loop"));
   assert.ok(card.steps.find((step) => step.id === "receipt").text.includes("evidence"));
+}
+
+function testFocusGuardCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let card = focusGuardCard(progress, now);
+  assert.equal(card.title, "Focus Guard");
+  assert.equal(card.mode, "profile");
+  assert.equal(card.action.kind, "profile");
+  assert.equal(card.action.target, "beginner");
+  assert.ok(card.guardrail.includes("one primary action"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  selectLearnerProfile(progress, "beginner");
+  card = focusGuardCard(progress, now);
+  assert.equal(card.mode, "first-step");
+  assert.equal(card.action.kind, "recommend");
+  assert.ok(card.reason.includes("concept map"));
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, 99, now);
+  card = focusGuardCard(progress, now);
+  assert.equal(card.mode, "rescue");
+  assert.equal(card.action.kind, "review");
+  assert.ok(card.headline.includes("weak signal"));
+
+  answerQuestion(progress, question, question.answer, now + 1);
+  card = focusGuardCard(progress, now + 2);
+  assert.notEqual(card.mode, "profile");
+  assert.equal(card.action.kind, "recommend");
+  assert.ok(card.proof.includes("started"));
 }
 
 function testCourseCoverage() {

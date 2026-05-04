@@ -124,6 +124,12 @@
 - The card makes the first useful loop visible before the learner has to understand the full app.
 - It keeps onboarding low-pressure with no setup, project task, or blank page.
 
+## Focus Guard
+
+- The home screen now highlights one primary action when a learner might be stuck.
+- It prioritizes choosing beginner mode, starting the first choice, rescuing due review, then the next recommended step.
+- This reduces decision overload without adding new exercise types or implementation assignments.
+
 ## Ability Proof Cards
 
 - Progress is translated into "I can judge..." ability statements.

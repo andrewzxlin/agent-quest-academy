@@ -213,6 +213,69 @@ export function firstFiveMinuteStartCard(progress) {
   };
 }
 
+export function focusGuardCard(progress, now = Date.now()) {
+  const onboarding = onboardingState(progress);
+  const firstFive = firstFiveMinuteStartCard(progress);
+  const stats = reviewStats(progress, now);
+  const next = nextPracticeRecommendation(progress, now);
+  const action =
+    !onboarding.completed
+      ? {
+          kind: "profile",
+          label: "Choose beginner mode",
+          target: "beginner"
+        }
+      : firstFive?.status === "new"
+        ? {
+            kind: "recommend",
+            label: "Start the first choice",
+            target: next.type
+          }
+        : stats.dueCount > 0
+          ? {
+              kind: "review",
+              label: "Rescue due review",
+              target: "review"
+            }
+          : {
+              kind: "recommend",
+              label: next.cta,
+              target: next.type
+            };
+  const mode =
+    action.kind === "profile"
+      ? "profile"
+      : action.kind === "review"
+        ? "rescue"
+        : firstFive?.status === "new"
+          ? "first-step"
+          : next.type;
+
+  return {
+    title: "Focus Guard",
+    mode,
+    headline:
+      mode === "profile"
+        ? "Start with one beginner-safe choice"
+        : mode === "rescue"
+          ? "Clear the weak signal first"
+          : mode === "first-step"
+            ? "Do only the first visible prompt"
+            : "One clear next move",
+    reason:
+      mode === "profile"
+        ? "Pick a coach mode so the app can hide unnecessary decisions."
+        : mode === "rescue"
+          ? "Due review is the fastest way to stop a weak pattern from growing."
+          : mode === "first-step"
+            ? "The first loop is just a concept map, one choice, and one receipt."
+            : next.reason,
+    action,
+    guardrail: "Only one primary action is shown here; no setup or project work required.",
+    proof: firstFive?.status === "started" ? "Your proof loop has started." : "The next tiny action creates the next signal."
+  };
+}
+
 export function beginnerGlossaryCards(chapterId) {
   const chapter = course.chapters.find((item) => item.id === chapterId);
   const glossary = beginnerGlossary.find((item) => item.chapterId === chapterId);
