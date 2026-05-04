@@ -437,6 +437,33 @@ export function answerRecallCue(question, result) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function answerProofLine(question, result) {
+  const stage = questionMasteryStage(question);
+  if (question.type === "single") {
+    const expected = question.choiceFeedback?.[result.expected]?.choice ?? question.choices?.[result.expected] ?? "the core workflow signal";
+    return {
+      title: `${stage.label} proof line`,
+      body: `I can recognize ${expected} as the signal that changes an agentic workflow decision.`
+    };
+  }
+  if (question.type === "multi") {
+    const coreChoices = (question.choiceFeedback ?? []).filter((item) => item.correct).map((item) => item.choice);
+    const proofParts = coreChoices.length > 0 ? coreChoices.slice(0, 3).join(", ") : "the connected workflow parts";
+    return {
+      title: `${stage.label} proof line`,
+      body: `I can connect ${proofParts} and explain how they work together in an agentic workflow.`
+    };
+  }
+  if (question.type === "short") {
+    const anchor = result.matches?.[0] ?? question.keywords?.[0] ?? "the key concept";
+    return {
+      title: `${stage.label} proof line`,
+      body: `I can explain ${anchor} in plain language and tie it to the workflow's task, tool, or risk.`
+    };
+  }
+  throw new Error(`Unknown question type: ${question.type}`);
+}
+
 export function mistakeRescuePrompt(question, result) {
   if (result.correct) return null;
   if (question.type === "single") {

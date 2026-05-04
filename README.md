@@ -169,6 +169,12 @@
 - Single-choice questions train recognition, multi-select questions train connection, and short answers train explanation.
 - The badge tells the learner what to focus on before answering, so each small question feels tied to the larger mastery path.
 
+## Answer Proof Lines
+
+- After checking an answer, feedback now includes one job-facing "I can..." proof line.
+- The line converts the current question into a reusable explanation of what the learner can recognize, connect, or explain.
+- This helps small quiz wins become interview-ready language without adding extra assignments.
+
 ## Learning Puzzle Board
 
 - The home screen now shows 8 job-readiness puzzle pieces across the full agentic workflow path.

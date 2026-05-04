@@ -14,6 +14,7 @@ import {
 } from "../src/course.js";
 import {
   abilityProofCards,
+  answerProofLine,
   answerRecallCue,
   answerQuestion,
   beginnerGlossaryCards,
@@ -77,6 +78,7 @@ const tests = [
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["short answer support provides concept chips", testShortAnswerSupport],
+  ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["answer recall cues turn answers into next-time signals", testAnswerRecallCues],
   ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
   ["single choice grading works", testSingleChoice],
@@ -429,6 +431,25 @@ function testShortAnswerSupport() {
   assert.ok(support.sentenceTemplate.includes("agentic workflow"));
   assert.equal(gradeQuestion(short, support.sentenceTemplate).correct, true);
   assert.doesNotMatch(`${support.prompt} ${support.sentenceTemplate} ${support.concepts.join(" ")}`, /請寫程式|建立 repo|project implementation/i);
+}
+
+function testAnswerProofLines() {
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  const singleProof = answerProofLine(single, gradeQuestion(single, single.answer));
+  const multiProof = answerProofLine(multi, gradeQuestion(multi, multi.answer));
+  const shortProof = answerProofLine(short, gradeQuestion(short, short.keywords[0]));
+
+  assert.ok(singleProof.title.includes("Recognize"));
+  assert.ok(multiProof.title.includes("Connect"));
+  assert.ok(shortProof.title.includes("Explain"));
+  for (const proof of [singleProof, multiProof, shortProof]) {
+    assert.ok(proof.body.startsWith("I can "));
+    assert.ok(proof.body.includes("workflow"));
+    assert.doesNotMatch(`${proof.title} ${proof.body}`, /repo|project implementation|build a project/i);
+  }
 }
 
 function testAnswerRecallCues() {

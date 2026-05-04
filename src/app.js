@@ -1,6 +1,7 @@
 import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interviewQuestionsForChapter } from "./course.js";
 import {
   abilityProofCards,
+  answerProofLine,
   answerRecallCue,
   answerQuestion,
   beginnerGlossaryCards,
@@ -839,10 +840,18 @@ function renderFeedback(question, result) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderAnswerProofLine(answerProofLine(question, result))}
     ${renderRecallCue(answerRecallCue(question, result))}
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+  </div>`;
+}
+
+function renderAnswerProofLine(proof) {
+  return `<div class="answer-proof-line">
+    <span>${proof.title}</span>
+    <p>${proof.body}</p>
   </div>`;
 }
 

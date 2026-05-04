@@ -1576,6 +1576,29 @@ h1 {
   margin: 8px 0 0;
 }
 
+.answer-proof-line {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(22 163 74 / 0.28);
+  border-radius: 10px;
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.answer-proof-line span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(22 163 74 / 0.14);
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+}
+
+.answer-proof-line p {
+  color: var(--ink);
+  margin: 8px 0 0;
+}
+
 .mistake-rescue {
   border: 1px solid rgb(127 29 29 / 0.18);
   border-radius: 10px;
