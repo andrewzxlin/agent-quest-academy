@@ -685,17 +685,41 @@ function renderQuestBriefCard(card) {
 function renderQuestion(question) {
   if (question.type === "single") {
     return `<div class="choices">${question.choices
-      .map((choice, index) => `<button class="choice ${selectedSingle === index ? "selected" : ""}" data-single="${index}">${choice}</button>`)
+      .map((choice, index) => {
+        const selected = selectedSingle === index;
+        return `<button class="choice ${selected ? "selected" : ""}" data-single="${index}" aria-pressed="${selected}">
+          <span class="choice-token">${choiceToken(index)}</span>
+          <span class="choice-copy">
+            <strong>${choice}</strong>
+            <small>Pick one answer, then check.</small>
+          </span>
+          <em>${selected ? "Selected" : "Pick"}</em>
+        </button>`;
+      })
       .join("")}</div>`;
   }
   if (question.type === "multi") {
     return `<div class="choices">${question.choices
-      .map((choice, index) => `<button class="choice ${selectedMulti.has(index) ? "selected" : ""}" data-multi="${index}">${choice}</button>`)
+      .map((choice, index) => {
+        const selected = selectedMulti.has(index);
+        return `<button class="choice ${selected ? "selected" : ""}" data-multi="${index}" aria-pressed="${selected}">
+          <span class="choice-token">${choiceToken(index)}</span>
+          <span class="choice-copy">
+            <strong>${choice}</strong>
+            <small>Multi-select is allowed here.</small>
+          </span>
+          <em>${selected ? "Added" : "Add"}</em>
+        </button>`;
+      })
       .join("")}</div><p class="hint">可複選，選完再檢查。</p>`;
   }
   return `${renderShortAnswerSupport(shortAnswerSupport(question))}
     ${renderShortAnswerRecipe(shortAnswerRecipe(question))}
     <textarea class="short-input" placeholder="用一句話回答即可，不需要寫程式。">${shortAnswer}</textarea>`;
+}
+
+function choiceToken(index) {
+  return String.fromCharCode(65 + index);
 }
 
 function renderCompletionCard(card) {

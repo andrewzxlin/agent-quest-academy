@@ -4462,18 +4462,78 @@ h1 {
 }
 
 .choice {
+  align-items: center;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #fff;
-  padding: 16px;
-  text-align: left;
   cursor: pointer;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto 1fr auto;
+  min-height: 74px;
+  padding: 14px;
+  text-align: left;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
 }
 
 .choice:hover,
 .choice.selected {
   border-color: var(--blue);
   background: #eff6ff;
+}
+
+.choice:hover {
+  transform: translateY(-1px);
+}
+
+.choice-token {
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  color: var(--ink);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 900;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.choice-copy strong,
+.choice-copy small {
+  display: block;
+}
+
+.choice-copy strong {
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.choice-copy small {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.choice em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  padding: 6px 9px;
+}
+
+.choice.selected .choice-token,
+.choice.selected em {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
 }
 
 .question-coach {
@@ -6169,6 +6229,15 @@ button:disabled {
 
   .quest-brief-action span {
     text-align: left;
+  }
+
+  .choice {
+    grid-template-columns: auto 1fr;
+  }
+
+  .choice em {
+    grid-column: 2;
+    justify-self: start;
   }
 
   .learning-library > summary {
