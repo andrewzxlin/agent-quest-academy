@@ -5970,6 +5970,72 @@ h1 {
   text-transform: uppercase;
 }
 
+.answer-job-story-seed-card {
+  background: rgb(255 255 255 / 0.86);
+  border: 1px solid rgb(14 116 144 / 0.28);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+}
+
+.answer-job-story-seed-card.draft {
+  border-color: rgb(234 88 12 / 0.28);
+}
+
+.answer-job-story-seed-card span,
+.answer-job-story-seed-card strong,
+.answer-job-story-seed-card small,
+.job-story-seed-steps b {
+  display: block;
+}
+
+.answer-job-story-seed-card span {
+  color: #0e7490;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-job-story-seed-card.draft span {
+  color: #c2410c;
+}
+
+.answer-job-story-seed-card strong {
+  margin-top: 5px;
+}
+
+.answer-job-story-seed-card small,
+.answer-job-story-seed-card p {
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.job-story-seed-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.job-story-seed-steps em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.35;
+  padding: 10px;
+}
+
+.job-story-seed-steps b {
+  color: #0e7490;
+  font-size: 10px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
 .answer-outcome-card {
   background: rgb(255 255 255 / 0.84);
   border: 1px solid rgb(37 99 235 / 0.2);
@@ -6996,6 +7062,7 @@ button:disabled {
   .answer-loot-badges,
   .answer-run-chain-meters,
   .answer-interview-steps,
+  .job-story-seed-steps,
   .memory-hook-grid,
   .answer-evidence-clip,
   .proof-booster-card,

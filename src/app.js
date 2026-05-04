@@ -5,6 +5,7 @@ import {
   answerOutcomeCard,
   answerEvidenceClip,
   answerInterviewLineCard,
+  answerJobStorySeedCard,
   answerLootCard,
   answerMemoryHookCard,
   answerProofLine,
@@ -2494,6 +2495,7 @@ function renderFeedback(question, result, progressState) {
     ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
     ${renderAnswerRunChainCard(answerRunChainCard(progressState, result))}
     ${renderAnswerInterviewLineCard(answerInterviewLineCard(question, result))}
+    ${renderAnswerJobStorySeedCard(answerJobStorySeedCard(question, result))}
     ${renderAnswerOutcomeCard(answerOutcomeCard(question, result, progressState))}
     ${renderAnswerEvidenceClip(answerEvidenceClip(question, result))}
     ${renderProofBoosterCard(proofBoosterCard(question, result, progressState))}
@@ -2537,6 +2539,25 @@ function renderAnswerInterviewLineCard(card) {
         </em>`)
         .join("")}
     </div>
+  </div>`;
+}
+
+function renderAnswerJobStorySeedCard(card) {
+  return `<div class="answer-job-story-seed-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.roleText}</small>
+    </div>
+    <div class="job-story-seed-steps">
+      ${card.steps
+        .map((step) => `<em>
+          <b>${step.label}</b>
+          ${step.text}
+        </em>`)
+        .join("")}
+    </div>
+    <p>${card.nextUse}</p>
   </div>`;
 }
 

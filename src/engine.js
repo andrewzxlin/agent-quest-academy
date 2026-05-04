@@ -1680,6 +1680,44 @@ export function answerEvidenceClip(question, result) {
   };
 }
 
+export function answerJobStorySeedCard(question, result) {
+  const stage = questionMasteryStage(question);
+  const role = questionRoleSignalCard(question);
+  const proof = answerProofLine(question, result);
+  const status = result.correct ? "ready" : "draft";
+  const chapter = question.chapterTitle ?? "agentic workflow";
+
+  return {
+    title: "Job Story Seed",
+    status,
+    headline: result.correct ? "Turn this answer into a job story seed" : "Draft the story after review repairs it",
+    roleText: role.roleText,
+    proofLine: proof.body,
+    steps: [
+      {
+        id: "situation",
+        label: "Situation",
+        text: `A ${chapter} workflow needs a clear ${stage.label.toLowerCase()} judgment.`
+      },
+      {
+        id: "judgment",
+        label: "Judgment",
+        text: result.correct
+          ? proof.body
+          : "I found the weak signal and saved it for review instead of guessing again."
+      },
+      {
+        id: "signal",
+        label: "Signal",
+        text: result.correct
+          ? `This supports ${role.roleText}.`
+          : "The repair loop makes the same workflow pattern easier to explain later."
+      }
+    ],
+    nextUse: result.correct ? "Reuse this as a tiny interview story seed." : "Revisit after review makes the signal cleaner."
+  };
+}
+
 export function answerInterviewLineCard(question, result) {
   const proof = answerProofLine(question, result);
   const role = questionRoleSignalCard(question);

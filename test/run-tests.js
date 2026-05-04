@@ -17,6 +17,7 @@ import {
   abilityProofCards,
   answerEvidenceClip,
   answerInterviewLineCard,
+  answerJobStorySeedCard,
   answerLootCard,
   answerMemoryHookCard,
   answerOutcomeCard,
@@ -177,6 +178,7 @@ const tests = [
   ["short answer recipe turns writing into three tiny steps", testShortAnswerRecipe],
   ["answer evidence clips turn every checked answer into a reusable signal", testAnswerEvidenceClips],
   ["answer interview line turns feedback into spoken proof", testAnswerInterviewLineCard],
+  ["answer job story seed turns a prompt into interview story material", testAnswerJobStorySeedCard],
   ["answer loot card makes each answer feel like a small reward", testAnswerLootCard],
   ["answer run chain makes clean streaks and repair loops visible", testAnswerRunChainCard],
   ["next step nudge makes the post-answer action obvious", testNextStepNudgeCard],
@@ -1479,6 +1481,29 @@ function testAnswerInterviewLineCard() {
   assert.equal(card.status, "draft");
   assert.ok(card.cue.includes("review"));
   assert.ok(card.steps.find((step) => step.id === "reuse").text.includes("review"));
+}
+
+function testAnswerJobStorySeedCard() {
+  const [single, multi] = flattenQuestions();
+
+  let card = answerJobStorySeedCard(single, gradeQuestion(single, single.answer));
+  assert.equal(card.title, "Job Story Seed");
+  assert.equal(card.status, "ready");
+  assert.ok(card.headline.includes("job story"));
+  assert.ok(card.roleText.includes("AI App Builder") || card.roleText.includes("Agent Workflow Builder"));
+  assert.ok(card.proofLine.startsWith("I can "));
+  assert.deepEqual(card.steps.map((step) => step.id), ["situation", "judgment", "signal"]);
+  assert.ok(card.steps.find((step) => step.id === "situation").text.includes("workflow"));
+  assert.ok(card.steps.find((step) => step.id === "judgment").text.startsWith("I can "));
+  assert.ok(card.steps.find((step) => step.id === "signal").text.includes("supports"));
+  assert.ok(card.nextUse.includes("interview story"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = answerJobStorySeedCard(multi, gradeQuestion(multi, []));
+  assert.equal(card.status, "draft");
+  assert.ok(card.steps.find((step) => step.id === "judgment").text.includes("review"));
+  assert.ok(card.steps.find((step) => step.id === "signal").text.includes("repair loop"));
+  assert.ok(card.nextUse.includes("review"));
 }
 
 function testNextStepNudgeCard() {
