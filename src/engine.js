@@ -1407,6 +1407,45 @@ export function answerEvidenceClip(question, result) {
   };
 }
 
+export function answerOutcomeCard(question, result, progress) {
+  const state = progress.answered[questionKey(question)];
+  const clip = answerEvidenceClip(question, result);
+  const stage = questionMasteryStage(question);
+  const xpGain = result.correct ? 10 : 2;
+  const cleanCount = state?.correctCount ?? 0;
+  const reviewCount = state?.wrongCount ?? 0;
+
+  return {
+    title: "Answer Outcome",
+    status: result.correct ? "proof" : "repair",
+    headline: result.correct ? `+${xpGain} XP and one ${stage.label} signal` : `+${xpGain} XP and one repair loop`,
+    summary: result.correct
+      ? "This answer is now a small proof point, not just a score."
+      : "This miss is saved so review can bring the pattern back.",
+    nextAction: result.correct ? "Continue while the signal is fresh." : "Read the fix, then let review protect the weak spot.",
+    lanes: [
+      {
+        id: "score",
+        label: "Score",
+        value: result.correct ? "Clean" : "Repair",
+        detail: result.correct ? `${cleanCount} clean pass` : `${reviewCount} review miss`
+      },
+      {
+        id: "memory",
+        label: "Memory",
+        value: result.correct ? "Scheduled" : "Due soon",
+        detail: result.correct ? "Recall will check if it sticks." : "Review queue catches it quickly."
+      },
+      {
+        id: "use",
+        label: "Job use",
+        value: clip.stage,
+        detail: clip.useCase
+      }
+    ]
+  };
+}
+
 export function questionMasterySignal(progress, question) {
   const state = progress.answered[questionKey(question)];
   if (!state) return null;

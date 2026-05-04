@@ -2,6 +2,7 @@ import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interv
 import {
   abilityShardCard,
   abilityProofCards,
+  answerOutcomeCard,
   answerEvidenceClip,
   answerProofLine,
   answerRecallCue,
@@ -2270,6 +2271,7 @@ function renderFeedback(question, result, progressState) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderAnswerOutcomeCard(answerOutcomeCard(question, result, progressState))}
     ${renderAnswerEvidenceClip(answerEvidenceClip(question, result))}
     ${renderProofBoosterCard(proofBoosterCard(question, result, progressState))}
     ${renderAnswerProofLine(answerProofLine(question, result))}
@@ -2278,6 +2280,26 @@ function renderFeedback(question, result, progressState) {
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+  </div>`;
+}
+
+function renderAnswerOutcomeCard(card) {
+  return `<div class="answer-outcome-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <p>${card.summary}</p>
+    </div>
+    <div class="answer-outcome-lanes">
+      ${card.lanes
+        .map((lane) => `<div>
+          <span>${lane.label}</span>
+          <strong>${lane.value}</strong>
+          <small>${lane.detail}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <small>${card.nextAction}</small>
   </div>`;
 }
 

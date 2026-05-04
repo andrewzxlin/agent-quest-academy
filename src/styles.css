@@ -4994,6 +4994,84 @@ h1 {
   color: #7f1d1d;
 }
 
+.answer-outcome-card {
+  background: rgb(255 255 255 / 0.84);
+  border: 1px solid rgb(37 99 235 / 0.2);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+}
+
+.answer-outcome-card.proof {
+  border-color: rgb(22 163 74 / 0.34);
+}
+
+.answer-outcome-card.repair {
+  border-color: rgb(234 88 12 / 0.34);
+}
+
+.answer-outcome-card span,
+.answer-outcome-card strong,
+.answer-outcome-card small,
+.answer-outcome-lanes span,
+.answer-outcome-lanes strong,
+.answer-outcome-lanes small {
+  display: block;
+}
+
+.answer-outcome-card > div > span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-outcome-card.proof > div > span {
+  color: #15803d;
+}
+
+.answer-outcome-card.repair > div > span {
+  color: #c2410c;
+}
+
+.answer-outcome-card p {
+  margin: 7px 0 0;
+}
+
+.answer-outcome-card small {
+  color: var(--muted);
+}
+
+.answer-outcome-lanes {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.answer-outcome-lanes div {
+  background: rgb(248 250 252 / 0.86);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.answer-outcome-lanes span {
+  color: #475569;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-outcome-lanes strong {
+  margin-top: 5px;
+}
+
+.answer-outcome-lanes small {
+  margin-top: 5px;
+}
+
 .answer-evidence-clip {
   background: rgb(255 255 255 / 0.84);
   border: 1px solid rgb(22 163 74 / 0.34);
@@ -5851,6 +5929,7 @@ button:disabled {
   .beginner-command-grid.daily,
   .beginner-command-grid.review,
   .short-recipe-steps,
+  .answer-outcome-lanes,
   .answer-evidence-clip,
   .proof-booster-card,
   .puzzle-grid,

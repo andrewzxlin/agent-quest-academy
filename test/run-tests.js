@@ -16,6 +16,7 @@ import {
   abilityShardCard,
   abilityProofCards,
   answerEvidenceClip,
+  answerOutcomeCard,
   answerProofLine,
   answerRecallCue,
   answerQuestion,
@@ -156,6 +157,7 @@ const tests = [
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["short answer recipe turns writing into three tiny steps", testShortAnswerRecipe],
   ["answer evidence clips turn every checked answer into a reusable signal", testAnswerEvidenceClips],
+  ["answer outcome card makes score memory and job use visible", testAnswerOutcomeCard],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["proof booster turns feedback into immediate proof or review", testProofBoosterCard],
   ["question mastery signals show recall progress", testQuestionMasterySignals],
@@ -1171,6 +1173,31 @@ function testAnswerEvidenceClips() {
   assert.equal(shortClip.stage, "Explain");
   assert.ok(shortClip.line.includes(short.keywords[0]));
   assert.doesNotMatch(JSON.stringify([savedClip, repairClip, shortClip]), /repo|project implementation|build a project|coding task/i);
+}
+
+function testAnswerOutcomeCard() {
+  const progress = createInitialProgress(1000);
+  const [single, nextSingle] = flattenQuestions().filter((item) => item.type === "single");
+
+  let result = gradeQuestion(single, single.answer);
+  answerQuestion(progress, single, single.answer, 1000);
+  let card = answerOutcomeCard(single, result, progress);
+  assert.equal(card.title, "Answer Outcome");
+  assert.equal(card.status, "proof");
+  assert.ok(card.headline.includes("+10 XP"));
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["score", "memory", "use"]);
+  assert.equal(card.lanes.find((lane) => lane.id === "score").value, "Clean");
+  assert.ok(card.lanes.find((lane) => lane.id === "use").detail.includes("interview"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  result = gradeQuestion(nextSingle, 99);
+  answerQuestion(progress, nextSingle, 99, 2000);
+  card = answerOutcomeCard(nextSingle, result, progress);
+  assert.equal(card.status, "repair");
+  assert.ok(card.headline.includes("+2 XP"));
+  assert.equal(card.lanes.find((lane) => lane.id === "score").value, "Repair");
+  assert.ok(card.lanes.find((lane) => lane.id === "memory").detail.includes("Review queue"));
+  assert.ok(card.nextAction.includes("review"));
 }
 
 function testAnswerProofLines() {
