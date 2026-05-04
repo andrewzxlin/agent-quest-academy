@@ -1,4 +1,4 @@
-import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons } from "./course.js";
+import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interviewQuestionsForChapter } from "./course.js";
 import {
   answerQuestion,
   buildReviewSessionQuestions,
@@ -76,6 +76,10 @@ function render() {
         <button class="boss-button" data-boss="true">
           <strong>章節 Boss Quiz</strong>
           <span>${bossResult ? `${bossResult.passed ? "已通關" : "待重戰"}：${bossResult.score}/${bossResult.total}` : `${chapter.title} 挑戰`}</span>
+        </button>
+        <button class="interview-button" data-interview="true">
+          <strong>面試情境題</strong>
+          <span>${chapter.title} 設計判斷</span>
         </button>
         <div class="map">
           ${lessons
@@ -289,6 +293,17 @@ function bindEvents() {
     render();
   });
 
+  document.querySelector("[data-interview]")?.addEventListener("click", () => {
+    const lessons = flattenLessons();
+    const lesson = lessons[selectedLessonIndex] ?? lessons[0];
+    sessionMode = "interview";
+    sessionQuestions = interviewQuestionsForChapter(lesson.chapterId);
+    currentIndex = 0;
+    bossScore = 0;
+    clearAnswerState();
+    render();
+  });
+
   document.querySelectorAll("[data-single]").forEach((button) => {
     button.addEventListener("click", () => {
       selectedSingle = Number(button.dataset.single);
@@ -327,7 +342,7 @@ function bindEvents() {
 
   document.querySelector("[data-next]")?.addEventListener("click", () => {
     if (currentIndex === sessionQuestions.length - 1) {
-      if (sessionMode === "review") {
+      if (sessionMode === "review" || sessionMode === "interview") {
         sessionMode = "lesson";
       } else if (sessionMode === "boss") {
         const lessons = flattenLessons();

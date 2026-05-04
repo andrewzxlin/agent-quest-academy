@@ -107,7 +107,8 @@ h1 {
 }
 
 .review-button,
-.boss-button {
+.boss-button,
+.interview-button {
   border: 1px solid #fed7aa;
   border-radius: 12px;
   background: #fff7ed;
@@ -123,15 +124,24 @@ h1 {
   color: #1d4ed8;
 }
 
+.interview-button {
+  border-color: #c4b5fd;
+  background: #f5f3ff;
+  color: #6d28d9;
+}
+
 .review-button strong,
 .review-button span,
 .boss-button strong,
-.boss-button span {
+.boss-button span,
+.interview-button strong,
+.interview-button span {
   display: block;
 }
 
 .review-button span,
-.boss-button span {
+.boss-button span,
+.interview-button span {
   margin-top: 4px;
   font-size: 13px;
 }

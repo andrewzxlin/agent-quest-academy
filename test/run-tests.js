@@ -1,5 +1,15 @@
 import assert from "node:assert/strict";
-import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, flattenQuestions, jobReadinessSkills } from "../src/course.js";
+import {
+  bossQuestionsForChapter,
+  chapterVisuals,
+  course,
+  flattenInterviewQuestions,
+  flattenLessons,
+  flattenQuestions,
+  interviewQuestionsForChapter,
+  interviewScenarios,
+  jobReadinessSkills
+} from "../src/course.js";
 import {
   answerQuestion,
   buildReviewSessionQuestions,
@@ -23,6 +33,7 @@ const tests = [
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["chapter visuals cover every chapter", testChapterVisuals],
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
+  ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
@@ -40,7 +51,8 @@ const tests = [
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
-  ["job readiness map derives status from progress", testJobReadinessMap]
+  ["job readiness map derives status from progress", testJobReadinessMap],
+  ["interview questions work with answer and review flow", testInterviewQuestionFlow]
 ];
 
 let failed = 0;
@@ -101,6 +113,19 @@ function testJobReadinessCoverage() {
       1,
       `expected one skill for ${chapter.id}`
     );
+  }
+}
+
+function testInterviewScenarioCoverage() {
+  assert.equal(interviewScenarios.length, course.chapters.length);
+  assert.equal(flattenInterviewQuestions().length, 24);
+  for (const chapter of course.chapters) {
+    const questions = interviewQuestionsForChapter(chapter.id);
+    assert.equal(questions.length, 3);
+    assert.ok(questions.every((question) => ["single", "multi", "short"].includes(question.type)));
+    assert.ok(questions.every((question) => question.lessonId === `interview:${chapter.id}`));
+    assert.ok(questions.every((question) => question.chapterId === chapter.id));
+    assert.ok(questions.every((question) => question.prompt.includes("面試情境")));
   }
 }
 
@@ -295,6 +320,19 @@ function testJobReadinessMap() {
   assert.equal(readiness[0].status, "job_ready");
   assert.equal(readiness[0].bossPassed, true);
   assert.equal(readiness[0].bossScore, "7/8");
+}
+
+function testInterviewQuestionFlow() {
+  const progress = createInitialProgress(1000);
+  const questions = interviewQuestionsForChapter("tools");
+  const first = questions[0];
+  answerQuestion(progress, first, 99, 1000);
+  assert.ok(progress.answered[`interview:tools:${first.id}`]);
+  assert.equal(buildReviewSessionQuestions(progress, 1000, 3)[0].lessonId, "interview:tools");
+
+  const second = questions[1];
+  answerQuestion(progress, second, second.answer, 1000);
+  assert.equal(progress.answered[`interview:tools:${second.id}`].correctCount, 1);
 }
 
 function countBy(items, keyFn) {

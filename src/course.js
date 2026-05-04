@@ -837,6 +837,243 @@ export const jobReadinessSkills = [
   }
 ];
 
+export const interviewScenarios = [
+  {
+    chapterId: "agent-basics",
+    title: "面試情境：這是真的 agent 嗎？",
+    rolePrompt: "面試官給你一個客服助理，會回答 FAQ、查訂單、必要時請真人確認退款。",
+    questions: [
+      single(
+        "q1",
+        "面試官問：這個系統最像哪一種 agentic workflow？",
+        "有固定步驟、工具查詢、狀態追蹤與人工核准的 workflow",
+        ["只是一段比較長的 prompt", "只是一個 FAQ chatbot", "只是一個資料庫查詢頁面"],
+        "重點不是模型會說話，而是 workflow 是否有 state、tool、step 與 approval gate。"
+      ),
+      multiChoice(
+        "q2",
+        "如果你要解釋它的核心組件，哪些是該提到的？",
+        ["State", "Tool", "Approval gate"],
+        ["背景顏色"],
+        "面試回答要先講清楚可控的 workflow 結構，再談模型。"
+      ),
+      short(
+        "q3",
+        "用一句話說明為什麼退款需要 human-in-the-loop。",
+        ["風險", "核准", "金額", "權限", "人工"],
+        "高風險或不可逆動作要有人類核准，這是 agent workflow 的安全邊界。"
+      )
+    ]
+  },
+  {
+    chapterId: "tools",
+    title: "面試情境：工具呼叫不穩怎麼辦？",
+    rolePrompt: "面試官說 agent 會呼叫物流 API，但偶爾 timeout，也有時拿到格式不完整的結果。",
+    questions: [
+      single(
+        "q1",
+        "你會先補哪個設計，讓 tool calling 更可靠？",
+        "明確 schema、timeout、retry、fallback 與錯誤訊息",
+        ["把 prompt 寫得更熱情", "把按鈕改成更醒目", "完全不要記錄錯誤"],
+        "工具可靠度來自清楚的 schema 與失敗處理，不是靠語氣。"
+      ),
+      multiChoice(
+        "q2",
+        "哪些資訊應該放進 tool schema 或 tool contract？",
+        ["必要欄位", "型別", "錯誤格式"],
+        ["使用者心情"],
+        "schema 是模型與外部世界的契約，越清楚越能降低錯誤。"
+      ),
+      short(
+        "q3",
+        "API timeout 時，回答中至少要提到哪一種處理策略？",
+        ["retry", "fallback", "timeout", "人工", "重試"],
+        "面試時要能說出 retry、fallback 或 human escalation，而不是假裝永遠成功。"
+      )
+    ]
+  },
+  {
+    chapterId: "rag",
+    title: "面試情境：如何降低胡說？",
+    rolePrompt: "面試官要你設計一個法規問答 agent，必須引用來源，不能憑印象回答。",
+    questions: [
+      single(
+        "q1",
+        "這個情境最需要哪個能力？",
+        "RAG、citation 與 confidence gate",
+        ["只調高 temperature", "只加一張漂亮封面", "只把回答變短"],
+        "需要 grounding：先找資料、再引用來源，低信心時拒答或轉人工。"
+      ),
+      multiChoice(
+        "q2",
+        "你會檢查 RAG pipeline 的哪些部分？",
+        ["Chunking", "Retriever", "Citation"],
+        ["Logo"],
+        "RAG 問題通常要拆成資料切分、檢索、引用與信心判斷。"
+      ),
+      short(
+        "q3",
+        "如果找不到可靠來源，agent 應該怎麼做？",
+        ["拒答", "轉人工", "低信心", "來源", "不回答"],
+        "沒有來源時不要硬編，這是 RAG agent 的基本安全判斷。"
+      )
+    ]
+  },
+  {
+    chapterId: "memory",
+    title: "面試情境：什麼該記住？",
+    rolePrompt: "面試官說助理會記住使用者偏好，也可能接觸敏感資料。",
+    questions: [
+      single(
+        "q1",
+        "你會怎麼區分 memory 與 state？",
+        "state 支援當前任務，memory 才是跨 session 的長期資料",
+        ["兩者完全一樣", "memory 只代表瀏覽器快取", "state 只能存圖片"],
+        "面試重點是知道短期任務狀態與長期記憶的邊界。"
+      ),
+      multiChoice(
+        "q2",
+        "長期 memory 設計要注意哪些事？",
+        ["使用者同意", "刪除權限", "敏感資料過濾"],
+        ["字體大小"],
+        "記憶不是越多越好，要能治理、刪除、限制用途。"
+      ),
+      short(
+        "q3",
+        "一句話說明為什麼不能把所有對話都永久記住。",
+        ["隱私", "同意", "敏感", "刪除", "權限"],
+        "好的 memory 設計要處理隱私、同意、保留期限與刪除。"
+      )
+    ]
+  },
+  {
+    chapterId: "guardrails",
+    title: "面試情境：高風險請求怎麼擋？",
+    rolePrompt: "面試官說 agent 可以查帳務資料，也能觸發寄信與退款流程。",
+    questions: [
+      single(
+        "q1",
+        "最合理的 guardrail 設計是哪個？",
+        "輸入分類、工具權限、輸出檢查與高風險人工核准",
+        ["只在 prompt 裡說請小心", "完全禁止所有工具", "只檢查 UI 顏色"],
+        "guardrail 要放在輸入、工具、輸出與流程分支，不只是提示詞。"
+      ),
+      multiChoice(
+        "q2",
+        "哪些動作適合加 approval gate？",
+        ["退款", "寄出正式信件", "修改帳務資料"],
+        ["切換深色模式"],
+        "不可逆、高風險、會影響使用者權益的動作適合人工核准。"
+      ),
+      short(
+        "q3",
+        "如果工具請求超出使用者權限，agent 應該怎麼做？",
+        ["拒絕", "權限", "轉人工", "policy", "阻擋"],
+        "安全邊界要能阻擋越權工具呼叫，必要時轉人工。"
+      )
+    ]
+  },
+  {
+    chapterId: "evals",
+    title: "面試情境：怎麼證明 agent 變好？",
+    rolePrompt: "面試官問你改了 prompt 後，如何知道 agent 真的比較可靠。",
+    questions: [
+      single(
+        "q1",
+        "最有說服力的回答是哪個？",
+        "用固定 eval dataset、scoring rubric 與 regression cases 比較改動前後",
+        ["覺得回答比較順", "UI 看起來比較漂亮", "只測一題成功就上線"],
+        "evals 是把品質變成可比較的證據，而不是主觀感覺。"
+      ),
+      multiChoice(
+        "q2",
+        "一套好的 eval 至少包含哪些東西？",
+        ["測試資料", "評分標準", "回歸案例"],
+        ["品牌口號"],
+        "測什麼、怎麼評、哪些錯不能再犯，都要明確。"
+      ),
+      short(
+        "q3",
+        "一句話說明 regression case 的用途。",
+        ["回歸", "舊錯", "再次發生", "測試", "品質"],
+        "regression case 用來確認以前修過的錯誤沒有再次出現。"
+      )
+    ]
+  },
+  {
+    chapterId: "observability",
+    title: "面試情境：agent 慢又貴怎麼查？",
+    rolePrompt: "面試官說 agent 回答很慢、成本暴增，而且偶爾工具失敗。",
+    questions: [
+      single(
+        "q1",
+        "你會先看哪類資料？",
+        "trace、span、latency、token、cost 與 failure rate",
+        ["只看首頁截圖", "只問使用者喜不喜歡", "只改 logo"],
+        "debug agent 要先把每一步拆開看，不然不知道慢在哪、貴在哪。"
+      ),
+      multiChoice(
+        "q2",
+        "哪些指標能幫你定位問題？",
+        ["Latency", "Tokens", "Tool failure"],
+        ["背景插圖"],
+        "observability 的價值是把 agent run 拆成可檢查的步驟與指標。"
+      ),
+      short(
+        "q3",
+        "如果 retrieval span 很慢，你會往哪個方向查？",
+        ["retrieval", "chunk", "索引", "向量", "查詢"],
+        "trace 會指出瓶頸在哪個 span，再回頭查 retrieval、chunking 或索引。"
+      )
+    ]
+  },
+  {
+    chapterId: "frameworks",
+    title: "面試情境：何時用 LangGraph？",
+    rolePrompt: "面試官問一個 workflow 有分支、可恢復執行、人工核准與多步狀態。",
+    questions: [
+      single(
+        "q1",
+        "這時候你會怎麼判斷框架？",
+        "需要 stateful graph 與 durable execution 時，LangGraph 比單純 chain 更合適",
+        ["任何 LLM 都一定要用 LangGraph", "永遠只用一段 prompt", "只看哪個 logo 好看"],
+        "LangGraph 的重點是 stateful workflow、分支、恢復與 human-in-the-loop。"
+      ),
+      multiChoice(
+        "q2",
+        "哪些需求會推向 LangGraph 類型設計？",
+        ["Branching", "Durable execution", "Human-in-the-loop"],
+        ["只顯示靜態文字"],
+        "有狀態、有分支、有可恢復流程時，graph abstraction 才有明確價值。"
+      ),
+      short(
+        "q3",
+        "一句話說明 LangChain 與 LangGraph 的取捨。",
+        ["元件", "graph", "state", "workflow", "分支"],
+        "LangChain 偏元件與組合；LangGraph 偏 stateful、可控、多步流程。"
+      )
+    ]
+  }
+];
+
+export function interviewQuestionsForChapter(chapterId) {
+  const scenario = interviewScenarios.find((item) => item.chapterId === chapterId);
+  if (!scenario) return [];
+  const chapter = course.chapters.find((item) => item.id === chapterId);
+  return scenario.questions.map((question) => ({
+    ...question,
+    prompt: `${scenario.title}：${scenario.rolePrompt}\n\n${question.prompt}`,
+    lessonId: `interview:${scenario.chapterId}`,
+    lessonTitle: scenario.title,
+    chapterId: scenario.chapterId,
+    chapterTitle: chapter?.title ?? scenario.chapterId
+  }));
+}
+
+export function flattenInterviewQuestions() {
+  return course.chapters.flatMap((chapter) => interviewQuestionsForChapter(chapter.id));
+}
+
 export function flattenLessons() {
   return course.chapters.flatMap((chapter) =>
     chapter.lessons.map((item) => ({

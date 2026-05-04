@@ -1,4 +1,4 @@
-import { course, flattenLessons, flattenQuestions, jobReadinessSkills } from "./course.js";
+import { course, flattenInterviewQuestions, flattenLessons, flattenQuestions, jobReadinessSkills } from "./course.js";
 
 const STORAGE_KEY = "agentQuestProgress:v1";
 
@@ -139,7 +139,7 @@ export function completeBossQuiz(progress, chapterId, score, total, now = Date.n
 }
 
 export function getDueReviewQuestions(progress, now = Date.now(), limit = 3) {
-  const questionsByKey = new Map(flattenQuestions().map((question) => [questionKey(question), question]));
+  const questionsByKey = new Map(reviewableQuestions().map((question) => [questionKey(question), question]));
   return [...progress.reviewQueue]
     .filter((item) => item.dueAt <= now)
     .sort((a, b) => b.priority - a.priority || a.dueAt - b.dueAt)
@@ -172,7 +172,7 @@ export function reviewStats(progress, now = Date.now()) {
 }
 
 export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
-  const questionsByKey = new Map(flattenQuestions().map((question) => [questionKey(question), question]));
+  const questionsByKey = new Map(reviewableQuestions().map((question) => [questionKey(question), question]));
   const reviewByKey = new Map(progress.reviewQueue.map((item) => [item.questionKey, item]));
   return Object.entries(progress.answered)
     .filter(([, state]) => state.wrongCount > 0)
@@ -344,6 +344,10 @@ function recordDailyActivity(progress, now, patch) {
       bossPasses: activity.bossPasses + (patch.bossPasses ?? 0)
     }
   };
+}
+
+function reviewableQuestions() {
+  return [...flattenQuestions(), ...flattenInterviewQuestions()];
 }
 
 function getDailyActivity(progress, now) {

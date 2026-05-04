@@ -6,6 +6,12 @@
 - Uses lesson completion and Boss results to derive status: new, learning, or job-ready.
 - Keeps the current learning flow low-friction: choice questions, multi-select, short answers, mistake review, and spaced review before project implementation tasks.
 
+## Interview Scenarios
+
+- Adds one interview-style scenario per chapter, focused on architecture judgment instead of project implementation.
+- Each scenario uses only single choice, multi-select, and short answer questions.
+- Wrong interview answers enter the same review queue and mistake notebook as normal lesson questions.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。
