@@ -34,6 +34,7 @@
 - Each phrase includes a Read / Trim / Say rehearsal path so learners can reuse it without open-ended writing.
 - The bank labels the strongest role signal, so each phrase points toward a job-facing path.
 - Daily Quest now includes banking one phrase and sampling one role, so the daily loop rewards reusable wording and career-path exploration as well as answer volume.
+- Unlocked achievements can add an "I can" proof line directly inside the phrase bank.
 
 ## Role Sampler
 

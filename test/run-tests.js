@@ -1541,6 +1541,8 @@ function testDailyPhraseBankCard() {
   assert.equal(card.roleSignal, "AI App Builder");
   assert.equal(card.roleLevel, "starter");
   assert.ok(card.roleUse.includes("role signal"));
+  assert.equal(card.achievementLine, "");
+  assert.ok(card.achievementUse.includes("Unlock"));
   assert.ok(card.promise.includes("choice questions"));
   assert.deepEqual(card.rehearsalSteps.map((step) => step.id), ["read", "trim", "say"]);
   assert.ok(card.rehearsalSteps.find((step) => step.id === "say").text.includes("No blank-page"));
@@ -1559,6 +1561,9 @@ function testDailyPhraseBankCard() {
   assert.ok(card.roleSignal.length > 0);
   assert.ok(card.roleUse.includes(card.roleSignal));
   assert.ok(["starter", "warming up", "building evidence", "interview-ready"].includes(card.roleLevel));
+  assert.equal(card.achievementTitle, "Role Explorer");
+  assert.ok(card.achievementLine.startsWith("I can "));
+  assert.ok(card.achievementUse.includes("interview sentence"));
   assert.ok(card.nextAction.includes("one-line coach"));
   assert.ok(card.rehearsalSteps.find((step) => step.id === "say").text.includes("interview sentence"));
 }

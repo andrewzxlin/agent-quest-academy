@@ -1076,6 +1076,11 @@ function renderDailyPhraseBankCard(card) {
         ${step.text}
       </small>`).join("")}
     </div>
+    ${card.achievementLine ? `<div class="phrase-bank-achievement">
+      <span>${card.achievementTitle}</span>
+      <strong>${card.achievementLine}</strong>
+      <small>${card.achievementUse}</small>
+    </div>` : ""}
     <em>${card.nextAction}</em>
     <small>${card.promise}</small>
   </section>`;

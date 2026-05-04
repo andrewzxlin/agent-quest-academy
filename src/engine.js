@@ -1644,6 +1644,7 @@ export function dailyPhraseBankCard(progress) {
   const roleSignal = [...roleFit.tracks].sort(
     (a, b) => b.readyCount - a.readyCount || b.practicingCount - a.practicingCount
   )[0];
+  const achievement = [...achievements(progress)].reverse().find((badge) => badge.unlocked) ?? null;
 
   return {
     title: "Today Phrase Bank",
@@ -1656,6 +1657,9 @@ export function dailyPhraseBankCard(progress) {
     roleUse: hasPhrases
       ? `Useful for: ${roleSignal?.title ?? "Agentic Workflow practice"}.`
       : "A role signal appears after the first phrase.",
+    achievementTitle: achievement?.title ?? "Achievement proof pending",
+    achievementLine: achievement?.proofLine ?? "",
+    achievementUse: achievement ? "Achievement proof can become one interview sentence." : "Unlock a badge to add an achievement proof line.",
     proofCount,
     repairCount,
     nextAction: hasPhrases ? "Use the newest line in the one-line coach or keep answering tiny prompts." : "Start with one choice question.",

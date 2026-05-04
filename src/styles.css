@@ -1736,6 +1736,27 @@ h1 {
   margin-bottom: 4px;
 }
 
+.phrase-bank-achievement {
+  background: rgb(255 255 255 / 0.72);
+  border: 1px solid rgb(8 145 178 / 0.16);
+  border-radius: 10px;
+  grid-column: 1 / -1;
+  padding: 12px;
+}
+
+.phrase-bank-achievement span,
+.phrase-bank-achievement strong,
+.phrase-bank-achievement small {
+  display: block;
+}
+
+.phrase-bank-achievement strong {
+  color: var(--ink);
+  font-size: 14px;
+  margin-top: 4px;
+  text-align: left;
+}
+
 .daily-momentum-card {
   display: grid;
   grid-template-columns: 1fr auto;
