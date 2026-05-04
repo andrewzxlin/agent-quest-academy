@@ -175,6 +175,12 @@
 - The snapshot is derived from the same daily missions used in the detailed progress area.
 - This adds a game-like "one more small step" loop without adding harder work.
 
+## Recall Combo
+
+- The home screen now rewards a clean run of recent correct answers as a small combo.
+- The combo also shows stable signals and repaired misses, so review progress feels visible.
+- It stays low-friction by using existing choice and short-answer quiz data.
+
 ## Daily Minimum Card
 
 - The home screen now shows a 3-minute minimum: one question is enough to bank today's smallest useful practice.

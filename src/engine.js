@@ -1022,6 +1022,47 @@ export function learningReceiptReel(progress, limit = 4) {
   };
 }
 
+export function recallComboCard(progress) {
+  const answered = Object.values(progress.answered ?? {}).sort((a, b) => (b.lastAnsweredAt ?? 0) - (a.lastAnsweredAt ?? 0));
+  const latestCleanRun = answered.findIndex((item) => item.lastResult !== "correct");
+  const cleanRun = latestCleanRun === -1 ? answered.length : latestCleanRun;
+  const stableSignals = answered.filter((item) => item.correctCount >= 2).length;
+  const repairedSignals = answered.filter((item) => item.wrongCount > 0 && item.lastResult === "correct").length;
+  const totalSignals = answered.length;
+  const mode = totalSignals === 0 ? "empty" : cleanRun >= 3 ? "combo" : repairedSignals > 0 ? "repair" : "building";
+  const target = cleanRun >= 3 ? 3 : 3 - cleanRun;
+
+  return {
+    title: "Recall Combo",
+    mode,
+    headline:
+      mode === "empty"
+        ? "Start the first clean recall"
+        : mode === "combo"
+          ? `${cleanRun} clean answers in the current run`
+          : mode === "repair"
+            ? "A weak signal has been repaired"
+            : "Build a 3-answer clean run",
+    cleanRun,
+    stableSignals,
+    repairedSignals,
+    totalSignals,
+    target,
+    nextAction:
+      mode === "empty"
+        ? "Answer one single-choice question."
+        : mode === "combo"
+          ? "Keep the combo warm with review or one short answer."
+          : `Land ${target} more clean answer${target === 1 ? "" : "s"} for a 3-answer combo.`,
+    proofLine: "Combos are built from real quiz answers and small recall wins.",
+    meters: [
+      { id: "clean", label: "Clean run", value: cleanRun },
+      { id: "stable", label: "Stable signals", value: stableSignals },
+      { id: "repair", label: "Repaired misses", value: repairedSignals }
+    ]
+  };
+}
+
 export function chapterMap(progress) {
   const lessons = flattenLessons();
   return course.chapters.map((chapter) => {

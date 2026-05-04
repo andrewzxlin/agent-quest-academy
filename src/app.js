@@ -54,6 +54,7 @@ import {
   questionCoachHint,
   questionMasterySignal,
   questionMasteryStage,
+  recallComboCard,
   reviewRhythmCard,
   reviewSprintCard,
   reviewStats,
@@ -112,6 +113,7 @@ function render() {
   const signalPassport = jobSignalPassport(progress, Date.now());
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
   const receiptReel = learningReceiptReel(progress);
+  const recallCombo = recallComboCard(progress);
   const gapRadar = landingGapRadar(progress, Date.now());
   const landingChecklist = landingReadinessChecklist(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
@@ -207,6 +209,7 @@ function render() {
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyMomentumCard(momentum)}
+        ${renderRecallComboCard(recallCombo)}
         ${renderReviewRhythmCard(reviewRhythm)}
         ${renderReviewSprintCard(reviewSprint)}
         ${renderMistakeFocusCard(mistakeFocus)}
@@ -714,6 +717,25 @@ function renderDailyMomentumCard(momentum) {
         <span>${momentum.correctRate}%</span>
         <small>今日正確率</small>
       </div>
+    </div>
+  </section>`;
+}
+
+function renderRecallComboCard(combo) {
+  return `<section class="recall-combo-card ${combo.mode}">
+    <div>
+      <p class="eyebrow">${combo.title}</p>
+      <h3>${combo.headline}</h3>
+      <p>${combo.proofLine}</p>
+      <strong>${combo.nextAction}</strong>
+    </div>
+    <div class="combo-meter-grid">
+      ${combo.meters
+        .map((meter) => `<div>
+          <span>${meter.value}</span>
+          <small>${meter.label}</small>
+        </div>`)
+        .join("")}
     </div>
   </section>`;
 }

@@ -67,6 +67,7 @@ import {
   questionCoachHint,
   questionMasterySignal,
   questionMasteryStage,
+  recallComboCard,
   reviewRhythmCard,
   reviewSprintCard,
   reviewStats,
@@ -126,6 +127,7 @@ const tests = [
   ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
   ["quest compass turns recommendation into a game-like next step", testQuestCompass],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
+  ["recall combo card rewards clean low-friction runs", testRecallComboCard],
   ["achievements unlock from real progress", testAchievements],
   ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook],
   ["mistake focus card picks the highest-priority wrong answer", testMistakeFocusCard],
@@ -1074,6 +1076,45 @@ function testDailyMomentum() {
   assert.equal(dailyMomentum(localProgress, localNextMorning).streakDays, 1);
   answerQuestion(localProgress, questions[3], questions[3].answer, localNextMorning);
   assert.equal(dailyMomentum(localProgress, localNextMorning).streakDays, 2);
+}
+
+function testRecallComboCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let combo = recallComboCard(progress);
+  assert.equal(combo.title, "Recall Combo");
+  assert.equal(combo.mode, "empty");
+  assert.equal(combo.cleanRun, 0);
+  assert.equal(combo.target, 3);
+  assert.equal(combo.meters.length, 3);
+  assert.ok(combo.nextAction.includes("single-choice"));
+  assert.doesNotMatch(JSON.stringify(combo), /repo|project implementation|build a project|coding task/i);
+
+  const questions = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, questions[0], questions[0].answer, now);
+  answerQuestion(progress, questions[1], 99, now + 1);
+  combo = recallComboCard(progress);
+  assert.equal(combo.mode, "building");
+  assert.equal(combo.cleanRun, 0);
+  assert.equal(combo.repairedSignals, 0);
+
+  answerQuestion(progress, questions[1], questions[1].answer, now + 2);
+  combo = recallComboCard(progress);
+  assert.equal(combo.mode, "repair");
+  assert.equal(combo.cleanRun, 2);
+  assert.equal(combo.repairedSignals, 1);
+  assert.ok(combo.nextAction.includes("1 more clean answer"));
+
+  answerQuestion(progress, questions[2], questions[2].answer, now + 3);
+  combo = recallComboCard(progress);
+  assert.equal(combo.mode, "combo");
+  assert.equal(combo.cleanRun, 3);
+  assert.equal(combo.repairedSignals, 1);
+  assert.ok(combo.headline.includes("3 clean answers"));
+
+  answerQuestion(progress, questions[2], questions[2].answer, now + 4);
+  combo = recallComboCard(progress);
+  assert.ok(combo.stableSignals >= 1);
 }
 
 function testAchievements() {
