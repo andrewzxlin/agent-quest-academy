@@ -171,6 +171,31 @@ export function reviewStats(progress, now = Date.now()) {
   };
 }
 
+export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
+  const questionsByKey = new Map(flattenQuestions().map((question) => [questionKey(question), question]));
+  const reviewByKey = new Map(progress.reviewQueue.map((item) => [item.questionKey, item]));
+  return Object.entries(progress.answered)
+    .filter(([, state]) => state.wrongCount > 0)
+    .sort(([, a], [, b]) => b.lastAnsweredAt - a.lastAnsweredAt)
+    .slice(0, limit)
+    .map(([key, state]) => {
+      const question = questionsByKey.get(key);
+      const review = reviewByKey.get(key);
+      return {
+        key,
+        question,
+        lessonTitle: question?.lessonTitle ?? "Unknown lesson",
+        chapterTitle: question?.chapterTitle ?? "Unknown chapter",
+        wrongCount: state.wrongCount,
+        correctCount: state.correctCount,
+        lastResult: state.lastResult,
+        dueAt: review?.dueAt ?? state.nextReviewAt,
+        due: (review?.dueAt ?? state.nextReviewAt) <= now
+      };
+    })
+    .filter((item) => item.question);
+}
+
 export function dailyMissions(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   return [

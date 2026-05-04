@@ -11,6 +11,7 @@ import {
   gradeQuestion,
   loadProgress,
   masteryForLesson,
+  mistakeNotebook,
   reviewStats,
   resetProgress,
   saveProgress
@@ -41,6 +42,7 @@ function render() {
   const bossResult = progress.bossResults?.find((item) => item.chapterId === chapter.id);
   const missions = dailyMissions(progress, Date.now());
   const badges = achievements(progress);
+  const mistakes = mistakeNotebook(progress, Date.now(), 5);
   const stats = reviewStats(progress, Date.now());
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
@@ -153,6 +155,22 @@ function render() {
                   <small>${badge.description}</small>
                 </div>`)
                 .join("")}
+            </div>
+          </div>
+          <div>
+            <h3>錯題本</h3>
+            <div class="mistake-list">
+              ${
+                mistakes.length === 0
+                  ? `<p class="empty-note">目前還沒有錯題。先去完成幾題，系統會自動整理。</p>`
+                  : mistakes
+                      .map((item) => `<div class="mistake-card ${item.due ? "due" : ""}">
+                        <span>${item.due ? "已到期" : "已排程"} / 錯 ${item.wrongCount} 次</span>
+                        <strong>${item.question.prompt}</strong>
+                        <small>${item.chapterTitle} / ${item.lessonTitle}</small>
+                      </div>`)
+                      .join("")
+              }
             </div>
           </div>
         </section>

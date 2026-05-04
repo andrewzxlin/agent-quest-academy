@@ -12,6 +12,7 @@ import {
   getDueReviewQuestions,
   gradeQuestion,
   masteryForLesson,
+  mistakeNotebook,
   reviewStats
 } from "../src/engine.js";
 
@@ -32,7 +33,8 @@ const tests = [
   ["boss quiz uses low-friction chapter questions", testBossQuizQuestions],
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
-  ["achievements unlock from real progress", testAchievements]
+  ["achievements unlock from real progress", testAchievements],
+  ["mistake notebook lists recent wrong answers with due state", testMistakeNotebook]
 ];
 
 let failed = 0;
@@ -205,6 +207,20 @@ function testAchievements() {
   assert.equal(badges.find((badge) => badge.id === "first-lesson").unlocked, true);
   assert.equal(badges.find((badge) => badge.id === "mistake-hunter").unlocked, true);
   assert.equal(badges.find((badge) => badge.id === "boss-clear").unlocked, true);
+}
+
+function testMistakeNotebook() {
+  const progress = createInitialProgress(1000);
+  const [firstWrong, secondWrong, correctOnly] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, firstWrong, 99, 1000);
+  answerQuestion(progress, correctOnly, correctOnly.answer, 1500);
+  answerQuestion(progress, secondWrong, 99, 2000);
+  const notebook = mistakeNotebook(progress, 2000, 5);
+  assert.equal(notebook.length, 2);
+  assert.equal(notebook[0].question.id, secondWrong.id);
+  assert.equal(notebook[0].due, true);
+  assert.equal(notebook[0].wrongCount, 1);
+  assert.equal(notebook.some((item) => item.question.id === correctOnly.id), false);
 }
 
 function countBy(items, keyFn) {

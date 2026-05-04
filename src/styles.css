@@ -356,18 +356,25 @@ button:disabled {
 }
 
 .mission-list,
-.badge-list {
+.badge-list,
+.mistake-list {
   display: grid;
   gap: 10px;
   margin-top: 12px;
 }
 
 .mission,
-.badge {
+.badge,
+.mistake-card {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 12px;
   background: #f8fafc;
+}
+
+.mistake-card.due {
+  border-color: #fdba74;
+  background: #fff7ed;
 }
 
 .mission.done,
@@ -378,14 +385,18 @@ button:disabled {
 
 .mission span,
 .badge span,
-.badge small {
+.badge small,
+.mistake-card span,
+.mistake-card small,
+.empty-note {
   display: block;
   color: var(--muted);
   font-size: 12px;
 }
 
 .mission strong,
-.badge strong {
+.badge strong,
+.mistake-card strong {
   display: block;
   margin-top: 3px;
 }
