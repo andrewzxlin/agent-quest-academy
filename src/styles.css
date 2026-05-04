@@ -2127,6 +2127,23 @@ h1 {
   color: var(--muted);
 }
 
+.mistake-focus-card em,
+.mistake-focus-card small {
+  display: block;
+}
+
+.mistake-focus-card em {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 800;
+  margin-top: 10px;
+}
+
+.mistake-focus-card small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
 .mistake-focus-card strong {
   display: block;
   margin-top: 10px;

@@ -1236,6 +1236,8 @@ function renderMistakeFocusCard(card) {
       <h3>${card.chapterTitle}</h3>
       <p>${card.prompt}</p>
       ${card.rescue ? `<strong>${card.rescue.body}</strong>` : ""}
+      <em>${card.repairLine}</em>
+      <small>${card.repairUseCase}</small>
     </div>
     <div class="mistake-focus-meter">
       <span>${card.dueCount}</span>

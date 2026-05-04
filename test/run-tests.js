@@ -1730,6 +1730,8 @@ function testMistakeNotebook() {
   assert.equal(notebook[0].wrongCount, 1);
   assert.ok(notebook[0].rescue.title.length > 0);
   assert.ok(notebook[0].rescue.body.length >= 20);
+  assert.ok(notebook[0].repairLine.startsWith("I can "));
+  assert.ok(notebook[0].repairUseCase.includes("Review"));
   assert.equal(notebook.some((item) => item.question.id === correctOnly.id), false);
 }
 
@@ -1749,6 +1751,8 @@ function testMistakeFocusCard() {
   assert.equal(focus.dueCount, 2);
   assert.equal(focus.totalWrong, 3);
   assert.ok(focus.rescue.body.length >= 20);
+  assert.ok(focus.repairLine.startsWith("I can "));
+  assert.ok(focus.repairUseCase.includes("Review"));
   assert.ok(focus.nextAction.includes("複習"));
 }
 

@@ -257,6 +257,7 @@
 - Wrong answers now show a short rescue prompt before the detailed explanation.
 - The prompt tells the learner what to look for next time, instead of only marking the answer wrong.
 - This keeps mistake replay supportive and low-friction.
+- Mistake Focus now shows the repair phrase, so a miss points to the exact line it can become.
 
 ## Mistake Safety Net
 

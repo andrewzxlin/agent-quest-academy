@@ -1550,12 +1550,15 @@ export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
     .map(([key, state]) => {
       const question = questionsByKey.get(key);
       const review = reviewByKey.get(key);
+      const repairClip = question ? answerEvidenceClip(question, gradeQuestion(question, wrongReplayResponse(question))) : null;
       return {
         key,
         question,
         lessonTitle: question?.lessonTitle ?? "Unknown lesson",
         chapterTitle: question?.chapterTitle ?? "Unknown chapter",
         rescue: question ? mistakeRescuePrompt(question, { correct: false, missing: question.keywords ?? [] }) : null,
+        repairLine: repairClip?.line ?? "",
+        repairUseCase: repairClip?.useCase ?? "",
         wrongCount: state.wrongCount,
         correctCount: state.correctCount,
         lastResult: state.lastResult,
@@ -1582,6 +1585,8 @@ export function mistakeFocusCard(progress, now = Date.now()) {
     totalWrong,
     wrongCount: focus.wrongCount,
     rescue: focus.rescue,
+    repairLine: focus.repairLine,
+    repairUseCase: focus.repairUseCase,
     nextAction: focus.due
       ? "先做這題的複習，不急著往下一課衝。"
       : "先讀提示，等排程到期後再回來複習。"
