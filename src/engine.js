@@ -113,6 +113,32 @@ export function gradeQuestion(question, response) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function questionCoachHint(question) {
+  if (question.type === "single") {
+    return {
+      title: "先抓決策線索",
+      body: "找最能完成任務、降低風險、符合 agent workflow 的選項；太像裝飾或情緒反應的答案通常不是核心。",
+      starter: null
+    };
+  }
+  if (question.type === "multi") {
+    return {
+      title: "先拆成流程零件",
+      body: "只選真的會影響流程的元件，例如模型、工具、狀態、檢索、評估或安全邊界。",
+      starter: null
+    };
+  }
+  if (question.type === "short") {
+    const keywords = question.keywords.slice(0, 3);
+    return {
+      title: "不用寫長，先套一句",
+      body: `先用 1 句話回答目的，再補 1 個 agent workflow 角色。可用詞：${keywords.join(" / ")}。`,
+      starter: `這是在處理 ${keywords.slice(0, 2).join(" / ")}，讓 agent workflow 可以...`
+    };
+  }
+  throw new Error(`Unknown question type: ${question.type}`);
+}
+
 export function answerQuestion(progress, question, response, now = Date.now()) {
   const result = gradeQuestion(question, response);
   const key = questionKey(question);

@@ -34,6 +34,7 @@ import {
   nextPracticeRecommendation,
   onboardingState,
   pitchPracticeCard,
+  questionCoachHint,
   reviewStats,
   selectLearnerProfile
 } from "../src/engine.js";
@@ -47,6 +48,7 @@ const tests = [
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
+  ["question coach hints reduce blank-page friction", testQuestionCoachHints],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
   ["choice feedback covers every selectable option", testChoiceFeedback],
@@ -192,6 +194,22 @@ function testLowFrictionQuestionTypes() {
   for (const question of questions) {
     assert.ok(["single", "multi", "short"].includes(question.type));
     assert.doesNotMatch(question.prompt, /實作專案|請寫程式|建立 repo/i);
+  }
+}
+
+function testQuestionCoachHints() {
+  const questions = [...flattenQuestions(), ...flattenInterviewQuestions()];
+  for (const question of questions) {
+    const hint = questionCoachHint(question);
+    assert.ok(hint.title.length > 0);
+    assert.ok(hint.body.length >= 20);
+    assert.doesNotMatch(`${hint.title} ${hint.body} ${hint.starter ?? ""}`, /repo|project implementation|專案實作/i);
+    if (question.type === "short") {
+      assert.ok(hint.starter.includes(question.keywords[0]) || hint.body.includes(question.keywords[0]));
+      assert.ok(hint.body.includes("agent workflow"));
+    } else {
+      assert.equal(hint.starter, null);
+    }
   }
 }
 

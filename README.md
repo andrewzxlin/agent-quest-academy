@@ -72,6 +72,12 @@
 - The cards explain what the term means and why it matters in an agentic workflow.
 - This reduces jargon friction while keeping the learning loop focused on choice questions, multi-select, and short answers.
 
+## Question Coach Hints
+
+- Every question now shows a small hint before answering.
+- Single-choice and multi-select hints teach how to spot workflow-relevant options.
+- Short-answer hints include a sentence starter so beginners can begin without staring at a blank box.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

@@ -22,6 +22,7 @@ import {
   nextPracticeRecommendation,
   onboardingState,
   pitchPracticeCard,
+  questionCoachHint,
   reviewStats,
   resetProgress,
   saveProgress,
@@ -149,6 +150,7 @@ function render() {
               <small>本課熟練度</small>
             </div>
           </div>
+          ${renderQuestionCoach(questionCoachHint(question))}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult) : ""}
           <div class="actions">
@@ -402,6 +404,14 @@ function renderGlossaryCard(glossary) {
   </section>`;
 }
 
+function renderQuestionCoach(hint) {
+  return `<div class="question-coach">
+    <span>${hint.title}</span>
+    <p>${hint.body}</p>
+    ${hint.starter ? `<button class="starter-chip" data-starter="${hint.starter}">套用起手式</button>` : ""}
+  </div>`;
+}
+
 function renderFeedback(question, result) {
   const tone = result.correct ? "correct" : "wrong";
   return `<div class="feedback ${tone}">
@@ -565,6 +575,13 @@ function bindEvents() {
       shortAnswer = event.target.value;
     });
   }
+
+  document.querySelectorAll("[data-starter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      shortAnswer = button.dataset.starter;
+      render();
+    });
+  });
 
   const pitchTextarea = document.querySelector(".pitch-input");
   if (pitchTextarea) {
