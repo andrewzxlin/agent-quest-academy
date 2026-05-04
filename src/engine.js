@@ -2945,6 +2945,64 @@ export function dailyMinimumCard(progress, now = Date.now()) {
   };
 }
 
+export function dailySkillTicketCard(progress, now = Date.now()) {
+  const dayStart = startOfLocalDay(now);
+  const dayEnd = addLocalDays(dayStart, 1);
+  const questionsByKey = new Map(flattenQuestions().map((question) => [questionKey(question), question]));
+  const todayAnswered = Object.entries(progress.answered)
+    .map(([key, state]) => ({ question: questionsByKey.get(key), state }))
+    .filter(({ question, state }) => question && state.lastAnsweredAt >= dayStart && state.lastAnsweredAt < dayEnd);
+  const countType = (type) => todayAnswered.filter(({ question }) => question.type === type).length;
+  const lanes = [
+    {
+      id: "single",
+      label: "Recognize",
+      format: "Single choice",
+      count: countType("single"),
+      target: 1,
+      reward: "Decision signal"
+    },
+    {
+      id: "multi",
+      label: "Connect",
+      format: "Multi choice",
+      count: countType("multi"),
+      target: 1,
+      reward: "Workflow link"
+    },
+    {
+      id: "short",
+      label: "Explain",
+      format: "Tiny short answer",
+      count: countType("short"),
+      target: 1,
+      reward: "Interview phrase"
+    }
+  ].map((lane) => ({
+    ...lane,
+    done: lane.count >= lane.target
+  }));
+  const completedCount = lanes.filter((lane) => lane.done).length;
+  const active = lanes.find((lane) => !lane.done) ?? lanes[lanes.length - 1];
+
+  return {
+    title: "Daily Skill Ticket",
+    status: completedCount === lanes.length ? "done" : "open",
+    headline: completedCount === lanes.length ? "Today's tiny skill loop is stamped." : `Next stamp: ${active.label}`,
+    activeId: active.id,
+    activeFormat: active.format,
+    activeReward: active.reward,
+    completedCount,
+    totalCount: lanes.length,
+    nextAction: completedCount === lanes.length ? "Keep the streak light." : `Answer one ${active.format.toLowerCase()}.`,
+    promise: "Choice stamps come first; one short answer is the final tiny stamp.",
+    lanes: lanes.map((lane) => ({
+      ...lane,
+      status: lane.done ? "done" : lane.id === active.id ? "active" : "locked"
+    }))
+  };
+}
+
 export function dailyLandingStepCard(progress, now = Date.now()) {
   const minimum = dailyMinimumCard(progress, now);
   const next = nextPracticeRecommendation(progress, now);

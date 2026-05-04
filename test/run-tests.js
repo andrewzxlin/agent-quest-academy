@@ -39,6 +39,7 @@ import {
   dashboardModeCard,
   dailyMinimumCard,
   dailyLandingStepCard,
+  dailySkillTicketCard,
   dailyMomentum,
   dailyPhraseBankCard,
   dailyQuestSnapshot,
@@ -172,6 +173,7 @@ const tests = [
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
   ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
+  ["daily skill ticket stamps one tiny type loop", testDailySkillTicketCard],
   ["daily landing step maps tiny practice to job value", testDailyLandingStepCard],
   ["daily phrase bank makes reusable lines visible in beginner flow", testDailyPhraseBankCard],
   ["zero to landing quest compresses the beginner route", testZeroToLandingQuestCard],
@@ -1578,6 +1580,46 @@ function testDailyMinimumCard() {
   assert.equal(card.doneCount, 3);
   assert.equal(card.checks.find((check) => check.id === "answer-one").done, true);
   assert.ok(card.headline.includes("banked"));
+}
+
+function testDailySkillTicketCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const tomorrow = now + 24 * 60 * 60 * 1000;
+  const progress = createInitialProgress(now);
+  let card = dailySkillTicketCard(progress, now);
+  assert.equal(card.title, "Daily Skill Ticket");
+  assert.equal(card.status, "open");
+  assert.equal(card.completedCount, 0);
+  assert.equal(card.totalCount, 3);
+  assert.equal(card.activeId, "single");
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["single", "multi", "short"]);
+  assert.deepEqual(card.lanes.map((lane) => lane.status), ["active", "locked", "locked"]);
+  assert.ok(card.promise.includes("Choice stamps"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const single = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, single, single.answer, now);
+  card = dailySkillTicketCard(progress, now);
+  assert.equal(card.activeId, "multi");
+  assert.deepEqual(card.lanes.map((lane) => lane.status), ["done", "active", "locked"]);
+  assert.ok(card.nextAction.includes("multi choice"));
+
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  answerQuestion(progress, multi, multi.answer, now + 1);
+  card = dailySkillTicketCard(progress, now);
+  assert.equal(card.activeId, "short");
+  assert.equal(card.activeReward, "Interview phrase");
+
+  const short = flattenQuestions().find((item) => item.type === "short");
+  answerQuestion(progress, short, short.keywords.slice(0, short.minMatches).join(" "), now + 2);
+  card = dailySkillTicketCard(progress, now);
+  assert.equal(card.status, "done");
+  assert.equal(card.completedCount, 3);
+  assert.ok(card.headline.includes("stamped"));
+
+  card = dailySkillTicketCard(progress, tomorrow);
+  assert.equal(card.completedCount, 0);
+  assert.equal(card.activeId, "single");
 }
 
 function testDailyLandingStepCard() {

@@ -26,6 +26,7 @@ import {
   dashboardModeCard,
   dailyMinimumCard,
   dailyLandingStepCard,
+  dailySkillTicketCard,
   dailyMomentum,
   dailyPhraseBankCard,
   dailyQuestSnapshot,
@@ -153,6 +154,7 @@ function render() {
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const dailyMinimum = dailyMinimumCard(progress, Date.now());
+  const dailySkillTicket = dailySkillTicketCard(progress, Date.now());
   const dailyLandingStep = dailyLandingStepCard(progress, Date.now());
   const dailyPhraseBank = dailyPhraseBankCard(progress);
   const momentum = dailyMomentum(progress, Date.now());
@@ -256,6 +258,7 @@ function render() {
         ${renderJargonShieldCard(jargonShield)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
+        ${renderDailySkillTicketCard(dailySkillTicket)}
         ${renderDailyLandingStepCard(dailyLandingStep)}
         ${renderDailyPhraseBankCard(dailyPhraseBank)}
         ${renderMistakeSafetyNetCard(mistakeSafetyNet)}
@@ -1061,6 +1064,32 @@ function renderDailyMinimumCard(card) {
           .map((check) => `<small class="${check.done ? "done" : ""}">${check.label}</small>`)
           .join("")}
       </div>
+    </div>
+  </section>`;
+}
+
+function renderDailySkillTicketCard(card) {
+  return `<section class="daily-skill-ticket-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.completedCount}/${card.totalCount} stamps - ${card.activeReward}</p>
+    </div>
+    <div class="daily-skill-ticket-lanes">
+      ${card.lanes.map((lane) => `<div class="${lane.status}">
+        <span>${lane.format}</span>
+        <strong>${lane.label}</strong>
+        <small>${lane.reward}</small>
+      </div>`).join("")}
+    </div>
+    <div class="daily-skill-ticket-action">
+      <div>
+        <strong>${card.activeFormat}</strong>
+        <small>${card.promise}</small>
+      </div>
+      <button class="primary compact" data-daily-skill-ticket-action="true">${card.nextAction}</button>
     </div>
   </section>`;
 }
@@ -2093,6 +2122,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-zero-landing-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-daily-skill-ticket-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

@@ -344,6 +344,12 @@
 - The card confirms the learner has saved one recall signal and still knows the next move.
 - This gives busy beginners a clear stop line without adding project work or heavier assignments.
 
+## Daily Skill Ticket
+
+- Beginner view now adds a daily ticket with three tiny stamps: single choice, multi choice, and one tiny short answer.
+- The ticket resets by day and always points to the next smallest type, keeping choices before writing.
+- This makes the daily loop feel like a small skill pass instead of an open-ended study session.
+
 ## Daily Landing Step
 
 - The home screen now connects the 3-minute minimum to a concrete landing step.

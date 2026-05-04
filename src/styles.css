@@ -1653,6 +1653,83 @@ h1 {
   color: #15803d;
 }
 
+.daily-skill-ticket-card {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.daily-skill-ticket-card.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.daily-skill-ticket-card .section-title > p,
+.daily-skill-ticket-lanes small,
+.daily-skill-ticket-action small {
+  color: var(--muted);
+}
+
+.daily-skill-ticket-lanes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.daily-skill-ticket-lanes div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(249 115 22 / 0.14);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.daily-skill-ticket-lanes div.active {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgb(249 115 22 / 0.12);
+}
+
+.daily-skill-ticket-lanes div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.daily-skill-ticket-lanes span,
+.daily-skill-ticket-lanes strong,
+.daily-skill-ticket-lanes small,
+.daily-skill-ticket-action strong,
+.daily-skill-ticket-action small {
+  display: block;
+}
+
+.daily-skill-ticket-lanes span {
+  color: #c2410c;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.daily-skill-ticket-card.done .daily-skill-ticket-lanes span {
+  color: #15803d;
+}
+
+.daily-skill-ticket-lanes strong {
+  margin-top: 6px;
+}
+
+.daily-skill-ticket-lanes small {
+  margin-top: 6px;
+}
+
+.daily-skill-ticket-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
 .daily-landing-step-card {
   background: #eef2ff;
   border: 1px solid #c7d2fe;
@@ -4839,6 +4916,7 @@ button:disabled {
   .exercise-scope-card,
   .daily-quest-snapshot,
   .daily-minimum-card,
+  .daily-skill-ticket-card,
   .daily-landing-step-card,
   .daily-phrase-bank-card,
   .daily-momentum-card,
@@ -4870,6 +4948,7 @@ button:disabled {
   .signal-preview-stats,
   .rhythm-grid,
   .review-orbit-rings,
+  .daily-skill-ticket-lanes,
   .daily-landing-route,
   .rescue-quest-grid,
   .mistake-safety-steps,
@@ -4947,6 +5026,11 @@ button:disabled {
   }
 
   .review-orbit-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .daily-skill-ticket-action {
     align-items: stretch;
     flex-direction: column;
   }
