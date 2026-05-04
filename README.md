@@ -112,6 +112,13 @@
 - Each path includes a low-friction practice button for the next available lesson, Boss, interview drill, or pitch.
 - The map stays low-friction: it uses existing lesson, Boss, and interview progress instead of adding project tasks.
 
+## Landing Checklist
+
+- The home screen now shows four simple gates for job-facing readiness: first lesson, Boss-proven foundations, role path evidence, and interview-ready explanations.
+- Each gate is derived from existing lesson, Boss, and interview drill progress.
+- The checklist points to the next smallest practice action instead of adding project implementation tasks.
+- This makes the path feel concrete for beginners: they can see which learning puzzle pieces are already proven and which one to close next.
+
 ## Mistake Rescue Prompts
 
 - Wrong answers now show a short rescue prompt before the detailed explanation.

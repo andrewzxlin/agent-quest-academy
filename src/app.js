@@ -24,6 +24,7 @@ import {
   isAnswerReady,
   jobReadinessMap,
   jobEvidenceBrief,
+  landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
   lessonSkillCard,
@@ -87,6 +88,7 @@ function render() {
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const roleFit = jobRoleFitCard(progress);
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
+  const landingChecklist = landingReadinessChecklist(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const momentum = dailyMomentum(progress, Date.now());
@@ -164,6 +166,7 @@ function render() {
         ${renderExerciseScopeCard(exerciseScope)}
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderJobRoleFitCard(roleFit)}
+        ${renderLandingReadinessChecklist(landingChecklist)}
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMomentumCard(momentum)}
@@ -411,7 +414,7 @@ function renderJobRoleFitCard(card) {
     </div>
     <div class="role-fit-grid">
       ${card.tracks
-        .map((track) => `<div class="role-fit-track ${track.level.replaceAll(" ", "-")}">
+        .map((track, index) => `<div class="role-fit-track ${track.level.replaceAll(" ", "-")}">
           <span>${track.level}</span>
           <strong>${track.title}</strong>
           <p>${track.description}</p>
@@ -420,6 +423,31 @@ function renderJobRoleFitCard(card) {
           <em>${track.nextGap}</em>
           <small>${track.nextAction}</small>
           <button class="secondary compact role-fit-action" data-role-practice="${index}" ${track.recommendedPractice.type === "locked" ? "disabled" : ""}>${track.recommendedPractice.cta}</button>
+        </div>`)
+        .join("")}
+    </div>
+  </section>`;
+}
+
+function renderLandingReadinessChecklist(card) {
+  return `<section class="landing-checklist-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Landing Checklist</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.completedCount}/${card.totalCount} gates ready - ${card.nextAction}</p>
+    </div>
+    <div class="landing-meter">
+      <strong>${card.percent}%</strong>
+      <span>${card.activeTitle}</span>
+    </div>
+    <div class="landing-checklist-grid">
+      ${card.items
+        .map((item) => `<div class="landing-check ${item.done ? "done" : ""}">
+          <span>${item.done ? "ready" : `${item.current}/${item.target}`}</span>
+          <strong>${item.title}</strong>
+          <small>${item.proof}</small>
         </div>`)
         .join("")}
     </div>

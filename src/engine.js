@@ -705,6 +705,61 @@ export function careerReadinessSnapshot(progress, now = Date.now()) {
   };
 }
 
+export function landingReadinessChecklist(progress, now = Date.now()) {
+  const proofs = abilityProofCards(progress);
+  const roleFit = jobRoleFitCard(progress);
+  const next = nextPracticeRecommendation(progress, now);
+  const provenCount = proofs.filter((proof) => ["proven", "interview_ready"].includes(proof.status)).length;
+  const interviewReadyCount = proofs.filter((proof) => proof.status === "interview_ready").length;
+  const rolePathsWithEvidence = roleFit.tracks.filter((track) => track.readyCount > 0).length;
+  const items = [
+    {
+      id: "start",
+      title: "Start without setup",
+      done: progress.completedLessons.length > 0,
+      current: Math.min(progress.completedLessons.length, 1),
+      target: 1,
+      proof: "Complete one micro-lesson with choice-first practice."
+    },
+    {
+      id: "boss-proof",
+      title: "Boss-proven foundations",
+      done: provenCount >= 3,
+      current: Math.min(provenCount, 3),
+      target: 3,
+      proof: "Turn three chapters into Boss-proven evidence."
+    },
+    {
+      id: "role-paths",
+      title: "Role path evidence",
+      done: rolePathsWithEvidence >= 2,
+      current: Math.min(rolePathsWithEvidence, 2),
+      target: 2,
+      proof: "Show progress across two job-facing paths."
+    },
+    {
+      id: "interview-lines",
+      title: "Interview-ready explanations",
+      done: interviewReadyCount >= 2,
+      current: Math.min(interviewReadyCount, 2),
+      target: 2,
+      proof: "Finish interview drills for two chapters."
+    }
+  ];
+  const completedCount = items.filter((item) => item.done).length;
+  const active = items.find((item) => !item.done) ?? items[items.length - 1];
+
+  return {
+    headline: completedCount === items.length ? "Landing-ready practice loop" : "Landing Checklist",
+    percent: Math.round((completedCount / items.length) * 100),
+    completedCount,
+    totalCount: items.length,
+    activeTitle: active.title,
+    nextAction: next.type === "done" ? "Rehearse a 60-second role proof." : next.cta,
+    items
+  };
+}
+
 export function jobRoleFitCard(progress) {
   const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));

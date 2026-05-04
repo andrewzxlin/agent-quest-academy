@@ -38,6 +38,7 @@ import {
   isAnswerReady,
   jobReadinessMap,
   jobEvidenceBrief,
+  landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
   lessonSkillCard,
@@ -99,6 +100,7 @@ const tests = [
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
   ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
   ["job role fit card maps progress to role paths", testJobRoleFitCard],
+  ["landing checklist tracks job-readiness gates", testLandingReadinessChecklist],
   ["job evidence brief turns progress into an interview line", testJobEvidenceBrief],
   ["exercise scope card keeps practice low-friction", testExerciseScopeCard],
   ["completion cards summarize finished sessions", testCompletionCards],
@@ -828,6 +830,45 @@ function testJobRoleFitCard() {
   assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").recommendedPractice.type, "lesson");
   assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").recommendedPractice.type, "lesson");
   assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").recommendedPractice.chapterId, "tools");
+}
+
+function testLandingReadinessChecklist() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let checklist = landingReadinessChecklist(progress, now);
+
+  assert.equal(checklist.headline, "Landing Checklist");
+  assert.equal(checklist.percent, 0);
+  assert.equal(checklist.completedCount, 0);
+  assert.equal(checklist.totalCount, 4);
+  assert.equal(checklist.items.length, 4);
+  assert.equal(checklist.items[0].title, "Start without setup");
+  assert.ok(checklist.nextAction.length > 0);
+  assert.doesNotMatch(JSON.stringify(checklist), /repo|project implementation|build a project/i);
+
+  completeLesson(progress, flattenLessons()[0].id, now);
+  checklist = landingReadinessChecklist(progress, now);
+  assert.equal(checklist.items.find((item) => item.id === "start").done, true);
+  assert.equal(checklist.percent, 25);
+
+  for (const chapter of course.chapters.slice(0, 3)) {
+    for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+      completeLesson(progress, lesson.id, now);
+    }
+    completeBossQuiz(progress, chapter.id, 8, 8, now);
+  }
+  for (const chapter of course.chapters.slice(0, 2)) {
+    for (const question of interviewQuestionsForChapter(chapter.id)) {
+      answerQuestion(progress, question, question.type === "multi" ? question.answer : question.answer ?? question.keywords[0], now);
+    }
+  }
+
+  checklist = landingReadinessChecklist(progress, now);
+  assert.ok(checklist.completedCount >= 3);
+  assert.ok(checklist.percent >= 75);
+  assert.equal(checklist.items.find((item) => item.id === "boss-proof").done, true);
+  assert.equal(checklist.items.find((item) => item.id === "role-paths").done, true);
+  assert.equal(checklist.items.find((item) => item.id === "interview-lines").done, true);
 }
 
 function testJobEvidenceBrief() {
