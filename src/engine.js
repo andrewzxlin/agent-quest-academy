@@ -1391,6 +1391,52 @@ export function reviewRescueQuest(progress, now = Date.now()) {
   };
 }
 
+export function mistakeSafetyNetCard(progress, now = Date.now()) {
+  const stats = reviewStats(progress, now);
+  const quest = reviewRescueQuest(progress, now);
+  const mode = quest.mode === "active" ? "rescue-now" : quest.mode === "waiting" ? "cooling" : "safe-start";
+  return {
+    title: "Mistake Safety Net",
+    mode,
+    headline:
+      mode === "rescue-now"
+        ? "A mistake is ready to become memory"
+        : mode === "cooling"
+          ? "Mistakes are safely scheduled"
+          : "Wrong answers are allowed here",
+    body:
+      mode === "safe-start"
+        ? "If you miss, the app turns it into a tiny review card instead of a dead end."
+        : "The review loop decides when to bring a weak pattern back, so you only handle the next small card.",
+    dueCount: stats.dueCount,
+    scheduledCount: stats.scheduledCount,
+    rescuedCount: quest.rescuedCount,
+    nextAction:
+      mode === "rescue-now"
+        ? "Replay one due card."
+        : mode === "cooling"
+          ? "Answer one fresh choice while review waits."
+          : "Try one choice; any miss becomes a rescue card.",
+    steps: [
+      {
+        id: "miss",
+        label: "Miss",
+        text: "A wrong answer becomes a visible review seed."
+      },
+      {
+        id: "return",
+        label: "Return",
+        text: "The weak pattern comes back when it is useful."
+      },
+      {
+        id: "repair",
+        label: "Repair",
+        text: "A correct replay moves the shard back toward memory."
+      }
+    ]
+  };
+}
+
 export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
   const questionsByKey = new Map(reviewableQuestions().map((question) => [questionKey(question), question]));
   const reviewByKey = new Map(progress.reviewQueue.map((item) => [item.questionKey, item]));

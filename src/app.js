@@ -53,6 +53,7 @@ import {
   loadProgress,
   masteryForLesson,
   mistakeFocusCard,
+  mistakeSafetyNetCard,
   mistakeRescuePrompt,
   mistakeNotebook,
   nextPracticeRecommendation,
@@ -125,6 +126,7 @@ function render() {
   const reviewRhythm = reviewRhythmCard(progress, Date.now());
   const reviewSprint = reviewSprintCard(progress, Date.now());
   const rescueQuest = reviewRescueQuest(progress, Date.now());
+  const mistakeSafetyNet = mistakeSafetyNetCard(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const compass = questCompass(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
@@ -241,6 +243,7 @@ function render() {
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyLandingStepCard(dailyLandingStep)}
+        ${renderMistakeSafetyNetCard(mistakeSafetyNet)}
         ${renderReviewRescueQuest(rescueQuest)}
         ${renderMistakeFocusCard(mistakeFocus)}
         ${renderRecommendationCard(recommendation)}
@@ -1165,6 +1168,32 @@ function renderReviewRescueQuest(card) {
           </div>`}
     </div>
     <strong>${card.promise}</strong>
+  </section>`;
+}
+
+function renderMistakeSafetyNetCard(card) {
+  return `<section class="mistake-safety-net-card ${card.mode}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.nextAction}</p>
+    </div>
+    <p>${card.body}</p>
+    <div class="mistake-safety-stats">
+      <span>${card.dueCount} due</span>
+      <span>${card.scheduledCount} scheduled</span>
+      <span>${card.rescuedCount} rescued</span>
+    </div>
+    <div class="mistake-safety-steps">
+      ${card.steps
+        .map((step) => `<div>
+          <strong>${step.label}</strong>
+          <small>${step.text}</small>
+        </div>`)
+        .join("")}
+    </div>
   </section>`;
 }
 

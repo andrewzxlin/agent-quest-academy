@@ -225,6 +225,12 @@
 - The prompt tells the learner what to look for next time, instead of only marking the answer wrong.
 - This keeps mistake replay supportive and low-friction.
 
+## Mistake Safety Net
+
+- Beginner view now explains what happens after a wrong answer before the learner hits a mistake.
+- The card shows due, scheduled, and rescued counts, plus the miss, return, repair loop.
+- This makes mistakes feel like tiny review loops instead of failure states.
+
 ## Review Sprint
 
 - The home screen now turns due review into a tiny three-step loop: peek, choose, and loop.

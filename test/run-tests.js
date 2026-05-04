@@ -66,6 +66,7 @@ import {
   learningPuzzleBoard,
   masteryForLesson,
   mistakeFocusCard,
+  mistakeSafetyNetCard,
   mistakeRescuePrompt,
   mistakeNotebook,
   nextPracticeRecommendation,
@@ -151,6 +152,7 @@ const tests = [
   ["review rhythm card explains spaced review timing", testReviewRhythmCard],
   ["review sprint card turns review into a tiny loop", testReviewSprintCard],
   ["review rescue quest makes mistake replay game-like", testReviewRescueQuest],
+  ["mistake safety net explains wrong answers as repair loops", testMistakeSafetyNetCard],
   ["boss quiz uses low-friction chapter questions", testBossQuizQuestions],
   ["boss quiz records pass and fail results", testBossQuizCompletion],
   ["daily missions track answers lessons and boss passes", testDailyMissions],
@@ -1282,6 +1284,31 @@ function testReviewRescueQuest() {
   assert.equal(quest.mode, "waiting");
   assert.equal(quest.rescuedCount, 1);
   assert.ok(quest.cards.find((card) => card.status === "rescued").reward.includes("memory"));
+}
+
+function testMistakeSafetyNetCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let card = mistakeSafetyNetCard(progress, now);
+  assert.equal(card.title, "Mistake Safety Net");
+  assert.equal(card.mode, "safe-start");
+  assert.equal(card.dueCount, 0);
+  assert.deepEqual(card.steps.map((step) => step.id), ["miss", "return", "repair"]);
+  assert.ok(card.body.includes("review card"));
+  assert.ok(card.nextAction.includes("choice"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, 99, now);
+  card = mistakeSafetyNetCard(progress, now);
+  assert.equal(card.mode, "rescue-now");
+  assert.equal(card.dueCount, 1);
+  assert.ok(card.headline.includes("memory"));
+
+  answerQuestion(progress, question, question.answer, now + 1);
+  card = mistakeSafetyNetCard(progress, now + 2);
+  assert.equal(card.mode, "cooling");
+  assert.equal(card.rescuedCount, 1);
 }
 
 function testBossQuizQuestions() {
