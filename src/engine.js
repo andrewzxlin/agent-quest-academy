@@ -373,6 +373,45 @@ export function questBriefCard(progress, now = Date.now()) {
   };
 }
 
+export function heroMissionPanelCard(progress, question, answerReady = false, checked = false, result = null, now = Date.now()) {
+  const mission = questionMissionStrip(question, answerReady, checked, result);
+  const role = questionRoleSignalCard(question);
+  const shard = abilityShardCard(progress, question);
+  const packet = jobPacketPreviewCard(progress, now);
+  const packetFocus = packet.items.find((item) => !item.done) ?? packet.items[packet.items.length - 1];
+
+  return {
+    title: "Hero Mission",
+    status: mission.status,
+    headline: mission.headline,
+    subline: mission.action,
+    lanes: [
+      {
+        id: "now",
+        label: "Now",
+        value: mission.reward,
+        text: mission.action,
+        status: mission.status
+      },
+      {
+        id: "skill",
+        label: "Skill",
+        value: role.skillTitle,
+        text: `${role.stage} signal for ${role.roleText}.`,
+        status: shard.status
+      },
+      {
+        id: "proof",
+        label: "Proof",
+        value: `${packet.readyCount}/${packet.totalCount} packet`,
+        text: checked ? mission.proofUse : `Next packet piece: ${packetFocus.label}.`,
+        status: packet.status
+      }
+    ],
+    reassurance: "One visible choice can become a skill shard, receipt, or review card."
+  };
+}
+
 export function learningHud(progress, now = Date.now()) {
   const badges = achievements(progress);
   const unlockedBadges = badges.filter((badge) => badge.unlocked);

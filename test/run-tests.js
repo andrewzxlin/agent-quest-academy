@@ -61,6 +61,7 @@ import {
   gradePitchPractice,
   gradeQuestion,
   isAnswerReady,
+  heroMissionPanelCard,
   interviewUnlockPreviewCard,
   jargonShieldCard,
   jobReadinessMap,
@@ -137,6 +138,7 @@ const tests = [
   ["focus guard shows one primary beginner action", testFocusGuardCard],
   ["start here card turns the homepage into one obvious action", testStartHereCard],
   ["quest brief makes the first screen action reward and packet clear", testQuestBriefCard],
+  ["hero mission panel ties the first screen to skill proof", testHeroMissionPanelCard],
   ["learning HUD makes the next unlock visible", testLearningHud],
   ["dashboard mode defaults to beginner and can switch full", testDashboardModeCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
@@ -406,6 +408,33 @@ function testQuestBriefCard() {
   assert.equal(card.mode, "review");
   assert.equal(card.action.type, "review");
   assert.ok(card.reassurance.includes("Due cards"));
+}
+
+function testHeroMissionPanelCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  const question = flattenQuestions().find((item) => item.type === "single");
+  let card = heroMissionPanelCard(progress, question, false, false, null, now);
+
+  assert.equal(card.title, "Hero Mission");
+  assert.equal(card.status, "choosing");
+  assert.ok(card.headline.includes("workflow signal"));
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["now", "skill", "proof"]);
+  assert.equal(card.lanes.find((lane) => lane.id === "proof").value, "0/4 packet");
+  assert.ok(card.lanes.find((lane) => lane.id === "skill").text.includes("signal"));
+  assert.ok(card.reassurance.includes("visible choice"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const result = gradeQuestion(question, question.answer);
+  answerQuestion(progress, question, question.answer, now);
+  card = heroMissionPanelCard(progress, question, true, true, result, now);
+  assert.equal(card.status, "saved");
+  assert.equal(card.lanes.find((lane) => lane.id === "skill").status, "collected");
+  assert.ok(card.lanes.find((lane) => lane.id === "proof").text.includes("receipt"));
+
+  card = heroMissionPanelCard(progress, question, true, true, { correct: false }, now);
+  assert.equal(card.status, "repair");
+  assert.ok(card.subline.includes("review"));
 }
 
 function testLearningHud() {

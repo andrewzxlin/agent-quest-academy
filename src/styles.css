@@ -300,6 +300,93 @@ h1 {
   margin: 8px 0;
 }
 
+.hero-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.hero-mission-panel {
+  background: #f8fafc;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-top: 6px;
+  padding: 14px;
+}
+
+.hero-mission-panel.ready {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.hero-mission-panel.saved {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.hero-mission-panel.repair {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.hero-mission-head span,
+.hero-mission-head strong,
+.hero-mission-head small,
+.hero-mission-lanes span,
+.hero-mission-lanes strong,
+.hero-mission-lanes small,
+.hero-mission-panel em {
+  display: block;
+}
+
+.hero-mission-head span,
+.hero-mission-lanes span {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.hero-mission-head strong {
+  font-size: 18px;
+  margin-top: 3px;
+}
+
+.hero-mission-head small,
+.hero-mission-lanes small,
+.hero-mission-panel em {
+  color: var(--muted);
+}
+
+.hero-mission-lanes {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.hero-mission-lanes div {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.hero-mission-lanes div.saved,
+.hero-mission-lanes div.collected,
+.hero-mission-lanes div.ready {
+  border-color: #86efac;
+}
+
+.hero-mission-lanes div.repair {
+  border-color: #fdba74;
+}
+
+.hero-mission-lanes strong {
+  font-size: 13px;
+  margin: 5px 0;
+}
+
 .start-here-card {
   align-items: center;
   background: #eef2ff;
@@ -7091,6 +7178,7 @@ button:disabled {
   .focus-guard-card,
   .first-five-card,
   .chapter-gate-strip,
+  .hero-mission-lanes,
   .session-rhythm-card,
   .ability-shard-card,
   .question-mini-diagram-card,

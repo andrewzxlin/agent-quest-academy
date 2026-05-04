@@ -46,6 +46,7 @@ import {
   focusGuardCard,
   gradeQuestion,
   gradePitchPractice,
+  heroMissionPanelCard,
   isAnswerReady,
   interviewUnlockPreviewCard,
   jargonShieldCard,
@@ -229,6 +230,7 @@ function render() {
   const timebox = questionTimeboxCard(question, currentIndex, sessionQuestions.length, checked, lastResult);
   const miniDiagram = questionMiniDiagramCard(question);
   const plainDecoder = questionPlainDecoderCard(question);
+  const heroMission = heroMissionPanelCard(progress, question, answerReady, checked, lastResult, Date.now());
 
   root.innerHTML = `
     <div class="shell">
@@ -278,10 +280,11 @@ function render() {
 
       <main class="main">
         <section class="hero-card">
-          <div>
+          <div class="hero-copy">
             <p class="eyebrow">${isReviewMode ? "Review Queue / 錯題重現" : isBossMode ? `${chapter.title} / Boss Quiz` : `${lesson.chapterTitle} / ${lesson.chapterTheme}`}</p>
             <h2>${isReviewMode ? "錯題複習模式" : isBossMode ? "章節 Boss Quiz" : lesson.title}</h2>
             <p>${isReviewMode ? "只練已到期或剛答錯的題目。複習答對後會重新排入下一次間隔複習。" : isBossMode ? "只用選擇題檢查整章核心判斷。答對 80% 以上就算通關。" : lesson.concept}</p>
+            ${renderHeroMissionPanelCard(heroMission)}
           </div>
           <div class="visual-card" style="--visual-accent: ${visual.accent}">
             <div class="orbital">
@@ -805,6 +808,27 @@ function renderQuestBriefCard(card) {
     </div>
     <p class="quest-brief-reassurance">${card.reassurance}</p>
   </section>`;
+}
+
+function renderHeroMissionPanelCard(card) {
+  if (!card) return "";
+  return `<div class="hero-mission-panel ${card.status}">
+    <div class="hero-mission-head">
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.subline}</small>
+    </div>
+    <div class="hero-mission-lanes">
+      ${card.lanes
+        .map((lane) => `<div class="${lane.status}">
+          <span>${lane.label}</span>
+          <strong>${lane.value}</strong>
+          <small>${lane.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <em>${card.reassurance}</em>
+  </div>`;
 }
 
 function renderQuestion(question) {
