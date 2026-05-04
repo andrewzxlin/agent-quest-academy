@@ -5684,6 +5684,78 @@ h1 {
   text-transform: uppercase;
 }
 
+.answer-run-chain-card {
+  background: rgb(255 255 255 / 0.86);
+  border: 1px solid rgb(37 99 235 / 0.26);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+}
+
+.answer-run-chain-card.combo {
+  border-color: rgb(22 163 74 / 0.34);
+}
+
+.answer-run-chain-card.repair {
+  border-color: rgb(234 88 12 / 0.34);
+}
+
+.answer-run-chain-card span,
+.answer-run-chain-card strong,
+.answer-run-chain-card small,
+.answer-run-chain-meters b {
+  display: block;
+}
+
+.answer-run-chain-card span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-run-chain-card.combo span {
+  color: #15803d;
+}
+
+.answer-run-chain-card.repair span {
+  color: #c2410c;
+}
+
+.answer-run-chain-card p {
+  color: var(--ink);
+  margin-top: 7px;
+}
+
+.answer-run-chain-card small {
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.answer-run-chain-meters {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.answer-run-chain-meters em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  padding: 10px;
+}
+
+.answer-run-chain-meters b {
+  color: var(--ink);
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
 .answer-interview-line-card {
   background: rgb(255 255 255 / 0.86);
   border: 1px solid rgb(109 40 217 / 0.26);
@@ -6700,6 +6772,7 @@ button:disabled {
   .short-recipe-steps,
   .answer-outcome-lanes,
   .answer-loot-badges,
+  .answer-run-chain-meters,
   .answer-interview-steps,
   .answer-evidence-clip,
   .proof-booster-card,

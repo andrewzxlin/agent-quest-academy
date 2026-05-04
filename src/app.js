@@ -8,6 +8,7 @@ import {
   answerLootCard,
   answerProofLine,
   answerRecallCue,
+  answerRunChainCard,
   answerQuestion,
   beginnerGlossaryCards,
   beginnerSkillMapCard,
@@ -2446,6 +2447,7 @@ function renderFeedback(question, result, progressState) {
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
     ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
+    ${renderAnswerRunChainCard(answerRunChainCard(progressState, result))}
     ${renderAnswerInterviewLineCard(answerInterviewLineCard(question, result))}
     ${renderAnswerOutcomeCard(answerOutcomeCard(question, result, progressState))}
     ${renderAnswerEvidenceClip(answerEvidenceClip(question, result))}
@@ -2506,6 +2508,25 @@ function renderAnswerLootCard(card) {
           <strong>${badge.value}</strong>
           <small>${badge.detail}</small>
         </div>`)
+        .join("")}
+    </div>
+    <small>${card.nextAction}</small>
+  </div>`;
+}
+
+function renderAnswerRunChainCard(card) {
+  return `<div class="answer-run-chain-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <p>${card.body}</p>
+    </div>
+    <div class="answer-run-chain-meters">
+      ${card.meters
+        .map((meter) => `<em>
+          <b>${meter.value}</b>
+          ${meter.label}
+        </em>`)
         .join("")}
     </div>
     <small>${card.nextAction}</small>

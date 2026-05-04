@@ -21,6 +21,7 @@ import {
   answerOutcomeCard,
   answerProofLine,
   answerRecallCue,
+  answerRunChainCard,
   answerQuestion,
   beginnerGlossaryCards,
   beginnerSkillMapCard,
@@ -172,6 +173,7 @@ const tests = [
   ["answer evidence clips turn every checked answer into a reusable signal", testAnswerEvidenceClips],
   ["answer interview line turns feedback into spoken proof", testAnswerInterviewLineCard],
   ["answer loot card makes each answer feel like a small reward", testAnswerLootCard],
+  ["answer run chain makes clean streaks and repair loops visible", testAnswerRunChainCard],
   ["next step nudge makes the post-answer action obvious", testNextStepNudgeCard],
   ["answer outcome card makes score memory and job use visible", testAnswerOutcomeCard],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
@@ -1365,6 +1367,35 @@ function testAnswerLootCard() {
   assert.equal(card.badges.find((badge) => badge.id === "xp").value, "+2");
   assert.equal(card.badges.find((badge) => badge.id === "loop").value, "Review");
   assert.ok(card.headline.includes("Repair loot"));
+}
+
+function testAnswerRunChainCard() {
+  const progress = createInitialProgress(1000);
+  const [first, second, third, fourth] = flattenQuestions().filter((item) => item.type === "single");
+
+  answerQuestion(progress, first, first.answer, 1000);
+  let card = answerRunChainCard(progress, gradeQuestion(first, first.answer));
+  assert.equal(card.title, "Run Chain");
+  assert.equal(card.status, "building");
+  assert.ok(card.headline.includes("1/3"));
+  assert.deepEqual(card.meters.map((meter) => meter.id), ["clean", "stable", "repair"]);
+  assert.equal(card.meters.find((meter) => meter.id === "clean").value, 1);
+  assert.ok(card.body.includes("2 more clean answers"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  answerQuestion(progress, second, second.answer, 2000);
+  answerQuestion(progress, third, third.answer, 3000);
+  card = answerRunChainCard(progress, gradeQuestion(third, third.answer));
+  assert.equal(card.status, "combo");
+  assert.ok(card.headline.includes("3 clean answers"));
+  assert.ok(card.body.includes("chain is live"));
+
+  answerQuestion(progress, fourth, 99, 4000);
+  card = answerRunChainCard(progress, gradeQuestion(fourth, 99));
+  assert.equal(card.status, "repair");
+  assert.ok(card.headline.includes("review fuel"));
+  assert.ok(card.body.includes("review target"));
+  assert.equal(card.nextAction, "Read the fix, then keep moving.");
 }
 
 function testAnswerInterviewLineCard() {

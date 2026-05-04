@@ -1669,6 +1669,48 @@ export function answerLootCard(question, result, progress) {
   };
 }
 
+export function answerRunChainCard(progress, result) {
+  const combo = recallComboCard(progress);
+  const cleanRun = combo.cleanRun;
+  const nextTarget = Math.max(0, 3 - Math.min(cleanRun, 3));
+  const status = result.correct ? (cleanRun >= 3 ? "combo" : "building") : "repair";
+
+  return {
+    title: "Run Chain",
+    status,
+    headline:
+      status === "combo"
+        ? `${cleanRun} clean answers chained`
+        : status === "building"
+          ? `${cleanRun}/3 clean chain`
+          : "Chain converted into review fuel",
+    body:
+      status === "repair"
+        ? "A miss does not reset the route; it creates the next review target."
+        : nextTarget === 0
+          ? "The chain is live. Keep it warm with one more tiny prompt or stop on a win."
+          : `Land ${nextTarget} more clean answer${nextTarget === 1 ? "" : "s"} to trigger a 3-answer combo.`,
+    meters: [
+      {
+        id: "clean",
+        label: "Clean",
+        value: cleanRun
+      },
+      {
+        id: "stable",
+        label: "Stable",
+        value: combo.stableSignals
+      },
+      {
+        id: "repair",
+        label: "Review",
+        value: combo.repairedSignals
+      }
+    ],
+    nextAction: status === "repair" ? "Read the fix, then keep moving." : combo.nextAction
+  };
+}
+
 export function nextStepNudgeCard(question, result, currentIndex, totalCount, mode = "lesson") {
   const stage = questionMasteryStage(question);
   const isLast = currentIndex >= totalCount - 1;
