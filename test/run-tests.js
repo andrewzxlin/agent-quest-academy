@@ -1755,6 +1755,7 @@ function testRecallComboCard() {
 function testAchievements() {
   const progress = createInitialProgress(1000);
   const question = flattenQuestions().find((item) => item.type === "single");
+  assert.equal(achievements(progress).find((badge) => badge.id === "role-explorer").unlocked, false);
   answerQuestion(progress, question, 99, 1000);
   completeLesson(progress, flattenLessons()[0].id, 1000);
   completeBossQuiz(progress, "agent-basics", 7, 8, 1000);
@@ -1762,6 +1763,8 @@ function testAchievements() {
   assert.equal(badges.find((badge) => badge.id === "first-lesson").unlocked, true);
   assert.equal(badges.find((badge) => badge.id === "mistake-hunter").unlocked, true);
   assert.equal(badges.find((badge) => badge.id === "boss-clear").unlocked, true);
+  assert.equal(badges.find((badge) => badge.id === "role-explorer").unlocked, true);
+  assert.ok(badges.find((badge) => badge.id === "role-explorer").description.includes("choice-first"));
 }
 
 function testMistakeNotebook() {

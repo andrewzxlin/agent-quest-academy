@@ -3178,6 +3178,7 @@ export function dailyMissions(progress, now = Date.now()) {
 export function achievements(progress) {
   const passedBosses = (progress.bossResults ?? []).filter((item) => item.passed).length;
   const wrongAnswers = Object.values(progress.answered).filter((item) => item.wrongCount > 0).length;
+  const roleSamples = roleSamplerCard(progress).sampledCount;
   return [
     {
       id: "first-lesson",
@@ -3196,6 +3197,12 @@ export function achievements(progress) {
       title: "章節通關",
       description: "通過任一章節 Boss Quiz",
       unlocked: passedBosses > 0
+    },
+    {
+      id: "role-explorer",
+      title: "Role Explorer",
+      description: "Sample one job-facing role path with choice-first practice",
+      unlocked: roleSamples > 0
     },
     {
       id: "hundred-xp",

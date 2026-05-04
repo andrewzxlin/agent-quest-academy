@@ -41,6 +41,7 @@
 - Each path is framed as one choice-style judgment, so learners can try a role signal before committing to a lane.
 - The sampler now shows 0/3, 1/3, or 3/3 sampled progress from existing single-choice and multi-select answers.
 - Each path points to the next chapter-sized sample route, keeping the next move concrete.
+- Sampling the first role path now unlocks a Role Explorer achievement.
 - The sampler keeps role exploration choice-first with no setup, project task, or long writing.
 
 ## Session Rhythm
