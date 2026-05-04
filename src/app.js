@@ -650,12 +650,14 @@ function renderRoleSamplerCard(card) {
         <span>${track.statusLabel}</span>
         <strong>${track.title}</strong>
         <p>${track.samplePrompt}</p>
+        <small>${track.sampleRoute}</small>
         <small>${track.level}</small>
         <small>${track.choiceMove}</small>
       </div>`).join("")}
     </div>
     <div class="role-sampler-action">
       <strong>${card.activeRole}</strong>
+      <span>${card.activeRoute}</span>
       <span>${card.activeMove}</span>
       <small>${card.nextAction}</small>
     </div>

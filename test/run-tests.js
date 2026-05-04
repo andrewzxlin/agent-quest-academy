@@ -1614,6 +1614,8 @@ function testRoleSamplerCard() {
   assert.ok(card.promise.includes("choice-first"));
   assert.ok(card.tracks.every((track) => track.sampled === false));
   assert.ok(card.tracks.every((track) => track.statusLabel === "try next"));
+  assert.ok(card.tracks.every((track) => track.sampleRoute.startsWith("Next sample via")));
+  assert.ok(card.activeRoute.includes(card.tracks[0].sampleChapterTitle));
   assert.ok(card.tracks.every((track) => track.samplePrompt.includes("?")));
   assert.ok(card.tracks.every((track) => track.choiceMove.includes("Pick")));
   assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
@@ -1626,6 +1628,7 @@ function testRoleSamplerCard() {
   assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").sampled, true);
   assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").sampled, true);
   assert.equal(card.activeRole, "Agent Reliability Builder");
+  assert.ok(card.activeRoute.includes(card.tracks.find((track) => track.id === "agent-reliability-builder").sampleChapterTitle));
   assert.ok(card.headline.includes("2/3"));
   assert.ok(card.activeMove.length > 0);
 }

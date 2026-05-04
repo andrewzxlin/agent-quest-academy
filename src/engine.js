@@ -2307,6 +2307,7 @@ export function zeroToLandingQuestCard(progress, now = Date.now()) {
 
 export function roleSamplerCard(progress) {
   const roleFit = jobRoleFitCard(progress);
+  const chaptersById = new Map(course.chapters.map((chapter) => [chapter.id, chapter]));
   const answeredChoiceChapterIds = new Set(
     flattenQuestions()
       .filter((question) => ["single", "multi"].includes(question.type) && progress.answered[questionKey(question)])
@@ -2332,6 +2333,8 @@ export function roleSamplerCard(progress) {
       samplePrompt: "Which choice creates the clearest agentic workflow signal?"
     };
     const sampled = track.chapterIds.some((chapterId) => answeredChoiceChapterIds.has(chapterId)) || track.level !== "starter";
+    const nextSampleChapterId = track.chapterIds.find((chapterId) => !answeredChoiceChapterIds.has(chapterId)) ?? track.chapterIds[0];
+    const nextSampleChapter = chaptersById.get(nextSampleChapterId);
     return {
       id: track.id,
       title: track.title,
@@ -2339,6 +2342,8 @@ export function roleSamplerCard(progress) {
       sampled,
       statusLabel: sampled ? "sampled" : "try next",
       nextGap: track.nextGap,
+      sampleChapterTitle: nextSampleChapter?.title ?? track.nextGap,
+      sampleRoute: `Next sample via ${nextSampleChapter?.title ?? track.nextGap}.`,
       choiceMove: sample.choiceMove,
       samplePrompt: sample.samplePrompt
     };
@@ -2355,6 +2360,7 @@ export function roleSamplerCard(progress) {
     progressLabel: `${sampledCount}/${tracks.length} sampled`,
     activeRole: active?.title ?? "Agentic Workflow Builder",
     activeMove: active?.choiceMove ?? "Pick one workflow signal.",
+    activeRoute: active?.sampleRoute ?? "Next sample via the smallest visible choice prompt.",
     nextAction:
       sampledCount === tracks.length
         ? "Use one tiny short answer to compare which role signal felt natural."
