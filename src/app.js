@@ -6,7 +6,8 @@ import {
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
-  getDueReviewQuestions,
+  achievements,
+  dailyMissions,
   gradeQuestion,
   loadProgress,
   masteryForLesson,
@@ -38,6 +39,8 @@ function render() {
   const question = sessionQuestions[currentIndex];
   const chapter = course.chapters.find((item) => item.id === lesson.chapterId) ?? course.chapters[0];
   const bossResult = progress.bossResults?.find((item) => item.chapterId === chapter.id);
+  const missions = dailyMissions(progress, Date.now());
+  const badges = achievements(progress);
   const stats = reviewStats(progress, Date.now());
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
@@ -125,6 +128,32 @@ function render() {
           <div>
             <h3>目前拼圖</h3>
             <p>課程涵蓋 Agent、Tool Calling、RAG、Memory、Guardrails、Evals、Observability、LangChain 與 LangGraph。</p>
+          </div>
+        </section>
+
+        <section class="mission-grid">
+          <div>
+            <h3>每日任務</h3>
+            <div class="mission-list">
+              ${missions
+                .map((mission) => `<div class="mission ${mission.done ? "done" : ""}">
+                  <span>${mission.done ? "完成" : `${mission.current}/${mission.target}`}</span>
+                  <strong>${mission.title}</strong>
+                </div>`)
+                .join("")}
+            </div>
+          </div>
+          <div>
+            <h3>成就徽章</h3>
+            <div class="badge-list">
+              ${badges
+                .map((badge) => `<div class="badge ${badge.unlocked ? "unlocked" : ""}">
+                  <span>${badge.unlocked ? "已解鎖" : "未解鎖"}</span>
+                  <strong>${badge.title}</strong>
+                  <small>${badge.description}</small>
+                </div>`)
+                .join("")}
+            </div>
           </div>
         </section>
       </main>

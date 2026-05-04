@@ -11,6 +11,7 @@ export function createInitialProgress(now = Date.now()) {
     reviewQueue: [],
     completedLessons: [],
     bossResults: [],
+    dailyActivity: {},
     lastActiveAt: now
   };
 }
@@ -84,6 +85,10 @@ export function answerQuestion(progress, question, response, now = Date.now()) {
   };
   progress.xp += result.correct ? 10 : 2;
   progress.lastActiveAt = now;
+  recordDailyActivity(progress, now, {
+    answers: 1,
+    correctAnswers: result.correct ? 1 : 0
+  });
 
   if (!result.correct) {
     progress.reviewQueue = upsertReview(progress.reviewQueue, {
@@ -106,11 +111,12 @@ export function answerQuestion(progress, question, response, now = Date.now()) {
   return { progress, result };
 }
 
-export function completeLesson(progress, lessonId) {
+export function completeLesson(progress, lessonId, now = Date.now()) {
   if (!progress.completedLessons.includes(lessonId)) {
     progress.completedLessons.push(lessonId);
     progress.streak += 1;
   }
+  recordDailyActivity(progress, now, { lessonsCompleted: 1 });
   const lessons = flattenLessons();
   progress.currentLessonIndex = Math.min(progress.currentLessonIndex + 1, lessons.length - 1);
   return progress;
@@ -125,6 +131,10 @@ export function completeBossQuiz(progress, chapterId, score, total, now = Date.n
   ];
   progress.xp += passed ? 50 : 15;
   progress.lastActiveAt = now;
+  recordDailyActivity(progress, now, {
+    bossAttempts: 1,
+    bossPasses: passed ? 1 : 0
+  });
   return progress;
 }
 
@@ -161,6 +171,64 @@ export function reviewStats(progress, now = Date.now()) {
   };
 }
 
+export function dailyMissions(progress, now = Date.now()) {
+  const activity = getDailyActivity(progress, now);
+  return [
+    {
+      id: "answer-five",
+      title: "答 5 題",
+      current: Math.min(activity.answers, 5),
+      target: 5,
+      done: activity.answers >= 5
+    },
+    {
+      id: "finish-lesson",
+      title: "完成 1 課",
+      current: Math.min(activity.lessonsCompleted, 1),
+      target: 1,
+      done: activity.lessonsCompleted >= 1
+    },
+    {
+      id: "beat-boss",
+      title: "通關 1 個 Boss Quiz",
+      current: Math.min(activity.bossPasses, 1),
+      target: 1,
+      done: activity.bossPasses >= 1
+    }
+  ];
+}
+
+export function achievements(progress) {
+  const passedBosses = (progress.bossResults ?? []).filter((item) => item.passed).length;
+  const wrongAnswers = Object.values(progress.answered).filter((item) => item.wrongCount > 0).length;
+  return [
+    {
+      id: "first-lesson",
+      title: "踏出第一步",
+      description: "完成任一 micro-lesson",
+      unlocked: progress.completedLessons.length > 0
+    },
+    {
+      id: "mistake-hunter",
+      title: "錯題獵人",
+      description: "至少留下 1 題可複習的錯題",
+      unlocked: wrongAnswers > 0
+    },
+    {
+      id: "boss-clear",
+      title: "章節通關",
+      description: "通過任一章節 Boss Quiz",
+      unlocked: passedBosses > 0
+    },
+    {
+      id: "hundred-xp",
+      title: "100 XP",
+      description: "累積 100 XP",
+      unlocked: progress.xp >= 100
+    }
+  ];
+}
+
 export function masteryForLesson(progress, lesson) {
   const total = lesson.questions.length;
   const correct = lesson.questions.filter((question) => {
@@ -187,6 +255,36 @@ function withLessonMetadata(question, lesson) {
     chapterId: lesson.chapterId,
     chapterTitle: lesson.chapterTitle
   };
+}
+
+function recordDailyActivity(progress, now, patch) {
+  const key = dailyKey(now);
+  const activity = getDailyActivity(progress, now);
+  progress.dailyActivity = {
+    ...(progress.dailyActivity ?? {}),
+    [key]: {
+      answers: activity.answers + (patch.answers ?? 0),
+      correctAnswers: activity.correctAnswers + (patch.correctAnswers ?? 0),
+      lessonsCompleted: activity.lessonsCompleted + (patch.lessonsCompleted ?? 0),
+      bossAttempts: activity.bossAttempts + (patch.bossAttempts ?? 0),
+      bossPasses: activity.bossPasses + (patch.bossPasses ?? 0)
+    }
+  };
+}
+
+function getDailyActivity(progress, now) {
+  return {
+    answers: 0,
+    correctAnswers: 0,
+    lessonsCompleted: 0,
+    bossAttempts: 0,
+    bossPasses: 0,
+    ...((progress.dailyActivity ?? {})[dailyKey(now)] ?? {})
+  };
+}
+
+function dailyKey(now) {
+  return new Date(now).toISOString().slice(0, 10);
 }
 
 function nextReviewTime({ correct, correctCount, wrongCount, now }) {

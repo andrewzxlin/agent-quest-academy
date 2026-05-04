@@ -7,6 +7,8 @@ import {
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
+  achievements,
+  dailyMissions,
   getDueReviewQuestions,
   gradeQuestion,
   masteryForLesson,
@@ -28,7 +30,9 @@ const tests = [
   ["review mode returns only due questions", testReviewModeOnlyDue],
   ["review stats separate due and scheduled", testReviewStats],
   ["boss quiz uses low-friction chapter questions", testBossQuizQuestions],
-  ["boss quiz records pass and fail results", testBossQuizCompletion]
+  ["boss quiz records pass and fail results", testBossQuizCompletion],
+  ["daily missions track answers lessons and boss passes", testDailyMissions],
+  ["achievements unlock from real progress", testAchievements]
 ];
 
 let failed = 0;
@@ -176,6 +180,31 @@ function testBossQuizCompletion() {
   assert.equal(progress.bossResults.length, 1);
   assert.equal(progress.bossResults[0].passed, false);
   assert.equal(progress.xp, 65);
+}
+
+function testDailyMissions() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  const questions = flattenQuestions().filter((item) => item.type === "single");
+  for (const question of questions.slice(0, 5)) {
+    answerQuestion(progress, question, question.answer, now);
+  }
+  completeLesson(progress, flattenLessons()[0].id, now);
+  completeBossQuiz(progress, "agent-basics", 7, 8, now);
+  const missions = dailyMissions(progress, now);
+  assert.equal(missions.every((mission) => mission.done), true);
+}
+
+function testAchievements() {
+  const progress = createInitialProgress(1000);
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, 99, 1000);
+  completeLesson(progress, flattenLessons()[0].id, 1000);
+  completeBossQuiz(progress, "agent-basics", 7, 8, 1000);
+  const badges = achievements(progress);
+  assert.equal(badges.find((badge) => badge.id === "first-lesson").unlocked, true);
+  assert.equal(badges.find((badge) => badge.id === "mistake-hunter").unlocked, true);
+  assert.equal(badges.find((badge) => badge.id === "boss-clear").unlocked, true);
 }
 
 function countBy(items, keyFn) {
