@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { bossQuestionsForChapter, course, flattenLessons, flattenQuestions } from "../src/course.js";
+import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, flattenQuestions } from "../src/course.js";
 import {
   answerQuestion,
   buildReviewSessionQuestions,
@@ -20,6 +20,7 @@ import {
 const tests = [
   ["course has MVP scope", testCourseScope],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
+  ["chapter visuals cover every chapter", testChapterVisuals],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
@@ -68,6 +69,18 @@ function testCourseCoverage() {
   const text = JSON.stringify(course);
   for (const topic of ["Tool", "RAG", "Memory", "Guardrails", "Evals", "Observability", "LangChain", "LangGraph"]) {
     assert.ok(text.includes(topic), `missing topic: ${topic}`);
+  }
+}
+
+function testChapterVisuals() {
+  for (const chapter of course.chapters) {
+    const visual = chapterVisuals[chapter.id];
+    assert.ok(visual, `missing visual for ${chapter.id}`);
+    assert.match(visual.mark, /^[A-Z]{2}$/);
+    assert.match(visual.accent, /^#[0-9a-f]{6}$/i);
+    assert.ok(visual.caption.length > 0);
+    assert.ok(visual.imagePrompt.includes("educational game card"));
+    assert.ok(visual.imagePrompt.includes("no text"));
   }
 }
 

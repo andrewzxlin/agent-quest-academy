@@ -216,11 +216,18 @@ h1 {
 .visual-card {
   min-height: 180px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #e0f2fe, #fef3c7);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--visual-accent, #2563eb) 25%, white), transparent 42%),
+    linear-gradient(135deg, #f8fafc, #fff7ed);
   padding: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.visual-card p {
+  color: var(--ink);
+  font-weight: 800;
 }
 
 .orbital {
@@ -236,6 +243,11 @@ h1 {
   padding: 8px 10px;
   text-align: center;
   font-weight: 700;
+}
+
+.orbital span:first-child {
+  background: var(--visual-accent, var(--blue));
+  color: white;
 }
 
 .progress-row {
@@ -432,6 +444,7 @@ button:disabled {
   border-radius: 12px;
   padding: 12px;
   background: #f8fafc;
+  border-top: 4px solid var(--node-accent, var(--blue));
 }
 
 .chapter-node span {
@@ -447,8 +460,23 @@ button:disabled {
 }
 
 .chapter-node strong,
-.chapter-node small {
+.chapter-node small,
+.chapter-node b,
+.chapter-node em {
   display: block;
+}
+
+.chapter-node b {
+  color: var(--node-accent, var(--blue));
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.chapter-node em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  margin-top: 4px;
 }
 
 .chapter-node small {

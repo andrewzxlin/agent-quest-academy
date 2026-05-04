@@ -735,6 +735,57 @@ export const course = {
   chapters
 };
 
+export const chapterVisuals = {
+  "agent-basics": {
+    mark: "AG",
+    accent: "#2563eb",
+    caption: "把聊天變成會判斷下一步的工作流。",
+    imagePrompt: "educational game card, beginner agent workflow, model tool state guardrail nodes, clean isometric illustration, no text"
+  },
+  tools: {
+    mark: "TL",
+    accent: "#16a34a",
+    caption: "讓模型透過受控工具安全地做事。",
+    imagePrompt: "educational game card, AI tool calling, safe API tools connected to an assistant, clean isometric illustration, no text"
+  },
+  rag: {
+    mark: "RG",
+    accent: "#0f766e",
+    caption: "先查證據，再根據來源回答。",
+    imagePrompt: "educational game card, retrieval augmented generation, documents chunks citations, clean isometric illustration, no text"
+  },
+  memory: {
+    mark: "MM",
+    accent: "#7c3aed",
+    caption: "記得該記的，忘掉不該保存的。",
+    imagePrompt: "educational game card, AI memory notebook with privacy filter, clean isometric illustration, no text"
+  },
+  guardrails: {
+    mark: "GR",
+    accent: "#dc2626",
+    caption: "把風險請求導到安全路線。",
+    imagePrompt: "educational game card, AI guardrails safety gates routing decisions, clean isometric illustration, no text"
+  },
+  evals: {
+    mark: "EV",
+    accent: "#ea580c",
+    caption: "用固定案例證明 agent 真的變好。",
+    imagePrompt: "educational game card, AI eval checklist scoring regression tests, clean isometric illustration, no text"
+  },
+  observability: {
+    mark: "OB",
+    accent: "#0891b2",
+    caption: "看見每一步，才知道怎麼修。",
+    imagePrompt: "educational game card, agent traces spans latency dashboard, clean isometric illustration, no text"
+  },
+  frameworks: {
+    mark: "LG",
+    accent: "#4f46e5",
+    caption: "理解 LangChain 元件與 LangGraph 狀態圖。",
+    imagePrompt: "educational game card, LangChain components and LangGraph state graph, clean isometric illustration, no text"
+  }
+};
+
 export function flattenLessons() {
   return course.chapters.flatMap((chapter) =>
     chapter.lessons.map((item) => ({

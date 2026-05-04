@@ -1,4 +1,4 @@
-import { bossQuestionsForChapter, course, flattenLessons } from "./course.js";
+import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons } from "./course.js";
 import {
   answerQuestion,
   buildReviewSessionQuestions,
@@ -40,6 +40,7 @@ function render() {
   }
   const question = sessionQuestions[currentIndex];
   const chapter = course.chapters.find((item) => item.id === lesson.chapterId) ?? course.chapters[0];
+  const visual = chapterVisuals[chapter.id] ?? chapterVisuals["agent-basics"];
   const bossResult = progress.bossResults?.find((item) => item.chapterId === chapter.id);
   const missions = dailyMissions(progress, Date.now());
   const badges = achievements(progress);
@@ -97,10 +98,11 @@ function render() {
             <h2>${isReviewMode ? "錯題複習模式" : isBossMode ? "章節 Boss Quiz" : lesson.title}</h2>
             <p>${isReviewMode ? "只練已到期或剛答錯的題目。複習答對後會重新排入下一次間隔複習。" : isBossMode ? "只用選擇題檢查整章核心判斷。答對 80% 以上就算通關。" : lesson.concept}</p>
           </div>
-          <div class="visual-card">
+          <div class="visual-card" style="--visual-accent: ${visual.accent}">
             <div class="orbital">
-              <span>Model</span><span>Tool</span><span>State</span><span>Check</span>
+              <span>${visual.mark}</span><span>Model</span><span>Tool</span><span>Check</span>
             </div>
+            <p>${visual.caption}</p>
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
@@ -184,11 +186,16 @@ function render() {
           </div>
           <div class="chapter-track">
             ${map
-              .map((item, index) => `<div class="chapter-node ${item.status}">
+              .map((item, index) => {
+                const visual = chapterVisuals[item.chapterId] ?? chapterVisuals["agent-basics"];
+                return `<div class="chapter-node ${item.status}" style="--node-accent: ${visual.accent}">
                 <span>${index + 1}</span>
+                <b>${visual.mark}</b>
                 <strong>${item.title}</strong>
+                <em>${visual.caption}</em>
                 <small>${item.completedLessons}/${item.totalLessons} 課 · ${item.lessonPercent}% · Boss ${item.bossPassed ? "已通關" : item.bossScore ?? "未挑戰"}</small>
-              </div>`)
+              </div>`;
+              })
               .join("")}
           </div>
         </section>
