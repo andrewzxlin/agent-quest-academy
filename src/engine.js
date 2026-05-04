@@ -449,6 +449,39 @@ export function abilityProofCards(progress) {
   });
 }
 
+export function careerReadinessSnapshot(progress, now = Date.now()) {
+  const proofs = abilityProofCards(progress);
+  const counts = proofs.reduce(
+    (total, card) => {
+      total[card.status] = (total[card.status] ?? 0) + 1;
+      return total;
+    },
+    { new: 0, practicing: 0, proven: 0, interview_ready: 0 }
+  );
+  const provenCount = counts.proven + counts.interview_ready;
+  const percent = proofs.length === 0 ? 0 : Math.round((provenCount / proofs.length) * 100);
+  const next = nextPracticeRecommendation(progress, now);
+  const level =
+    counts.interview_ready >= 6
+      ? "Interview-ready track"
+      : provenCount >= 4
+        ? "Portfolio signal track"
+        : counts.practicing > 0 || provenCount > 0
+          ? "Skill-building track"
+          : "Fresh start";
+
+  return {
+    level,
+    percent,
+    total: proofs.length,
+    provenCount,
+    interviewReadyCount: counts.interview_ready,
+    practicingCount: counts.practicing,
+    nextGap: next.type === "done" ? "All current chapters are cleared." : next.title,
+    nextAction: next.cta
+  };
+}
+
 export function completionCard(progress, event) {
   const summariesByChapter = new Map(chapterSummaryCards(progress).map((item) => [item.chapterId, item]));
   const summary = event.chapterId ? summariesByChapter.get(event.chapterId) : null;

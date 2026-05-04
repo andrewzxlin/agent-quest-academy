@@ -314,6 +314,48 @@ h1 {
   border-color: #86efac;
 }
 
+.career-snapshot {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.career-snapshot h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.career-snapshot p,
+.career-snapshot span,
+.career-snapshot small {
+  color: var(--muted);
+}
+
+.snapshot-meter {
+  min-width: 180px;
+  text-align: right;
+}
+
+.snapshot-meter strong,
+.snapshot-meter span,
+.snapshot-meter small {
+  display: block;
+}
+
+.snapshot-meter strong {
+  color: #3730a3;
+  font-size: 32px;
+}
+
+.snapshot-meter span {
+  margin: 4px 0;
+}
+
 .onboarding-card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -1195,6 +1237,7 @@ button:disabled {
   .hero-card,
   .completion-card,
   .recommendation-card,
+  .career-snapshot,
   .onboarding-card.compact-card,
   .job-scenario-card,
   .explain-grid,

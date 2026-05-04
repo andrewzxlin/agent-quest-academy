@@ -18,6 +18,7 @@ import {
   beginnerGlossaryCards,
   buildReviewSessionQuestions,
   buildSessionQuestions,
+  careerReadinessSnapshot,
   chapterGateMap,
   chapterMap,
   chapterSummaryCards,
@@ -74,6 +75,7 @@ const tests = [
   ["chapter gate map stages lessons boss interview and pitch unlocks", testChapterGateMap],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
+  ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
   ["completion cards summarize finished sessions", testCompletionCards],
   ["next practice recommendation picks the highest-value next step", testNextPracticeRecommendation],
   ["pitch practice cards coach interview answers", testPitchPracticeCards],
@@ -503,6 +505,26 @@ function testAbilityProofCards() {
   cards = abilityProofCards(progress);
   assert.equal(cards[0].status, "interview_ready");
   assert.equal(cards[0].interviewProgress, "3/3 interview drill");
+}
+
+function testCareerReadinessSnapshot() {
+  const progress = createInitialProgress(1000);
+  let snapshot = careerReadinessSnapshot(progress, 1000);
+  assert.equal(snapshot.level, "Fresh start");
+  assert.equal(snapshot.percent, 0);
+  assert.equal(snapshot.provenCount, 0);
+  assert.ok(snapshot.nextGap.length > 0);
+
+  const chapter = course.chapters[0];
+  const chapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === chapter.id);
+  for (const lesson of chapterLessons) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, 1000);
+  snapshot = careerReadinessSnapshot(progress, 1000);
+  assert.equal(snapshot.provenCount, 1);
+  assert.equal(snapshot.percent, 13);
+  assert.ok(["Skill-building track", "Portfolio signal track"].includes(snapshot.level));
 }
 
 function testCompletionCards() {

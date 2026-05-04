@@ -5,6 +5,7 @@ import {
   beginnerGlossaryCards,
   buildReviewSessionQuestions,
   buildSessionQuestions,
+  careerReadinessSnapshot,
   chapterGateMap,
   chapterMap,
   chapterSummaryCards,
@@ -69,6 +70,7 @@ function render() {
   const proofs = abilityProofCards(progress);
   const stats = reviewStats(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
+  const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const onboarding = onboardingState(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
@@ -138,6 +140,7 @@ function render() {
           </div>
         </section>
         ${renderOnboardingCard(onboarding)}
+        ${renderCareerSnapshot(careerSnapshot)}
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
@@ -346,6 +349,21 @@ function renderRecommendationCard(recommendation) {
       <p>${recommendation.reason}</p>
     </div>
     <button class="primary compact" data-recommend="true" ${recommendation.type === "done" ? "disabled" : ""}>${recommendation.cta}</button>
+  </section>`;
+}
+
+function renderCareerSnapshot(snapshot) {
+  return `<section class="career-snapshot">
+    <div>
+      <p class="eyebrow">Job Readiness Snapshot</p>
+      <h3>${snapshot.level}</h3>
+      <p>${snapshot.provenCount}/${snapshot.total} chapters proven, ${snapshot.interviewReadyCount} interview-ready.</p>
+    </div>
+    <div class="snapshot-meter">
+      <strong>${snapshot.percent}%</strong>
+      <span>下一個缺口：${snapshot.nextGap}</span>
+      <small>${snapshot.nextAction}</small>
+    </div>
   </section>`;
 }
 
