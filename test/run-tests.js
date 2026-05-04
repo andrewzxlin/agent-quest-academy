@@ -82,6 +82,7 @@ import {
   onboardingState,
   oneLineCoachCard,
   pitchPracticeCard,
+  pitchUnlockPreviewCard,
   practiceDietCard,
   proofBoosterCard,
   questionCoachHint,
@@ -196,6 +197,7 @@ const tests = [
   ["chapter gate map stages lessons boss interview and pitch unlocks", testChapterGateMap],
   ["boss gate teaser makes the next proof gate visible", testBossGateTeaserCard],
   ["interview unlock preview shows how Boss turns into interview practice", testInterviewUnlockPreviewCard],
+  ["pitch unlock preview turns interview proof into a rehearseable answer", testPitchUnlockPreviewCard],
   ["boss readiness card explains chapter checkpoint", testBossReadinessCard],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
@@ -2143,6 +2145,37 @@ function testInterviewUnlockPreviewCard() {
   assert.equal(card.status, "complete");
   assert.equal(card.steps.find((step) => step.id === "line").done, true);
   assert.equal(card.nextAction, "Practice 60-second pitch");
+}
+
+function testPitchUnlockPreviewCard() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  let card = pitchUnlockPreviewCard(progress);
+  assert.equal(card.title, "Pitch Unlock Preview");
+  assert.equal(card.status, "locked");
+  assert.equal(card.chapterId, chapter.id);
+  assert.equal(card.lines.length, 3);
+  assert.deepEqual(card.lines.map((line) => line.id), ["problem", "role", "tradeoff"]);
+  assert.ok(card.prompt.includes("agentic workflow"));
+  assert.ok(card.promise.includes("No blank-page"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, 1000);
+  card = pitchUnlockPreviewCard(progress);
+  assert.equal(card.status, "drafting");
+  assert.equal(card.nextAction, "Practice interview prompt");
+  assert.ok(card.checks.every((check) => check.done === false));
+
+  for (const question of interviewQuestionsForChapter(chapter.id)) {
+    answerQuestion(progress, question, question.type === "multi" ? question.answer : question.answer ?? question.keywords[0], 1000);
+  }
+  card = pitchUnlockPreviewCard(progress);
+  assert.equal(card.status, "ready");
+  assert.equal(card.nextAction, "Open pitch practice");
+  assert.ok(card.checks.every((check) => check.done === true));
 }
 
 function testBossReadinessCard() {

@@ -69,6 +69,7 @@ import {
   onboardingState,
   oneLineCoachCard,
   pitchPracticeCard,
+  pitchUnlockPreviewCard,
   practiceDietCard,
   proofBoosterCard,
   questionCoachHint,
@@ -174,6 +175,7 @@ function render() {
   const beginnerSkillMap = beginnerSkillMapCard(progress);
   const bossGateTeaser = bossGateTeaserCard(progress);
   const interviewPreview = interviewUnlockPreviewCard(progress);
+  const pitchPreview = pitchUnlockPreviewCard(progress);
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
@@ -269,6 +271,7 @@ function render() {
           beginnerSkillMap,
           bossGateTeaser,
           interviewPreview,
+          pitchPreview,
           zeroToLandingQuest,
           roleSampler,
           jargonShield,
@@ -699,6 +702,7 @@ function renderBeginnerCommandCenter(cards) {
         ${renderBeginnerSkillMapCard(cards.beginnerSkillMap)}
         ${renderBossGateTeaserCard(cards.bossGateTeaser)}
         ${renderInterviewUnlockPreviewCard(cards.interviewPreview)}
+        ${renderPitchUnlockPreviewCard(cards.pitchPreview)}
         ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
         ${renderRoleSamplerCard(cards.roleSampler)}
         ${renderJargonShieldCard(cards.jargonShield)}
@@ -876,6 +880,37 @@ function renderInterviewUnlockPreviewCard(card) {
     <div class="interview-preview-action">
       <small>${card.promise}</small>
       <button class="primary compact" data-interview-preview-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderPitchUnlockPreviewCard(card) {
+  if (!card) return "";
+  return `<section class="pitch-unlock-preview-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.chapterTitle}</p>
+    </div>
+    <p>${card.prompt}</p>
+    <div class="pitch-preview-lines">
+      ${card.lines
+        .map((line) => `<div>
+          <span>${line.label}</span>
+          <strong>${line.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="pitch-preview-checks">
+      ${card.checks
+        .map((check) => `<small class="${check.done ? "done" : ""}">${check.label}</small>`)
+        .join("")}
+    </div>
+    <div class="pitch-preview-action">
+      <small>${card.promise}</small>
+      <button class="primary compact" data-pitch-preview-action="${card.chapterId}">${card.nextAction}</button>
     </div>
   </section>`;
 }
@@ -2363,6 +2398,18 @@ function bindEvents() {
   });
 
   document.querySelector("[data-interview-preview-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-pitch-preview-action]")?.addEventListener("click", (event) => {
+    const card = pitchUnlockPreviewCard(progress);
+    if (card?.status === "ready") {
+      activePitch = pitchPracticeCard(progress, event.currentTarget.dataset.pitchPreviewAction);
+      pitchAnswer = "";
+      latestCompletion = null;
+      render();
+      return;
+    }
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

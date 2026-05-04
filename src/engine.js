@@ -2239,6 +2239,70 @@ export function interviewUnlockPreviewCard(progress) {
   };
 }
 
+export function pitchUnlockPreviewCard(progress) {
+  const proofs = abilityProofCards(progress);
+  const readyProof =
+    proofs.find((proof) => proof.status === "interview_ready") ??
+    proofs.find((proof) => proof.status === "proven") ??
+    proofs.find((proof) => proof.status === "practicing") ??
+    proofs[0];
+  if (!readyProof) return null;
+
+  const pitch = pitchPracticeCard(progress, readyProof.chapterId);
+  const interviewPreview = interviewUnlockPreviewCard(progress);
+  const status =
+    readyProof.status === "interview_ready"
+      ? "ready"
+      : readyProof.status === "proven"
+        ? "drafting"
+        : "locked";
+
+  return {
+    title: "Pitch Unlock Preview",
+    status,
+    chapterId: readyProof.chapterId,
+    chapterTitle: readyProof.title,
+    headline:
+      status === "ready"
+        ? "60-second pitch is ready to rehearse"
+        : status === "drafting"
+          ? "Finish interview prompts to unlock the pitch"
+          : "Build proof before pitch practice",
+    prompt: pitch?.prompt ?? "Use three short lines to explain one agentic workflow judgment.",
+    sampleAnswer: pitch?.sampleAnswer ?? readyProof.abilityStatement,
+    nextAction:
+      status === "ready"
+        ? "Open pitch practice"
+        : status === "drafting"
+          ? "Practice interview prompt"
+          : interviewPreview?.nextAction ?? "Build first proof",
+    promise: "No blank-page speech: reuse proof, scenario, and one tradeoff line.",
+    lines: [
+      {
+        id: "problem",
+        label: "Problem",
+        text: pitch?.outline?.[0] ?? "What workflow problem this ability solves."
+      },
+      {
+        id: "role",
+        label: "Role",
+        text: pitch?.outline?.[1] ?? "What role it plays in agentic workflow."
+      },
+      {
+        id: "tradeoff",
+        label: "Tradeoff",
+        text: pitch?.outline?.[2] ?? "What risk or boundary you would mention."
+      }
+    ],
+    checks:
+      pitch?.checks.map((check) => ({
+        id: check.id,
+        label: check.label,
+        done: status === "ready"
+      })) ?? []
+  };
+}
+
 export function jobReadinessMap(progress) {
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
   return jobReadinessSkills.map((skill) => {
