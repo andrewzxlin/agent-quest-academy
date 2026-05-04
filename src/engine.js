@@ -1041,6 +1041,72 @@ export function questionRoleSignalCard(question) {
   };
 }
 
+export function questionComfortMeterCard(question, answerReady = false, checked = false, result = null) {
+  const preview = questionSignalPreview(question);
+  const stage = questionMasteryStage(question);
+  const typeConfig = {
+    single: {
+      format: "Pick 1",
+      effort: "Lightest",
+      meter: 1,
+      move: "Choose the option that best matches the workflow signal."
+    },
+    multi: {
+      format: "Pick signals",
+      effort: "Low",
+      meter: 2,
+      move: "Select every option that belongs in the workflow."
+    },
+    short: {
+      format: "One sentence",
+      effort: "Small write",
+      meter: 3,
+      move: "Use the chips or template, then write one compact answer."
+    }
+  };
+  const config = typeConfig[question.type] ?? typeConfig.single;
+  const status = checked ? (result?.correct ? "saved" : "repair") : answerReady ? "ready" : "calm";
+  const headlineByStatus = {
+    calm: `No blank page: ${config.format}`,
+    ready: "Ready to check",
+    saved: "Comfort loop saved",
+    repair: "No penalty: review will replay it"
+  };
+
+  return {
+    title: "Comfort Meter",
+    status,
+    headline: headlineByStatus[status],
+    stage: stage.label,
+    reassurance: checked
+      ? result?.correct
+        ? "This answer became a saved signal."
+        : "A miss becomes a review card, not a dead end."
+      : "Only one tiny move is required before feedback appears.",
+    bars: Array.from({ length: 3 }, (_, index) => ({
+      id: `bar-${index + 1}`,
+      active: index < config.meter
+    })),
+    lanes: [
+      {
+        id: "effort",
+        label: "Effort",
+        text: config.effort
+      },
+      {
+        id: "move",
+        label: "Move",
+        text: checked ? (result?.correct ? "Continue" : "Review seed") : config.move
+      },
+      {
+        id: "reward",
+        label: "Reward",
+        text: preview.reward
+      }
+    ]
+  };
+}
+
 export function questionMissionStrip(question, answerReady = false, checked = false, result = null) {
   const preview = questionSignalPreview(question);
   const status = checked ? (result?.correct ? "saved" : "repair") : answerReady ? "ready" : "choosing";

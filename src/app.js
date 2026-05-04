@@ -81,6 +81,7 @@ import {
   practiceDietCard,
   proofBoosterCard,
   questionCoachHint,
+  questionComfortMeterCard,
   questionHintDeck,
   questionMasterySignal,
   questionMasteryStage,
@@ -216,6 +217,7 @@ function render() {
   const abilityShard = abilityShardCard(progress, question);
   const questionMission = questionMissionStrip(question, answerReady, checked, lastResult);
   const roleSignal = questionRoleSignalCard(question);
+  const comfortMeter = questionComfortMeterCard(question, answerReady, checked, lastResult);
 
   root.innerHTML = `
     <div class="shell">
@@ -359,6 +361,7 @@ function render() {
           ${renderSessionRhythmCard(sessionRhythm)}
           ${renderAbilityShardCard(abilityShard)}
           ${renderQuestionRoleSignalCard(roleSignal)}
+          ${renderQuestionComfortMeterCard(comfortMeter)}
           ${renderQuestionMissionStrip(questionMission)}
           ${renderQuestionHintDeck(questionHintDeck(question), question)}
           ${renderQuestion(question)}
@@ -612,6 +615,27 @@ function renderQuestionRoleSignalCard(card) {
         .join("")}
     </div>
     <small>${card.tinyProof}</small>
+  </div>`;
+}
+
+function renderQuestionComfortMeterCard(card) {
+  return `<div class="question-comfort-meter ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.reassurance}</small>
+    </div>
+    <div class="comfort-bars" aria-label="${card.stage} effort meter">
+      ${card.bars.map((bar) => `<i class="${bar.active ? "active" : ""}"></i>`).join("")}
+    </div>
+    <div class="comfort-lanes">
+      ${card.lanes
+        .map((lane) => `<em>
+          <b>${lane.label}</b>
+          ${lane.text}
+        </em>`)
+        .join("")}
+    </div>
   </div>`;
 }
 

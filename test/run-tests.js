@@ -94,6 +94,7 @@ import {
   practiceDietCard,
   proofBoosterCard,
   questionCoachHint,
+  questionComfortMeterCard,
   questionHintDeck,
   questionKey,
   questionMasterySignal,
@@ -160,6 +161,7 @@ const tests = [
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
   ["question role signal connects each prompt to role evidence", testQuestionRoleSignalCard],
+  ["question comfort meter makes each prompt feel low-friction", testQuestionComfortMeterCard],
   ["question mission strip keeps pick check save visible", testQuestionMissionStrip],
   ["session rhythm shows choices before tiny explanation", testSessionRhythmCard],
   ["ability shard card turns each prompt into a collectible piece", testAbilityShardCard],
@@ -1094,6 +1096,40 @@ function testQuestionRoleSignalCard() {
   card = questionRoleSignalCard(short);
   assert.equal(card.stage, "Explain");
   assert.ok(card.chips.find((chip) => chip.id === "stage").value.includes("Explain"));
+}
+
+function testQuestionComfortMeterCard() {
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  let card = questionComfortMeterCard(single);
+  assert.equal(card.title, "Comfort Meter");
+  assert.equal(card.status, "calm");
+  assert.ok(card.headline.includes("No blank page"));
+  assert.equal(card.stage, "Recognize");
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["effort", "move", "reward"]);
+  assert.equal(card.lanes.find((lane) => lane.id === "effort").text, "Lightest");
+  assert.equal(card.bars.filter((bar) => bar.active).length, 1);
+  assert.ok(card.reassurance.includes("one tiny move"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = questionComfortMeterCard(multi, true);
+  assert.equal(card.status, "ready");
+  assert.equal(card.stage, "Connect");
+  assert.equal(card.bars.filter((bar) => bar.active).length, 2);
+  assert.ok(card.lanes.find((lane) => lane.id === "move").text.includes("workflow"));
+
+  card = questionComfortMeterCard(short, true, true, { correct: false });
+  assert.equal(card.status, "repair");
+  assert.equal(card.stage, "Explain");
+  assert.equal(card.bars.filter((bar) => bar.active).length, 3);
+  assert.ok(card.reassurance.includes("review card"));
+  assert.equal(card.lanes.find((lane) => lane.id === "move").text, "Review seed");
+
+  card = questionComfortMeterCard(single, true, true, { correct: true });
+  assert.equal(card.status, "saved");
+  assert.ok(card.reassurance.includes("saved signal"));
 }
 
 function testQuestionMissionStrip() {
