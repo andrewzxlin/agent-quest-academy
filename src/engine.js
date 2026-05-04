@@ -2303,6 +2303,69 @@ export function pitchUnlockPreviewCard(progress) {
   };
 }
 
+export function jobPacketPreviewCard(progress, now = Date.now()) {
+  const passport = jobSignalPassport(progress, now);
+  const brief = jobEvidenceBrief(progress, now);
+  const pitch = pitchUnlockPreviewCard(progress);
+  const checklist = landingReadinessChecklist(progress, now);
+  const roleStamp = passport.stamps.find((stamp) => stamp.id === "role");
+  const receiptStamp = passport.stamps.find((stamp) => stamp.id === "receipt");
+  const roleReady = passport.status !== "starter passport";
+  const evidenceReady = (brief?.readyCount ?? 0) > 0;
+  const receiptReady = Boolean(receiptStamp && !receiptStamp.value.includes("pending"));
+  const pitchReady = pitch?.status === "ready";
+  const items = [
+    {
+      id: "role",
+      label: "Role signal",
+      done: roleReady,
+      text: roleReady ? (roleStamp?.value ?? "Role signal started") : "Pick up the first role signal."
+    },
+    {
+      id: "evidence",
+      label: "Evidence line",
+      done: evidenceReady,
+      text: evidenceReady
+        ? brief.interviewLine
+        : "Clear a Boss gate to turn practice into evidence."
+    },
+    {
+      id: "receipt",
+      label: "Latest receipt",
+      done: receiptReady,
+      text: receiptReady ? receiptStamp.detail : "Answer one choice to create a visible receipt."
+    },
+    {
+      id: "pitch",
+      label: "Pitch seed",
+      done: pitchReady,
+      text: pitchReady
+        ? pitch.sampleAnswer
+        : "Finish interview drills to unlock a 60-second answer."
+    }
+  ];
+  const readyCount = items.filter((item) => item.done).length;
+
+  return {
+    title: "Job Packet Preview",
+    status: readyCount === items.length ? "ready" : readyCount > 0 ? "building" : "starter",
+    headline:
+      readyCount === items.length
+        ? "A small job packet is ready"
+        : `${readyCount}/${items.length} packet pieces ready`,
+    summary: "Role signal, evidence line, receipt, and pitch seed stay visible as the learning path moves.",
+    nextAction: pitchReady ? "Open pitch practice" : checklist.nextAction,
+    promise: "No blank-page assignment: each piece comes from choices, review, Boss, or interview drills.",
+    readyCount,
+    totalCount: items.length,
+    action: {
+      kind: pitchReady ? "pitch" : "practice",
+      chapterId: pitch?.chapterId ?? null
+    },
+    items
+  };
+}
+
 export function jobReadinessMap(progress) {
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
   return jobReadinessSkills.map((skill) => {

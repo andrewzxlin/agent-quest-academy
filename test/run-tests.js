@@ -57,6 +57,7 @@ import {
   jargonShieldCard,
   jobReadinessMap,
   jobEvidenceBrief,
+  jobPacketPreviewCard,
   jobSignalPassport,
   landingGapRadar,
   landingReadinessChecklist,
@@ -198,6 +199,7 @@ const tests = [
   ["boss gate teaser makes the next proof gate visible", testBossGateTeaserCard],
   ["interview unlock preview shows how Boss turns into interview practice", testInterviewUnlockPreviewCard],
   ["pitch unlock preview turns interview proof into a rehearseable answer", testPitchUnlockPreviewCard],
+  ["job packet preview shows the final reusable learning packet", testJobPacketPreviewCard],
   ["boss readiness card explains chapter checkpoint", testBossReadinessCard],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
@@ -2176,6 +2178,52 @@ function testPitchUnlockPreviewCard() {
   assert.equal(card.status, "ready");
   assert.equal(card.nextAction, "Open pitch practice");
   assert.ok(card.checks.every((check) => check.done === true));
+}
+
+function testJobPacketPreviewCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  const chapter = course.chapters[0];
+  let card = jobPacketPreviewCard(progress, now);
+
+  assert.equal(card.title, "Job Packet Preview");
+  assert.equal(card.status, "starter");
+  assert.equal(card.readyCount, 0);
+  assert.equal(card.totalCount, 4);
+  assert.deepEqual(card.items.map((item) => item.id), ["role", "evidence", "receipt", "pitch"]);
+  assert.ok(card.items.every((item) => item.done === false));
+  assert.equal(card.action.kind, "practice");
+  assert.ok(card.promise.includes("No blank-page"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = jobPacketPreviewCard(progress, now);
+  assert.equal(card.status, "building");
+  assert.equal(card.items.find((item) => item.id === "receipt").done, true);
+
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, now);
+  card = jobPacketPreviewCard(progress, now);
+  assert.equal(card.items.find((item) => item.id === "role").done, true);
+  assert.equal(card.items.find((item) => item.id === "evidence").done, true);
+  assert.equal(card.items.find((item) => item.id === "pitch").done, false);
+  assert.ok(card.readyCount >= 3);
+
+  for (const interviewQuestion of interviewQuestionsForChapter(chapter.id)) {
+    const response =
+      interviewQuestion.type === "multi"
+        ? interviewQuestion.answer
+        : interviewQuestion.answer ?? interviewQuestion.keywords[0];
+    answerQuestion(progress, interviewQuestion, response, now);
+  }
+  card = jobPacketPreviewCard(progress, now);
+  assert.equal(card.status, "ready");
+  assert.equal(card.action.kind, "pitch");
+  assert.equal(card.action.chapterId, chapter.id);
+  assert.equal(card.items.find((item) => item.id === "pitch").done, true);
 }
 
 function testBossReadinessCard() {

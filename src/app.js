@@ -44,6 +44,7 @@ import {
   questCompass,
   jobReadinessMap,
   jobEvidenceBrief,
+  jobPacketPreviewCard,
   jobSignalPassport,
   landingGapRadar,
   landingReadinessChecklist,
@@ -176,6 +177,7 @@ function render() {
   const bossGateTeaser = bossGateTeaserCard(progress);
   const interviewPreview = interviewUnlockPreviewCard(progress);
   const pitchPreview = pitchUnlockPreviewCard(progress);
+  const jobPacketPreview = jobPacketPreviewCard(progress, Date.now());
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
@@ -272,6 +274,7 @@ function render() {
           bossGateTeaser,
           interviewPreview,
           pitchPreview,
+          jobPacketPreview,
           zeroToLandingQuest,
           roleSampler,
           jargonShield,
@@ -703,6 +706,7 @@ function renderBeginnerCommandCenter(cards) {
         ${renderBossGateTeaserCard(cards.bossGateTeaser)}
         ${renderInterviewUnlockPreviewCard(cards.interviewPreview)}
         ${renderPitchUnlockPreviewCard(cards.pitchPreview)}
+        ${renderJobPacketPreviewCard(cards.jobPacketPreview)}
         ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
         ${renderRoleSamplerCard(cards.roleSampler)}
         ${renderJargonShieldCard(cards.jargonShield)}
@@ -748,6 +752,8 @@ function renderBeginnerRouteRail(cards) {
   const routeTotal = cards.beginnerSkillMap.totalCount;
   const dailyDone = cards.dailySkillTicket.completedCount;
   const dailyTotal = cards.dailySkillTicket.totalCount;
+  const packetDone = cards.jobPacketPreview.readyCount;
+  const packetTotal = cards.jobPacketPreview.totalCount;
   const reviewMode = cards.reviewOrbit.mode;
   const reviewLabel =
     reviewMode === "due"
@@ -764,8 +770,13 @@ function renderBeginnerRouteRail(cards) {
       <strong>Daily</strong>
       <small>${dailyDone}/${dailyTotal} stamps</small>
     </div>
-    <div class="${reviewMode}">
+    <div class="${cards.jobPacketPreview.status}">
       <span>03</span>
+      <strong>Packet</strong>
+      <small>${packetDone}/${packetTotal} pieces</small>
+    </div>
+    <div class="${reviewMode}">
+      <span>04</span>
       <strong>Review</strong>
       <small>${reviewLabel}</small>
     </div>
@@ -911,6 +922,36 @@ function renderPitchUnlockPreviewCard(card) {
     <div class="pitch-preview-action">
       <small>${card.promise}</small>
       <button class="primary compact" data-pitch-preview-action="${card.chapterId}">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderJobPacketPreviewCard(card) {
+  if (!card) return "";
+  return `<section class="job-packet-preview-card ${card.status}">
+    <div class="job-packet-header">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+        <p>${card.summary}</p>
+      </div>
+      <div class="job-packet-score">
+        <strong>${card.readyCount}/${card.totalCount}</strong>
+        <span>ready</span>
+      </div>
+    </div>
+    <div class="job-packet-items">
+      ${card.items
+        .map((item) => `<div class="${item.done ? "done" : ""}">
+          <span>${item.done ? "Ready" : "Next"}</span>
+          <strong>${item.label}</strong>
+          <small>${item.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="job-packet-action">
+      <small>${card.promise}</small>
+      <button class="primary compact" data-job-packet-action="${card.action.chapterId ?? ""}">${card.nextAction}</button>
     </div>
   </section>`;
 }
@@ -2405,6 +2446,18 @@ function bindEvents() {
     const card = pitchUnlockPreviewCard(progress);
     if (card?.status === "ready") {
       activePitch = pitchPracticeCard(progress, event.currentTarget.dataset.pitchPreviewAction);
+      pitchAnswer = "";
+      latestCompletion = null;
+      render();
+      return;
+    }
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-job-packet-action]")?.addEventListener("click", () => {
+    const card = jobPacketPreviewCard(progress, Date.now());
+    if (card?.action.kind === "pitch" && card.action.chapterId) {
+      activePitch = pitchPracticeCard(progress, card.action.chapterId);
       pitchAnswer = "";
       latestCompletion = null;
       render();

@@ -641,7 +641,7 @@ h1 {
 .beginner-route-rail {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .beginner-route-rail div {
@@ -657,14 +657,20 @@ h1 {
 
 .beginner-route-rail div.active,
 .beginner-route-rail div.open,
-.beginner-route-rail div.due {
+.beginner-route-rail div.due,
+.beginner-route-rail div.building {
   border-color: #8b5cf6;
   box-shadow: 0 0 0 3px rgb(139 92 246 / 0.1);
 }
 
 .beginner-route-rail div.done,
-.beginner-route-rail div.scheduled {
+.beginner-route-rail div.scheduled,
+.beginner-route-rail div.ready {
   border-color: #86efac;
+}
+
+.beginner-route-rail div.starter {
+  border-color: #fde68a;
 }
 
 .beginner-route-rail span {
@@ -733,6 +739,7 @@ h1 {
 .beginner-command-grid .boss-gate-teaser-card,
 .beginner-command-grid .interview-preview-card,
 .beginner-command-grid .pitch-unlock-preview-card,
+.beginner-command-grid .job-packet-preview-card,
 .beginner-command-grid .role-sampler-card,
 .beginner-command-grid .jargon-shield-card,
 .beginner-command-grid .daily-landing-step-card,
@@ -1109,6 +1116,116 @@ h1 {
 }
 
 .pitch-preview-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.job-packet-preview-card {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.job-packet-preview-card.building {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+}
+
+.job-packet-preview-card.ready {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.job-packet-header {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr auto;
+}
+
+.job-packet-header h3 {
+  font-size: 24px;
+  margin: 4px 0 6px;
+}
+
+.job-packet-header p,
+.job-packet-action small,
+.job-packet-items small {
+  color: var(--muted);
+}
+
+.job-packet-score {
+  background: #ffffff;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 12px;
+  min-width: 92px;
+  padding: 12px;
+  text-align: center;
+}
+
+.job-packet-score strong,
+.job-packet-score span,
+.job-packet-items span,
+.job-packet-items strong,
+.job-packet-items small,
+.job-packet-action small {
+  display: block;
+}
+
+.job-packet-score strong {
+  font-size: 26px;
+}
+
+.job-packet-score span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.job-packet-items {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 16px;
+}
+
+.job-packet-items div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.job-packet-items div.done {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.job-packet-items span {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.job-packet-items div.done span {
+  color: #15803d;
+}
+
+.job-packet-items strong {
+  margin-top: 6px;
+}
+
+.job-packet-items small {
+  margin-top: 6px;
+}
+
+.job-packet-action {
   align-items: center;
   display: flex;
   gap: 12px;
@@ -5478,6 +5595,7 @@ button:disabled {
   .boss-gate-teaser-card,
   .interview-preview-card,
   .pitch-unlock-preview-card,
+  .job-packet-preview-card,
   .zero-landing-quest-card,
   .jargon-shield-card,
   .quest-compass,
@@ -5553,6 +5671,7 @@ button:disabled {
   .boss-gate-steps,
   .interview-preview-steps,
   .pitch-preview-lines,
+  .job-packet-items,
   .zero-landing-milestones,
   .role-sampler-grid,
   .phrase-bank-steps,
@@ -5594,6 +5713,11 @@ button:disabled {
     display: grid;
   }
 
+  .job-packet-header {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
   .learning-library > summary {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -5631,6 +5755,11 @@ button:disabled {
   }
 
   .zero-landing-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .job-packet-action {
     align-items: stretch;
     flex-direction: column;
   }
