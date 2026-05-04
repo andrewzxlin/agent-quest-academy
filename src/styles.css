@@ -715,16 +715,20 @@ h1 {
   padding: 22px;
 }
 
-.seven-day-path-card > strong,
-.seven-day-path-card > small {
-  display: block;
-}
-
-.seven-day-path-card > strong {
+.seven-day-action-row {
+  align-items: center;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr auto;
   margin-top: 10px;
 }
 
-.seven-day-path-card > small {
+.seven-day-action-row strong,
+.seven-day-action-row small {
+  display: block;
+}
+
+.seven-day-action-row small {
   color: var(--muted);
   margin-top: 6px;
 }
@@ -3337,6 +3341,7 @@ button:disabled {
   .gap-radar-steps,
   .landing-checklist-grid,
   .seven-day-grid,
+  .seven-day-action-row,
   .evidence-story-seeds,
   .one-line-grid,
   .receipt-grid,

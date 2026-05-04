@@ -609,8 +609,13 @@ function renderSevenDayLandingPath(path) {
       </div>
       <p>${path.completedCount}/${path.totalCount} steps - ${path.percent}%</p>
     </div>
-    <strong>${path.activeAction}</strong>
-    <small>${path.activeSignal}</small>
+    <div class="seven-day-action-row">
+      <div>
+        <strong>${path.activeAction}</strong>
+        <small>${path.activeSignal}</small>
+      </div>
+      <button class="primary compact" data-seven-day-action="true">${path.nextRecommendation}</button>
+    </div>
     <div class="seven-day-grid">
       ${path.days
         .map((day) => `<div class="${day.done ? "done" : ""}">
@@ -1468,6 +1473,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-recommend]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-seven-day-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

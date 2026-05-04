@@ -162,6 +162,7 @@
 - The home screen now shows seven low-friction steps from first answer to a job-facing line.
 - Each step is derived from existing answers, lessons, review, Boss, role evidence, and interview drill progress.
 - The path gives beginners a visible route without adding project implementation tasks.
+- The active path step now includes a start button wired to the same recommended practice flow.
 
 ## Mistake Rescue Prompts
 
