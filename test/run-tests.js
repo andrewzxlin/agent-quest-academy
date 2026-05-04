@@ -34,6 +34,7 @@ import {
   jobReadinessMap,
   jobScenarioCard,
   masteryForLesson,
+  mistakeRescuePrompt,
   mistakeNotebook,
   nextPracticeRecommendation,
   onboardingState,
@@ -54,6 +55,7 @@ const tests = [
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
+  ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
   ["choice feedback covers every selectable option", testChoiceFeedback],
@@ -241,6 +243,19 @@ function testQuestionCoachHints() {
     } else {
       assert.equal(hint.starter, null);
     }
+  }
+}
+
+function testMistakeRescuePrompts() {
+  const questions = [...flattenQuestions(), ...flattenInterviewQuestions()];
+  for (const question of questions) {
+    const wrongResult = gradeQuestion(question, question.type === "multi" ? [] : "__wrong__");
+    const rescue = mistakeRescuePrompt(question, wrongResult);
+    assert.equal(wrongResult.correct, false);
+    assert.ok(rescue.title.length > 0);
+    assert.ok(rescue.body.length >= 20);
+    assert.doesNotMatch(`${rescue.title} ${rescue.body}`, /repo|project implementation|專案實作/i);
+    assert.equal(mistakeRescuePrompt(question, { ...wrongResult, correct: true }), null);
   }
 }
 

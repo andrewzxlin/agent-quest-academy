@@ -21,6 +21,7 @@ import {
   jobScenarioCard,
   loadProgress,
   masteryForLesson,
+  mistakeRescuePrompt,
   mistakeNotebook,
   nextPracticeRecommendation,
   onboardingState,
@@ -487,8 +488,17 @@ function renderFeedback(question, result) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+  </div>`;
+}
+
+function renderMistakeRescue(rescue) {
+  if (!rescue) return "";
+  return `<div class="mistake-rescue">
+    <span>${rescue.title}</span>
+    <p>${rescue.body}</p>
   </div>`;
 }
 

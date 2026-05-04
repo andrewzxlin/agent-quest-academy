@@ -102,6 +102,12 @@
 - The snapshot derives its level from real ability proof progress.
 - It keeps the learner oriented toward job-facing readiness without adding planning overhead.
 
+## Mistake Rescue Prompts
+
+- Wrong answers now show a short rescue prompt before the detailed explanation.
+- The prompt tells the learner what to look for next time, instead of only marking the answer wrong.
+- This keeps mistake replay supportive and low-friction.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

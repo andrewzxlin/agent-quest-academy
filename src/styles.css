@@ -688,6 +688,27 @@ h1 {
   color: #7f1d1d;
 }
 
+.mistake-rescue {
+  border: 1px solid rgb(127 29 29 / 0.18);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.68);
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.mistake-rescue span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(127 29 29 / 0.1);
+  padding: 3px 7px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.mistake-rescue p {
+  margin: 6px 0 0;
+}
+
 .choice-feedback {
   display: grid;
   gap: 8px;

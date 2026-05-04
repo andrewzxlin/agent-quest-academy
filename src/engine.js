@@ -176,6 +176,30 @@ export function questionCoachHint(question) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function mistakeRescuePrompt(question, result) {
+  if (result.correct) return null;
+  if (question.type === "single") {
+    return {
+      title: "下次先找核心任務",
+      body: "重看題目時，先問：哪個選項真的會改變 agent workflow 的行動、狀態或風險？"
+    };
+  }
+  if (question.type === "multi") {
+    return {
+      title: "下次逐一檢查每個零件",
+      body: "把每個選項都問一次：它是不是 workflow 必須追蹤、呼叫、檢索、評估或保護的部分？"
+    };
+  }
+  if (question.type === "short") {
+    const missing = (result.missing ?? question.keywords).slice(0, 3);
+    return {
+      title: "下次補上關鍵詞",
+      body: `先不用寫長，下一次只要補進這些概念之一：${missing.join(" / ")}。`
+    };
+  }
+  throw new Error(`Unknown question type: ${question.type}`);
+}
+
 export function answerQuestion(progress, question, response, now = Date.now()) {
   const result = gradeQuestion(question, response);
   const key = questionKey(question);
