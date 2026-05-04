@@ -30,6 +30,7 @@ import {
   dailyMomentum,
   dailyQuestSnapshot,
   dailyMissions,
+  exerciseScopeCard,
   getDueReviewQuestions,
   gradePitchPractice,
   gradeQuestion,
@@ -92,6 +93,7 @@ const tests = [
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
   ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
   ["job evidence brief turns progress into an interview line", testJobEvidenceBrief],
+  ["exercise scope card keeps practice low-friction", testExerciseScopeCard],
   ["completion cards summarize finished sessions", testCompletionCards],
   ["next practice recommendation picks the highest-value next step", testNextPracticeRecommendation],
   ["pitch practice cards coach interview answers", testPitchPracticeCards],
@@ -771,6 +773,24 @@ function testJobEvidenceBrief() {
   brief = jobEvidenceBrief(progress, 1000);
   assert.equal(brief.strongestStatus, "interview_ready");
   assert.ok(brief.headline.includes("interview-ready"));
+}
+
+function testExerciseScopeCard() {
+  const scope = exerciseScopeCard();
+  const single = scope.formats.find((item) => item.label === "單選");
+  const multi = scope.formats.find((item) => item.label === "複選");
+  const short = scope.formats.find((item) => item.label === "簡答");
+  const project = scope.formats.find((item) => item.label === "專案實作");
+
+  assert.equal(single.count, 80);
+  assert.equal(multi.count, 32);
+  assert.equal(short.count, 32);
+  assert.equal(project.count, 0);
+  assert.ok(scope.headline.includes("不先寫專案"));
+  assert.ok(scope.description.includes("單選"));
+  assert.ok(scope.guardrails.some((item) => item.includes("不用建立 repo")));
+  assert.ok(scope.guardrails.some((item) => item.includes("簡答")));
+  assert.doesNotMatch(scope.guardrails.join(" "), /請寫程式|請建立 repo|需要建立 repo|build a project/i);
 }
 
 function testCompletionCards() {

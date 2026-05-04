@@ -425,6 +425,80 @@ h1 {
   margin-top: 8px;
 }
 
+.exercise-scope-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.exercise-scope-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.exercise-scope-card p,
+.exercise-scope-card span {
+  color: var(--muted);
+}
+
+.scope-guardrails,
+.scope-formats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.scope-guardrails {
+  margin-top: 12px;
+}
+
+.scope-guardrails span {
+  background: rgb(255 255 255 / 0.76);
+  border: 1px solid rgb(249 115 22 / 0.16);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 7px 10px;
+}
+
+.scope-formats {
+  justify-content: flex-end;
+  min-width: 250px;
+}
+
+.scope-formats div {
+  min-width: 72px;
+  text-align: center;
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(249 115 22 / 0.18);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.scope-formats div.muted {
+  opacity: 0.58;
+}
+
+.scope-formats strong,
+.scope-formats span {
+  display: block;
+}
+
+.scope-formats strong {
+  color: #c2410c;
+  font-size: 24px;
+}
+
+.scope-formats span {
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .daily-quest-snapshot {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -1642,6 +1716,7 @@ button:disabled {
   .recommendation-card,
   .career-snapshot,
   .job-evidence-brief,
+  .exercise-scope-card,
   .daily-quest-snapshot,
   .daily-momentum-card,
   .mistake-focus-card,
@@ -1678,6 +1753,11 @@ button:disabled {
   .learning-library > summary::after {
     grid-column: 2;
     grid-row: 1 / span 2;
+  }
+
+  .scope-formats {
+    justify-content: flex-start;
+    min-width: 0;
   }
 
   .main {

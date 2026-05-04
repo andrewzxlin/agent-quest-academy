@@ -683,6 +683,29 @@ export function jobEvidenceBrief(progress, now = Date.now()) {
   };
 }
 
+export function exerciseScopeCard() {
+  const questions = [...flattenQuestions(), ...flattenInterviewQuestions()];
+  const counts = questions.reduce(
+    (total, question) => {
+      total[question.type] = (total[question.type] ?? 0) + 1;
+      return total;
+    },
+    { single: 0, multi: 0, short: 0 }
+  );
+
+  return {
+    headline: "先練判斷，不先寫專案",
+    description: "本階段只用單選、複選、少量簡答建立 Agentic Workflow 直覺，讓初學者先會分辨、會解釋、會修正錯題。",
+    formats: [
+      { label: "單選", count: counts.single, tone: "primary" },
+      { label: "複選", count: counts.multi, tone: "primary" },
+      { label: "簡答", count: counts.short, tone: "primary" },
+      { label: "專案實作", count: 0, tone: "muted" }
+    ],
+    guardrails: ["不用建立 repo", "不用寫 LangGraph 程式", "簡答只練口頭解釋"]
+  };
+}
+
 export function dailyQuestSnapshot(progress, now = Date.now()) {
   const missions = dailyMissions(progress, now);
   const completedCount = missions.filter((mission) => mission.done).length;

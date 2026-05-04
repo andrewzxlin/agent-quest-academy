@@ -17,6 +17,7 @@ import {
   dailyMomentum,
   dailyQuestSnapshot,
   dailyMissions,
+  exerciseScopeCard,
   gradeQuestion,
   gradePitchPractice,
   isAnswerReady,
@@ -82,6 +83,7 @@ function render() {
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
+  const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const momentum = dailyMomentum(progress, Date.now());
   const onboarding = onboardingState(progress);
@@ -155,6 +157,7 @@ function render() {
           </div>
         </section>
         ${renderOnboardingCard(onboarding)}
+        ${renderExerciseScopeCard(exerciseScope)}
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderDailyQuestSnapshot(dailyQuest)}
@@ -406,6 +409,27 @@ function renderJobEvidenceBrief(brief) {
       <span>${brief.readyCount}/${brief.total}</span>
       <small>ready evidence</small>
       <em>${brief.nextGap} · ${brief.nextAction}</em>
+    </div>
+  </section>`;
+}
+
+function renderExerciseScopeCard(scope) {
+  return `<section class="exercise-scope-card">
+    <div>
+      <p class="eyebrow">Practice Scope</p>
+      <h3>${scope.headline}</h3>
+      <p>${scope.description}</p>
+      <div class="scope-guardrails">
+        ${scope.guardrails.map((item) => `<span>${item}</span>`).join("")}
+      </div>
+    </div>
+    <div class="scope-formats">
+      ${scope.formats
+        .map((item) => `<div class="${item.tone}">
+          <strong>${item.count}</strong>
+          <span>${item.label}</span>
+        </div>`)
+        .join("")}
     </div>
   </section>`;
 }
