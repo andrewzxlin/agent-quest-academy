@@ -4,11 +4,11 @@
 
 - Maps each chapter to one concrete AI / Agent engineering skill signal.
 - Uses lesson completion and Boss results to derive status: new, learning, or job-ready.
-- Keeps the current learning flow low-friction: choice questions, multi-select, short answers, mistake review, and spaced review before project implementation tasks.
+- Keeps the current learning flow low-friction: choice questions, multi-select, short answers, mistake review, and spaced review, with no project implementation tasks in this phase.
 
 ## Interview Scenarios
 
-- Adds one interview-style scenario per chapter, focused on architecture judgment instead of project implementation.
+- Adds one interview-style scenario per chapter, focused on architecture judgment instead of implementation assignments.
 - Each scenario uses only single choice, multi-select, and short answer questions.
 - Wrong interview answers enter the same review queue and mistake notebook as normal lesson questions.
 
@@ -22,7 +22,7 @@
 
 - Short answers show matched concepts, missing concepts, and a compact sample answer.
 - Keyword grading stays lenient so beginners can answer in plain language.
-- The goal is to build interview explanation muscle without forcing project implementation tasks too early.
+- The goal is to build interview explanation muscle through short answers, not project implementation tasks.
 
 ## Chapter Summary Cards
 
@@ -82,7 +82,7 @@
 
 - Every chapter has a work-facing scenario before the quiz.
 - Each card explains the likely workplace task, the common beginner trap, and the interview signal.
-- This connects low-friction practice to job-ready agent workflow judgment without adding project implementation tasks.
+- This connects low-friction practice to job-ready agent workflow judgment without adding implementation assignments.
 
 ## Profile Quest Routes
 
@@ -94,7 +94,7 @@
 
 - Progress is translated into "I can judge..." ability statements.
 - Each chapter moves from new, to practicing, to Boss-proven, to interview-ready based on real completion data.
-- The cards help learners see job-facing evidence without adding project implementation tasks.
+- The cards help learners see job-facing evidence without adding project tasks.
 
 ## Job Readiness Snapshot
 
@@ -124,7 +124,7 @@
 
 - Every lesson now shows the exact micro-skill being practiced before the quiz.
 - The card connects the lesson to one job-facing skill signal and one answer lens.
-- It reinforces that the current path stays low-friction: single choice, multi-select, and short answers before coding work.
+- It reinforces that the current path stays low-friction: single choice, multi-select, and short answers rather than coding work.
 
 ## Learning Puzzle Board
 
@@ -158,6 +158,12 @@
 - It highlights the strongest proof so far and the next gap to close.
 - It breaks the evidence into a three-part script: problem, workflow role, and risk or tradeoff.
 - This helps learners connect low-friction drills to job-facing explanations.
+
+## Exercise Scope Guardrail
+
+- Main lessons, Boss Quiz, interview drills, and review sessions stay limited to single choice, multi-select, and short answer questions.
+- Short answers are explanation prompts, not implementation assignments.
+- Project builds, repo tasks, code-writing prompts, and LangGraph build tasks are intentionally out of scope for this learning phase.
 
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 

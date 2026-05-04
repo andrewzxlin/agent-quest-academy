@@ -630,7 +630,7 @@ export function careerReadinessSnapshot(progress, now = Date.now()) {
     counts.interview_ready >= 6
       ? "Interview-ready track"
       : provenCount >= 4
-        ? "Portfolio signal track"
+        ? "Explanation signal track"
         : counts.practicing > 0 || provenCount > 0
           ? "Skill-building track"
           : "Fresh start";

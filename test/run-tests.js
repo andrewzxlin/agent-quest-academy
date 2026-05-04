@@ -739,7 +739,7 @@ function testCareerReadinessSnapshot() {
   snapshot = careerReadinessSnapshot(progress, 1000);
   assert.equal(snapshot.provenCount, 1);
   assert.equal(snapshot.percent, 13);
-  assert.ok(["Skill-building track", "Portfolio signal track"].includes(snapshot.level));
+  assert.ok(["Skill-building track", "Explanation signal track"].includes(snapshot.level));
 }
 
 function testJobEvidenceBrief() {
