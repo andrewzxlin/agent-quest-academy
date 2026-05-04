@@ -163,6 +163,12 @@
 - The ladder shows the learner whether they are starting from zero, recognizing patterns, forming explanations, or ready to teach the idea.
 - This makes the path from beginner to job-facing explanation visible without adding harder exercises.
 
+## Question Stage Badges
+
+- Every quiz question now shows whether it trains Recognize, Connect, or Explain.
+- Single-choice questions train recognition, multi-select questions train connection, and short answers train explanation.
+- The badge tells the learner what to focus on before answering, so each small question feels tied to the larger mastery path.
+
 ## Learning Puzzle Board
 
 - The home screen now shows 8 job-readiness puzzle pieces across the full agentic workflow path.

@@ -299,6 +299,34 @@ export function lessonMasteryLadder(progress, lessonId) {
   };
 }
 
+export function questionMasteryStage(question) {
+  if (question.type === "single") {
+    return {
+      id: "recognize",
+      label: "Recognize",
+      proof: "This question trains you to spot the strongest workflow signal.",
+      nextAction: "Pick the option that changes the agent's decision or risk."
+    };
+  }
+  if (question.type === "multi") {
+    return {
+      id: "connect",
+      label: "Connect",
+      proof: "This question trains you to link multiple workflow parts.",
+      nextAction: "Select every part that affects state, tools, retrieval, checks, or feedback."
+    };
+  }
+  if (question.type === "short") {
+    return {
+      id: "explain",
+      label: "Explain",
+      proof: "This question trains you to turn the idea into a short job-facing explanation.",
+      nextAction: "Use one concept word, then say why it matters in the workflow."
+    };
+  }
+  throw new Error(`Unknown question type: ${question.type}`);
+}
+
 export function selectLearnerProfile(progress, profileId) {
   const profile = LEARNER_PROFILES.find((item) => item.id === profileId);
   progress.learnerProfile = profile ? profile.id : null;

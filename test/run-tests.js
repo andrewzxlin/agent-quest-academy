@@ -53,6 +53,7 @@ import {
   onboardingState,
   pitchPracticeCard,
   questionCoachHint,
+  questionMasteryStage,
   reviewRhythmCard,
   reviewStats,
   selectLearnerProfile,
@@ -74,6 +75,7 @@ const tests = [
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
+  ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer recall cues turn answers into next-time signals", testAnswerRecallCues],
   ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
@@ -393,6 +395,22 @@ function testQuestionCoachHints() {
     } else {
       assert.equal(hint.starter, null);
     }
+  }
+}
+
+function testQuestionMasteryStage() {
+  const expectedByType = {
+    single: "recognize",
+    multi: "connect",
+    short: "explain"
+  };
+  for (const question of [...flattenQuestions(), ...flattenInterviewQuestions()]) {
+    const stage = questionMasteryStage(question);
+    assert.equal(stage.id, expectedByType[question.type]);
+    assert.ok(["Recognize", "Connect", "Explain"].includes(stage.label));
+    assert.ok(stage.proof.includes("question"));
+    assert.ok(stage.nextAction.length >= 20);
+    assert.doesNotMatch(JSON.stringify(stage), /repo|project implementation|build a project/i);
   }
 }
 

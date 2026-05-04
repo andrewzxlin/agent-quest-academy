@@ -40,6 +40,7 @@ import {
   onboardingState,
   pitchPracticeCard,
   questionCoachHint,
+  questionMasteryStage,
   reviewRhythmCard,
   reviewStats,
   resetProgress,
@@ -199,6 +200,7 @@ function render() {
               <small>本課熟練度</small>
             </div>
           </div>
+          ${renderQuestionMasteryStage(questionMasteryStage(question))}
           ${renderQuestionCoach(questionCoachHint(question))}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult) : ""}
@@ -806,6 +808,14 @@ function renderQuestionCoach(hint) {
     <span>${hint.title}</span>
     <p>${hint.body}</p>
     ${hint.starter ? `<button class="starter-chip" data-starter="${hint.starter}">套用起手式</button>` : ""}
+  </div>`;
+}
+
+function renderQuestionMasteryStage(stage) {
+  return `<div class="question-stage ${stage.id}">
+    <span>${stage.label}</span>
+    <p>${stage.proof}</p>
+    <small>${stage.nextAction}</small>
   </div>`;
 }
 
