@@ -1818,6 +1818,42 @@ export function answerOutcomeCard(question, result, progress) {
   };
 }
 
+export function answerGateProgressCard(progress, question, result, mode = "lesson") {
+  const gate = chapterGateStrip(progress, question.chapterId);
+  const stage = questionMasteryStage(question);
+  const isInterview = mode === "interview" || question.lessonId?.startsWith("interview:");
+  const gateId = isInterview ? "interview" : mode === "boss" ? "boss" : "lessons";
+  const gateLabelById = {
+    lessons: "Learn key",
+    boss: "Boss key",
+    interview: "Interview key"
+  };
+  const activeStep = gate?.steps.find((step) => step.id === gateId) ?? gate?.steps[0] ?? null;
+  const status = result.correct ? "advanced" : "repair";
+  const gateLabel = gateLabelById[gateId];
+
+  return {
+    title: "Gate Progress",
+    status,
+    chapterTitle: gate?.chapterTitle ?? question.chapterTitle,
+    gateId,
+    gateLabel,
+    headline: result.correct ? `${gateLabel} signal charged` : `${gateLabel} repair seed saved`,
+    summary: result.correct
+      ? `${stage.label} practice moved this chapter route forward.`
+      : "The gate is not blocked; review will bring this signal back.",
+    activeProgress: activeStep?.text ?? "Gate progress pending",
+    lanes:
+      gate?.steps.slice(0, 3).map((step) => ({
+        id: step.id,
+        label: step.label,
+        value: step.text,
+        status: step.done ? "done" : step.id === gateId ? status : "waiting"
+      })) ?? [],
+    nextUse: result.correct ? "Keep going while this gate is warm." : "Read the fix, then continue without restarting."
+  };
+}
+
 export function answerLootCard(question, result, progress) {
   const state = progress.answered[questionKey(question)];
   const stage = questionMasteryStage(question);

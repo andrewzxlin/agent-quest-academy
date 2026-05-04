@@ -2,6 +2,7 @@ import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interv
 import {
   abilityShardCard,
   abilityProofCards,
+  answerGateProgressCard,
   answerOutcomeCard,
   answerEvidenceClip,
   answerInterviewLineCard,
@@ -2553,6 +2554,7 @@ function renderFeedback(question, result, progressState) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderAnswerGateProgressCard(answerGateProgressCard(progressState, question, result, sessionMode))}
     ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
     ${renderAnswerRunChainCard(answerRunChainCard(progressState, result))}
     ${renderAnswerInterviewLineCard(answerInterviewLineCard(question, result))}
@@ -2581,6 +2583,26 @@ function renderNextStepNudgeCard(card) {
       <b>${card.actionLabel}</b>
       <small>${card.tinyRule}</small>
     </div>
+  </div>`;
+}
+
+function renderAnswerGateProgressCard(card) {
+  return `<div class="answer-gate-progress-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.chapterTitle} / ${card.gateLabel} / ${card.activeProgress}</small>
+      <p>${card.summary}</p>
+    </div>
+    <div class="answer-gate-lanes">
+      ${card.lanes
+        .map((lane) => `<em class="${lane.status}">
+          <b>${lane.label}</b>
+          ${lane.value}
+        </em>`)
+        .join("")}
+    </div>
+    <small>${card.nextUse}</small>
   </div>`;
 }
 

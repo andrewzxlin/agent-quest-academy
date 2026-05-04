@@ -5980,6 +5980,78 @@ h1 {
   text-align: center;
 }
 
+.answer-gate-progress-card {
+  background: rgb(255 255 255 / 0.88);
+  border: 1px solid rgb(37 99 235 / 0.26);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+}
+
+.answer-gate-progress-card.repair {
+  border-color: rgb(234 88 12 / 0.34);
+}
+
+.answer-gate-progress-card span,
+.answer-gate-progress-card strong,
+.answer-gate-progress-card small,
+.answer-gate-lanes b {
+  display: block;
+}
+
+.answer-gate-progress-card span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-gate-progress-card.repair span {
+  color: #c2410c;
+}
+
+.answer-gate-progress-card p {
+  color: var(--ink);
+  margin-top: 7px;
+}
+
+.answer-gate-progress-card small {
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.answer-gate-lanes {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.answer-gate-lanes em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  padding: 10px;
+}
+
+.answer-gate-lanes em.advanced,
+.answer-gate-lanes em.done {
+  border-color: #86efac;
+}
+
+.answer-gate-lanes em.repair {
+  border-color: #fdba74;
+}
+
+.answer-gate-lanes b {
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
 .answer-loot-card {
   background: rgb(255 255 255 / 0.88);
   border: 1px solid rgb(22 163 74 / 0.34);
@@ -7273,6 +7345,7 @@ button:disabled {
   .beginner-command-grid.review,
   .short-recipe-steps,
   .answer-outcome-lanes,
+  .answer-gate-lanes,
   .answer-loot-badges,
   .answer-run-chain-meters,
   .answer-interview-steps,

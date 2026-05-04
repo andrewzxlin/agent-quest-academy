@@ -16,6 +16,7 @@ import {
   abilityShardCard,
   abilityProofCards,
   answerEvidenceClip,
+  answerGateProgressCard,
   answerInterviewLineCard,
   answerJobStorySeedCard,
   answerLootCard,
@@ -180,6 +181,7 @@ const tests = [
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["short answer recipe turns writing into three tiny steps", testShortAnswerRecipe],
   ["answer evidence clips turn every checked answer into a reusable signal", testAnswerEvidenceClips],
+  ["answer gate progress ties feedback to the current skill gate", testAnswerGateProgressCard],
   ["answer interview line turns feedback into spoken proof", testAnswerInterviewLineCard],
   ["answer job story seed turns a prompt into interview story material", testAnswerJobStorySeedCard],
   ["answer loot card makes each answer feel like a small reward", testAnswerLootCard],
@@ -1419,6 +1421,49 @@ function testAnswerEvidenceClips() {
   assert.equal(shortClip.stage, "Explain");
   assert.ok(shortClip.line.includes(short.keywords[0]));
   assert.doesNotMatch(JSON.stringify([savedClip, repairClip, shortClip]), /repo|project implementation|build a project|coding task/i);
+}
+
+function testAnswerGateProgressCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  const chapter = course.chapters[0];
+  const question = flattenQuestions().find((item) => item.type === "single" && item.chapterId === chapter.id);
+  let result = gradeQuestion(question, question.answer);
+  answerQuestion(progress, question, question.answer, now);
+  let card = answerGateProgressCard(progress, question, result, "lesson");
+
+  assert.equal(card.title, "Gate Progress");
+  assert.equal(card.status, "advanced");
+  assert.equal(card.gateId, "lessons");
+  assert.equal(card.gateLabel, "Learn key");
+  assert.ok(card.headline.includes("Learn key"));
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["lessons", "boss", "interview"]);
+  assert.equal(card.lanes.find((lane) => lane.id === "lessons").status, "advanced");
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const wrongQuestion = flattenQuestions().find((item) => item.type === "multi" && item.chapterId === chapter.id);
+  result = gradeQuestion(wrongQuestion, []);
+  answerQuestion(progress, wrongQuestion, [], now);
+  card = answerGateProgressCard(progress, wrongQuestion, result, "lesson");
+  assert.equal(card.status, "repair");
+  assert.equal(card.lanes.find((lane) => lane.id === "lessons").status, "repair");
+  assert.ok(card.summary.includes("review"));
+
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, now);
+  const interviewQuestion = interviewQuestionsForChapter(chapter.id)[0];
+  const interviewResponse =
+    interviewQuestion.type === "multi"
+      ? interviewQuestion.answer
+      : interviewQuestion.answer ?? interviewQuestion.keywords[0];
+  result = gradeQuestion(interviewQuestion, interviewResponse);
+  answerQuestion(progress, interviewQuestion, interviewResponse, now);
+  card = answerGateProgressCard(progress, interviewQuestion, result, "interview");
+  assert.equal(card.gateId, "interview");
+  assert.equal(card.gateLabel, "Interview key");
+  assert.equal(card.lanes.find((lane) => lane.id === "interview").status, "advanced");
 }
 
 function testAnswerOutcomeCard() {
