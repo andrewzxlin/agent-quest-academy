@@ -1121,12 +1121,21 @@ function lesson({ id, title, concept, analogy, focus, best, multi, shortKeywords
 }
 
 function single(id, prompt, correct, distractors, explanation) {
+  const choices = shuffleStable([correct, ...distractors], id);
   return {
     id,
     type: "single",
     prompt,
-    choices: shuffleStable([correct, ...distractors], id),
-    answer: shuffleStable([correct, ...distractors], id).indexOf(correct),
+    choices,
+    answer: choices.indexOf(correct),
+    choiceFeedback: choices.map((choice) => ({
+      choice,
+      correct: choice === correct,
+      reason:
+        choice === correct
+          ? "這個選項抓到題目的核心判斷，是面試時應該先說出的主軸。"
+          : "這個選項太表層或偏離題目的限制，沒有處理 agent workflow 的關鍵風險。"
+    })),
     explanation
   };
 }
@@ -1139,6 +1148,13 @@ function multiChoice(id, prompt, correct, distractors, explanation) {
     prompt,
     choices,
     answer: correct.map((item) => choices.indexOf(item)),
+    choiceFeedback: choices.map((choice) => ({
+      choice,
+      correct: correct.includes(choice),
+      reason: correct.includes(choice)
+        ? "這是本題需要同時掌握的關鍵要素之一。"
+        : "這個選項不是這個情境的核心判斷，容易把注意力放到不影響 agent 行為的地方。"
+    })),
     explanation
   };
 }

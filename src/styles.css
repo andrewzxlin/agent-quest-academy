@@ -318,6 +318,46 @@ h1 {
   color: #7f1d1d;
 }
 
+.choice-feedback {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.choice-note {
+  border: 1px solid rgb(15 23 42 / 0.1);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.65);
+  padding: 10px;
+}
+
+.choice-note span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(15 23 42 / 0.08);
+  padding: 3px 7px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.choice-note strong,
+.choice-note p {
+  display: block;
+  margin-top: 6px;
+}
+
+.choice-note p {
+  margin-bottom: 0;
+}
+
+.choice-note.expected-answer {
+  border-color: #22c55e;
+}
+
+.choice-note.selected-answer.wrong-choice {
+  border-color: #ef4444;
+}
+
 .actions {
   display: flex;
   gap: 10px;

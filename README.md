@@ -12,6 +12,12 @@
 - Each scenario uses only single choice, multi-select, and short answer questions.
 - Wrong interview answers enter the same review queue and mistake notebook as normal lesson questions.
 
+## Choice-Level Feedback
+
+- Single choice and multi-select questions explain why each option is a core answer or a distractor.
+- Feedback highlights both the selected answer and the expected answer after checking.
+- This turns mistakes into architecture judgment practice instead of simple right/wrong memorization.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

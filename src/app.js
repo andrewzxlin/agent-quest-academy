@@ -249,7 +249,38 @@ function renderFeedback(question, result) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderChoiceFeedback(question, result)}
   </div>`;
+}
+
+function renderChoiceFeedback(question, result) {
+  if (!question.choiceFeedback) return "";
+  return `<div class="choice-feedback">
+    ${question.choiceFeedback
+      .map((item, index) => {
+        const state = choiceFeedbackState(question, result, index);
+        return `<div class="choice-note ${state} ${item.correct ? "correct-choice" : "wrong-choice"}">
+          <span>${item.correct ? "核心選項" : "干擾選項"}</span>
+          <strong>${item.choice}</strong>
+          <p>${item.reason}</p>
+        </div>`;
+      })
+      .join("")}
+  </div>`;
+}
+
+function choiceFeedbackState(question, result, index) {
+  if (question.type === "single") {
+    const selected = selectedSingle === index ? "selected-answer" : "";
+    const expected = Number(result.expected) === index ? "expected-answer" : "";
+    return `${selected} ${expected}`.trim();
+  }
+  if (question.type === "multi") {
+    const selected = selectedMulti.has(index) ? "selected-answer" : "";
+    const expected = result.expected.includes(index) ? "expected-answer" : "";
+    return `${selected} ${expected}`.trim();
+  }
+  return "";
 }
 
 function readinessStatusText(status) {

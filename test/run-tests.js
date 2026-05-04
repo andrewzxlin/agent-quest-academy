@@ -37,6 +37,7 @@ const tests = [
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
+  ["choice feedback covers every selectable option", testChoiceFeedback],
   ["short answer keyword grading works", testShortAnswer],
   ["wrong answer is added to due review", testWrongAnswerReview],
   ["correct answer schedules future review", testCorrectAnswerReview],
@@ -151,6 +152,22 @@ function testMultiChoice() {
   const question = flattenQuestions().find((item) => item.type === "multi");
   assert.equal(gradeQuestion(question, question.answer).correct, true);
   assert.equal(gradeQuestion(question, [question.answer[0]]).correct, false);
+}
+
+function testChoiceFeedback() {
+  const selectableQuestions = [...flattenQuestions(), ...flattenInterviewQuestions()].filter((question) =>
+    ["single", "multi"].includes(question.type)
+  );
+  for (const question of selectableQuestions) {
+    assert.equal(question.choiceFeedback.length, question.choices.length);
+    assert.ok(question.choiceFeedback.every((item) => item.choice && item.reason));
+    assert.deepEqual(
+      question.choiceFeedback.map((item) => item.correct),
+      question.choices.map((_, index) =>
+        question.type === "single" ? index === question.answer : question.answer.includes(index)
+      )
+    );
+  }
 }
 
 function testShortAnswer() {
