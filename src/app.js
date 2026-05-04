@@ -79,6 +79,7 @@ import {
   questionMasteryStage,
   questionSignalPreview,
   recallComboCard,
+  questBriefCard,
   reviewOrbitCard,
   reviewRescueQuest,
   reviewRhythmCard,
@@ -170,6 +171,7 @@ function render() {
   const firstFive = firstFiveMinuteStartCard(progress);
   const focusGuard = focusGuardCard(progress, Date.now());
   const startHere = startHereCard(progress, Date.now());
+  const questBrief = questBriefCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
   const choiceArcade = choiceArcadeCard(progress);
@@ -262,6 +264,7 @@ function render() {
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
+        ${renderQuestBriefCard(questBrief)}
         ${renderStartHereCard(startHere)}
         ${renderDashboardModeCard(dashboardMode)}
         ${renderOnboardingCard(onboarding)}
@@ -577,6 +580,33 @@ function renderStartHereCard(card) {
     <button class="primary" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
       ${card.actionLabel}
     </button>
+  </section>`;
+}
+
+function renderQuestBriefCard(card) {
+  return `<section class="quest-brief-card ${card.mode}">
+    <div class="quest-brief-copy">
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.body}</p>
+      <strong>${card.reward}</strong>
+    </div>
+    <div class="quest-brief-lanes">
+      ${card.lanes
+        .map((lane) => `<div class="${lane.done ? "done" : "active"}">
+          <span>${lane.label}</span>
+          <small>${lane.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="quest-brief-action">
+      <div>
+        <span>${card.packetProgress}</span>
+        <small>${card.packetFocus}</small>
+      </div>
+      <button class="primary compact" data-quest-brief-action="true">${card.headline}</button>
+    </div>
+    <p class="quest-brief-reassurance">${card.reassurance}</p>
   </section>`;
 }
 
@@ -2420,6 +2450,10 @@ function bindEvents() {
 
   document.querySelector("[data-recommend]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-quest-brief-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(questBriefCard(progress, Date.now()).action);
   });
 
   document.querySelector("[data-practice-diet-action]")?.addEventListener("click", () => {

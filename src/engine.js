@@ -321,6 +321,58 @@ export function startHereCard(progress, now = Date.now()) {
   };
 }
 
+export function questBriefCard(progress, now = Date.now()) {
+  const next = nextPracticeRecommendation(progress, now);
+  const packet = jobPacketPreviewCard(progress, now);
+  const minimum = dailyMinimumCard(progress, now);
+  const stats = reviewStats(progress, now);
+  const packetFocus = packet.items.find((item) => !item.done) ?? packet.items[packet.items.length - 1];
+  const usePitchAction = next.type === "done" && packet.action.kind === "pitch";
+  const action = usePitchAction
+    ? { type: "pitch", chapterId: packet.action.chapterId, cta: "Open pitch practice" }
+    : next;
+  const rewardByType = {
+    review: "Repair memory before it fades.",
+    lesson: "Earn a fresh learning receipt.",
+    boss: "Turn a chapter into proof.",
+    interview: "Turn proof into spoken language.",
+    pitch: "Rehearse one reusable answer.",
+    done: "Keep the packet warm."
+  };
+
+  return {
+    title: "Quest Brief",
+    mode: action.type,
+    headline: action.cta,
+    body: next.reason,
+    reward: rewardByType[action.type] ?? rewardByType.lesson,
+    packetProgress: `${packet.readyCount}/${packet.totalCount}`,
+    packetFocus: packetFocus.label,
+    action,
+    lanes: [
+      {
+        id: "move",
+        label: "Move",
+        text: action.title ?? next.title,
+        done: false
+      },
+      {
+        id: "minimum",
+        label: "Minimum",
+        text: minimum.status === "done" ? "Daily stop line already banked" : "One answer can be enough",
+        done: minimum.status === "done"
+      },
+      {
+        id: "packet",
+        label: "Packet",
+        text: `${packet.readyCount}/${packet.totalCount} pieces - ${packetFocus.label}`,
+        done: packet.status === "ready"
+      }
+    ],
+    reassurance: stats.dueCount > 0 ? "Due cards are handled first so weak memory becomes the next quest." : "One click starts the loop; one answer can leave a receipt."
+  };
+}
+
 export function learningHud(progress, now = Date.now()) {
   const badges = achievements(progress);
   const unlockedBadges = badges.filter((badge) => badge.unlocked);

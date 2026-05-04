@@ -363,6 +363,108 @@ h1 {
   line-height: 1.35;
 }
 
+.quest-brief-card {
+  align-items: stretch;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  color: #ffffff;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1.1fr 1.2fr auto;
+  padding: 20px;
+}
+
+.quest-brief-card.lesson {
+  background: #12313f;
+  border-color: #155e75;
+}
+
+.quest-brief-card.review {
+  background: #3b2412;
+  border-color: #9a3412;
+}
+
+.quest-brief-card.boss,
+.quest-brief-card.interview,
+.quest-brief-card.pitch {
+  background: #211449;
+  border-color: #6d28d9;
+}
+
+.quest-brief-copy h3 {
+  font-size: 24px;
+  margin: 4px 0 6px;
+}
+
+.quest-brief-copy p,
+.quest-brief-copy .eyebrow,
+.quest-brief-reassurance,
+.quest-brief-action small {
+  color: rgb(255 255 255 / 0.74);
+}
+
+.quest-brief-copy strong {
+  display: block;
+  margin-top: 10px;
+}
+
+.quest-brief-lanes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.quest-brief-lanes div {
+  background: rgb(255 255 255 / 0.1);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.quest-brief-lanes div.done {
+  background: rgb(34 197 94 / 0.18);
+  border-color: rgb(134 239 172 / 0.72);
+}
+
+.quest-brief-lanes span,
+.quest-brief-lanes small,
+.quest-brief-action span,
+.quest-brief-action small {
+  display: block;
+}
+
+.quest-brief-lanes span {
+  color: rgb(255 255 255 / 0.84);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.quest-brief-lanes small {
+  color: rgb(255 255 255 / 0.72);
+  margin-top: 6px;
+}
+
+.quest-brief-action {
+  align-content: space-between;
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+  min-width: 150px;
+}
+
+.quest-brief-action span {
+  font-size: 28px;
+  font-weight: 900;
+  text-align: right;
+}
+
+.quest-brief-reassurance {
+  grid-column: 1 / -1;
+  font-size: 13px;
+}
+
 .completion-card {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -5585,6 +5687,7 @@ button:disabled {
   }
 
   .hero-card,
+  .quest-brief-card,
   .start-here-card,
   .completion-card,
   .recommendation-card,
@@ -5650,6 +5753,7 @@ button:disabled {
   .question-signal-steps,
   .session-rhythm-steps,
   .start-here-steps,
+  .quest-brief-lanes,
   .beginner-route-rail,
   .beginner-command-grid.path,
   .beginner-command-grid.daily,
@@ -5716,6 +5820,14 @@ button:disabled {
   .job-packet-header {
     align-items: stretch;
     grid-template-columns: 1fr;
+  }
+
+  .quest-brief-action {
+    justify-items: stretch;
+  }
+
+  .quest-brief-action span {
+    text-align: left;
   }
 
   .learning-library > summary {

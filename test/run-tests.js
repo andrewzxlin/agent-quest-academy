@@ -93,6 +93,7 @@ import {
   questionMasteryStage,
   questionSignalPreview,
   recallComboCard,
+  questBriefCard,
   reviewOrbitCard,
   reviewRescueQuest,
   reviewRhythmCard,
@@ -118,6 +119,7 @@ const tests = [
   ["first five minute start keeps first run tiny", testFirstFiveMinuteStartCard],
   ["focus guard shows one primary beginner action", testFocusGuardCard],
   ["start here card turns the homepage into one obvious action", testStartHereCard],
+  ["quest brief makes the first screen action reward and packet clear", testQuestBriefCard],
   ["learning HUD makes the next unlock visible", testLearningHud],
   ["dashboard mode defaults to beginner and can switch full", testDashboardModeCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
@@ -346,6 +348,30 @@ function testStartHereCard() {
   assert.equal(card.mode, "rescue");
   assert.equal(card.action.kind, "review");
   assert.ok(card.steps.find((step) => step.label === "Signal").text.includes("review card"));
+}
+
+function testQuestBriefCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let card = questBriefCard(progress, now);
+
+  assert.equal(card.title, "Quest Brief");
+  assert.equal(card.mode, "lesson");
+  assert.equal(card.packetProgress, "0/4");
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["move", "minimum", "packet"]);
+  assert.equal(card.lanes.find((lane) => lane.id === "minimum").done, false);
+  assert.equal(card.lanes.find((lane) => lane.id === "packet").done, false);
+  assert.ok(card.headline.length > 0);
+  assert.ok(card.reward.length > 0);
+  assert.ok(card.reassurance.includes("One click"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, 99, now);
+  card = questBriefCard(progress, now);
+  assert.equal(card.mode, "review");
+  assert.equal(card.action.type, "review");
+  assert.ok(card.reassurance.includes("Due cards"));
 }
 
 function testLearningHud() {
