@@ -19,10 +19,12 @@ import {
   masteryForLesson,
   mistakeNotebook,
   nextPracticeRecommendation,
+  onboardingState,
   pitchPracticeCard,
   reviewStats,
   resetProgress,
-  saveProgress
+  saveProgress,
+  selectLearnerProfile
 } from "./engine.js";
 
 let progress = loadProgress();
@@ -62,6 +64,7 @@ function render() {
   const summaries = chapterSummaryCards(progress);
   const stats = reviewStats(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
+  const onboarding = onboardingState(progress);
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -127,6 +130,7 @@ function render() {
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
+        ${renderOnboardingCard(onboarding)}
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
@@ -309,6 +313,36 @@ function renderRecommendationCard(recommendation) {
   </section>`;
 }
 
+function renderOnboardingCard(onboarding) {
+  if (onboarding.completed) {
+    return `<section class="onboarding-card compact-card">
+      <div>
+        <p class="eyebrow">Coach Mode</p>
+        <h3>${onboarding.headline}</h3>
+        <p>${onboarding.guidance}</p>
+      </div>
+      <button class="ghost compact" data-profile-reset="true">重選起點</button>
+    </section>`;
+  }
+  return `<section class="onboarding-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Start Here</p>
+        <h3>${onboarding.headline}</h3>
+      </div>
+      <p>${onboarding.guidance}</p>
+    </div>
+    <div class="profile-grid">
+      ${onboarding.options
+        .map((profile) => `<button class="profile-option" data-profile="${profile.id}">
+          <strong>${profile.title}</strong>
+          <span>${profile.description}</span>
+        </button>`)
+        .join("")}
+    </div>
+  </section>`;
+}
+
 function renderPitchPracticeCard(card) {
   const result = gradePitchPractice(card, pitchAnswer);
   return `<section class="pitch-card">
@@ -461,6 +495,20 @@ function bindEvents() {
 
   document.querySelector("[data-recommend]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelectorAll("[data-profile]").forEach((button) => {
+    button.addEventListener("click", () => {
+      progress = selectLearnerProfile(progress, button.dataset.profile);
+      saveProgress(progress);
+      render();
+    });
+  });
+
+  document.querySelector("[data-profile-reset]")?.addEventListener("click", () => {
+    progress = selectLearnerProfile(progress, null);
+    saveProgress(progress);
+    render();
   });
 
   document.querySelectorAll("[data-single]").forEach((button) => {

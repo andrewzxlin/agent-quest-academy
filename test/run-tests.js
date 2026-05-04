@@ -30,12 +30,15 @@ import {
   masteryForLesson,
   mistakeNotebook,
   nextPracticeRecommendation,
+  onboardingState,
   pitchPracticeCard,
-  reviewStats
+  reviewStats,
+  selectLearnerProfile
 } from "../src/engine.js";
 
 const tests = [
   ["course has MVP scope", testCourseScope],
+  ["onboarding profile starts empty and can be selected", testOnboardingProfile],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["chapter visuals cover every chapter", testChapterVisuals],
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
@@ -91,6 +94,23 @@ function testCourseScope() {
   assert.equal(course.chapters.length, 8);
   assert.equal(flattenLessons().length, 24);
   assert.equal(flattenQuestions().length, 120);
+}
+
+function testOnboardingProfile() {
+  const progress = createInitialProgress(1000);
+  let state = onboardingState(progress);
+  assert.equal(state.completed, false);
+  assert.equal(state.options.length, 3);
+  assert.equal(state.headline, "先選你的起點");
+
+  selectLearnerProfile(progress, "interview");
+  state = onboardingState(progress);
+  assert.equal(state.completed, true);
+  assert.equal(state.selected.id, "interview");
+  assert.ok(state.guidance.includes("面試") || state.guidance.includes("pitch"));
+
+  selectLearnerProfile(progress, "unknown");
+  assert.equal(onboardingState(progress).completed, false);
 }
 
 function testCourseCoverage() {

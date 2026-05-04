@@ -54,6 +54,12 @@
 - Future chapters and advanced drills are still visible, but marked as locked until the prerequisite is done.
 - This keeps the curriculum readable for beginners while preserving a game-like progression path.
 
+## Onboarding Profile
+
+- First-time learners choose one starting point: complete beginner, AI user new to agents, or interview prep.
+- The home screen shows a coach note matched to that profile.
+- The profile is stored in local progress and can be reset without affecting course progress.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

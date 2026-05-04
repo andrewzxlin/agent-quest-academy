@@ -2,6 +2,27 @@ import { course, flattenInterviewQuestions, flattenLessons, flattenQuestions, jo
 
 const STORAGE_KEY = "agentQuestProgress:v1";
 
+const LEARNER_PROFILES = [
+  {
+    id: "beginner",
+    title: "完全新手",
+    description: "我想從 0 開始，不想先碰專案或複雜術語。",
+    coachLine: "今天只要完成一個 micro-lesson，先把 agent 的直覺建立起來。"
+  },
+  {
+    id: "ai-user",
+    title: "會用 AI，但不懂 Agent",
+    description: "我用過 ChatGPT 或工具，但還不懂 workflow、tool、RAG。",
+    coachLine: "把你熟悉的 AI 使用經驗，拆成 workflow、tool、state、guardrail。"
+  },
+  {
+    id: "interview",
+    title: "準備面試",
+    description: "我想把 Agentic Workflow 轉成能在面試中說清楚的能力。",
+    coachLine: "優先練 Boss、面試情境題和 60 秒 pitch，讓概念變成可表達的答案。"
+  }
+];
+
 export function createInitialProgress(now = Date.now()) {
   return {
     currentLessonIndex: 0,
@@ -12,6 +33,7 @@ export function createInitialProgress(now = Date.now()) {
     completedLessons: [],
     bossResults: [],
     dailyActivity: {},
+    learnerProfile: null,
     lastActiveAt: now
   };
 }
@@ -34,6 +56,23 @@ export function saveProgress(progress, storage = globalThis.localStorage) {
 
 export function resetProgress(storage = globalThis.localStorage) {
   if (storage) storage.removeItem(STORAGE_KEY);
+}
+
+export function onboardingState(progress) {
+  const selected = LEARNER_PROFILES.find((profile) => profile.id === progress.learnerProfile) ?? null;
+  return {
+    completed: Boolean(selected),
+    selected,
+    options: LEARNER_PROFILES,
+    headline: selected ? selected.title : "先選你的起點",
+    guidance: selected?.coachLine ?? "不用先做專案，先用低阻力題目建立 Agentic Workflow 的直覺。"
+  };
+}
+
+export function selectLearnerProfile(progress, profileId) {
+  const profile = LEARNER_PROFILES.find((item) => item.id === profileId);
+  progress.learnerProfile = profile ? profile.id : null;
+  return progress;
 }
 
 export function gradeQuestion(question, response) {
