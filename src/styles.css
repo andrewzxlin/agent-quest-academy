@@ -554,6 +554,48 @@ h1 {
   border-color: #86efac;
 }
 
+.job-signal-passport {
+  background: #ecfeff;
+  border: 1px solid #a5f3fc;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.passport-stamps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.passport-stamps div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid #a5f3fc;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.passport-stamps span,
+.passport-stamps strong,
+.passport-stamps small {
+  display: block;
+}
+
+.passport-stamps span {
+  color: #0e7490;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.passport-stamps strong {
+  margin-top: 6px;
+}
+
+.passport-stamps small {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
 .landing-checklist-card {
   background: #f8fafc;
   border: 1px solid var(--line);
@@ -2832,6 +2874,7 @@ button:disabled {
   .recommendation-card,
   .quest-compass,
   .career-snapshot,
+  .job-signal-passport,
   .landing-checklist-card,
   .job-evidence-brief,
   .exercise-scope-card,
@@ -2859,6 +2902,7 @@ button:disabled {
   .profile-grid,
   .proof-grid,
   .role-fit-grid,
+  .passport-stamps,
   .landing-checklist-grid,
   .evidence-story-seeds,
   .receipt-grid,

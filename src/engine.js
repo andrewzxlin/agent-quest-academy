@@ -1360,6 +1360,50 @@ export function jobRoleFitCard(progress) {
   };
 }
 
+export function jobSignalPassport(progress, now = Date.now()) {
+  const roleFit = jobRoleFitCard(progress);
+  const evidence = jobEvidenceBrief(progress, now);
+  const receipt = learningReceiptReel(progress, 1).receipts[0] ?? null;
+  const strongestTrack = [...roleFit.tracks].sort(
+    (a, b) => b.readyCount - a.readyCount || b.practicingCount - a.practicingCount
+  )[0];
+  const status =
+    strongestTrack.readyCount > 0
+      ? "evidence started"
+      : strongestTrack.practicingCount > 0
+        ? "practice started"
+        : "starter passport";
+
+  return {
+    title: "Job Signal Passport",
+    status,
+    summary:
+      strongestTrack.readyCount > 0
+        ? `Current strongest signal: ${strongestTrack.title}`
+        : "Start with one receipt, then build a role signal.",
+    stamps: [
+      {
+        id: "role",
+        label: "Role Signal",
+        value: strongestTrack.title,
+        detail: strongestTrack.proofLine
+      },
+      {
+        id: "evidence",
+        label: "Evidence Line",
+        value: evidence.strongestTitle,
+        detail: evidence.interviewLine
+      },
+      {
+        id: "receipt",
+        label: "Latest Receipt",
+        value: receipt ? `${receipt.resultLabel}: ${receipt.stage}` : "First receipt pending",
+        detail: receipt?.nextUse ?? "Answer one choice question to create the first visible proof point."
+      }
+    ]
+  };
+}
+
 function roleFitSkillChips(pieces) {
   return pieces.map((piece) => {
     const state =

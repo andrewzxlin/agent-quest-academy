@@ -138,6 +138,12 @@
 - Each path includes a low-friction practice button for the next available lesson, Boss, interview drill, or pitch.
 - The map stays low-friction: it uses existing lesson, Boss, and interview progress instead of adding project tasks.
 
+## Job Signal Passport
+
+- The home screen now summarizes the current strongest role signal, evidence line, and latest learning receipt.
+- The passport has three stamps: Role Signal, Evidence Line, and Latest Receipt.
+- It turns existing progress into a compact job-facing signal without adding extra assignments.
+
 ## Landing Checklist
 
 - The home screen now shows four simple gates for job-facing readiness: first lesson, Boss-proven foundations, role path evidence, and interview-ready explanations.

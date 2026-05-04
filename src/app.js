@@ -30,6 +30,7 @@ import {
   questCompass,
   jobReadinessMap,
   jobEvidenceBrief,
+  jobSignalPassport,
   landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
@@ -105,6 +106,7 @@ function render() {
   const compass = questCompass(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const roleFit = jobRoleFitCard(progress);
+  const signalPassport = jobSignalPassport(progress, Date.now());
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
   const receiptReel = learningReceiptReel(progress);
   const landingChecklist = landingReadinessChecklist(progress, Date.now());
@@ -193,6 +195,7 @@ function render() {
         ${renderExerciseScopeCard(exerciseScope)}
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderJobRoleFitCard(roleFit)}
+        ${renderJobSignalPassport(signalPassport)}
         ${renderLandingReadinessChecklist(landingChecklist)}
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderLearningReceiptReel(receiptReel)}
@@ -502,6 +505,27 @@ function renderJobRoleFitCard(card) {
           <em>${track.nextGap}</em>
           <small>${track.nextAction}</small>
           <button class="secondary compact role-fit-action" data-role-practice="${index}" ${track.recommendedPractice.type === "locked" ? "disabled" : ""}>${track.recommendedPractice.cta}</button>
+        </div>`)
+        .join("")}
+    </div>
+  </section>`;
+}
+
+function renderJobSignalPassport(passport) {
+  return `<section class="job-signal-passport ${passport.status.replaceAll(" ", "-")}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${passport.title}</p>
+        <h3>${passport.summary}</h3>
+      </div>
+      <p>${passport.status}</p>
+    </div>
+    <div class="passport-stamps">
+      ${passport.stamps
+        .map((stamp) => `<div>
+          <span>${stamp.label}</span>
+          <strong>${stamp.value}</strong>
+          <small>${stamp.detail}</small>
         </div>`)
         .join("")}
     </div>

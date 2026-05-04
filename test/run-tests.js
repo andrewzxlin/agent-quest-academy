@@ -43,6 +43,7 @@ import {
   isAnswerReady,
   jobReadinessMap,
   jobEvidenceBrief,
+  jobSignalPassport,
   landingReadinessChecklist,
   questCompass,
   jobRoleFitCard,
@@ -132,6 +133,7 @@ const tests = [
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
   ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
   ["job role fit card maps progress to role paths", testJobRoleFitCard],
+  ["job signal passport summarizes current role evidence", testJobSignalPassport],
   ["landing checklist tracks job-readiness gates", testLandingReadinessChecklist],
   ["job evidence brief turns progress into an interview line", testJobEvidenceBrief],
   ["exercise scope card keeps practice low-friction", testExerciseScopeCard],
@@ -1255,6 +1257,32 @@ function testJobRoleFitCard() {
   assert.equal(card.tracks.find((track) => track.id === "ai-app-builder").recommendedPractice.type, "lesson");
   assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").recommendedPractice.type, "lesson");
   assert.equal(card.tracks.find((track) => track.id === "agent-workflow-builder").recommendedPractice.chapterId, "tools");
+}
+
+function testJobSignalPassport() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let passport = jobSignalPassport(progress, now);
+  assert.equal(passport.title, "Job Signal Passport");
+  assert.equal(passport.status, "starter passport");
+  assert.equal(passport.stamps.length, 3);
+  assert.deepEqual(passport.stamps.map((stamp) => stamp.id), ["role", "evidence", "receipt"]);
+  assert.ok(passport.stamps.find((stamp) => stamp.id === "role").detail.includes("low-friction"));
+  assert.ok(passport.stamps.find((stamp) => stamp.id === "evidence").detail.includes("agentic workflow"));
+  assert.ok(passport.stamps.find((stamp) => stamp.id === "receipt").value.includes("pending"));
+  assert.doesNotMatch(JSON.stringify(passport), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  const chapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, now);
+  passport = jobSignalPassport(progress, now);
+  assert.equal(passport.status, "evidence started");
+  assert.ok(passport.summary.includes("Current strongest signal"));
+  assert.ok(passport.stamps.find((stamp) => stamp.id === "receipt").value.includes("Proof gained"));
 }
 
 function testLandingReadinessChecklist() {
