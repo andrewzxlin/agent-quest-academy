@@ -277,6 +277,36 @@ export function lessonPracticePlan(progress, lessonId) {
   };
 }
 
+export function lessonAnalogyBridge(lessonId) {
+  const lesson = flattenLessons().find((item) => item.id === lessonId);
+  if (!lesson) return null;
+  const skill = jobReadinessSkills.find((item) => item.chapterId === lesson.chapterId);
+  return {
+    lessonId,
+    chapterId: lesson.chapterId,
+    title: "Analogy bridge",
+    hook: lesson.analogy,
+    cards: [
+      {
+        id: "picture",
+        label: "Picture it",
+        text: `Picture the idea like this: ${lesson.analogy}`
+      },
+      {
+        id: "workflow",
+        label: "Workflow meaning",
+        text: `In the workflow, this means: ${lesson.focus ?? lesson.concept}`
+      },
+      {
+        id: "job",
+        label: "Job signal",
+        text: `Use this idea to explain job-ready agentic workflow judgment: ${skill?.signal ?? lesson.chapterTheme}.`
+      }
+    ],
+    prompt: "Read the analogy first, then answer the choice questions as workflow judgment practice."
+  };
+}
+
 export function conceptDiagramCard(lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;

@@ -30,6 +30,7 @@ import {
   landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
+  lessonAnalogyBridge,
   lessonPitchBuilder,
   lessonPracticePlan,
   lessonSkillCard,
@@ -107,6 +108,7 @@ function render() {
   const jobScenario = jobScenarioCard(chapter.id);
   const skillCard = lessonSkillCard(progress, lesson.id);
   const practicePlan = lessonPracticePlan(progress, lesson.id);
+  const analogyBridge = lessonAnalogyBridge(lesson.id);
   const conceptDiagram = conceptDiagramCard(lesson.id);
   const masteryLadder = lessonMasteryLadder(progress, lesson.id);
   const lessonPitch = lessonPitchBuilder(progress, lesson.id);
@@ -194,6 +196,7 @@ function render() {
         ${renderGlossaryCard(glossary)}
         ${renderLessonSkillCard(skillCard)}
         ${renderLessonPracticePlan(practicePlan)}
+        ${renderLessonAnalogyBridge(analogyBridge)}
         ${renderConceptDiagramCard(conceptDiagram)}
         ${renderLessonMasteryLadder(masteryLadder)}
         ${renderLessonPitchBuilder(lessonPitch)}
@@ -777,6 +780,27 @@ function renderLessonPracticePlan(plan) {
         .join("")}
     </div>
     <strong>${plan.promise}</strong>
+  </section>`;
+}
+
+function renderLessonAnalogyBridge(card) {
+  if (!card) return "";
+  return `<section class="lesson-analogy-bridge">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Analogy Bridge</p>
+        <h3>${card.title}</h3>
+      </div>
+      <p>${card.prompt}</p>
+    </div>
+    <div class="analogy-bridge-grid">
+      ${card.cards
+        .map((item) => `<div>
+          <span>${item.label}</span>
+          <strong>${item.text}</strong>
+        </div>`)
+        .join("")}
+    </div>
   </section>`;
 }
 

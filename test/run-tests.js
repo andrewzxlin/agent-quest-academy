@@ -44,6 +44,7 @@ import {
   landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
+  lessonAnalogyBridge,
   lessonPitchBuilder,
   lessonPracticePlan,
   lessonSkillCard,
@@ -75,6 +76,7 @@ const tests = [
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
   ["lesson practice plans show choice-first sequence", testLessonPracticePlans],
+  ["lesson analogy bridges explain concepts in plain language", testLessonAnalogyBridges],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
   ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
   ["lesson pitch builder turns mastery into interview lines", testLessonPitchBuilder],
@@ -300,6 +302,22 @@ function testLessonPracticePlans() {
   assert.equal(updated.attempted, 1);
   assert.equal(updated.formats.find((format) => format.type === "single").attempted, 1);
   assert.equal(lessonPracticePlan(progress, "missing-lesson"), null);
+}
+
+function testLessonAnalogyBridges() {
+  for (const lesson of flattenLessons()) {
+    const bridge = lessonAnalogyBridge(lesson.id);
+    assert.equal(bridge.lessonId, lesson.id);
+    assert.equal(bridge.chapterId, lesson.chapterId);
+    assert.equal(bridge.title, "Analogy bridge");
+    assert.equal(bridge.hook, lesson.analogy);
+    assert.deepEqual(bridge.cards.map((card) => card.id), ["picture", "workflow", "job"]);
+    assert.equal(bridge.cards.length, 3);
+    assert.ok(bridge.cards.every((card) => card.text.length >= 20));
+    assert.ok(bridge.prompt.includes("choice questions"));
+    assert.doesNotMatch(JSON.stringify(bridge), /repo|project implementation|build a project/i);
+  }
+  assert.equal(lessonAnalogyBridge("missing-lesson"), null);
 }
 
 function testConceptDiagramCards() {

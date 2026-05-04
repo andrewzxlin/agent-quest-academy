@@ -162,6 +162,12 @@
 - Learners see that the session starts with single-choice recognition, moves to multi-select connection, and ends with one tiny short answer.
 - The plan makes it explicit that the current phase uses quick judgment practice, not coding tasks.
 
+## Lesson Analogy Bridges
+
+- Every lesson now turns the built-in analogy into a three-part bridge: picture it, workflow meaning, and job signal.
+- The bridge gives beginners a plain-language anchor before the concept diagram and quiz.
+- It keeps the lesson visual and approachable while staying inside choice questions, multi-select, and short answers.
+
 ## Concept Diagram Cards
 
 - Every lesson now shows a four-step concept diagram before the quiz.

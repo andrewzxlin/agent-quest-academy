@@ -1204,6 +1204,42 @@ h1 {
   margin-top: 8px;
 }
 
+.lesson-analogy-bridge {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.analogy-bridge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.analogy-bridge-grid div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.analogy-bridge-grid span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(234 88 12 / 0.12);
+  color: #c2410c;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+}
+
+.analogy-bridge-grid strong {
+  display: block;
+  margin-top: 10px;
+}
+
 .concept-diagram-card {
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--diagram-accent, #2563eb) 16%, white), transparent 38%),
@@ -2414,6 +2450,7 @@ button:disabled {
   .role-fit-grid,
   .landing-checklist-grid,
   .practice-plan-grid,
+  .analogy-bridge-grid,
   .diagram-flow,
   .mastery-ladder-grid,
   .lesson-pitch-lines,
