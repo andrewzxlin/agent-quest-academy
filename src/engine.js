@@ -1645,6 +1645,23 @@ export function dailyPhraseBankCard(progress) {
     proofCount,
     repairCount,
     nextAction: hasPhrases ? "Use the newest line in the one-line coach or keep answering tiny prompts." : "Start with one choice question.",
+    rehearsalSteps: [
+      {
+        id: "read",
+        label: "Read",
+        text: hasPhrases ? "Read the newest line once." : "Answer once to unlock the first line."
+      },
+      {
+        id: "trim",
+        label: "Trim",
+        text: hasPhrases ? "Keep only the workflow signal." : "The app will keep the line short."
+      },
+      {
+        id: "say",
+        label: "Say",
+        text: hasPhrases ? "Say it as one interview sentence." : "No blank-page writing required."
+      }
+    ],
     promise: "This bank grows from choice questions and tiny short answers, not project work."
   };
 }

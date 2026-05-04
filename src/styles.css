@@ -1616,6 +1616,27 @@ h1 {
   grid-column: 1 / -1;
 }
 
+.phrase-bank-steps {
+  display: grid;
+  gap: 8px;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.phrase-bank-steps small {
+  background: rgb(255 255 255 / 0.76);
+  border: 1px solid rgb(8 145 178 / 0.14);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.phrase-bank-steps b {
+  color: #0891b2;
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
 .daily-momentum-card {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -4568,6 +4589,7 @@ button:disabled {
   .practice-diet-formats,
   .practice-diet-rules,
   .zero-landing-milestones,
+  .phrase-bank-steps,
   .jargon-shield-terms,
   .skill-profile-metrics,
   .skill-profile-highlights,

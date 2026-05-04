@@ -31,6 +31,7 @@
 - Beginner view now shows the latest reusable line without opening the full dashboard.
 - The card counts saved proof lines and repair targets, then points to the next tiny prompt.
 - It makes the evidence loop visible from day one while staying choice-first and no-project.
+- Each phrase includes a Read / Trim / Say rehearsal path so learners can reuse it without open-ended writing.
 
 ## Session Rhythm
 

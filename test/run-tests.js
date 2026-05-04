@@ -1531,6 +1531,8 @@ function testDailyPhraseBankCard() {
   assert.equal(card.repairCount, 0);
   assert.ok(card.latestLine.includes("one low-friction question"));
   assert.ok(card.promise.includes("choice questions"));
+  assert.deepEqual(card.rehearsalSteps.map((step) => step.id), ["read", "trim", "say"]);
+  assert.ok(card.rehearsalSteps.find((step) => step.id === "say").text.includes("No blank-page"));
   assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
 
   const [single, multi] = flattenQuestions().filter((item) => ["single", "multi"].includes(item.type));
@@ -1544,6 +1546,7 @@ function testDailyPhraseBankCard() {
   assert.ok(card.latestLine.startsWith("I can "));
   assert.ok(card.latestUse.includes("Review"));
   assert.ok(card.nextAction.includes("one-line coach"));
+  assert.ok(card.rehearsalSteps.find((step) => step.id === "say").text.includes("interview sentence"));
 }
 
 function testZeroToLandingQuestCard() {

@@ -1034,6 +1034,12 @@ function renderDailyPhraseBankCard(card) {
       <strong>${card.repairCount}</strong>
       <span>repair</span>
     </div>
+    <div class="phrase-bank-steps">
+      ${card.rehearsalSteps.map((step) => `<small>
+        <b>${step.label}</b>
+        ${step.text}
+      </small>`).join("")}
+    </div>
     <em>${card.nextAction}</em>
     <small>${card.promise}</small>
   </section>`;
