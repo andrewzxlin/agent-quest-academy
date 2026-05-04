@@ -3059,6 +3059,13 @@ export function dailyMissions(progress, now = Date.now()) {
       done: activity.answers >= 5
     },
     {
+      id: "bank-phrase",
+      title: "Bank 1 phrase",
+      current: Math.min(activity.answers, 1),
+      target: 1,
+      done: activity.answers >= 1
+    },
+    {
       id: "finish-lesson",
       title: "完成 1 課",
       current: Math.min(activity.lessonsCompleted, 1),

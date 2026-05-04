@@ -32,6 +32,7 @@
 - The card counts saved proof lines and repair targets, then points to the next tiny prompt.
 - It makes the evidence loop visible from day one while staying choice-first and no-project.
 - Each phrase includes a Read / Trim / Say rehearsal path so learners can reuse it without open-ended writing.
+- Daily Quest now includes banking one phrase, so the daily loop rewards reusable wording as well as answer volume.
 
 ## Session Rhythm
 
