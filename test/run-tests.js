@@ -39,6 +39,7 @@ const tests = [
   ["multi choice grading works", testMultiChoice],
   ["choice feedback covers every selectable option", testChoiceFeedback],
   ["short answer keyword grading works", testShortAnswer],
+  ["short answer feedback includes matches missing keywords and sample answer", testShortAnswerFeedback],
   ["wrong answer is added to due review", testWrongAnswerReview],
   ["correct answer schedules future review", testCorrectAnswerReview],
   ["lesson completion advances progress", testLessonCompletion],
@@ -174,6 +175,17 @@ function testShortAnswer() {
   const question = flattenQuestions().find((item) => item.type === "short");
   assert.equal(gradeQuestion(question, question.keywords[0]).correct, true);
   assert.equal(gradeQuestion(question, "完全無關").correct, false);
+}
+
+function testShortAnswerFeedback() {
+  const shortQuestions = [...flattenQuestions(), ...flattenInterviewQuestions()].filter((question) => question.type === "short");
+  for (const question of shortQuestions) {
+    assert.ok(question.sampleAnswer.includes(question.keywords[0]));
+    const result = gradeQuestion(question, question.keywords[0]);
+    assert.deepEqual(result.matches, [question.keywords[0]]);
+    assert.equal(result.missing.length, question.keywords.length - 1);
+    assert.equal(result.expected, question.keywords);
+  }
 }
 
 function testWrongAnswerReview() {

@@ -1166,6 +1166,7 @@ function short(id, prompt, keywords, explanation) {
     prompt,
     keywords,
     minMatches: 1,
+    sampleAnswer: `可以提到 ${keywords.slice(0, 3).join("、")}；重點是說清楚它如何影響 agent workflow 的判斷。`,
     explanation
   };
 }

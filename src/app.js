@@ -250,6 +250,7 @@ function renderFeedback(question, result) {
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
     ${renderChoiceFeedback(question, result)}
+    ${renderShortFeedback(question, result)}
   </div>`;
 }
 
@@ -281,6 +282,26 @@ function choiceFeedbackState(question, result, index) {
     return `${selected} ${expected}`.trim();
   }
   return "";
+}
+
+function renderShortFeedback(question, result) {
+  if (question.type !== "short") return "";
+  const matches = result.matches ?? [];
+  const missing = result.missing ?? [];
+  return `<div class="short-feedback">
+    <div>
+      <span>命中的概念</span>
+      <strong>${matches.length === 0 ? "尚未命中關鍵概念" : matches.join("、")}</strong>
+    </div>
+    <div>
+      <span>可以再補</span>
+      <strong>${missing.slice(0, 4).join("、")}</strong>
+    </div>
+    <div>
+      <span>示範回答</span>
+      <p>${question.sampleAnswer}</p>
+    </div>
+  </div>`;
 }
 
 function readinessStatusText(status) {

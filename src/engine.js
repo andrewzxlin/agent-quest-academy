@@ -57,7 +57,8 @@ export function gradeQuestion(question, response) {
     return {
       correct: matches.length >= question.minMatches,
       expected: question.keywords,
-      matches
+      matches,
+      missing: question.keywords.filter((keyword) => !matches.includes(keyword))
     };
   }
   throw new Error(`Unknown question type: ${question.type}`);
