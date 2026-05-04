@@ -484,6 +484,77 @@ h1 {
   gap: 18px;
 }
 
+.beginner-command-group {
+  border-left: 4px solid #c7d2fe;
+  display: grid;
+  gap: 14px;
+  padding: 4px 0 8px 16px;
+}
+
+.beginner-command-group.route {
+  border-color: #a78bfa;
+}
+
+.beginner-command-group.daily {
+  border-color: #67e8f9;
+}
+
+.beginner-command-group.review {
+  border-color: #86efac;
+}
+
+.beginner-route-rail {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.beginner-route-rail div {
+  align-items: center;
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  gap: 4px;
+  grid-template-columns: auto 1fr;
+  padding: 12px;
+}
+
+.beginner-route-rail div.active,
+.beginner-route-rail div.open,
+.beginner-route-rail div.due {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgb(139 92 246 / 0.1);
+}
+
+.beginner-route-rail div.done,
+.beginner-route-rail div.scheduled {
+  border-color: #86efac;
+}
+
+.beginner-route-rail span {
+  align-items: center;
+  background: #ede9fe;
+  border-radius: 999px;
+  color: #6d28d9;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  grid-row: 1 / span 2;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+}
+
+.beginner-route-rail strong,
+.beginner-route-rail small {
+  display: block;
+}
+
+.beginner-route-rail small {
+  color: var(--muted);
+}
+
 .beginner-section-heading {
   align-items: end;
   display: flex;
@@ -5088,6 +5159,7 @@ button:disabled {
   .choice-lens-steps,
   .question-signal-steps,
   .session-rhythm-steps,
+  .beginner-route-rail,
   .beginner-command-grid.path,
   .beginner-command-grid.daily,
   .beginner-command-grid.review,

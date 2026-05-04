@@ -625,48 +625,86 @@ function renderPracticeDietCard(card) {
 
 function renderBeginnerCommandCenter(cards) {
   return `<section class="beginner-command-center">
-    <div class="beginner-section-heading">
-      <div>
-        <p class="eyebrow">Beginner Route</p>
-        <h3>Learn by tiny choices, visible proof, and scheduled review</h3>
+    ${renderBeginnerRouteRail(cards)}
+    <div class="beginner-command-group route">
+      <div class="beginner-section-heading">
+        <div>
+          <p class="eyebrow">Beginner Route</p>
+          <h3>Learn by tiny choices, visible proof, and scheduled review</h3>
+        </div>
+        <p>No setup, no project gate, no blank-page writing.</p>
       </div>
-      <p>No setup, no project gate, no blank-page writing.</p>
-    </div>
-    <div class="beginner-command-grid path">
-      ${renderPracticeDietCard(cards.practiceDiet)}
-      ${renderChoiceArcadeCard(cards.choiceArcade)}
-      ${renderBeginnerSkillMapCard(cards.beginnerSkillMap)}
-      ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
-      ${renderRoleSamplerCard(cards.roleSampler)}
-      ${renderJargonShieldCard(cards.jargonShield)}
-    </div>
-    <div class="beginner-section-heading compact">
-      <div>
-        <p class="eyebrow">Daily Loop</p>
-        <h3>One small ticket can still move the path</h3>
+      <div class="beginner-command-grid path">
+        ${renderPracticeDietCard(cards.practiceDiet)}
+        ${renderChoiceArcadeCard(cards.choiceArcade)}
+        ${renderBeginnerSkillMapCard(cards.beginnerSkillMap)}
+        ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
+        ${renderRoleSamplerCard(cards.roleSampler)}
+        ${renderJargonShieldCard(cards.jargonShield)}
       </div>
-      <p>Stop after the minimum or keep the proof trail warm.</p>
     </div>
-    <div class="beginner-command-grid daily">
-      ${renderDailyQuestSnapshot(cards.dailyQuest)}
-      ${renderDailyMinimumCard(cards.dailyMinimum)}
-      ${renderDailySkillTicketCard(cards.dailySkillTicket)}
-      ${renderDailyLandingStepCard(cards.dailyLandingStep)}
-      ${renderDailyPhraseBankCard(cards.dailyPhraseBank)}
-    </div>
-    <div class="beginner-section-heading compact">
-      <div>
-        <p class="eyebrow">Review Loop</p>
-        <h3>Weak signals come back before they fade</h3>
+
+    <div class="beginner-command-group daily">
+      <div class="beginner-section-heading compact">
+        <div>
+          <p class="eyebrow">Daily Loop</p>
+          <h3>One small ticket can still move the path</h3>
+        </div>
+        <p>Stop after the minimum or keep the proof trail warm.</p>
       </div>
-      <p>Mistakes become scheduled cards, not dead ends.</p>
+      <div class="beginner-command-grid daily">
+        ${renderDailyQuestSnapshot(cards.dailyQuest)}
+        ${renderDailyMinimumCard(cards.dailyMinimum)}
+        ${renderDailySkillTicketCard(cards.dailySkillTicket)}
+        ${renderDailyLandingStepCard(cards.dailyLandingStep)}
+        ${renderDailyPhraseBankCard(cards.dailyPhraseBank)}
+      </div>
     </div>
-    <div class="beginner-command-grid review">
-      ${renderMistakeSafetyNetCard(cards.mistakeSafetyNet)}
-      ${renderReviewOrbitCard(cards.reviewOrbit)}
-      ${renderReviewRescueQuest(cards.rescueQuest)}
+
+    <div class="beginner-command-group review">
+      <div class="beginner-section-heading compact">
+        <div>
+          <p class="eyebrow">Review Loop</p>
+          <h3>Weak signals come back before they fade</h3>
+        </div>
+        <p>Mistakes become scheduled cards, not dead ends.</p>
+      </div>
+      <div class="beginner-command-grid review">
+        ${renderMistakeSafetyNetCard(cards.mistakeSafetyNet)}
+        ${renderReviewOrbitCard(cards.reviewOrbit)}
+        ${renderReviewRescueQuest(cards.rescueQuest)}
+      </div>
     </div>
   </section>`;
+}
+
+function renderBeginnerRouteRail(cards) {
+  const routeDone = cards.beginnerSkillMap.completedCount;
+  const routeTotal = cards.beginnerSkillMap.totalCount;
+  const dailyDone = cards.dailySkillTicket.completedCount;
+  const dailyTotal = cards.dailySkillTicket.totalCount;
+  const reviewMode = cards.reviewOrbit.mode;
+  const reviewLabel =
+    reviewMode === "due"
+      ? `${cards.reviewOrbit.dueCount} due`
+      : `${cards.reviewOrbit.scheduledCount} scheduled`;
+  return `<div class="beginner-route-rail">
+    <div class="active">
+      <span>01</span>
+      <strong>Route</strong>
+      <small>${routeDone}/${routeTotal} mastered</small>
+    </div>
+    <div class="${cards.dailySkillTicket.status}">
+      <span>02</span>
+      <strong>Daily</strong>
+      <small>${dailyDone}/${dailyTotal} stamps</small>
+    </div>
+    <div class="${reviewMode}">
+      <span>03</span>
+      <strong>Review</strong>
+      <small>${reviewLabel}</small>
+    </div>
+  </div>`;
 }
 
 function renderChoiceArcadeCard(card) {
