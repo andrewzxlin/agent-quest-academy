@@ -1,5 +1,6 @@
 import {
   beginnerGlossary,
+  chapterVisuals,
   course,
   flattenInterviewQuestions,
   flattenLessons,
@@ -67,6 +68,57 @@ const PROFILE_QUEST_STEPS = {
     "先看工作情境卡，抓住這章在面試裡會被問的判斷點。",
     "完成 Boss 和 interview drill，累積可口頭說明的架構語言。",
     "用 pitch 練習把問題、workflow 角色、風險取捨講成 60 秒答案。"
+  ]
+};
+
+const CONCEPT_DIAGRAM_NODES = {
+  "agent-basics": [
+    { label: "Goal", detail: "What the learner or user wants the agent to finish." },
+    { label: "State", detail: "What the workflow remembers between steps." },
+    { label: "Decision", detail: "How the next step is chosen instead of guessed." },
+    { label: "Gate", detail: "Where risk, approval, or feedback changes the path." }
+  ],
+  tools: [
+    { label: "Need", detail: "The user asks for something outside plain text." },
+    { label: "Schema", detail: "The tool input is shaped before any call happens." },
+    { label: "Call", detail: "The agent uses an API, search, database, or action." },
+    { label: "Recover", detail: "Retry, fallback, or escalation handles tool failure." }
+  ],
+  rag: [
+    { label: "Question", detail: "The agent receives a question that needs evidence." },
+    { label: "Retrieve", detail: "Documents are chunked and searched for relevant context." },
+    { label: "Ground", detail: "The answer is tied back to retrieved sources." },
+    { label: "Check", detail: "Citations and uncertainty reduce hallucination risk." }
+  ],
+  memory: [
+    { label: "Signal", detail: "A useful preference, fact, or history appears." },
+    { label: "Store", detail: "Only durable, safe memory is kept." },
+    { label: "Recall", detail: "The agent brings memory back when it matters." },
+    { label: "Filter", detail: "Privacy and stale memory are checked before use." }
+  ],
+  guardrails: [
+    { label: "Input", detail: "The user request is screened before action." },
+    { label: "Policy", detail: "Rules define what is allowed, risky, or blocked." },
+    { label: "Route", detail: "The workflow continues, asks for help, or refuses." },
+    { label: "Output", detail: "The final response is checked before delivery." }
+  ],
+  evals: [
+    { label: "Case", detail: "A realistic task becomes a repeatable test item." },
+    { label: "Score", detail: "The system grades quality, safety, and correctness." },
+    { label: "Compare", detail: "Changes are measured against a baseline." },
+    { label: "Improve", detail: "Weak spots become the next practice target." }
+  ],
+  observability: [
+    { label: "Trace", detail: "The full workflow is recorded step by step." },
+    { label: "Span", detail: "Each model call, tool call, and guardrail is visible." },
+    { label: "Metric", detail: "Latency, cost, and failures become measurable." },
+    { label: "Debug", detail: "The team can find where the workflow broke." }
+  ],
+  frameworks: [
+    { label: "Component", detail: "Models, tools, prompts, and retrievers are separated." },
+    { label: "Graph", detail: "Nodes and edges make workflow state explicit." },
+    { label: "Runtime", detail: "Execution handles retries, persistence, and handoffs." },
+    { label: "Proof", detail: "The learner can explain why this structure matters." }
   ]
 };
 
@@ -169,6 +221,23 @@ export function lessonSkillCard(progress, lessonId) {
     total,
     mastery: masteryForLesson(progress, lesson),
     mix
+  };
+}
+
+export function conceptDiagramCard(lessonId) {
+  const lesson = flattenLessons().find((item) => item.id === lessonId);
+  if (!lesson) return null;
+  const visual = chapterVisuals[lesson.chapterId] ?? chapterVisuals["agent-basics"];
+  return {
+    lessonId,
+    chapterId: lesson.chapterId,
+    title: `${lesson.title} concept map`,
+    mark: visual.mark,
+    accent: visual.accent,
+    caption: visual.caption,
+    imagePrompt: visual.imagePrompt,
+    bridgeLine: "Read left to right before answering: what enters the workflow, what changes, what is checked, and what proof comes out.",
+    nodes: CONCEPT_DIAGRAM_NODES[lesson.chapterId] ?? CONCEPT_DIAGRAM_NODES["agent-basics"]
   };
 }
 

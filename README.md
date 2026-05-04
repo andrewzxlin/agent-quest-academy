@@ -149,6 +149,13 @@
 - The card connects the lesson to one job-facing skill signal and one answer lens.
 - It reinforces that the current path stays low-friction: single choice, multi-select, and short answers rather than coding work.
 
+## Concept Diagram Cards
+
+- Every lesson now shows a four-step concept diagram before the quiz.
+- The diagram turns the current chapter into a tiny workflow map: what enters, what changes, what gets checked, and what proof comes out.
+- Each diagram reuses the chapter visual mark, accent color, caption, and Image 2.0 prompt seed.
+- This gives beginners a picture-first anchor before answering choice questions or short explanations.
+
 ## Learning Puzzle Board
 
 - The home screen now shows 8 job-readiness puzzle pieces across the full agentic workflow path.

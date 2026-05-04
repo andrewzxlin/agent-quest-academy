@@ -24,6 +24,7 @@ import {
   chapterMap,
   chapterSummaryCards,
   completionCard,
+  conceptDiagramCard,
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
@@ -66,6 +67,7 @@ const tests = [
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
+  ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
   ["learning puzzle board tracks job-readiness pieces", testLearningPuzzleBoard],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
@@ -259,6 +261,24 @@ function testLessonSkillCards() {
   assert.equal(updated.correct, 1);
   assert.ok(updated.mastery > 0);
   assert.equal(lessonSkillCard(progress, "missing-lesson"), null);
+}
+
+function testConceptDiagramCards() {
+  for (const lesson of flattenLessons()) {
+    const card = conceptDiagramCard(lesson.id);
+    assert.equal(card.lessonId, lesson.id);
+    assert.equal(card.chapterId, lesson.chapterId);
+    assert.equal(card.nodes.length, 4);
+    assert.match(card.accent, /^#[0-9a-f]{6}$/i);
+    assert.match(card.mark, /^[A-Z]{2}$/);
+    assert.ok(card.title.includes(lesson.title));
+    assert.ok(card.bridgeLine.includes("workflow"));
+    assert.ok(card.imagePrompt.includes("educational game card"));
+    assert.ok(card.imagePrompt.includes("no text"));
+    assert.ok(card.nodes.every((node) => node.label.length > 0 && node.detail.length >= 20));
+    assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project/i);
+  }
+  assert.equal(conceptDiagramCard("missing-lesson"), null);
 }
 
 function testLearningPuzzleBoard() {

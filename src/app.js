@@ -11,6 +11,7 @@ import {
   chapterMap,
   chapterSummaryCards,
   completionCard,
+  conceptDiagramCard,
   completeBossQuiz,
   completeLesson,
   createInitialProgress,
@@ -98,6 +99,7 @@ function render() {
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
   const skillCard = lessonSkillCard(progress, lesson.id);
+  const conceptDiagram = conceptDiagramCard(lesson.id);
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -181,6 +183,7 @@ function render() {
         ${renderJobScenarioCard(jobScenario)}
         ${renderGlossaryCard(glossary)}
         ${renderLessonSkillCard(skillCard)}
+        ${renderConceptDiagramCard(conceptDiagram)}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -727,6 +730,29 @@ function renderLessonSkillCard(card) {
         <p>${card.attempted}/${card.total} 題已嘗試，${card.mastery}% 已掌握。</p>
       </div>
     </div>
+  </section>`;
+}
+
+function renderConceptDiagramCard(card) {
+  if (!card) return "";
+  return `<section class="concept-diagram-card" style="--diagram-accent: ${card.accent}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Concept Diagram</p>
+        <h3>${card.title}</h3>
+      </div>
+      <p>${card.bridgeLine}</p>
+    </div>
+    <div class="diagram-flow">
+      ${card.nodes
+        .map((node, index) => `<div class="diagram-node">
+          <span>${index + 1}</span>
+          <strong>${node.label}</strong>
+          <small>${node.detail}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <p class="diagram-caption"><b>${card.mark}</b>${card.caption}</p>
   </section>`;
 }
 

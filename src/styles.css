@@ -1122,6 +1122,87 @@ h1 {
   margin-top: 8px;
 }
 
+.concept-diagram-card {
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--diagram-accent, #2563eb) 16%, white), transparent 38%),
+    #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.diagram-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.diagram-node {
+  position: relative;
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.diagram-node:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 26px;
+  right: -14px;
+  width: 16px;
+  height: 2px;
+  background: var(--diagram-accent, #2563eb);
+}
+
+.diagram-node span,
+.diagram-node strong,
+.diagram-node small {
+  display: block;
+}
+
+.diagram-node span {
+  align-items: center;
+  background: var(--diagram-accent, #2563eb);
+  border-radius: 999px;
+  color: white;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.diagram-node strong {
+  margin-top: 10px;
+}
+
+.diagram-node small {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.diagram-caption {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.diagram-caption b {
+  background: var(--diagram-accent, #2563eb);
+  border-radius: 999px;
+  color: white;
+  display: inline-flex;
+  font-size: 12px;
+  justify-content: center;
+  min-width: 36px;
+  padding: 6px 8px;
+}
+
 .job-scenario-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2016,8 +2097,13 @@ button:disabled {
   .proof-grid,
   .role-fit-grid,
   .landing-checklist-grid,
+  .diagram-flow,
   .summary-grid {
     grid-template-columns: 1fr;
+  }
+
+  .diagram-node::after {
+    display: none;
   }
 
   .section-title {
