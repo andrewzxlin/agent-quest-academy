@@ -1199,6 +1199,10 @@ function testJobEvidenceBrief() {
   assert.equal(brief.total, course.chapters.length);
   assert.ok(brief.interviewLine.includes("agentic workflow"));
   assert.equal(brief.scriptParts.length, 3);
+  assert.deepEqual(brief.storySeeds.map((seed) => seed.id), ["situation", "judgment", "signal"]);
+  assert.equal(brief.storySeeds.length, 3);
+  assert.ok(brief.storySeeds.every((seed) => seed.text.length >= 30));
+  assert.doesNotMatch(JSON.stringify(brief.storySeeds), /repo|project implementation|build a project/i);
   assert.ok(brief.scriptParts[0].includes("問題"));
   assert.ok(brief.scriptParts[1].includes("角色"));
   assert.ok(brief.scriptParts[2].includes("風險"));
@@ -1221,6 +1225,7 @@ function testJobEvidenceBrief() {
   brief = jobEvidenceBrief(progress, 1000);
   assert.equal(brief.strongestStatus, "interview_ready");
   assert.ok(brief.headline.includes("interview-ready"));
+  assert.ok(brief.storySeeds.find((seed) => seed.id === "signal").text.includes("interview answer"));
 }
 
 function testExerciseScopeCard() {

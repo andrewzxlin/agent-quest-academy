@@ -511,6 +511,14 @@ function renderJobEvidenceBrief(brief) {
       <div class="evidence-script">
         ${brief.scriptParts.map((part) => `<span>${part}</span>`).join("")}
       </div>
+      <div class="evidence-story-seeds">
+        ${brief.storySeeds
+          .map((seed) => `<div>
+            <span>${seed.label}</span>
+            <small>${seed.text}</small>
+          </div>`)
+          .join("")}
+      </div>
     </div>
     <div class="evidence-meter">
       <span>${brief.readyCount}/${brief.total}</span>

@@ -252,6 +252,13 @@
 - It breaks the evidence into a three-part script: problem, workflow role, and risk or tradeoff.
 - This helps learners connect low-friction drills to job-facing explanations.
 
+## Job Evidence Story Seeds
+
+- The Job Evidence Brief now adds Situation, Judgment, and Signal seeds.
+- These turn progress into a short interview story without asking learners to invent an answer from a blank page.
+- The seeds reuse existing proof and practice progress instead of adding project implementation work.
+- This helps beginners explain why an agentic workflow choice matters before they are asked to build a full system.
+
 ## Exercise Scope Guardrail
 
 - Main lessons, Boss Quiz, interview drills, and review sessions stay limited to single choice, multi-select, and short answer questions.

@@ -1352,6 +1352,26 @@ export function jobEvidenceBrief(progress, now = Date.now()) {
       `角色：我會說明它如何影響 state、tool、retrieval、guardrail 或 feedback loop。`,
       `風險：我會補一句實務取捨，避免只背名詞。`
     ],
+    storySeeds: [
+      {
+        id: "situation",
+        label: "Situation",
+        text: `I studied ${strongest.title} as a concrete agentic workflow problem.`
+      },
+      {
+        id: "judgment",
+        label: "Judgment",
+        text: "I practiced judging the workflow role instead of only naming the concept."
+      },
+      {
+        id: "signal",
+        label: "Signal",
+        text:
+          strongest.status === "interview_ready"
+            ? "I can now turn the proof into a short interview answer."
+            : "My next step is to turn this proof into a short interview answer."
+      }
+    ],
     readyCount,
     practiceCount,
     total: proofs.length,
