@@ -66,7 +66,8 @@ import {
   reviewRhythmCard,
   reviewStats,
   selectLearnerProfile,
-  shortAnswerSupport
+  shortAnswerSupport,
+  uncertaintySafetyCard
 } from "../src/engine.js";
 
 const tests = [
@@ -89,6 +90,7 @@ const tests = [
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
   ["choice elimination hints reduce option overload", testChoiceEliminationHints],
+  ["uncertainty safety cards normalize unsure answers", testUncertaintySafetyCards],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
@@ -531,6 +533,24 @@ function testChoiceEliminationHints() {
       assert.ok(hint.body.includes("Keep every option"));
       assert.ok(hint.checks.some((check) => check.includes("Do not stop")));
     }
+  }
+}
+
+function testUncertaintySafetyCards() {
+  const questions = [...flattenQuestions(), ...flattenInterviewQuestions()];
+  for (const question of questions) {
+    const card = uncertaintySafetyCard(question);
+    assert.equal(card.title, "Not sure is a valid move");
+    assert.ok(["Recognize", "Connect", "Explain"].includes(card.stage));
+    assert.ok(card.body.includes(card.stage.toLowerCase()));
+    assert.ok(card.body.includes("perfect confidence"));
+    assert.ok(card.action.length >= 50);
+    assert.ok(card.reviewPromise.includes("review"));
+    assert.ok(card.reviewPromise.includes("blank-page"));
+    assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+    if (question.type === "single") assert.ok(card.action.includes("Pick the option"));
+    if (question.type === "multi") assert.ok(card.action.includes("Select every workflow part"));
+    if (question.type === "short") assert.ok(card.action.includes("concept chip"));
   }
 }
 

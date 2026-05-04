@@ -55,7 +55,8 @@ import {
   resetProgress,
   saveProgress,
   selectLearnerProfile,
-  shortAnswerSupport
+  shortAnswerSupport,
+  uncertaintySafetyCard
 } from "./engine.js";
 
 let progress = loadProgress();
@@ -224,6 +225,7 @@ function render() {
           ${renderQuestionMasteryStage(questionMasteryStage(question))}
           ${renderQuestionCoach(questionCoachHint(question))}
           ${renderChoiceEliminationHint(choiceEliminationHint(question))}
+          ${renderUncertaintySafetyCard(uncertaintySafetyCard(question))}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
           <div class="actions">
@@ -999,6 +1001,17 @@ function renderChoiceEliminationHint(hint) {
     <div class="elimination-checks">
       ${hint.checks.map((check) => `<small>${check}</small>`).join("")}
     </div>
+  </div>`;
+}
+
+function renderUncertaintySafetyCard(card) {
+  return `<div class="uncertainty-safety-card">
+    <div>
+      <span>${card.title}</span>
+      <p>${card.body}</p>
+    </div>
+    <strong>${card.action}</strong>
+    <small>${card.reviewPromise}</small>
   </div>`;
 }
 

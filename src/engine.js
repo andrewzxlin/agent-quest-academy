@@ -587,6 +587,27 @@ export function choiceEliminationHint(question) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function uncertaintySafetyCard(question) {
+  const stage = questionMasteryStage(question);
+  const action =
+    question.type === "single"
+      ? "Pick the option that changes the workflow most clearly, or mark uncertainty and let review handle it."
+      : question.type === "multi"
+        ? "Select every workflow part you can defend, or mark uncertainty before checking."
+        : question.type === "short"
+          ? "Use one concept chip or the sentence template; a partial sentence is enough to create a review target."
+          : null;
+  if (!action) throw new Error(`Unknown question type: ${question.type}`);
+
+  return {
+    title: "Not sure is a valid move",
+    stage: stage.label,
+    body: `This question trains ${stage.label.toLowerCase()}. You do not need perfect confidence before answering.`,
+    action,
+    reviewPromise: "If you mark uncertainty, this pattern comes back through review instead of becoming a blank-page block."
+  };
+}
+
 export function shortAnswerSupport(question) {
   if (question.type !== "short") return null;
   const concepts = question.keywords.slice(0, Math.max(1, question.minMatches));

@@ -19,6 +19,12 @@
 - This turns mistakes into architecture judgment practice instead of simple right/wrong memorization.
 - Every checked answer includes a next-time recall cue so learners know what signal to look for in review.
 
+## Uncertainty Safety Cards
+
+- Every question now explains that "not sure" is a valid learning move.
+- The card tells learners how to take one small action for single choice, multi-select, or short answer prompts.
+- It makes the review loop explicit, so uncertainty becomes a scheduled practice target instead of a blank-page block.
+
 ## Short Answer Coaching
 
 - Short answers show matched concepts, missing concepts, and a compact sample answer.
