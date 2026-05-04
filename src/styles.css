@@ -5220,6 +5220,69 @@ h1 {
   color: #7f1d1d;
 }
 
+.answer-loot-card {
+  background: rgb(255 255 255 / 0.88);
+  border: 1px solid rgb(22 163 74 / 0.34);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+}
+
+.answer-loot-card.repair {
+  border-color: rgb(234 88 12 / 0.34);
+}
+
+.answer-loot-card span,
+.answer-loot-card strong,
+.answer-loot-card small,
+.answer-loot-badges span,
+.answer-loot-badges strong,
+.answer-loot-badges small {
+  display: block;
+}
+
+.answer-loot-card > div > span {
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-loot-card.repair > div > span {
+  color: #c2410c;
+}
+
+.answer-loot-card strong {
+  margin-top: 5px;
+}
+
+.answer-loot-card small {
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.answer-loot-badges {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.answer-loot-badges div {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.answer-loot-badges span {
+  color: #475569;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .answer-outcome-card {
   background: rgb(255 255 255 / 0.84);
   border: 1px solid rgb(37 99 235 / 0.2);
@@ -6160,6 +6223,7 @@ button:disabled {
   .beginner-command-grid.review,
   .short-recipe-steps,
   .answer-outcome-lanes,
+  .answer-loot-badges,
   .answer-evidence-clip,
   .proof-booster-card,
   .puzzle-grid,

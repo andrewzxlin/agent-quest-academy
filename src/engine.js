@@ -1467,6 +1467,43 @@ export function answerOutcomeCard(question, result, progress) {
   };
 }
 
+export function answerLootCard(question, result, progress) {
+  const state = progress.answered[questionKey(question)];
+  const stage = questionMasteryStage(question);
+  const xpGain = result.correct ? 10 : 2;
+  const cleanCount = state?.correctCount ?? 0;
+  const reviewCount = state?.wrongCount ?? 0;
+  const status = result.correct ? "proof" : "repair";
+
+  return {
+    title: "Answer Loot",
+    status,
+    headline: result.correct ? "Loot gained: proof signal saved" : "Repair loot gained: review seed saved",
+    subhead: `${question.chapterTitle} / ${stage.label}`,
+    nextAction: result.correct ? "Bank this signal and take the next tiny prompt." : "Read the fix, then let review bring it back.",
+    badges: [
+      {
+        id: "xp",
+        label: "XP",
+        value: `+${xpGain}`,
+        detail: result.correct ? "Clean answer reward" : "Repair attempt reward"
+      },
+      {
+        id: "signal",
+        label: "Signal",
+        value: stage.label,
+        detail: result.correct ? `${cleanCount} clean pass` : `${reviewCount} review miss`
+      },
+      {
+        id: "loop",
+        label: "Loop",
+        value: result.correct ? "Recall" : "Review",
+        detail: result.correct ? "Scheduled to stick" : "Queued to repair"
+      }
+    ]
+  };
+}
+
 export function questionMasterySignal(progress, question) {
   const state = progress.answered[questionKey(question)];
   if (!state) return null;

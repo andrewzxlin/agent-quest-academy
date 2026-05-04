@@ -4,6 +4,7 @@ import {
   abilityProofCards,
   answerOutcomeCard,
   answerEvidenceClip,
+  answerLootCard,
   answerProofLine,
   answerRecallCue,
   answerQuestion,
@@ -2341,6 +2342,7 @@ function renderFeedback(question, result, progressState) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
     ${renderAnswerOutcomeCard(answerOutcomeCard(question, result, progressState))}
     ${renderAnswerEvidenceClip(answerEvidenceClip(question, result))}
     ${renderProofBoosterCard(proofBoosterCard(question, result, progressState))}
@@ -2350,6 +2352,26 @@ function renderFeedback(question, result, progressState) {
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+  </div>`;
+}
+
+function renderAnswerLootCard(card) {
+  return `<div class="answer-loot-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.subhead}</small>
+    </div>
+    <div class="answer-loot-badges">
+      ${card.badges
+        .map((badge) => `<div>
+          <span>${badge.label}</span>
+          <strong>${badge.value}</strong>
+          <small>${badge.detail}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <small>${card.nextAction}</small>
   </div>`;
 }
 

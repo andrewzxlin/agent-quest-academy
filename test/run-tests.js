@@ -16,6 +16,7 @@ import {
   abilityShardCard,
   abilityProofCards,
   answerEvidenceClip,
+  answerLootCard,
   answerOutcomeCard,
   answerProofLine,
   answerRecallCue,
@@ -160,6 +161,7 @@ const tests = [
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["short answer recipe turns writing into three tiny steps", testShortAnswerRecipe],
   ["answer evidence clips turn every checked answer into a reusable signal", testAnswerEvidenceClips],
+  ["answer loot card makes each answer feel like a small reward", testAnswerLootCard],
   ["answer outcome card makes score memory and job use visible", testAnswerOutcomeCard],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["proof booster turns feedback into immediate proof or review", testProofBoosterCard],
@@ -1226,6 +1228,32 @@ function testAnswerOutcomeCard() {
   assert.equal(card.lanes.find((lane) => lane.id === "score").value, "Repair");
   assert.ok(card.lanes.find((lane) => lane.id === "memory").detail.includes("Review queue"));
   assert.ok(card.nextAction.includes("review"));
+}
+
+function testAnswerLootCard() {
+  const progress = createInitialProgress(1000);
+  const [single, nextSingle] = flattenQuestions().filter((item) => item.type === "single");
+
+  let result = gradeQuestion(single, single.answer);
+  answerQuestion(progress, single, single.answer, 1000);
+  let card = answerLootCard(single, result, progress);
+  assert.equal(card.title, "Answer Loot");
+  assert.equal(card.status, "proof");
+  assert.ok(card.headline.includes("Loot gained"));
+  assert.ok(card.subhead.includes("Recognize"));
+  assert.deepEqual(card.badges.map((badge) => badge.id), ["xp", "signal", "loop"]);
+  assert.equal(card.badges.find((badge) => badge.id === "xp").value, "+10");
+  assert.equal(card.badges.find((badge) => badge.id === "loop").value, "Recall");
+  assert.ok(card.nextAction.includes("next tiny prompt"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  result = gradeQuestion(nextSingle, 99);
+  answerQuestion(progress, nextSingle, 99, 2000);
+  card = answerLootCard(nextSingle, result, progress);
+  assert.equal(card.status, "repair");
+  assert.equal(card.badges.find((badge) => badge.id === "xp").value, "+2");
+  assert.equal(card.badges.find((badge) => badge.id === "loop").value, "Review");
+  assert.ok(card.headline.includes("Repair loot"));
 }
 
 function testAnswerProofLines() {
