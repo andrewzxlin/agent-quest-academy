@@ -136,6 +136,12 @@
 - Learners can switch to Full Dashboard when they want every evidence, role, landing, review, and lesson support signal.
 - The mode reduces first-run information overload while keeping the complete dashboard one click away.
 
+## Practice Diet
+
+- Beginner view now shows a practice diet card before the quiz flow.
+- It makes the current lesson mix explicit: mostly single choice and multi-select, with one tiny short answer at the end.
+- The card gives learners a clear start button while promising no build assignment, setup, or long writing in this phase.
+
 ## Ability Proof Cards
 
 - Progress is translated into "I can judge..." ability statements.

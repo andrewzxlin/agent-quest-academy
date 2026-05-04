@@ -70,6 +70,7 @@ import {
   onboardingState,
   oneLineCoachCard,
   pitchPracticeCard,
+  practiceDietCard,
   proofBoosterCard,
   questionCoachHint,
   questionKey,
@@ -103,6 +104,7 @@ const tests = [
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
   ["lesson practice plans show choice-first sequence", testLessonPracticePlans],
+  ["practice diet card keeps beginner work choice-heavy", testPracticeDietCard],
   ["lesson stage route makes recognize connect explain visible", testLessonStageRoute],
   ["lesson warmup cards remove first-step friction", testLessonWarmupCards],
   ["lesson analogy bridges explain concepts in plain language", testLessonAnalogyBridges],
@@ -424,6 +426,30 @@ function testLessonPracticePlans() {
   assert.equal(updated.attempted, 1);
   assert.equal(updated.formats.find((format) => format.type === "single").attempted, 1);
   assert.equal(lessonPracticePlan(progress, "missing-lesson"), null);
+}
+
+function testPracticeDietCard() {
+  const progress = createInitialProgress(1000);
+  const lesson = flattenLessons()[0];
+  let card = practiceDietCard(progress, lesson.id, 1000);
+
+  assert.equal(card.title, "Practice Diet");
+  assert.equal(card.lessonId, lesson.id);
+  assert.equal(card.choicePercent, 80);
+  assert.deepEqual(card.formats.map((format) => format.id), ["single", "multi", "short"]);
+  assert.deepEqual(card.formats.map((format) => format.count), [3, 1, 1]);
+  assert.equal(card.formats.find((format) => format.id === "short").role, "One sentence only");
+  assert.deepEqual(card.rules.map((rule) => rule.id), ["choice-first", "short-last", "review-loop"]);
+  assert.ok(card.headline.includes("choices"));
+  assert.ok(card.description.includes("4/5"));
+  assert.ok(card.promise.includes("No build assignment"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const single = lesson.questions.find((question) => question.type === "single");
+  answerQuestion(progress, { ...single, lessonId: lesson.id }, single.answer, 1000);
+  card = practiceDietCard(progress, lesson.id, 1000);
+  assert.equal(card.formats.find((format) => format.id === "single").attempted, 1);
+  assert.equal(practiceDietCard(progress, "missing-lesson", 1000), null);
 }
 
 function testLessonStageRoute() {

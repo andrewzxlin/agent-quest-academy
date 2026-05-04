@@ -57,6 +57,7 @@ import {
   onboardingState,
   oneLineCoachCard,
   pitchPracticeCard,
+  practiceDietCard,
   proofBoosterCard,
   questionCoachHint,
   questionMasterySignal,
@@ -143,6 +144,7 @@ function render() {
   const firstFive = firstFiveMinuteStartCard(progress);
   const focusGuard = focusGuardCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
+  const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
   const showFullDashboard = dashboardMode.mode === "full";
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
@@ -225,6 +227,7 @@ function render() {
         ${renderOnboardingCard(onboarding)}
         ${renderFocusGuardCard(focusGuard)}
         ${renderFirstFiveMinuteStartCard(firstFive)}
+        ${renderPracticeDietCard(practiceDiet)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyLandingStepCard(dailyLandingStep)}
@@ -507,6 +510,41 @@ function renderDashboardModeCard(card) {
       </div>
     </div>
     <button class="secondary compact" data-dashboard-mode="${card.nextMode}">${card.actionLabel}</button>
+  </section>`;
+}
+
+function renderPracticeDietCard(card) {
+  if (!card) return "";
+  return `<section class="practice-diet-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.choicePercent}% choice-based</p>
+    </div>
+    <p>${card.description}</p>
+    <div class="practice-diet-formats">
+      ${card.formats
+        .map((format) => `<div>
+          <span>${format.count}</span>
+          <strong>${format.label}</strong>
+          <small>${format.attempted}/${format.count} tried - ${format.role}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="practice-diet-rules">
+      ${card.rules
+        .map((rule) => `<div>
+          <span>${rule.label}</span>
+          <small>${rule.detail}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="practice-diet-action">
+      <small>${card.promise}</small>
+      <button class="primary compact" data-practice-diet-action="true">${card.nextAction}</button>
+    </div>
   </section>`;
 }
 
@@ -1709,6 +1747,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-recommend]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-practice-diet-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

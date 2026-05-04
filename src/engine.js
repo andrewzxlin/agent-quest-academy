@@ -409,6 +409,67 @@ export function lessonPracticePlan(progress, lessonId) {
   };
 }
 
+export function practiceDietCard(progress, lessonId, now = Date.now()) {
+  const plan = lessonPracticePlan(progress, lessonId);
+  if (!plan) return null;
+  const next = nextPracticeRecommendation(progress, now);
+  const count = (type) => plan.formats.find((format) => format.type === type)?.count ?? 0;
+  const attempted = (type) => plan.formats.find((format) => format.type === type)?.attempted ?? 0;
+  const choiceCount = count("single") + count("multi");
+  const shortCount = count("short");
+  const choicePercent = plan.total === 0 ? 0 : Math.round((choiceCount / plan.total) * 100);
+
+  return {
+    lessonId,
+    title: "Practice Diet",
+    headline: "Mostly choices, one tiny explanation.",
+    description: `${choiceCount}/${plan.total} prompts are single choice or multi-select before the short answer appears.`,
+    choicePercent,
+    nextAction: next.cta,
+    promise: "No build assignment, no setup, no long writing.",
+    formats: [
+      {
+        id: "single",
+        label: "Single choice",
+        count: count("single"),
+        attempted: attempted("single"),
+        role: "Fast recognition"
+      },
+      {
+        id: "multi",
+        label: "Multi-select",
+        count: count("multi"),
+        attempted: attempted("multi"),
+        role: "Connect signals"
+      },
+      {
+        id: "short",
+        label: "Tiny short answer",
+        count: shortCount,
+        attempted: attempted("short"),
+        role: "One sentence only"
+      }
+    ],
+    rules: [
+      {
+        id: "choice-first",
+        label: "Choose first",
+        detail: "Single and multi-select prompts build judgment before writing."
+      },
+      {
+        id: "short-last",
+        label: "Short last",
+        detail: "Fresh lesson runs keep the short answer as the final tiny explanation."
+      },
+      {
+        id: "review-loop",
+        label: "Review returns",
+        detail: "Wrong answers come back through spaced review instead of extra assignments."
+      }
+    ]
+  };
+}
+
 export function lessonStageRoute(progress, lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;

@@ -417,6 +417,76 @@ h1 {
   padding: 5px 9px;
 }
 
+.practice-diet-card {
+  background: #ecfeff;
+  border: 1px solid #67e8f9;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.practice-diet-card > p,
+.practice-diet-card .section-title > p,
+.practice-diet-action small {
+  color: var(--muted);
+}
+
+.practice-diet-formats,
+.practice-diet-rules {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.practice-diet-formats div,
+.practice-diet-rules div {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(8 145 178 / 0.14);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.practice-diet-formats span,
+.practice-diet-formats strong,
+.practice-diet-formats small,
+.practice-diet-rules span,
+.practice-diet-rules small,
+.practice-diet-action small {
+  display: block;
+}
+
+.practice-diet-formats span {
+  color: #0e7490;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.practice-diet-formats strong,
+.practice-diet-rules span {
+  margin-top: 4px;
+}
+
+.practice-diet-formats small,
+.practice-diet-rules small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.practice-diet-rules span {
+  color: #0e7490;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.practice-diet-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
 .quest-compass {
   background: #0f172a;
   border: 1px solid rgb(148 163 184 / 0.34);
@@ -3816,6 +3886,7 @@ button:disabled {
   .completion-card,
   .recommendation-card,
   .dashboard-mode-card,
+  .practice-diet-card,
   .quest-compass,
   .career-snapshot,
   .skill-profile-card,
@@ -3864,6 +3935,8 @@ button:disabled {
   .proof-grid,
   .first-five-grid,
   .role-fit-grid,
+  .practice-diet-formats,
+  .practice-diet-rules,
   .skill-profile-metrics,
   .skill-profile-highlights,
   .skill-profile-lines,
@@ -3909,6 +3982,11 @@ button:disabled {
   .scope-formats {
     justify-content: flex-start;
     min-width: 0;
+  }
+
+  .practice-diet-action {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .main {
