@@ -38,6 +38,7 @@ import {
   lessonSkillCard,
   lessonMasteryLadder,
   lessonWarmupCard,
+  learningReceiptReel,
   learningPuzzleBoard,
   loadProgress,
   masteryForLesson,
@@ -103,6 +104,7 @@ function render() {
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
   const roleFit = jobRoleFitCard(progress);
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
+  const receiptReel = learningReceiptReel(progress);
   const landingChecklist = landingReadinessChecklist(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
@@ -191,6 +193,7 @@ function render() {
         ${renderJobRoleFitCard(roleFit)}
         ${renderLandingReadinessChecklist(landingChecklist)}
         ${renderJobEvidenceBrief(evidenceBrief)}
+        ${renderLearningReceiptReel(receiptReel)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyMomentumCard(momentum)}
@@ -530,6 +533,32 @@ function renderJobEvidenceBrief(brief) {
       <small>ready evidence</small>
       <em>${brief.nextGap} · ${brief.nextAction}</em>
     </div>
+  </section>`;
+}
+
+function renderLearningReceiptReel(reel) {
+  return `<section class="learning-receipt-reel">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Learning Receipts</p>
+        <h3>${reel.title}</h3>
+      </div>
+      <p>${reel.headline}</p>
+    </div>
+    ${
+      reel.receipts.length === 0
+        ? `<p class="receipt-empty">${reel.emptyAction}</p>`
+        : `<div class="receipt-grid">
+          ${reel.receipts
+            .map((receipt) => `<div class="receipt ${receipt.status}">
+              <span>${receipt.resultLabel}</span>
+              <strong>${receipt.stage} - ${receipt.chapterTitle}</strong>
+              <p>${receipt.proof}</p>
+              <small>${receipt.nextUse}</small>
+            </div>`)
+            .join("")}
+        </div>`
+    }
   </section>`;
 }
 

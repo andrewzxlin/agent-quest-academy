@@ -925,6 +925,43 @@ export function mistakeFocusCard(progress, now = Date.now()) {
   };
 }
 
+export function learningReceiptReel(progress, limit = 4) {
+  const questionsByKey = new Map(
+    [...flattenQuestions(), ...flattenInterviewQuestions()].map((question) => [questionKey(question), question])
+  );
+  const receipts = Object.entries(progress.answered)
+    .map(([key, state]) => {
+      const question = questionsByKey.get(key);
+      if (!question) return null;
+      const stage = questionMasteryStage(question);
+      const status = state.lastResult === "correct" ? "proof" : "review";
+      return {
+        key,
+        status,
+        stage: stage.label,
+        chapterTitle: question.chapterTitle,
+        lessonTitle: question.lessonTitle,
+        resultLabel: status === "proof" ? "Proof gained" : "Review seed",
+        proof: `${stage.label} practice for ${question.chapterTitle}: ${stage.proof}`,
+        nextUse:
+          status === "proof"
+            ? "Save this as one tiny job-facing evidence point."
+            : "Replay this pattern once it appears in review.",
+        lastAnsweredAt: state.lastAnsweredAt ?? 0
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.lastAnsweredAt - a.lastAnsweredAt)
+    .slice(0, limit);
+
+  return {
+    title: "Learning Receipt Reel",
+    headline: receipts.length > 0 ? "Every small answer leaves evidence." : "Answer one question to print your first receipt.",
+    receipts,
+    emptyAction: "Start with one choice question; the receipt appears automatically."
+  };
+}
+
 export function chapterMap(progress) {
   const lessons = flattenLessons();
   return course.chapters.map((chapter) => {

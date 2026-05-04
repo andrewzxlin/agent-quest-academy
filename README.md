@@ -219,6 +219,12 @@
 - The line converts the current question into a reusable explanation of what the learner can recognize, connect, or explain.
 - This helps small quiz wins become interview-ready language without adding extra assignments.
 
+## Learning Receipt Reel
+
+- The home screen now turns recent answers into small learning receipts.
+- Each receipt shows whether the answer created proof or a review seed, and which mastery stage it trained.
+- This makes tiny choice-question progress visible as job-facing evidence without adding extra work.
+
 ## Question Mastery Signals
 
 - After checking an answer, feedback now shows whether the question is in review, first pass, strengthening, or stable.

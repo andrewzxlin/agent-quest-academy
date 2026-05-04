@@ -52,6 +52,7 @@ import {
   lessonSkillCard,
   lessonMasteryLadder,
   lessonWarmupCard,
+  learningReceiptReel,
   learningPuzzleBoard,
   masteryForLesson,
   mistakeFocusCard,
@@ -95,6 +96,7 @@ const tests = [
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["question mastery signals show recall progress", testQuestionMasterySignals],
+  ["learning receipt reel turns answers into visible evidence", testLearningReceiptReel],
   ["answer recall cues turn answers into next-time signals", testAnswerRecallCues],
   ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
   ["single choice grading works", testSingleChoice],
@@ -633,6 +635,30 @@ function testQuestionMasterySignals() {
   signal = questionMasterySignal(progress, question);
   assert.equal(signal.level, "stable");
   assert.ok(signal.body.includes("job-facing explanation"));
+}
+
+function testLearningReceiptReel() {
+  const progress = createInitialProgress(1000);
+  let reel = learningReceiptReel(progress);
+  assert.equal(reel.title, "Learning Receipt Reel");
+  assert.equal(reel.receipts.length, 0);
+  assert.ok(reel.emptyAction.includes("choice question"));
+
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  answerQuestion(progress, single, single.answer, 1000);
+  answerQuestion(progress, multi, [], 2000);
+  reel = learningReceiptReel(progress);
+
+  assert.equal(reel.receipts.length, 2);
+  assert.equal(reel.receipts[0].status, "review");
+  assert.equal(reel.receipts[0].resultLabel, "Review seed");
+  assert.equal(reel.receipts[1].status, "proof");
+  assert.equal(reel.receipts[1].resultLabel, "Proof gained");
+  assert.ok(reel.receipts.every((receipt) => ["Recognize", "Connect", "Explain"].includes(receipt.stage)));
+  assert.ok(reel.receipts.every((receipt) => receipt.proof.includes(receipt.chapterTitle)));
+  assert.ok(reel.receipts.every((receipt) => receipt.nextUse.length >= 30));
+  assert.doesNotMatch(JSON.stringify(reel), /repo|project implementation|build a project|coding task/i);
 }
 
 function testAnswerRecallCues() {

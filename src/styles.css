@@ -665,6 +665,70 @@ h1 {
   margin-top: 8px;
 }
 
+.learning-receipt-reel {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.receipt-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.receipt {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.receipt.proof {
+  border-color: rgb(22 163 74 / 0.32);
+}
+
+.receipt.review {
+  border-color: rgb(217 119 6 / 0.34);
+}
+
+.receipt span,
+.receipt strong,
+.receipt p,
+.receipt small {
+  display: block;
+}
+
+.receipt span {
+  color: #475569;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.receipt strong {
+  margin-top: 6px;
+}
+
+.receipt p,
+.receipt small,
+.receipt-empty {
+  color: var(--muted);
+}
+
+.receipt p {
+  margin: 8px 0;
+}
+
+.receipt small {
+  font-weight: 700;
+}
+
+.receipt-empty {
+  margin: 12px 0 0;
+}
+
 .exercise-scope-card {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -2743,6 +2807,7 @@ button:disabled {
   .role-fit-grid,
   .landing-checklist-grid,
   .evidence-story-seeds,
+  .receipt-grid,
   .practice-plan-grid,
   .warmup-step-grid,
   .analogy-bridge-grid,
