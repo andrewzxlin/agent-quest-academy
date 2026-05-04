@@ -58,6 +58,7 @@ import {
   jobPacketShowcaseCard,
   jobSignalPassport,
   landingGapRadar,
+  landingMissionStripCard,
   landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
@@ -179,6 +180,7 @@ function render() {
   const recallCombo = recallComboCard(progress);
   const signalPreview = signalPreviewCard(progress, Date.now());
   const gapRadar = landingGapRadar(progress, Date.now());
+  const landingMission = landingMissionStripCard(progress, Date.now());
   const landingChecklist = landingReadinessChecklist(progress, Date.now());
   const landingPath = sevenDayLandingPath(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
@@ -309,6 +311,7 @@ function render() {
           </div>
         </section>
         ${renderQuestBriefCard(questBrief)}
+        ${renderLandingMissionStripCard(landingMission)}
         ${renderStartHereCard(startHere)}
         ${renderDashboardModeCard(dashboardMode)}
         ${renderOnboardingCard(onboarding)}
@@ -824,6 +827,32 @@ function renderQuestBriefCard(card) {
       <button class="primary compact" data-quest-brief-action="true">${card.headline}</button>
     </div>
     <p class="quest-brief-reassurance">${card.reassurance}</p>
+  </section>`;
+}
+
+function renderLandingMissionStripCard(card) {
+  return `<section class="landing-mission-strip ${card.status}">
+    <div class="landing-mission-copy">
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.activeProof}</p>
+      <strong>${card.activeLine}</strong>
+    </div>
+    <div class="landing-mission-route">
+      ${card.route
+        .map((step) => `<span class="${step.status}">
+          <b>${step.number}</b>
+          ${step.label}
+        </span>`)
+        .join("")}
+    </div>
+    <div class="landing-mission-action">
+      <em>${card.percent}%</em>
+      <small>${card.packetProgress}</small>
+      <small>${card.checklistProgress}</small>
+      <button class="primary compact" data-landing-strip-action="true">${card.nextAction}</button>
+    </div>
+    <small>${card.promise}</small>
   </section>`;
 }
 
@@ -2992,6 +3021,10 @@ function bindEvents() {
 
   document.querySelector("[data-quest-brief-action]")?.addEventListener("click", () => {
     startRecommendedPractice(questBriefCard(progress, Date.now()).action);
+  });
+
+  document.querySelector("[data-landing-strip-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 
   document.querySelector("[data-practice-diet-action]")?.addEventListener("click", () => {

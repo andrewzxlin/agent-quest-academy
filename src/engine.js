@@ -3721,6 +3721,38 @@ export function zeroToLandingQuestCard(progress, now = Date.now()) {
   };
 }
 
+export function landingMissionStripCard(progress, now = Date.now()) {
+  const quest = zeroToLandingQuestCard(progress, now);
+  const checklist = landingReadinessChecklist(progress, now);
+  const packet = jobPacketPreviewCard(progress, now);
+  const next = nextPracticeRecommendation(progress, now);
+  const active = quest.milestones.find((milestone) => milestone.status === "active") ?? quest.milestones.at(-1);
+  const completed = quest.completedCount === quest.totalCount;
+
+  return {
+    title: "Landing Mission",
+    status: completed ? "ready" : "active",
+    headline: completed ? "Keep the job packet warm" : `From zero to job signal: ${active.label}`,
+    percent: quest.percent,
+    activeId: active.id,
+    activeLabel: active.label,
+    activeProof: active.proof,
+    activeLine: active.line,
+    nextAction: next.type === "done" ? quest.nextAction : next.cta,
+    nextType: next.type,
+    packetProgress: `${packet.readyCount}/${packet.totalCount} packet pieces`,
+    checklistProgress: `${checklist.completedCount}/${checklist.totalCount} landing gates`,
+    promise: "One tiny answer can move the route; no project task is required in this phase.",
+    route: quest.milestones.map((milestone, index) => ({
+      id: milestone.id,
+      number: index + 1,
+      label: milestone.label,
+      status: milestone.status,
+      proof: milestone.proof
+    }))
+  };
+}
+
 export function roleSamplerCard(progress) {
   const roleFit = jobRoleFitCard(progress);
   const chaptersById = new Map(course.chapters.map((chapter) => [chapter.id, chapter]));

@@ -71,6 +71,7 @@ import {
   jobPacketShowcaseCard,
   jobSignalPassport,
   landingGapRadar,
+  landingMissionStripCard,
   landingReadinessChecklist,
   questCompass,
   jobRoleFitCard,
@@ -227,6 +228,7 @@ const tests = [
   ["daily landing step maps tiny practice to job value", testDailyLandingStepCard],
   ["daily phrase bank makes reusable lines visible in beginner flow", testDailyPhraseBankCard],
   ["zero to landing quest compresses the beginner route", testZeroToLandingQuestCard],
+  ["landing mission strip keeps the job route visible above the card wall", testLandingMissionStripCard],
   ["role sampler turns role paths into choice-first samples", testRoleSamplerCard],
   ["quest compass turns recommendation into a game-like next step", testQuestCompass],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
@@ -2416,6 +2418,37 @@ function testZeroToLandingQuestCard() {
   assert.equal(card.milestones.find((milestone) => milestone.id === "role-signal").status, "done");
   assert.equal(card.activeId, "interview-line");
   assert.ok(card.activeLine.includes("interview-ready"));
+}
+
+function testLandingMissionStripCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = landingMissionStripCard(progress, now);
+
+  assert.equal(card.title, "Landing Mission");
+  assert.equal(card.status, "active");
+  assert.equal(card.percent, 0);
+  assert.equal(card.activeId, "first-choice");
+  assert.equal(card.activeLabel, "First choice");
+  assert.equal(card.route.length, 5);
+  assert.deepEqual(card.route.map((step) => step.status), ["active", "locked", "locked", "locked", "locked"]);
+  assert.ok(card.headline.includes("job signal"));
+  assert.ok(card.packetProgress.includes("packet pieces"));
+  assert.ok(card.checklistProgress.includes("landing gates"));
+  assert.ok(card.promise.includes("One tiny answer"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = landingMissionStripCard(progress, now);
+  assert.equal(card.route.find((step) => step.id === "first-choice").status, "done");
+  assert.equal(card.activeId, "first-receipt");
+  assert.ok(card.nextAction.length > 0);
+
+  completeLesson(progress, flattenLessons()[0].id, now);
+  card = landingMissionStripCard(progress, now);
+  assert.equal(card.route.find((step) => step.id === "first-receipt").status, "done");
+  assert.ok(card.percent >= 40);
 }
 
 function testRoleSamplerCard() {
