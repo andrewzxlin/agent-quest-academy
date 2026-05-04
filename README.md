@@ -48,6 +48,7 @@
 
 - Every achievement now carries a short "I can" proof line.
 - Badges stay playful while also creating wording that can feed interview and portfolio explanations.
+- The One-Line Coach now pulls unlocked achievement proof into the learner's tiny interview script.
 
 ## Session Rhythm
 

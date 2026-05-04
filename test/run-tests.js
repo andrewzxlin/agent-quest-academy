@@ -2221,6 +2221,8 @@ function testOneLineCoachCard() {
   card = oneLineCoachCard(progress, now);
   assert.equal(card.readinessLabel, "Boss-proven");
   assert.ok(card.lines[0].text.includes("Boss-proven"));
+  assert.ok(card.lines.some((line) => line.id === "achievement"));
+  assert.ok(card.lines.find((line) => line.id === "achievement").text.startsWith("I can "));
 
   for (const question of interviewQuestionsForChapter(chapter.id)) {
     const response = question.type === "multi" ? question.answer : question.answer ?? question.keywords[0];

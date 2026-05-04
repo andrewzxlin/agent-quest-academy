@@ -2677,6 +2677,7 @@ export function oneLineCoachCard(progress, now = Date.now()) {
   const rank = { interview_ready: 4, proven: 3, practicing: 2, new: 1 };
   const strongest = [...proofs].sort((a, b) => rank[b.status] - rank[a.status])[0] ?? null;
   if (!brief || !strongest) return null;
+  const achievement = achievements(progress).find((badge) => badge.unlocked) ?? null;
 
   const readinessLabel =
     strongest.status === "interview_ready"
@@ -2709,7 +2710,17 @@ export function oneLineCoachCard(progress, now = Date.now()) {
         label: "Next",
         text: `My next small step is: ${next.cta}.`
       }
-    ],
+    ].concat(
+      achievement
+        ? [
+            {
+              id: "achievement",
+              label: achievement.title,
+              text: achievement.proofLine
+            }
+          ]
+        : []
+    ),
     proofLink: brief.proof
   };
 }
