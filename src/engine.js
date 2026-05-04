@@ -5,6 +5,7 @@ import {
   flattenInterviewQuestions,
   flattenLessons,
   flattenQuestions,
+  interviewQuestionsForChapter,
   jobReadinessSkills,
   jobScenarioCards
 } from "./course.js";
@@ -2153,6 +2154,88 @@ export function bossGateTeaserCard(progress) {
             : "Finish next micro-lesson",
     promise: "Still choice-first: the Boss checks judgment, not setup work.",
     steps
+  };
+}
+
+export function interviewUnlockPreviewCard(progress) {
+  const chapters = chapterMap(progress);
+  const gatesByChapter = new Map(chapterGateMap(progress).map((gate) => [gate.chapterId, gate]));
+  const hasUnansweredInterview = (chapterId) => {
+    const questions = interviewQuestionsForChapter(chapterId);
+    return questions.some((question) => !progress.answered[questionKey(question)]);
+  };
+  const hasCompletedInterview = (chapterId) => {
+    const questions = interviewQuestionsForChapter(chapterId);
+    return questions.length > 0 && questions.every((question) => progress.answered[questionKey(question)]);
+  };
+  const chapter =
+    chapters.find((item) => {
+      const gate = gatesByChapter.get(item.chapterId);
+      return gate?.interviewUnlocked && hasUnansweredInterview(item.chapterId);
+    }) ??
+    chapters.find((item) => gatesByChapter.get(item.chapterId)?.interviewUnlocked && hasCompletedInterview(item.chapterId)) ??
+    chapters.find((item) => gatesByChapter.get(item.chapterId)?.lessonsUnlocked && !gatesByChapter.get(item.chapterId)?.interviewUnlocked) ??
+    chapters[0];
+  if (!chapter) return null;
+
+  const gate = gatesByChapter.get(chapter.chapterId);
+  const questions = interviewQuestionsForChapter(chapter.chapterId);
+  const answeredCount = questions.filter((question) => progress.answered[questionKey(question)]).length;
+  const totalCount = questions.length;
+  const activeQuestion = questions.find((question) => !progress.answered[questionKey(question)]) ?? questions[0];
+  const status = !gate?.interviewUnlocked ? "locked" : answeredCount === totalCount ? "complete" : answeredCount > 0 ? "started" : "ready";
+  const prompt = activeQuestion?.prompt.split("\n\n").at(-1) ?? "Explain one workflow judgment in a short answer.";
+
+  return {
+    title: "Interview Unlock Preview",
+    status,
+    chapterId: chapter.chapterId,
+    chapterTitle: chapter.title,
+    scenarioTitle: activeQuestion?.lessonTitle ?? "Interview drill",
+    headline:
+      status === "locked"
+        ? "Interview drill opens after Boss proof"
+        : status === "complete"
+          ? "Interview drill is complete"
+          : status === "started"
+            ? `${answeredCount}/${totalCount} interview prompts answered`
+            : `${chapter.title} interview drill is unlocked`,
+    prompt,
+    answeredCount,
+    totalCount,
+    unlock:
+      status === "locked"
+        ? "Beat the chapter Boss to open job-facing scenario practice."
+        : "Use the scenario to turn workflow judgment into spoken interview language.",
+    nextAction:
+      status === "locked"
+        ? gate?.bossUnlocked
+          ? "Start Boss Quiz"
+          : "Reach Boss proof first"
+        : status === "complete"
+          ? "Practice 60-second pitch"
+          : "Practice interview prompt",
+    promise: "Still low-friction: one scenario, one choice or tiny answer, one reusable line.",
+    steps: [
+      {
+        id: "proof",
+        label: "Proof",
+        text: chapter.bossPassed ? "Boss proof saved" : "Boss proof pending",
+        done: chapter.bossPassed
+      },
+      {
+        id: "scenario",
+        label: "Scenario",
+        text: `${answeredCount}/${totalCount} prompts`,
+        done: totalCount > 0 && answeredCount === totalCount
+      },
+      {
+        id: "line",
+        label: "Line",
+        text: status === "complete" ? "Pitch line ready" : "Reusable line next",
+        done: status === "complete"
+      }
+    ]
   };
 }
 

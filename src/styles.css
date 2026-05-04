@@ -731,6 +731,7 @@ h1 {
 
 .beginner-command-grid .zero-landing-quest-card,
 .beginner-command-grid .boss-gate-teaser-card,
+.beginner-command-grid .interview-preview-card,
 .beginner-command-grid .role-sampler-card,
 .beginner-command-grid .jargon-shield-card,
 .beginner-command-grid .daily-landing-step-card,
@@ -945,6 +946,83 @@ h1 {
 }
 
 .boss-gate-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.interview-preview-card {
+  background: #faf5ff;
+  border: 1px solid #d8b4fe;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.interview-preview-card.locked {
+  background: #f8fafc;
+  border-color: var(--line);
+}
+
+.interview-preview-card.complete {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.interview-preview-card .section-title > p,
+.interview-preview-card > p,
+.interview-preview-action small {
+  color: var(--muted);
+}
+
+.interview-preview-card > strong {
+  background: rgb(255 255 255 / 0.8);
+  border: 1px solid rgb(126 34 206 / 0.14);
+  border-radius: 8px;
+  display: block;
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.interview-preview-steps {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.interview-preview-steps div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(126 34 206 / 0.14);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.interview-preview-steps div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.interview-preview-steps span,
+.interview-preview-steps small,
+.interview-preview-action small {
+  display: block;
+}
+
+.interview-preview-steps span {
+  color: #7e22ce;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.interview-preview-steps small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.interview-preview-action {
   align-items: center;
   display: flex;
   gap: 12px;
@@ -5312,6 +5390,7 @@ button:disabled {
   .choice-arcade-card,
   .beginner-skill-map-card,
   .boss-gate-teaser-card,
+  .interview-preview-card,
   .zero-landing-quest-card,
   .jargon-shield-card,
   .quest-compass,
@@ -5385,6 +5464,7 @@ button:disabled {
   .choice-arcade-rooms,
   .beginner-skill-map-nodes,
   .boss-gate-steps,
+  .interview-preview-steps,
   .zero-landing-milestones,
   .role-sampler-grid,
   .phrase-bank-steps,

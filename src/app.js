@@ -39,6 +39,7 @@ import {
   gradeQuestion,
   gradePitchPractice,
   isAnswerReady,
+  interviewUnlockPreviewCard,
   jargonShieldCard,
   questCompass,
   jobReadinessMap,
@@ -172,6 +173,7 @@ function render() {
   const choiceArcade = choiceArcadeCard(progress);
   const beginnerSkillMap = beginnerSkillMapCard(progress);
   const bossGateTeaser = bossGateTeaserCard(progress);
+  const interviewPreview = interviewUnlockPreviewCard(progress);
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
   const showFullDashboard = dashboardMode.mode === "full";
@@ -266,6 +268,7 @@ function render() {
           choiceArcade,
           beginnerSkillMap,
           bossGateTeaser,
+          interviewPreview,
           zeroToLandingQuest,
           roleSampler,
           jargonShield,
@@ -695,6 +698,7 @@ function renderBeginnerCommandCenter(cards) {
         ${renderChoiceArcadeCard(cards.choiceArcade)}
         ${renderBeginnerSkillMapCard(cards.beginnerSkillMap)}
         ${renderBossGateTeaserCard(cards.bossGateTeaser)}
+        ${renderInterviewUnlockPreviewCard(cards.interviewPreview)}
         ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
         ${renderRoleSamplerCard(cards.roleSampler)}
         ${renderJargonShieldCard(cards.jargonShield)}
@@ -845,6 +849,33 @@ function renderBossGateTeaserCard(card) {
         <small>${card.promise}</small>
       </div>
       <button class="primary compact" data-boss-gate-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderInterviewUnlockPreviewCard(card) {
+  if (!card) return "";
+  return `<section class="interview-preview-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.answeredCount}/${card.totalCount} - ${card.chapterTitle}</p>
+    </div>
+    <p>${card.unlock}</p>
+    <strong>${card.prompt}</strong>
+    <div class="interview-preview-steps">
+      ${card.steps
+        .map((step) => `<div class="${step.done ? "done" : ""}">
+          <span>${step.label}</span>
+          <small>${step.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="interview-preview-action">
+      <small>${card.promise}</small>
+      <button class="primary compact" data-interview-preview-action="true">${card.nextAction}</button>
     </div>
   </section>`;
 }
@@ -2328,6 +2359,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-boss-gate-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-interview-preview-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 
