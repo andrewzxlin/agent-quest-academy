@@ -417,11 +417,20 @@ function testCorrectAnswerReview() {
 }
 
 function testLessonCompletion() {
-  const progress = createInitialProgress();
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
   const lesson = flattenLessons()[0];
-  completeLesson(progress, lesson.id);
+  completeLesson(progress, lesson.id, now);
   assert.equal(progress.completedLessons.includes(lesson.id), true);
   assert.equal(progress.currentLessonIndex, 1);
+  assert.equal(progress.streak, 1);
+  assert.equal(dailyMomentum(progress, now).lessonsCompletedToday, 1);
+
+  completeLesson(progress, lesson.id, now);
+  assert.equal(progress.completedLessons.filter((id) => id === lesson.id).length, 1);
+  assert.equal(progress.currentLessonIndex, 1);
+  assert.equal(progress.streak, 1);
+  assert.equal(dailyMomentum(progress, now).lessonsCompletedToday, 1);
 }
 
 function testSessionReview() {

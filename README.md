@@ -138,6 +138,7 @@
 - The home screen shows today's answers, correct rate, and a tiny next nudge.
 - Momentum is derived from existing daily activity, so learners get game-like feedback without extra setup.
 - Daily activity uses the learner's local calendar day, so late-night practice is counted against the expected day.
+- Repeating an already completed lesson no longer advances the lesson path or daily completion count.
 
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 

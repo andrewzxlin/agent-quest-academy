@@ -297,13 +297,15 @@ export function answerQuestion(progress, question, response, now = Date.now()) {
 }
 
 export function completeLesson(progress, lessonId, now = Date.now()) {
-  if (!progress.completedLessons.includes(lessonId)) {
-    progress.completedLessons.push(lessonId);
-    progress.streak += 1;
-  }
-  recordDailyActivity(progress, now, { lessonsCompleted: 1 });
+  const newlyCompleted = !progress.completedLessons.includes(lessonId);
+  if (!newlyCompleted) return progress;
+
+  progress.completedLessons.push(lessonId);
+  progress.streak += 1;
   const lessons = flattenLessons();
   progress.currentLessonIndex = Math.min(progress.currentLessonIndex + 1, lessons.length - 1);
+  progress.lastActiveAt = now;
+  recordDailyActivity(progress, now, { lessonsCompleted: 1 });
   return progress;
 }
 
