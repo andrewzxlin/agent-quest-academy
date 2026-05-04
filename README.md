@@ -17,6 +17,7 @@
 - Single choice and multi-select questions explain why each option is a core answer or a distractor.
 - Feedback highlights both the selected answer and the expected answer after checking.
 - This turns mistakes into architecture judgment practice instead of simple right/wrong memorization.
+- Every checked answer includes a next-time recall cue so learners know what signal to look for in review.
 
 ## Short Answer Coaching
 

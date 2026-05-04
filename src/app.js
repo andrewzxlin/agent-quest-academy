@@ -1,6 +1,7 @@
 import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interviewQuestionsForChapter } from "./course.js";
 import {
   abilityProofCards,
+  answerRecallCue,
   answerQuestion,
   beginnerGlossaryCards,
   buildReviewSessionQuestions,
@@ -687,9 +688,17 @@ function renderFeedback(question, result) {
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+    ${renderRecallCue(answerRecallCue(question, result))}
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+  </div>`;
+}
+
+function renderRecallCue(cue) {
+  return `<div class="recall-cue">
+    <span>${cue.title}</span>
+    <p>${cue.body}</p>
   </div>`;
 }
 

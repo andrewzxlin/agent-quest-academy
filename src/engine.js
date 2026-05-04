@@ -237,6 +237,31 @@ export function shortAnswerSupport(question) {
   };
 }
 
+export function answerRecallCue(question, result) {
+  if (question.type === "single") {
+    const expected = question.choiceFeedback?.[result.expected];
+    return {
+      title: "下次先抓這個線索",
+      body: expected ? `看到類似題目時，先找會影響 workflow 的核心選項：${expected.choice}。` : "看到類似題目時，先找真正會改變 workflow 行動或風險的選項。"
+    };
+  }
+  if (question.type === "multi") {
+    const coreChoices = (question.choiceFeedback ?? []).filter((item) => item.correct).map((item) => item.choice);
+    return {
+      title: "下次逐一檢查",
+      body: `把選項拆成零件檢查：${coreChoices.slice(0, 3).join(" / ")}。只選真的會影響 agent workflow 的部分。`
+    };
+  }
+  if (question.type === "short") {
+    const anchor = (result.matches?.[0] ?? question.keywords[0]) || "核心概念";
+    return {
+      title: "下次先說一個概念",
+      body: `先講出 ${anchor}，再補一句它如何幫助 agentic workflow 判斷任務、工具或風險。`
+    };
+  }
+  throw new Error(`Unknown question type: ${question.type}`);
+}
+
 export function mistakeRescuePrompt(question, result) {
   if (result.correct) return null;
   if (question.type === "single") {

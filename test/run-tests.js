@@ -14,6 +14,7 @@ import {
 } from "../src/course.js";
 import {
   abilityProofCards,
+  answerRecallCue,
   answerQuestion,
   beginnerGlossaryCards,
   buildReviewSessionQuestions,
@@ -67,6 +68,7 @@ const tests = [
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
   ["short answer support provides concept chips", testShortAnswerSupport],
+  ["answer recall cues turn answers into next-time signals", testAnswerRecallCues],
   ["mistake rescue prompts give wrong-answer next steps", testMistakeRescuePrompts],
   ["single choice grading works", testSingleChoice],
   ["multi choice grading works", testMultiChoice],
@@ -349,6 +351,25 @@ function testShortAnswerSupport() {
   assert.ok(support.sentenceTemplate.includes("agentic workflow"));
   assert.equal(gradeQuestion(short, support.sentenceTemplate).correct, true);
   assert.doesNotMatch(`${support.prompt} ${support.sentenceTemplate} ${support.concepts.join(" ")}`, /請寫程式|建立 repo|project implementation/i);
+}
+
+function testAnswerRecallCues() {
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  const singleCue = answerRecallCue(single, gradeQuestion(single, single.answer));
+  const multiCue = answerRecallCue(multi, gradeQuestion(multi, multi.answer));
+  const shortCue = answerRecallCue(short, gradeQuestion(short, short.keywords[0]));
+
+  for (const cue of [singleCue, multiCue, shortCue]) {
+    assert.ok(cue.title.length > 0);
+    assert.ok(cue.body.includes("workflow"));
+    assert.doesNotMatch(`${cue.title} ${cue.body}`, /repo|project implementation|專案實作/i);
+  }
+  assert.ok(singleCue.body.includes(single.choices[single.answer]));
+  assert.ok(multiCue.body.includes(multi.choiceFeedback.find((item) => item.correct).choice));
+  assert.ok(shortCue.body.includes(short.keywords[0]));
 }
 
 function testMistakeRescuePrompts() {
