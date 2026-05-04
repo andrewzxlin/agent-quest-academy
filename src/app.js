@@ -39,6 +39,7 @@ import {
   lessonPitchBuilder,
   lessonPracticePlan,
   lessonSkillCard,
+  lessonStageRoute,
   lessonMasteryLadder,
   lessonWarmupCard,
   learningReceiptReel,
@@ -134,6 +135,7 @@ function render() {
   const bossReadiness = bossReadinessCard(progress, chapter.id);
   const skillCard = lessonSkillCard(progress, lesson.id);
   const practicePlan = lessonPracticePlan(progress, lesson.id);
+  const stageRoute = lessonStageRoute(progress, lesson.id);
   const warmupCard = lessonWarmupCard(progress, lesson.id);
   const analogyBridge = lessonAnalogyBridge(lesson.id);
   const conceptDiagram = conceptDiagramCard(lesson.id);
@@ -234,6 +236,7 @@ function render() {
         ${renderGlossaryCard(glossary)}
         ${renderLessonSkillCard(skillCard)}
         ${renderLessonPracticePlan(practicePlan)}
+        ${renderLessonStageRoute(stageRoute)}
         ${renderLessonWarmupCard(warmupCard)}
         ${renderLessonAnalogyBridge(analogyBridge)}
         ${renderConceptDiagramCard(conceptDiagram)}
@@ -1075,6 +1078,31 @@ function renderLessonPracticePlan(plan) {
         .join("")}
     </div>
     <strong>${plan.promise}</strong>
+  </section>`;
+}
+
+function renderLessonStageRoute(card) {
+  if (!card) return "";
+  return `<section class="lesson-stage-route">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Stage Route</p>
+        <h3>${card.title}</h3>
+      </div>
+      <p>${card.nextAction}</p>
+    </div>
+    <p>${card.headline}</p>
+    <div class="stage-route-grid">
+      ${card.stages
+        .map((stage, index) => `<div class="stage-route-step ${stage.status}">
+          <span>${index + 1}</span>
+          <strong>${stage.label}</strong>
+          <small>${stage.format} x ${stage.count} - ${stage.move}</small>
+          <em>${stage.current}/${stage.target} proof - ${stage.reward}</em>
+        </div>`)
+        .join("")}
+    </div>
+    <strong>${card.promise}</strong>
   </section>`;
 }
 

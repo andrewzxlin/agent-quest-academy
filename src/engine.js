@@ -277,6 +277,60 @@ export function lessonPracticePlan(progress, lessonId) {
   };
 }
 
+export function lessonStageRoute(progress, lessonId) {
+  const lesson = flattenLessons().find((item) => item.id === lessonId);
+  if (!lesson) return null;
+  const plan = lessonPracticePlan(progress, lessonId);
+  const ladder = lessonMasteryLadder(progress, lessonId);
+  const activeStage = ladder.stages.find((stage) => !stage.done) ?? ladder.stages[ladder.stages.length - 1];
+  const formatByStage = {
+    recognize: "single",
+    connect: "multi",
+    explain: "short"
+  };
+  const moveByStage = {
+    recognize: "Tap one option.",
+    connect: "Keep every defensible part.",
+    explain: "Write one useful sentence."
+  };
+  const rewardByStage = {
+    recognize: "Decision signal",
+    connect: "Workflow map signal",
+    explain: "Interview wording signal"
+  };
+  const stages = ladder.stages.map((stage) => {
+    const type = formatByStage[stage.id];
+    const format = plan.formats.find((item) => item.type === type);
+    const status = stage.done ? "done" : stage.id === activeStage.id ? "active" : "up-next";
+    return {
+      id: stage.id,
+      label: stage.label,
+      type,
+      format: format?.label ?? type,
+      attempted: format?.attempted ?? 0,
+      count: format?.count ?? 0,
+      current: stage.current,
+      target: stage.target,
+      status,
+      done: stage.done,
+      move: moveByStage[stage.id],
+      reward: rewardByStage[stage.id],
+      proof: stage.proof
+    };
+  });
+
+  return {
+    lessonId,
+    title: "Tiny stage route",
+    headline: "Recognize first, connect second, explain last.",
+    promise: "No projects or coding tasks here: each stage is a small quiz move.",
+    activeStageId: activeStage.id,
+    activeLabel: activeStage.label,
+    nextAction: ladder.doneCount === ladder.totalCount ? "Rehearse the short lesson pitch." : `Clear ${activeStage.label} with the next tiny prompt.`,
+    stages
+  };
+}
+
 export function lessonWarmupCard(progress, lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;

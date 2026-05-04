@@ -1891,6 +1891,81 @@ h1 {
   margin-top: 8px;
 }
 
+.lesson-stage-route {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.lesson-stage-route > p {
+  color: var(--muted);
+}
+
+.lesson-stage-route > strong {
+  color: #9a3412;
+  display: block;
+  margin-top: 14px;
+}
+
+.stage-route-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.stage-route-step {
+  background: rgb(255 255 255 / 0.84);
+  border: 1px solid rgb(154 52 18 / 0.16);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.stage-route-step.active {
+  border-color: #f97316;
+  box-shadow: 0 10px 24px rgb(249 115 22 / 0.14);
+}
+
+.stage-route-step.done {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.stage-route-step span {
+  align-items: center;
+  background: #f97316;
+  border-radius: 999px;
+  color: white;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.stage-route-step.done span {
+  background: #16a34a;
+}
+
+.stage-route-step strong,
+.stage-route-step small,
+.stage-route-step em {
+  display: block;
+}
+
+.stage-route-step strong {
+  margin-top: 10px;
+}
+
+.stage-route-step small,
+.stage-route-step em {
+  color: var(--muted);
+  font-style: normal;
+  margin-top: 8px;
+}
+
 .lesson-warmup-card {
   background: #f0fdfa;
   border: 1px solid #99f6e4;
@@ -3426,6 +3501,7 @@ button:disabled {
   .receipt-grid,
   .compass-steps,
   .practice-plan-grid,
+  .stage-route-grid,
   .warmup-step-grid,
   .analogy-bridge-grid,
   .boss-readiness-checks,

@@ -53,6 +53,7 @@ import {
   lessonPitchBuilder,
   lessonPracticePlan,
   lessonSkillCard,
+  lessonStageRoute,
   lessonMasteryLadder,
   lessonWarmupCard,
   learningReceiptReel,
@@ -91,6 +92,7 @@ const tests = [
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
   ["lesson practice plans show choice-first sequence", testLessonPracticePlans],
+  ["lesson stage route makes recognize connect explain visible", testLessonStageRoute],
   ["lesson warmup cards remove first-step friction", testLessonWarmupCards],
   ["lesson analogy bridges explain concepts in plain language", testLessonAnalogyBridges],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
@@ -332,6 +334,41 @@ function testLessonPracticePlans() {
   assert.equal(updated.attempted, 1);
   assert.equal(updated.formats.find((format) => format.type === "single").attempted, 1);
   assert.equal(lessonPracticePlan(progress, "missing-lesson"), null);
+}
+
+function testLessonStageRoute() {
+  const progress = createInitialProgress(1000);
+  for (const lesson of flattenLessons()) {
+    const route = lessonStageRoute(progress, lesson.id);
+    assert.equal(route.lessonId, lesson.id);
+    assert.equal(route.title, "Tiny stage route");
+    assert.equal(route.headline, "Recognize first, connect second, explain last.");
+    assert.equal(route.activeStageId, "recognize");
+    assert.deepEqual(route.stages.map((stage) => stage.id), ["recognize", "connect", "explain"]);
+    assert.deepEqual(route.stages.map((stage) => stage.type), ["single", "multi", "short"]);
+    assert.deepEqual(route.stages.map((stage) => stage.status), ["active", "up-next", "up-next"]);
+    assert.ok(route.stages.every((stage) => stage.count > 0 && stage.move.length > 10));
+    assert.ok(route.promise.includes("No projects or coding tasks"));
+    assert.doesNotMatch(JSON.stringify(route), /repo|project implementation|build a project/i);
+  }
+
+  const lesson = flattenLessons()[0];
+  for (const question of lesson.questions.filter((item) => item.type === "single")) {
+    answerQuestion(progress, { ...question, lessonId: lesson.id }, question.answer, 1000);
+  }
+  let route = lessonStageRoute(progress, lesson.id);
+  assert.equal(route.activeStageId, "connect");
+  assert.deepEqual(route.stages.map((stage) => stage.status), ["done", "active", "up-next"]);
+
+  const multi = lesson.questions.find((item) => item.type === "multi");
+  const short = lesson.questions.find((item) => item.type === "short");
+  answerQuestion(progress, { ...multi, lessonId: lesson.id }, multi.answer, 1000);
+  answerQuestion(progress, { ...short, lessonId: lesson.id }, short.keywords[0], 1000);
+  route = lessonStageRoute(progress, lesson.id);
+  assert.equal(route.activeStageId, "explain");
+  assert.deepEqual(route.stages.map((stage) => stage.status), ["done", "done", "done"]);
+  assert.ok(route.nextAction.includes("lesson pitch"));
+  assert.equal(lessonStageRoute(progress, "missing-lesson"), null);
 }
 
 function testLessonWarmupCards() {

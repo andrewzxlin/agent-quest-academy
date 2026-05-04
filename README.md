@@ -243,6 +243,12 @@
 - Learners see that the session starts with single-choice recognition, moves to multi-select connection, and ends with one tiny short answer.
 - The plan makes it explicit that the current phase uses quick judgment practice, not coding tasks.
 
+## Lesson Stage Routes
+
+- Every lesson now shows a Tiny Stage Route: Recognize, Connect, then Explain.
+- The route makes the learning puzzle visible before the quiz, with one small move and one reward signal per stage.
+- It preserves the low-friction sequence: choices first, one short sentence last, no project implementation tasks.
+
 ## Lesson Warmup Cards
 
 - Every lesson now adds a zero-friction warmup before the analogy and quiz.
