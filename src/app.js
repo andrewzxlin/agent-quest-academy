@@ -367,6 +367,7 @@ function renderCompletionCard(card) {
     </div>
     <div>
       <strong>${card.result}</strong>
+      <em class="completion-role-signal">${card.roleSignal}</em>
       <span>${card.nextAction}</span>
       <button class="secondary compact" data-dismiss-completion="true">繼續練習</button>
     </div>

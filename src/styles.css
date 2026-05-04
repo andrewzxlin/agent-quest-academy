@@ -245,17 +245,27 @@ h1 {
 }
 
 .completion-card p,
-.completion-card span {
+.completion-card span,
+.completion-card em {
   color: var(--muted);
 }
 
 .completion-card strong,
-.completion-card span {
+.completion-card span,
+.completion-card em {
   display: block;
 }
 
 .completion-card strong {
   font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.completion-role-signal {
+  color: var(--ink);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
   margin-bottom: 8px;
 }
 

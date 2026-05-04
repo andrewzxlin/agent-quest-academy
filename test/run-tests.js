@@ -893,6 +893,8 @@ function testCompletionCards() {
   assert.equal(lessonCard.type, "lesson");
   assert.equal(lessonCard.headline, lesson.title);
   assert.ok(lessonCard.ability.length > 20);
+  assert.ok(lessonCard.roleSignal.includes("AI App Builder"));
+  assert.ok(lessonCard.roleSignal.includes("Agent Workflow Builder"));
   assert.ok(lessonCard.nextAction.includes("Boss Quiz"));
 
   completeBossQuiz(progress, chapter.id, 7, 8, 1000);
@@ -906,11 +908,13 @@ function testCompletionCards() {
   });
   assert.equal(bossCard.title, "Boss cleared");
   assert.ok(bossCard.result.includes("7/8"));
+  assert.ok(bossCard.roleSignal.includes("AI App Builder"));
   assert.ok(bossCard.nextAction.includes("面試情境題"));
 
   const reviewCard = completionCard(progress, { type: "review", title: "錯題複習" });
   assert.equal(reviewCard.title, "Review session complete");
   assert.ok(reviewCard.result.includes("複習"));
+  assert.ok(reviewCard.roleSignal.includes("every role path"));
 }
 
 function testNextPracticeRecommendation() {

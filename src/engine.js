@@ -919,8 +919,16 @@ export function completionCard(progress, event) {
         : event.type === "review"
           ? "錯題與間隔複習已更新"
           : "進度、XP 與複習排程已更新",
+    roleSignal: roleFitCompletionLine(event.chapterId),
     nextAction: summary?.nextAction ?? "繼續下一個低阻力練習。"
   };
+}
+
+function roleFitCompletionLine(chapterId) {
+  if (!chapterId) return "Review strengthens every role path by making the same judgment easier to recall later.";
+  const roles = ROLE_FIT_TRACKS.filter((track) => track.chapterIds.includes(chapterId)).map((track) => track.title);
+  if (roles.length === 0) return "This step adds one reusable agentic workflow judgment.";
+  return `This step supports: ${roles.join(" / ")}.`;
 }
 
 export function nextPracticeRecommendation(progress, now = Date.now()) {

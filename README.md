@@ -35,6 +35,7 @@
 
 - Finishing a lesson, Boss Quiz, interview drill, or review session now shows an immediate completion card.
 - Cards summarize the result, the relevant job-facing skill, and the next recommended action.
+- Cards also show which role path the completed step supports.
 - This keeps the loop game-like while still pointing back to interview-ready explanations.
 
 ## Next Practice Recommendation
