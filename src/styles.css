@@ -1076,6 +1076,50 @@ h1 {
   margin-top: 6px;
 }
 
+.beginner-skill-gate-path {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 12px;
+}
+
+.beginner-skill-gate-path div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(124 58 237 / 0.14);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.beginner-skill-gate-path div.current {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgb(139 92 246 / 0.12);
+}
+
+.beginner-skill-gate-path div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.beginner-skill-gate-path div.locked {
+  opacity: 0.62;
+}
+
+.beginner-skill-gate-path span,
+.beginner-skill-gate-path strong {
+  display: block;
+}
+
+.beginner-skill-gate-path span {
+  color: #6d28d9;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.beginner-skill-gate-path strong {
+  margin-top: 6px;
+}
+
 .beginner-skill-map-action {
   align-items: center;
   display: flex;
@@ -7222,6 +7266,7 @@ button:disabled {
   .session-rhythm-steps,
   .start-here-steps,
   .quest-brief-lanes,
+  .beginner-skill-gate-path,
   .beginner-route-rail,
   .beginner-command-grid.path,
   .beginner-command-grid.daily,

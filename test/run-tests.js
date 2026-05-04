@@ -940,6 +940,9 @@ function testBeginnerSkillMapCard() {
   assert.equal(card.activeId, course.chapters[0].id);
   assert.equal(card.nodes.length, 3);
   assert.deepEqual(card.nodes.map((node) => node.status), ["new", "locked", "locked"]);
+  assert.deepEqual(card.activePath.map((gate) => gate.id), ["learn", "boss", "interview"]);
+  assert.deepEqual(card.activePath.map((gate) => gate.status), ["current", "locked", "locked"]);
+  assert.ok(card.activePath[0].label.includes("Learn"));
   assert.ok(card.activeNext.includes("micro-lesson"));
   assert.ok(card.promise.includes("no project gate"));
   assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
@@ -952,12 +955,14 @@ function testBeginnerSkillMapCard() {
   card = beginnerSkillMapCard(progress);
   assert.equal(card.activeId, firstChapter.id);
   assert.ok(card.activeNext.includes("Boss"));
+  assert.deepEqual(card.activePath.map((gate) => gate.status), ["done", "current", "locked"]);
 
   completeBossQuiz(progress, firstChapter.id, 8, 8, 1000);
   card = beginnerSkillMapCard(progress);
   assert.equal(card.unlockedCount, 2);
   assert.equal(card.activeId, firstChapter.id);
   assert.equal(card.nodes[0].status, "proven");
+  assert.deepEqual(card.activePath.map((gate) => gate.status), ["done", "done", "current"]);
 
   for (const question of interviewQuestionsForChapter(firstChapter.id)) {
     const response = question.type === "multi" ? question.answer : question.answer ?? question.keywords[0];
@@ -967,6 +972,7 @@ function testBeginnerSkillMapCard() {
   assert.equal(card.completedCount, 1);
   assert.equal(card.activeId, course.chapters[1].id);
   assert.equal(card.nodes[0].status, "complete");
+  assert.deepEqual(card.activePath.map((gate) => gate.status), ["current", "locked", "locked"]);
 }
 
 function testInterviewScenarioCoverage() {

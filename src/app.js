@@ -1105,6 +1105,12 @@ function renderBeginnerSkillMapCard(card) {
         <small>${node.label} - ${node.percent}%</small>
       </div>`).join("")}
     </div>
+    <div class="beginner-skill-gate-path">
+      ${card.activePath.map((gate) => `<div class="${gate.status}">
+        <span>${gate.label}</span>
+        <strong>${gate.text}</strong>
+      </div>`).join("")}
+    </div>
     <div class="beginner-skill-map-action">
       <div>
         <strong>${card.activeSkill}</strong>

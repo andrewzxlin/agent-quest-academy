@@ -3220,6 +3220,30 @@ export function beginnerSkillMapCard(progress) {
                 ? "Learning"
                 : "Start"
   }));
+  const activeStages = active?.stages ?? [];
+  const learnStage = activeStages[0];
+  const bossStage = activeStages[1];
+  const interviewStage = activeStages[2];
+  const activePath = [
+    {
+      id: "learn",
+      label: "Learn key",
+      text: learnStage?.progress ?? "0/3 micro-lessons",
+      status: active?.status === "locked" ? "locked" : learnStage?.done ? "done" : "current"
+    },
+    {
+      id: "boss",
+      label: "Boss key",
+      text: bossStage?.progress ?? "not yet",
+      status: bossStage?.done ? "done" : learnStage?.done ? "current" : "locked"
+    },
+    {
+      id: "interview",
+      label: "Interview key",
+      text: interviewStage?.progress ?? "0/3 interview drill",
+      status: interviewStage?.done ? "done" : bossStage?.done ? "current" : "locked"
+    }
+  ];
 
   return {
     title: "Beginner Skill Map",
@@ -3231,6 +3255,7 @@ export function beginnerSkillMapCard(progress) {
     totalCount: pieces.length,
     unlockedCount,
     promise: "The map moves through choices, Boss checks, and interview drills; no project gate here.",
+    activePath,
     nodes: visibleNodes
   };
 }
