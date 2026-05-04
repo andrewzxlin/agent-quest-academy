@@ -134,6 +134,20 @@ export function buildSessionQuestions(progress, lesson, now = Date.now()) {
   return [...due, ...fresh].slice(0, 7);
 }
 
+export function buildReviewSessionQuestions(progress, now = Date.now(), limit = 7) {
+  return getDueReviewQuestions(progress, now, limit);
+}
+
+export function reviewStats(progress, now = Date.now()) {
+  const dueCount = progress.reviewQueue.filter((item) => item.dueAt <= now).length;
+  const wrongCount = Object.values(progress.answered).filter((item) => item.lastResult === "wrong").length;
+  return {
+    dueCount,
+    scheduledCount: progress.reviewQueue.length,
+    wrongCount
+  };
+}
+
 export function masteryForLesson(progress, lesson) {
   const total = lesson.questions.length;
   const correct = lesson.questions.filter((question) => {

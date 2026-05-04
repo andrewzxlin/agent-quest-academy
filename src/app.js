@@ -1,6 +1,7 @@
 import { course, flattenLessons } from "./course.js";
 import {
   answerQuestion,
+  buildReviewSessionQuestions,
   buildSessionQuestions,
   completeLesson,
   createInitialProgress,
@@ -8,6 +9,7 @@ import {
   gradeQuestion,
   loadProgress,
   masteryForLesson,
+  reviewStats,
   resetProgress,
   saveProgress
 } from "./engine.js";
@@ -21,6 +23,7 @@ let selectedMulti = new Set();
 let shortAnswer = "";
 let checked = false;
 let lastResult = null;
+let sessionMode = "lesson";
 
 const root = document.querySelector("#app");
 
@@ -31,8 +34,10 @@ function render() {
     sessionQuestions = buildSessionQuestions(progress, lesson);
   }
   const question = sessionQuestions[currentIndex];
-  const dueCount = getDueReviewQuestions(progress, Date.now(), 99).length;
+  const stats = reviewStats(progress, Date.now());
+  const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
+  const isReviewMode = sessionMode === "review";
 
   root.innerHTML = `
     <div class="shell">
@@ -49,6 +54,10 @@ function render() {
           <div><span>${progress.streak}</span><small>連續課</small></div>
           <div><span>${dueCount}</span><small>待複習</small></div>
         </div>
+        <button class="review-button" data-review="true" ${dueCount === 0 ? "disabled" : ""}>
+          <strong>錯題複習</strong>
+          <span>${dueCount === 0 ? "目前沒有到期題" : `立即刷 ${dueCount} 題到期題`}</span>
+        </button>
         <div class="map">
           ${lessons
             .map((item, index) => {
@@ -68,22 +77,22 @@ function render() {
       <main class="main">
         <section class="hero-card">
           <div>
-            <p class="eyebrow">${lesson.chapterTitle} / ${lesson.chapterTheme}</p>
-            <h2>${lesson.title}</h2>
-            <p>${lesson.concept}</p>
+            <p class="eyebrow">${isReviewMode ? "Review Queue / 錯題重現" : `${lesson.chapterTitle} / ${lesson.chapterTheme}`}</p>
+            <h2>${isReviewMode ? "錯題複習模式" : lesson.title}</h2>
+            <p>${isReviewMode ? "只練已到期或剛答錯的題目。複習答對後會重新排入下一次間隔複習。" : lesson.concept}</p>
           </div>
           <div class="visual-card">
             <div class="orbital">
               <span>Model</span><span>Tool</span><span>State</span><span>Check</span>
             </div>
-            <strong>${lesson.analogy}</strong>
+            <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : lesson.analogy}</strong>
           </div>
         </section>
 
         <section class="quiz-card">
           <div class="progress-row">
             <div>
-              <p class="eyebrow">第 ${currentIndex + 1} / ${sessionQuestions.length} 題</p>
+              <p class="eyebrow">${isReviewMode ? "複習" : "第"} ${currentIndex + 1} / ${sessionQuestions.length} 題</p>
               <h3>${question.prompt}</h3>
             </div>
             <div class="mastery">
@@ -95,7 +104,7 @@ function render() {
           ${checked ? renderFeedback(question, lastResult) : ""}
           <div class="actions">
             <button class="primary" data-check="true" ${checked ? "disabled" : ""}>檢查答案</button>
-            <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? "完成本課" : "下一題"}</button>
+            <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : "完成本課") : "下一題"}</button>
           </div>
         </section>
 
@@ -143,12 +152,21 @@ function bindEvents() {
     button.addEventListener("click", () => {
       selectedLessonIndex = Number(button.dataset.lesson);
       progress.currentLessonIndex = selectedLessonIndex;
+      sessionMode = "lesson";
       sessionQuestions = [];
       currentIndex = 0;
       clearAnswerState();
       saveProgress(progress);
       render();
     });
+  });
+
+  document.querySelector("[data-review]")?.addEventListener("click", () => {
+    sessionMode = "review";
+    sessionQuestions = buildReviewSessionQuestions(progress, Date.now(), 7);
+    currentIndex = 0;
+    clearAnswerState();
+    render();
   });
 
   document.querySelectorAll("[data-single]").forEach((button) => {
@@ -186,9 +204,13 @@ function bindEvents() {
 
   document.querySelector("[data-next]")?.addEventListener("click", () => {
     if (currentIndex === sessionQuestions.length - 1) {
-      const lesson = flattenLessons()[selectedLessonIndex];
-      progress = completeLesson(progress, lesson.id);
-      selectedLessonIndex = progress.currentLessonIndex;
+      if (sessionMode === "review") {
+        sessionMode = "lesson";
+      } else {
+        const lesson = flattenLessons()[selectedLessonIndex];
+        progress = completeLesson(progress, lesson.id);
+        selectedLessonIndex = progress.currentLessonIndex;
+      }
       sessionQuestions = [];
       currentIndex = 0;
     } else {
@@ -203,6 +225,7 @@ function bindEvents() {
     resetProgress();
     progress = createInitialProgress();
     selectedLessonIndex = 0;
+    sessionMode = "lesson";
     sessionQuestions = [];
     currentIndex = 0;
     clearAnswerState();

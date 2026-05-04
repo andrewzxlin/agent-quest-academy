@@ -2,12 +2,14 @@ import assert from "node:assert/strict";
 import { course, flattenLessons, flattenQuestions } from "../src/course.js";
 import {
   answerQuestion,
+  buildReviewSessionQuestions,
   buildSessionQuestions,
   completeLesson,
   createInitialProgress,
   getDueReviewQuestions,
   gradeQuestion,
-  masteryForLesson
+  masteryForLesson,
+  reviewStats
 } from "../src/engine.js";
 
 const tests = [
@@ -21,7 +23,9 @@ const tests = [
   ["correct answer schedules future review", testCorrectAnswerReview],
   ["lesson completion advances progress", testLessonCompletion],
   ["session includes due review first", testSessionReview],
-  ["fresh session questions keep stable keys", testFreshSessionQuestionKeys]
+  ["fresh session questions keep stable keys", testFreshSessionQuestionKeys],
+  ["review mode returns only due questions", testReviewModeOnlyDue],
+  ["review stats separate due and scheduled", testReviewStats]
 ];
 
 let failed = 0;
@@ -127,6 +131,28 @@ function testFreshSessionQuestionKeys() {
   answerQuestion(progress, session[0], session[0].answer, 1000);
   assert.ok(progress.answered[`${lesson.id}:${session[0].id}`]);
   assert.equal(progress.answered[`undefined:${session[0].id}`], undefined);
+}
+
+function testReviewModeOnlyDue() {
+  const progress = createInitialProgress(1000);
+  const [dueQuestion, futureQuestion] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, dueQuestion, 99, 1000);
+  answerQuestion(progress, futureQuestion, futureQuestion.answer, 1000);
+  const review = buildReviewSessionQuestions(progress, 1000, 7);
+  assert.equal(review.length, 1);
+  assert.equal(review[0].id, dueQuestion.id);
+  assert.equal(review[0].lessonId, dueQuestion.lessonId);
+}
+
+function testReviewStats() {
+  const progress = createInitialProgress(1000);
+  const [wrongQuestion, correctQuestion] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, wrongQuestion, 99, 1000);
+  answerQuestion(progress, correctQuestion, correctQuestion.answer, 1000);
+  const stats = reviewStats(progress, 1000);
+  assert.equal(stats.dueCount, 1);
+  assert.equal(stats.scheduledCount, 2);
+  assert.equal(stats.wrongCount, 1);
 }
 
 function countBy(items, keyFn) {
