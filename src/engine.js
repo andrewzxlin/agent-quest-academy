@@ -116,6 +116,41 @@ export function jobScenarioCard(chapterId) {
   };
 }
 
+export function lessonSkillCard(progress, lessonId) {
+  const lesson = flattenLessons().find((item) => item.id === lessonId);
+  if (!lesson) return null;
+  const skill = jobReadinessSkills.find((item) => item.chapterId === lesson.chapterId);
+  const total = lesson.questions.length;
+  const attempted = lesson.questions.filter((question) => progress.answered[questionKey({ ...question, lessonId })]).length;
+  const correct = lesson.questions.filter((question) => {
+    const state = progress.answered[questionKey({ ...question, lessonId })];
+    return state?.correctCount > 0;
+  }).length;
+  const mix = ["single", "multi", "short"]
+    .map((type) => ({
+      type,
+      label: type === "single" ? "選擇題" : type === "multi" ? "複選題" : "一句話簡答",
+      count: lesson.questions.filter((question) => question.type === type).length
+    }))
+    .filter((item) => item.count > 0);
+
+  return {
+    lessonId,
+    chapterId: lesson.chapterId,
+    title: lesson.title,
+    focus: lesson.focus?.length >= 20 ? lesson.focus : lesson.concept,
+    jobSkill: skill?.title ?? lesson.chapterTitle,
+    jobSignal: skill?.signal ?? lesson.chapterTheme,
+    answerLens: "先找題目裡的 workflow 線索：state、tool、risk、feedback、human gate。",
+    practicePromise: "本課只用選擇、複選與一句話簡答，先練判斷，不要求寫程式。",
+    attempted,
+    correct,
+    total,
+    mastery: masteryForLesson(progress, lesson),
+    mix
+  };
+}
+
 export function selectLearnerProfile(progress, profileId) {
   const profile = LEARNER_PROFILES.find((item) => item.id === profileId);
   progress.learnerProfile = profile ? profile.id : null;

@@ -1324,6 +1324,7 @@ function lesson({ id, title, concept, analogy, focus, best, multi, shortKeywords
     title,
     concept,
     analogy,
+    focus,
     questions: [
       single("q1", best.prompt, best.correct, best.distractors, `重點是：${focus}。`),
       multiChoice("q2", multi.prompt, multi.correct, multi.distractors, `這些選項都是 ${title} 會用到的核心判斷。`),

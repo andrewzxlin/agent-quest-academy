@@ -21,6 +21,7 @@ import {
   isAnswerReady,
   jobReadinessMap,
   jobScenarioCard,
+  lessonSkillCard,
   loadProgress,
   masteryForLesson,
   mistakeRescuePrompt,
@@ -78,6 +79,7 @@ function render() {
   const onboarding = onboardingState(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
+  const skillCard = lessonSkillCard(progress, lesson.id);
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -152,6 +154,7 @@ function render() {
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
         ${renderJobScenarioCard(jobScenario)}
         ${renderGlossaryCard(glossary)}
+        ${renderLessonSkillCard(skillCard)}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -471,6 +474,35 @@ function renderGlossaryCard(glossary) {
           </div>`
         )
         .join("")}
+    </div>
+  </section>`;
+}
+
+function renderLessonSkillCard(card) {
+  if (!card) return "";
+  return `<section class="lesson-skill-card">
+    <div>
+      <p class="eyebrow">Micro Skill</p>
+      <h3>${card.title}</h3>
+      <p>${card.focus}</p>
+      <strong>${card.practicePromise}</strong>
+    </div>
+    <div class="skill-grid">
+      <div>
+        <span>工作訊號</span>
+        <strong>${card.jobSkill}</strong>
+        <p>${card.jobSignal}</p>
+      </div>
+      <div>
+        <span>答題鏡頭</span>
+        <strong>${card.answerLens}</strong>
+        <p>${card.mix.map((item) => `${item.label} ${item.count}`).join(" / ")}</p>
+      </div>
+      <div>
+        <span>目前掌握</span>
+        <strong>${card.correct}/${card.total} 核心判斷</strong>
+        <p>${card.attempted}/${card.total} 題已嘗試，${card.mastery}% 已掌握。</p>
+      </div>
     </div>
   </section>`;
 }

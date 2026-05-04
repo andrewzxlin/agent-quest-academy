@@ -35,6 +35,7 @@ import {
   isAnswerReady,
   jobReadinessMap,
   jobScenarioCard,
+  lessonSkillCard,
   masteryForLesson,
   mistakeRescuePrompt,
   mistakeNotebook,
@@ -54,6 +55,7 @@ const tests = [
   ["chapter visuals cover every chapter", testChapterVisuals],
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
+  ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
@@ -207,6 +209,35 @@ function testJobScenarioCards() {
     assert.equal(card.workplaceTask, scenario.workplaceTask);
     assert.ok(card.chapterTitle.length > 0);
   }
+}
+
+function testLessonSkillCards() {
+  const progress = createInitialProgress(1000);
+  for (const lesson of flattenLessons()) {
+    const card = lessonSkillCard(progress, lesson.id);
+    assert.equal(card.lessonId, lesson.id);
+    assert.equal(card.total, lesson.questions.length);
+    assert.equal(card.attempted, 0);
+    assert.equal(card.correct, 0);
+    assert.equal(card.mastery, 0);
+    assert.ok(card.focus.length >= 20);
+    assert.ok(card.jobSignal.length >= 20);
+    assert.ok(card.answerLens.includes("workflow"));
+    assert.ok(card.practicePromise.includes("選擇") || card.practicePromise.includes("single"));
+    assert.ok(card.mix.every((item) => ["single", "multi", "short"].includes(item.type)));
+    assert.doesNotMatch(
+      `${card.focus} ${card.jobSignal} ${card.answerLens} ${card.practicePromise}`,
+      /repo|project implementation|實作專案/i
+    );
+  }
+
+  const lesson = flattenLessons()[0];
+  answerQuestion(progress, { ...lesson.questions[0], lessonId: lesson.id }, lesson.questions[0].answer, 1000);
+  const updated = lessonSkillCard(progress, lesson.id);
+  assert.equal(updated.attempted, 1);
+  assert.equal(updated.correct, 1);
+  assert.ok(updated.mastery > 0);
+  assert.equal(lessonSkillCard(progress, "missing-lesson"), null);
 }
 
 function testInterviewScenarioCoverage() {

@@ -503,6 +503,66 @@ h1 {
   font-size: 13px;
 }
 
+.lesson-skill-card {
+  display: grid;
+  grid-template-columns: 0.9fr 1.4fr;
+  gap: 18px;
+  align-items: stretch;
+  background: #ecfeff;
+  border: 1px solid #a5f3fc;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.lesson-skill-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.lesson-skill-card p {
+  color: var(--muted);
+}
+
+.lesson-skill-card > div > strong {
+  display: block;
+  margin-top: 12px;
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.skill-grid div {
+  border: 1px solid #a5f3fc;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.74);
+  padding: 12px;
+}
+
+.skill-grid span,
+.skill-grid strong {
+  display: block;
+}
+
+.skill-grid span {
+  color: #0e7490;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.skill-grid strong {
+  font-size: 14px;
+}
+
+.skill-grid p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
 .job-scenario-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1298,6 +1358,7 @@ button:disabled {
   .daily-quest-snapshot,
   .onboarding-card.compact-card,
   .job-scenario-card,
+  .lesson-skill-card,
   .explain-grid,
   .mission-grid {
     grid-template-columns: 1fr;
@@ -1306,6 +1367,7 @@ button:disabled {
   .chapter-track,
   .readiness-grid,
   .glossary-grid,
+  .skill-grid,
   .pitch-grid,
   .profile-grid,
   .proof-grid,
