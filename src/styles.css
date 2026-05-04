@@ -356,6 +356,59 @@ h1 {
   margin: 4px 0;
 }
 
+.job-evidence-brief {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: #f5f3ff;
+  border: 1px solid #c4b5fd;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.job-evidence-brief h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.job-evidence-brief p {
+  color: var(--muted);
+}
+
+.job-evidence-brief strong {
+  display: block;
+  margin-top: 10px;
+}
+
+.evidence-meter {
+  min-width: 170px;
+  text-align: right;
+}
+
+.evidence-meter span,
+.evidence-meter small,
+.evidence-meter em {
+  display: block;
+}
+
+.evidence-meter span {
+  color: #6d28d9;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.evidence-meter small,
+.evidence-meter em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.evidence-meter em {
+  margin-top: 8px;
+}
+
 .daily-quest-snapshot {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -1572,6 +1625,7 @@ button:disabled {
   .completion-card,
   .recommendation-card,
   .career-snapshot,
+  .job-evidence-brief,
   .daily-quest-snapshot,
   .daily-momentum-card,
   .mistake-focus-card,

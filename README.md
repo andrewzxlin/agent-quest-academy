@@ -152,6 +152,12 @@
 - Due mistakes and repeated misses are prioritized before less urgent scheduled reviews.
 - This gives learners one concrete repair target instead of a noisy list.
 
+## Job Evidence Brief
+
+- The home screen now turns current progress into one interview-ready evidence line.
+- It highlights the strongest proof so far and the next gap to close.
+- This helps learners connect low-friction drills to job-facing explanations.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

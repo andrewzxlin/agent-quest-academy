@@ -21,6 +21,7 @@ import {
   gradePitchPractice,
   isAnswerReady,
   jobReadinessMap,
+  jobEvidenceBrief,
   jobScenarioCard,
   lessonSkillCard,
   learningPuzzleBoard,
@@ -80,6 +81,7 @@ function render() {
   const stats = reviewStats(progress, Date.now());
   const recommendation = nextPracticeRecommendation(progress, Date.now());
   const careerSnapshot = careerReadinessSnapshot(progress, Date.now());
+  const evidenceBrief = jobEvidenceBrief(progress, Date.now());
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const momentum = dailyMomentum(progress, Date.now());
   const onboarding = onboardingState(progress);
@@ -154,6 +156,7 @@ function render() {
         </section>
         ${renderOnboardingCard(onboarding)}
         ${renderCareerSnapshot(careerSnapshot)}
+        ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMomentumCard(momentum)}
         ${renderMistakeFocusCard(mistakeFocus)}
@@ -383,6 +386,23 @@ function renderCareerSnapshot(snapshot) {
       <strong>${snapshot.percent}%</strong>
       <span>下一個缺口：${snapshot.nextGap}</span>
       <small>${snapshot.nextAction}</small>
+    </div>
+  </section>`;
+}
+
+function renderJobEvidenceBrief(brief) {
+  if (!brief) return "";
+  return `<section class="job-evidence-brief">
+    <div>
+      <p class="eyebrow">Job Evidence Brief</p>
+      <h3>${brief.headline}</h3>
+      <p>${brief.interviewLine}</p>
+      <strong>${brief.proof}</strong>
+    </div>
+    <div class="evidence-meter">
+      <span>${brief.readyCount}/${brief.total}</span>
+      <small>ready evidence</small>
+      <em>${brief.nextGap} · ${brief.nextAction}</em>
     </div>
   </section>`;
 }

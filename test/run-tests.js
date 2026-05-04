@@ -35,6 +35,7 @@ import {
   gradeQuestion,
   isAnswerReady,
   jobReadinessMap,
+  jobEvidenceBrief,
   jobScenarioCard,
   lessonSkillCard,
   learningPuzzleBoard,
@@ -90,6 +91,7 @@ const tests = [
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
   ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
+  ["job evidence brief turns progress into an interview line", testJobEvidenceBrief],
   ["completion cards summarize finished sessions", testCompletionCards],
   ["next practice recommendation picks the highest-value next step", testNextPracticeRecommendation],
   ["pitch practice cards coach interview answers", testPitchPracticeCards],
@@ -738,6 +740,33 @@ function testCareerReadinessSnapshot() {
   assert.equal(snapshot.provenCount, 1);
   assert.equal(snapshot.percent, 13);
   assert.ok(["Skill-building track", "Portfolio signal track"].includes(snapshot.level));
+}
+
+function testJobEvidenceBrief() {
+  const progress = createInitialProgress(1000);
+  let brief = jobEvidenceBrief(progress, 1000);
+  assert.equal(brief.readyCount, 0);
+  assert.equal(brief.total, course.chapters.length);
+  assert.ok(brief.interviewLine.includes("agentic workflow"));
+  assert.ok(brief.nextGap.length > 0);
+
+  const chapter = course.chapters[0];
+  const chapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === chapter.id);
+  for (const lesson of chapterLessons) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, 1000);
+  brief = jobEvidenceBrief(progress, 1000);
+  assert.equal(brief.strongestStatus, "proven");
+  assert.equal(brief.readyCount, 1);
+  assert.ok(brief.proof.includes("Boss"));
+
+  for (const question of interviewQuestionsForChapter(chapter.id)) {
+    answerQuestion(progress, question, question.type === "multi" ? question.answer : question.answer ?? question.keywords[0], 1000);
+  }
+  brief = jobEvidenceBrief(progress, 1000);
+  assert.equal(brief.strongestStatus, "interview_ready");
+  assert.ok(brief.headline.includes("interview-ready"));
 }
 
 function testCompletionCards() {

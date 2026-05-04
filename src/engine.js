@@ -647,6 +647,37 @@ export function careerReadinessSnapshot(progress, now = Date.now()) {
   };
 }
 
+export function jobEvidenceBrief(progress, now = Date.now()) {
+  const proofs = abilityProofCards(progress);
+  const next = nextPracticeRecommendation(progress, now);
+  const rank = { interview_ready: 4, proven: 3, practicing: 2, new: 1 };
+  const strongest = [...proofs].sort((a, b) => rank[b.status] - rank[a.status])[0] ?? null;
+  if (!strongest) return null;
+  const readyCount = proofs.filter((item) => ["interview_ready", "proven"].includes(item.status)).length;
+  const practiceCount = proofs.filter((item) => item.status === "practicing").length;
+  const headline =
+    strongest.status === "interview_ready"
+      ? "You have interview-ready evidence"
+      : strongest.status === "proven"
+        ? "You have Boss-proven evidence"
+        : strongest.status === "practicing"
+          ? "You have practice evidence"
+          : "Start your first evidence block";
+
+  return {
+    headline,
+    strongestTitle: strongest.title,
+    strongestStatus: strongest.status,
+    proof: strongest.proof,
+    interviewLine: `我能說明 ${strongest.title} 在 agentic workflow 裡的作用，並用 ${strongest.interviewProgress} 作為目前練習證據。`,
+    readyCount,
+    practiceCount,
+    total: proofs.length,
+    nextGap: next.type === "done" ? "All current evidence blocks are complete." : next.title,
+    nextAction: next.cta
+  };
+}
+
 export function dailyQuestSnapshot(progress, now = Date.now()) {
   const missions = dailyMissions(progress, now);
   const completedCount = missions.filter((mission) => mission.done).length;
