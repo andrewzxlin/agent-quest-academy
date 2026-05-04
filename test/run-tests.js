@@ -115,10 +115,15 @@ function testOnboardingProfile() {
   state = onboardingState(progress);
   assert.equal(state.completed, true);
   assert.equal(state.selected.id, "interview");
+  assert.equal(state.questSteps.length, 3);
+  assert.ok(state.questSteps.some((step) => step.includes("interview") || step.includes("pitch")));
+  assert.doesNotMatch(state.questSteps.join(" "), /repo|project implementation|專案實作/i);
   assert.ok(state.guidance.includes("面試") || state.guidance.includes("pitch"));
 
   selectLearnerProfile(progress, "unknown");
-  assert.equal(onboardingState(progress).completed, false);
+  state = onboardingState(progress);
+  assert.equal(state.completed, false);
+  assert.equal(state.questSteps.length, 0);
 }
 
 function testCourseCoverage() {

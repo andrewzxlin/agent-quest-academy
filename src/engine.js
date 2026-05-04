@@ -31,6 +31,24 @@ const LEARNER_PROFILES = [
   }
 ];
 
+const PROFILE_QUEST_STEPS = {
+  beginner: [
+    "先用詞卡和提示理解 agent / tool / state 的意思。",
+    "每天完成一個 micro-lesson，答錯就進錯題複習。",
+    "通過 Boss 後再練 60 秒口頭說明，不急著做專案。"
+  ],
+  "ai-user": [
+    "把熟悉的 ChatGPT 用法拆成 workflow、tool、RAG、memory。",
+    "用選擇題判斷哪些步驟需要工具、狀態或 guardrail。",
+    "用工作情境卡練習把 AI 使用經驗轉成 agent 設計判斷。"
+  ],
+  interview: [
+    "先看工作情境卡，抓住這章在面試裡會被問的判斷點。",
+    "完成 Boss 和 interview drill，累積可口頭說明的架構語言。",
+    "用 pitch 練習把問題、workflow 角色、風險取捨講成 60 秒答案。"
+  ]
+};
+
 export function createInitialProgress(now = Date.now()) {
   return {
     currentLessonIndex: 0,
@@ -72,6 +90,7 @@ export function onboardingState(progress) {
     completed: Boolean(selected),
     selected,
     options: LEARNER_PROFILES,
+    questSteps: selected ? PROFILE_QUEST_STEPS[selected.id] ?? [] : [],
     headline: selected ? selected.title : "先選你的起點",
     guidance: selected?.coachLine ?? "不用先做專案，先用低阻力題目建立 Agentic Workflow 的直覺。"
   };

@@ -84,6 +84,12 @@
 - Each card explains the likely workplace task, the common beginner trap, and the interview signal.
 - This connects low-friction practice to job-ready agent workflow judgment without adding project implementation tasks.
 
+## Profile Quest Routes
+
+- Each onboarding profile now gets three small next-step goals.
+- Complete beginners, AI users, and interview-focused learners see different routes after choosing a profile.
+- The routes keep the first steps concrete: glossary, micro-lessons, review, Boss, interview drill, and pitch practice.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

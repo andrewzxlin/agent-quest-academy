@@ -335,6 +335,7 @@ function renderOnboardingCard(onboarding) {
         <p class="eyebrow">Coach Mode</p>
         <h3>${onboarding.headline}</h3>
         <p>${onboarding.guidance}</p>
+        ${renderQuestSteps(onboarding.questSteps)}
       </div>
       <button class="ghost compact" data-profile-reset="true">重選起點</button>
     </section>`;
@@ -356,6 +357,13 @@ function renderOnboardingCard(onboarding) {
         .join("")}
     </div>
   </section>`;
+}
+
+function renderQuestSteps(steps = []) {
+  if (steps.length === 0) return "";
+  return `<div class="quest-route">
+    ${steps.map((step, index) => `<div><span>${index + 1}</span><strong>${step}</strong></div>`).join("")}
+  </div>`;
 }
 
 function renderPitchPracticeCard(card) {

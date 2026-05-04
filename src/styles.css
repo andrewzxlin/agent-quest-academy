@@ -360,6 +360,35 @@ h1 {
   margin-top: 8px;
 }
 
+.quest-route {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.quest-route div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+.quest-route span {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.quest-route strong {
+  font-size: 13px;
+}
+
 .glossary-card {
   background: #f8fafc;
   border: 1px solid var(--line);
