@@ -1,5 +1,6 @@
 import { bossQuestionsForChapter, chapterVisuals, course, flattenLessons, interviewQuestionsForChapter } from "./course.js";
 import {
+  abilityShardCard,
   abilityProofCards,
   answerProofLine,
   answerRecallCue,
@@ -164,6 +165,7 @@ function render() {
   const isBossMode = sessionMode === "boss";
   const answerReady = isAnswerReady(question, getResponse(question));
   const sessionRhythm = sessionRhythmCard(sessionQuestions, currentIndex);
+  const abilityShard = abilityShardCard(progress, question);
 
   root.innerHTML = `
     <div class="shell">
@@ -284,6 +286,7 @@ function render() {
             </div>
           </div>
           ${renderSessionRhythmCard(sessionRhythm)}
+          ${renderAbilityShardCard(abilityShard)}
           ${renderQuestionMasteryStage(questionMasteryStage(question))}
           ${renderQuestionSignalPreview(questionSignalPreview(question))}
           ${renderQuestionCoach(questionCoachHint(question))}
@@ -460,6 +463,25 @@ function renderSessionRhythmCard(card) {
         .join("")}
     </div>
     <small>${card.promise}</small>
+  </div>`;
+}
+
+function renderAbilityShardCard(card) {
+  return `<div class="ability-shard-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.chapterTitle} - ${card.stage}</small>
+    </div>
+    <div>
+      <em>${card.shard}</em>
+      <p>${card.body}</p>
+      <small>${card.jobUse}</small>
+    </div>
+    <div>
+      <b>${card.progressLabel}</b>
+      <small>${card.nextUse}</small>
+    </div>
   </div>`;
 }
 

@@ -816,6 +816,52 @@ export function sessionRhythmCard(questions, currentIndex = 0) {
   };
 }
 
+export function abilityShardCard(progress, question) {
+  const state = progress.answered[questionKey(question)];
+  const stage = questionMasteryStage(question);
+  const shardByStage = {
+    Recognize: "Decision shard",
+    Connect: "Workflow link shard",
+    Explain: "Interview line shard"
+  };
+  const jobUseByStage = {
+    Recognize: "Spot the signal that changes what an agent should do.",
+    Connect: "Connect tools, state, retrieval, checks, and feedback.",
+    Explain: "Turn the workflow idea into one job-facing sentence."
+  };
+  const status =
+    state?.correctCount > 0 ? "collected" : state?.wrongCount > 0 ? "repair" : "available";
+  const shard = shardByStage[stage.label] ?? "Ability shard";
+
+  return {
+    title: "Ability Shard",
+    status,
+    shard,
+    stage: stage.label,
+    chapterTitle: question.chapterTitle,
+    headline:
+      status === "collected"
+        ? `${shard} collected`
+        : status === "repair"
+          ? `${shard} is ready for review`
+          : `Collect a ${shard}`,
+    body:
+      status === "collected"
+        ? "This small answer is already part of your visible ability trail."
+        : status === "repair"
+          ? "A missed shard becomes a review target, not extra homework."
+          : "One tiny answer can add a visible job-skill signal.",
+    jobUse: jobUseByStage[stage.label] ?? stage.proof,
+    progressLabel: `${state?.correctCount ?? 0} clean / ${state?.wrongCount ?? 0} review`,
+    nextUse:
+      status === "collected"
+        ? "Reuse it later in a short explanation."
+        : status === "repair"
+          ? "Review will bring this pattern back."
+          : "Answer the current prompt to try collecting it."
+  };
+}
+
 export function selectLearnerProfile(progress, profileId) {
   const profile = LEARNER_PROFILES.find((item) => item.id === profileId);
   progress.learnerProfile = profile ? profile.id : null;

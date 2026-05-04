@@ -25,6 +25,12 @@
 - Learners can see that choice prompts come first and the short explanation stays small.
 - The rhythm strip reduces blank-page anxiety by making the final short answer visible before it arrives.
 
+## Ability Shards
+
+- Every quiz prompt now shows a collectible ability shard before the learner answers.
+- A shard starts as available, becomes a review target after a miss, and becomes collected after a clean answer.
+- The shard names connect tiny prompts to job-facing skills: decision signal, workflow link, and interview line.
+
 ## Uncertainty Safety Cards
 
 - Every question now explains that "not sure" is a valid learning move.

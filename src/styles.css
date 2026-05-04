@@ -3099,6 +3099,67 @@ h1 {
   margin-bottom: 3px;
 }
 
+.ability-shard-card {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 0.9fr 1.3fr 0.8fr;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.ability-shard-card.collected {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.ability-shard-card.repair {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.ability-shard-card span,
+.ability-shard-card strong,
+.ability-shard-card small,
+.ability-shard-card em,
+.ability-shard-card b {
+  display: block;
+}
+
+.ability-shard-card span {
+  color: #475569;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ability-shard-card strong {
+  margin-top: 4px;
+}
+
+.ability-shard-card em {
+  color: #7c3aed;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.ability-shard-card p {
+  color: var(--ink);
+  margin: 6px 0 0;
+}
+
+.ability-shard-card small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.ability-shard-card b {
+  color: var(--ink);
+  font-size: 13px;
+}
+
 .question-signal-preview {
   background: #fff7ed;
   border: 1px solid #fed7aa;
@@ -3987,6 +4048,7 @@ button:disabled {
   .focus-guard-card,
   .first-five-card,
   .session-rhythm-card,
+  .ability-shard-card,
   .job-scenario-card,
   .lesson-skill-card,
   .explain-grid,

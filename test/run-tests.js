@@ -13,6 +13,7 @@ import {
   jobReadinessSkills
 } from "../src/course.js";
 import {
+  abilityShardCard,
   abilityProofCards,
   answerProofLine,
   answerRecallCue,
@@ -121,6 +122,7 @@ const tests = [
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
   ["session rhythm shows choices before tiny explanation", testSessionRhythmCard],
+  ["ability shard card turns each prompt into a collectible piece", testAbilityShardCard],
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["answer proof lines turn feedback into job-facing evidence", testAnswerProofLines],
   ["proof booster turns feedback into immediate proof or review", testProofBoosterCard],
@@ -799,6 +801,38 @@ function testSessionRhythmCard() {
   rhythm = sessionRhythmCard([], 10);
   assert.equal(rhythm.headline, "No active prompts");
   assert.equal(rhythm.steps.length, 0);
+}
+
+function testAbilityShardCard() {
+  const progress = createInitialProgress(1000);
+  const single = flattenQuestions().find((item) => item.type === "single");
+  const multi = flattenQuestions().find((item) => item.type === "multi");
+  const short = flattenQuestions().find((item) => item.type === "short");
+
+  let shard = abilityShardCard(progress, single);
+  assert.equal(shard.title, "Ability Shard");
+  assert.equal(shard.status, "available");
+  assert.equal(shard.stage, "Recognize");
+  assert.equal(shard.shard, "Decision shard");
+  assert.ok(shard.headline.includes("Collect"));
+  assert.ok(shard.jobUse.includes("agent"));
+  assert.equal(shard.progressLabel, "0 clean / 0 review");
+  assert.doesNotMatch(JSON.stringify(shard), /repo|project implementation|build a project|coding task/i);
+
+  answerQuestion(progress, single, 99, 1000);
+  shard = abilityShardCard(progress, single);
+  assert.equal(shard.status, "repair");
+  assert.ok(shard.body.includes("review target"));
+  assert.equal(shard.progressLabel, "0 clean / 1 review");
+
+  answerQuestion(progress, single, single.answer, 2000);
+  shard = abilityShardCard(progress, single);
+  assert.equal(shard.status, "collected");
+  assert.ok(shard.nextUse.includes("short explanation"));
+  assert.equal(shard.progressLabel, "1 clean / 1 review");
+
+  assert.equal(abilityShardCard(progress, multi).shard, "Workflow link shard");
+  assert.equal(abilityShardCard(progress, short).shard, "Interview line shard");
 }
 
 function testShortAnswerSupport() {
