@@ -630,6 +630,8 @@ function renderZeroToLandingQuestCard(card) {
     <div class="zero-landing-action">
       <div>
         <strong>${card.activeProof}</strong>
+        <em>${card.activeLine}</em>
+        <small>${card.activeUse}</small>
         <small>${card.promise}</small>
       </div>
       <button class="primary compact" data-zero-landing-action="true">${card.nextAction}</button>

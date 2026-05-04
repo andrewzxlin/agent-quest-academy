@@ -2259,31 +2259,36 @@ export function zeroToLandingQuestCard(progress, now = Date.now()) {
       id: "first-choice",
       label: "First choice",
       done: dayDone("first-answer"),
-      proof: "One answer starts the recall trail."
+      proof: "One answer starts the recall trail.",
+      line: "I can start an agentic workflow learning trail with one defended choice."
     },
     {
       id: "first-receipt",
       label: "First receipt",
       done: dayDone("first-lesson"),
-      proof: "A micro-lesson becomes visible progress."
+      proof: "A micro-lesson becomes visible progress.",
+      line: "I can turn a tiny lesson into visible workflow evidence."
     },
     {
       id: "boss-proof",
       label: "Boss proof",
       done: dayDone("boss-proof"),
-      proof: "A chapter becomes defended evidence."
+      proof: "A chapter becomes defended evidence.",
+      line: "I can defend one chapter-level agentic workflow judgment."
     },
     {
       id: "role-signal",
       label: "Role signal",
       done: gateDone("role-paths"),
-      proof: "Proof connects to more than one role path."
+      proof: "Proof connects to more than one role path.",
+      line: "I can connect my proof to more than one job-facing role path."
     },
     {
       id: "interview-line",
       label: "Interview line",
       done: gateDone("interview-lines"),
-      proof: "Short explanations become interview-ready."
+      proof: "Short explanations become interview-ready.",
+      line: "I can turn short explanations into interview-ready wording."
     }
   ];
   const completedCount = milestones.filter((milestone) => milestone.done).length;
@@ -2300,6 +2305,8 @@ export function zeroToLandingQuestCard(progress, now = Date.now()) {
     percent: Math.round((completedCount / milestones.length) * 100),
     activeId: active.id,
     activeProof: active.proof,
+    activeLine: active.line,
+    activeUse: "Say this line after the next tiny practice step.",
     nextAction: next.type === "done" ? "Rehearse one interview line." : next.cta,
     promise: "The whole route starts with choices and keeps writing tiny.",
     milestones: milestones.map((milestone) => ({

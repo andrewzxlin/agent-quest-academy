@@ -1586,6 +1586,9 @@ function testZeroToLandingQuestCard() {
   ]);
   assert.equal(card.milestones[0].status, "active");
   assert.ok(card.promise.includes("choices"));
+  assert.ok(card.activeLine.startsWith("I can "));
+  assert.ok(card.activeUse.includes("Say this line"));
+  assert.ok(card.milestones.every((milestone) => milestone.line.startsWith("I can ")));
   assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
 
   const question = flattenQuestions().find((item) => item.type === "single");
@@ -1593,6 +1596,7 @@ function testZeroToLandingQuestCard() {
   card = zeroToLandingQuestCard(progress, now);
   assert.equal(card.milestones.find((milestone) => milestone.id === "first-choice").status, "done");
   assert.equal(card.activeId, "first-receipt");
+  assert.ok(card.activeLine.includes("tiny lesson"));
 
   completeLesson(progress, flattenLessons()[0].id, now);
   card = zeroToLandingQuestCard(progress, now);
@@ -1607,6 +1611,7 @@ function testZeroToLandingQuestCard() {
   assert.equal(card.milestones.find((milestone) => milestone.id === "boss-proof").status, "done");
   assert.equal(card.milestones.find((milestone) => milestone.id === "role-signal").status, "done");
   assert.equal(card.activeId, "interview-line");
+  assert.ok(card.activeLine.includes("interview-ready"));
 }
 
 function testRoleSamplerCard() {

@@ -495,6 +495,7 @@ h1 {
 }
 
 .zero-landing-quest-card .section-title > p,
+.zero-landing-action em,
 .zero-landing-action small,
 .zero-landing-milestones small {
   color: var(--muted);
@@ -526,6 +527,7 @@ h1 {
 .zero-landing-milestones span,
 .zero-landing-milestones strong,
 .zero-landing-milestones small,
+.zero-landing-action em,
 .zero-landing-action strong,
 .zero-landing-action small {
   display: block;
@@ -557,6 +559,13 @@ h1 {
   gap: 12px;
   justify-content: space-between;
   margin-top: 14px;
+}
+
+.zero-landing-action em {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 800;
+  margin-top: 6px;
 }
 
 .role-sampler-card {

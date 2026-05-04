@@ -214,6 +214,7 @@
 
 - Beginner view now compresses the path from first choice to interview line into five visible milestones.
 - The milestones reuse real progress: first answer, first receipt, Boss proof, role signal, and interview-ready explanations.
+- The active milestone now includes a short "I can" line, so progress doubles as interview wording.
 - This keeps the landing path visible without exposing the full dashboard or adding heavier work.
 
 ## Ability Proof Cards
