@@ -52,6 +52,7 @@ import {
   jobRoleFitCard,
   jobScenarioCard,
   lessonAnalogyBridge,
+  lessonLadderStrip,
   lessonPitchBuilder,
   lessonPracticePlan,
   lessonSkillCard,
@@ -197,6 +198,7 @@ function render() {
   const conceptDiagram = conceptDiagramCard(lesson.id);
   const masteryLadder = lessonMasteryLadder(progress, lesson.id);
   const lessonPitch = lessonPitchBuilder(progress, lesson.id);
+  const ladderStrip = lessonLadderStrip(progress, lesson.id, question);
   const dueCount = stats.dueCount;
   const mastery = masteryForLesson(progress, lesson);
   const isReviewMode = sessionMode === "review";
@@ -342,6 +344,7 @@ function render() {
               <small>本課熟練度</small>
             </div>
           </div>
+          ${renderLessonLadderStrip(ladderStrip)}
           ${renderSessionRhythmCard(sessionRhythm)}
           ${renderAbilityShardCard(abilityShard)}
           ${renderQuestionMissionStrip(questionMission)}
@@ -518,6 +521,26 @@ function renderSessionRhythmCard(card) {
         .join("")}
     </div>
     <small>${card.promise}</small>
+  </div>`;
+}
+
+function renderLessonLadderStrip(card) {
+  if (!card) return "";
+  return `<div class="lesson-ladder-strip">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.activeStage}: ${card.level}</strong>
+      <small>${card.activeProof}</small>
+    </div>
+    <div class="lesson-ladder-steps">
+      ${card.stages
+        .map((stage) => `<em class="${stage.status}">
+          <b>${stage.label}</b>
+          ${stage.current}/${stage.target}
+        </em>`)
+        .join("")}
+    </div>
+    <small>${card.headline} - ${card.nextAction}</small>
   </div>`;
 }
 

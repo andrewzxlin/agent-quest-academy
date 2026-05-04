@@ -66,6 +66,7 @@ import {
   jobRoleFitCard,
   jobScenarioCard,
   lessonAnalogyBridge,
+  lessonLadderStrip,
   lessonPitchBuilder,
   lessonPracticePlan,
   lessonSkillCard,
@@ -139,6 +140,7 @@ const tests = [
   ["lesson analogy bridges explain concepts in plain language", testLessonAnalogyBridges],
   ["concept diagram cards turn lessons into visual workflow maps", testConceptDiagramCards],
   ["lesson mastery ladder tracks recognize connect explain stages", testLessonMasteryLadder],
+  ["lesson ladder strip keeps the current mastery stage visible", testLessonLadderStrip],
   ["lesson pitch builder turns mastery into interview lines", testLessonPitchBuilder],
   ["learning puzzle board tracks job-readiness pieces", testLearningPuzzleBoard],
   ["beginner skill map shows the route without full dashboard", testBeginnerSkillMapCard],
@@ -747,6 +749,30 @@ function testLessonMasteryLadder() {
   assert.equal(ladder.level, "Ready to teach");
   assert.ok(ladder.nextAction.includes("60-second"));
   assert.equal(lessonMasteryLadder(progress, "missing-lesson"), null);
+}
+
+function testLessonLadderStrip() {
+  const progress = createInitialProgress(1000);
+  const lesson = flattenLessons()[0];
+  const single = lesson.questions.find((item) => item.type === "single");
+  const multi = lesson.questions.find((item) => item.type === "multi");
+  let strip = lessonLadderStrip(progress, lesson.id, { ...single, lessonId: lesson.id });
+
+  assert.equal(strip.title, "Lesson Ladder");
+  assert.equal(strip.level, "Starting from zero");
+  assert.equal(strip.activeStage, "Recognize");
+  assert.equal(strip.stages.find((stage) => stage.id === "recognize").status, "current");
+  assert.deepEqual(strip.stages.map((stage) => stage.id), ["recognize", "connect", "explain"]);
+  assert.doesNotMatch(JSON.stringify(strip), /repo|project implementation|build a project|coding task/i);
+
+  for (const question of lesson.questions.filter((item) => item.type === "single")) {
+    answerQuestion(progress, { ...question, lessonId: lesson.id }, question.answer, 1000);
+  }
+  strip = lessonLadderStrip(progress, lesson.id, { ...multi, lessonId: lesson.id });
+  assert.equal(strip.activeStage, "Connect");
+  assert.equal(strip.stages.find((stage) => stage.id === "recognize").status, "done");
+  assert.equal(strip.stages.find((stage) => stage.id === "connect").status, "current");
+  assert.equal(lessonLadderStrip(progress, "missing-lesson", single), null);
 }
 
 function testLessonPitchBuilder() {

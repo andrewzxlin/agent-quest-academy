@@ -895,6 +895,27 @@ export function lessonMasteryLadder(progress, lessonId) {
   };
 }
 
+export function lessonLadderStrip(progress, lessonId, currentQuestion) {
+  const ladder = lessonMasteryLadder(progress, lessonId);
+  if (!ladder) return null;
+  const currentStage = currentQuestion ? questionMasteryStage(currentQuestion) : null;
+  const stages = ladder.stages.map((stage) => ({
+    ...stage,
+    status: stage.done ? "done" : stage.id === currentStage?.id ? "current" : "up-next"
+  }));
+  const active = stages.find((stage) => stage.status === "current") ?? stages.find((stage) => !stage.done) ?? stages[stages.length - 1];
+
+  return {
+    title: "Lesson Ladder",
+    level: ladder.level,
+    headline: `${ladder.doneCount}/${ladder.totalCount} stages ready`,
+    activeStage: active.label,
+    activeProof: active.proof,
+    nextAction: ladder.nextAction,
+    stages
+  };
+}
+
 export function lessonPitchBuilder(progress, lessonId) {
   const lesson = flattenLessons().find((item) => item.id === lessonId);
   if (!lesson) return null;
