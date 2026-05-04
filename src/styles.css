@@ -5488,6 +5488,72 @@ h1 {
   text-transform: uppercase;
 }
 
+.answer-interview-line-card {
+  background: rgb(255 255 255 / 0.86);
+  border: 1px solid rgb(109 40 217 / 0.26);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+}
+
+.answer-interview-line-card.draft {
+  border-color: rgb(234 88 12 / 0.28);
+}
+
+.answer-interview-line-card span,
+.answer-interview-line-card strong,
+.answer-interview-line-card small,
+.answer-interview-steps b {
+  display: block;
+}
+
+.answer-interview-line-card span {
+  color: #6d28d9;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.answer-interview-line-card.draft span {
+  color: #c2410c;
+}
+
+.answer-interview-line-card p {
+  color: var(--ink);
+  font-weight: 800;
+  margin: 8px 0 0;
+}
+
+.answer-interview-line-card small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.answer-interview-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.answer-interview-steps em {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  padding: 10px;
+}
+
+.answer-interview-steps b {
+  color: var(--ink);
+  font-size: 10px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
 .answer-outcome-card {
   background: rgb(255 255 255 / 0.84);
   border: 1px solid rgb(37 99 235 / 0.2);
@@ -6434,6 +6500,7 @@ button:disabled {
   .short-recipe-steps,
   .answer-outcome-lanes,
   .answer-loot-badges,
+  .answer-interview-steps,
   .answer-evidence-clip,
   .proof-booster-card,
   .puzzle-grid,

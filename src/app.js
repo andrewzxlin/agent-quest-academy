@@ -4,6 +4,7 @@ import {
   abilityProofCards,
   answerOutcomeCard,
   answerEvidenceClip,
+  answerInterviewLineCard,
   answerLootCard,
   answerProofLine,
   answerRecallCue,
@@ -2399,6 +2400,7 @@ function renderFeedback(question, result, progressState) {
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
     ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
+    ${renderAnswerInterviewLineCard(answerInterviewLineCard(question, result))}
     ${renderAnswerOutcomeCard(answerOutcomeCard(question, result, progressState))}
     ${renderAnswerEvidenceClip(answerEvidenceClip(question, result))}
     ${renderProofBoosterCard(proofBoosterCard(question, result, progressState))}
@@ -2421,6 +2423,25 @@ function renderNextStepNudgeCard(card) {
     <div>
       <b>${card.actionLabel}</b>
       <small>${card.tinyRule}</small>
+    </div>
+  </div>`;
+}
+
+function renderAnswerInterviewLineCard(card) {
+  return `<div class="answer-interview-line-card ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <p>${card.line}</p>
+      <small>${card.cue}</small>
+    </div>
+    <div class="answer-interview-steps">
+      ${card.steps
+        .map((step) => `<em>
+          <b>${step.label}</b>
+          ${step.text}
+        </em>`)
+        .join("")}
     </div>
   </div>`;
 }

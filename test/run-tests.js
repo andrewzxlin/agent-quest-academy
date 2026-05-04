@@ -16,6 +16,7 @@ import {
   abilityShardCard,
   abilityProofCards,
   answerEvidenceClip,
+  answerInterviewLineCard,
   answerLootCard,
   answerOutcomeCard,
   answerProofLine,
@@ -165,6 +166,7 @@ const tests = [
   ["short answer support provides concept chips", testShortAnswerSupport],
   ["short answer recipe turns writing into three tiny steps", testShortAnswerRecipe],
   ["answer evidence clips turn every checked answer into a reusable signal", testAnswerEvidenceClips],
+  ["answer interview line turns feedback into spoken proof", testAnswerInterviewLineCard],
   ["answer loot card makes each answer feel like a small reward", testAnswerLootCard],
   ["next step nudge makes the post-answer action obvious", testNextStepNudgeCard],
   ["answer outcome card makes score memory and job use visible", testAnswerOutcomeCard],
@@ -1287,6 +1289,25 @@ function testAnswerLootCard() {
   assert.equal(card.badges.find((badge) => badge.id === "xp").value, "+2");
   assert.equal(card.badges.find((badge) => badge.id === "loop").value, "Review");
   assert.ok(card.headline.includes("Repair loot"));
+}
+
+function testAnswerInterviewLineCard() {
+  const [single, multi] = flattenQuestions();
+
+  let card = answerInterviewLineCard(single, gradeQuestion(single, single.answer));
+  assert.equal(card.title, "Answer Interview Line");
+  assert.equal(card.status, "ready");
+  assert.ok(card.headline.includes("one-line signal"));
+  assert.ok(card.line.startsWith("I can "));
+  assert.ok(card.roleText.includes("AI App Builder") || card.roleText.includes("Agent Workflow Builder"));
+  assert.deepEqual(card.steps.map((step) => step.id), ["read", "role", "reuse"]);
+  assert.ok(card.steps.find((step) => step.id === "reuse").text.includes("pitch"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = answerInterviewLineCard(multi, gradeQuestion(multi, []));
+  assert.equal(card.status, "draft");
+  assert.ok(card.cue.includes("review"));
+  assert.ok(card.steps.find((step) => step.id === "reuse").text.includes("review"));
 }
 
 function testNextStepNudgeCard() {

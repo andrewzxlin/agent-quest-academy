@@ -1451,6 +1451,28 @@ export function answerEvidenceClip(question, result) {
   };
 }
 
+export function answerInterviewLineCard(question, result) {
+  const proof = answerProofLine(question, result);
+  const role = questionRoleSignalCard(question);
+  const status = result.correct ? "ready" : "draft";
+
+  return {
+    title: "Answer Interview Line",
+    status,
+    headline: result.correct ? "Say this as a one-line signal" : "Repair this into a stronger line",
+    line: proof.body,
+    roleText: role.roleText,
+    cue: result.correct
+      ? "Use it as a short spoken proof after this run."
+      : "Read the correction first; review will make this line cleaner.",
+    steps: [
+      { id: "read", label: "Read", text: "Say the line once." },
+      { id: "role", label: "Role", text: role.chips.find((chip) => chip.id === "role")?.value ?? "Agentic Workflow roles" },
+      { id: "reuse", label: "Reuse", text: result.correct ? "Bring it into pitch practice." : "Let review replay it." }
+    ]
+  };
+}
+
 export function answerOutcomeCard(question, result, progress) {
   const state = progress.answered[questionKey(question)];
   const clip = answerEvidenceClip(question, result);
