@@ -86,6 +86,7 @@ import {
   questionMasteryStage,
   questionSignalPreview,
   recallComboCard,
+  reviewOrbitCard,
   reviewRescueQuest,
   reviewRhythmCard,
   reviewSprintCard,
@@ -162,6 +163,7 @@ const tests = [
   ["review mode returns only due questions", testReviewModeOnlyDue],
   ["review stats separate due and scheduled", testReviewStats],
   ["review rhythm card explains spaced review timing", testReviewRhythmCard],
+  ["review orbit makes spaced review visible in beginner flow", testReviewOrbitCard],
   ["review sprint card turns review into a tiny loop", testReviewSprintCard],
   ["review rescue quest makes mistake replay game-like", testReviewRescueQuest],
   ["mistake safety net explains wrong answers as repair loops", testMistakeSafetyNetCard],
@@ -1360,6 +1362,44 @@ function testReviewRhythmCard() {
   assert.equal(card.status, "Review coming soon");
   assert.equal(card.dueNow, 0);
   assert.equal(card.next24h, 1);
+}
+
+function testReviewOrbitCard() {
+  const now = 1000;
+  const day = 24 * 60 * 60 * 1000;
+  const progress = createInitialProgress(now);
+  let card = reviewOrbitCard(progress, now);
+  assert.equal(card.title, "Review Orbit");
+  assert.equal(card.mode, "empty");
+  assert.equal(card.activeId, "now");
+  assert.equal(card.activeLabel, "Seed");
+  assert.equal(card.scheduledCount, 0);
+  assert.deepEqual(card.rings.map((ring) => ring.id), ["now", "tomorrow", "week", "later"]);
+  assert.ok(card.promise.includes("short sentence"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const [wrongQuestion, firstCorrect, secondCorrect, laterCorrect] = flattenQuestions().filter((item) => item.type === "single");
+  answerQuestion(progress, wrongQuestion, 99, now);
+  answerQuestion(progress, firstCorrect, firstCorrect.answer, now);
+  answerQuestion(progress, secondCorrect, secondCorrect.answer, now);
+  answerQuestion(progress, secondCorrect, secondCorrect.answer, now + day);
+  answerQuestion(progress, laterCorrect, laterCorrect.answer, now);
+  answerQuestion(progress, laterCorrect, laterCorrect.answer, now + day);
+  answerQuestion(progress, laterCorrect, laterCorrect.answer, now + 4 * day);
+  card = reviewOrbitCard(progress, now);
+  assert.equal(card.mode, "due");
+  assert.equal(card.activeId, "now");
+  assert.equal(card.rings.find((ring) => ring.id === "now").count, 1);
+  assert.equal(card.rings.find((ring) => ring.id === "tomorrow").count, 1);
+  assert.equal(card.rings.find((ring) => ring.id === "week").count, 1);
+  assert.equal(card.rings.find((ring) => ring.id === "later").count, 1);
+  assert.ok(card.nextAction.includes("due review"));
+
+  progress.reviewQueue = progress.reviewQueue.filter((item) => item.dueAt > now);
+  card = reviewOrbitCard(progress, now);
+  assert.equal(card.mode, "scheduled");
+  assert.equal(card.activeId, "tomorrow");
+  assert.equal(card.rings.find((ring) => ring.id === "tomorrow").status, "active");
 }
 
 function testReviewSprintCard() {

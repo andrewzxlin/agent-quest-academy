@@ -2094,6 +2094,85 @@ h1 {
   margin-top: 4px;
 }
 
+.review-orbit-card {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.review-orbit-card.due {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.review-orbit-card .section-title > p,
+.review-orbit-rings small,
+.review-orbit-action small {
+  color: var(--muted);
+}
+
+.review-orbit-rings {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 14px;
+}
+
+.review-orbit-rings div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(79 70 229 / 0.14);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.review-orbit-rings div.active {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 0.12);
+}
+
+.review-orbit-card.due .review-orbit-rings div.active {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgb(249 115 22 / 0.12);
+}
+
+.review-orbit-rings span,
+.review-orbit-rings strong,
+.review-orbit-rings small,
+.review-orbit-action strong,
+.review-orbit-action small {
+  display: block;
+}
+
+.review-orbit-rings span {
+  color: #4338ca;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.review-orbit-card.due .review-orbit-rings span {
+  color: #c2410c;
+}
+
+.review-orbit-rings strong {
+  color: var(--ink);
+  font-size: 24px;
+  margin-top: 4px;
+}
+
+.review-orbit-rings small {
+  margin-top: 6px;
+}
+
+.review-orbit-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
 .review-sprint-card {
   align-items: center;
   background: #f7fee7;
@@ -4766,6 +4845,7 @@ button:disabled {
   .recall-combo-card,
   .signal-preview-card,
   .review-rhythm-card,
+  .review-orbit-card,
   .review-sprint-card,
   .review-rescue-quest,
   .mistake-safety-net-card,
@@ -4789,6 +4869,7 @@ button:disabled {
   .combo-meter-grid,
   .signal-preview-stats,
   .rhythm-grid,
+  .review-orbit-rings,
   .daily-landing-route,
   .rescue-quest-grid,
   .mistake-safety-steps,
@@ -4861,6 +4942,11 @@ button:disabled {
 
   .practice-diet-action,
   .choice-arcade-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .review-orbit-action {
     align-items: stretch;
     flex-direction: column;
   }

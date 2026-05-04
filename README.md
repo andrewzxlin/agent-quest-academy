@@ -362,6 +362,12 @@
 - Wrong answers return first, while correct answers reappear later as spaced recall.
 - This makes periodic review visible and low-pressure without adding any implementation assignments.
 
+## Review Orbit
+
+- Beginner view now shows a lighter review orbit with Now, 24h, 7d, and Later rings.
+- Due cards become the active ring, while scheduled cards stay visible without demanding immediate work.
+- This makes periodic review feel like a tiny recurring loop instead of a hidden queue.
+
 ## Lesson Micro Skill Cards
 
 - Every lesson now shows the exact micro-skill being practiced before the quiz.

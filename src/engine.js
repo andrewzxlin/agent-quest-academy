@@ -1447,6 +1447,72 @@ export function reviewRhythmCard(progress, now = Date.now()) {
   };
 }
 
+export function reviewOrbitCard(progress, now = Date.now()) {
+  const day = 24 * 60 * 60 * 1000;
+  const stats = reviewStats(progress, now);
+  const counts = {
+    now: progress.reviewQueue.filter((item) => item.dueAt <= now).length,
+    next24h: progress.reviewQueue.filter((item) => item.dueAt > now && item.dueAt <= now + day).length,
+    next7d: progress.reviewQueue.filter((item) => item.dueAt > now + day && item.dueAt <= now + 7 * day).length,
+    later: progress.reviewQueue.filter((item) => item.dueAt > now + 7 * day).length
+  };
+  const rings = [
+    {
+      id: "now",
+      label: "Now",
+      count: counts.now,
+      role: "Replay weak cards first."
+    },
+    {
+      id: "tomorrow",
+      label: "24h",
+      count: counts.next24h,
+      role: "Let fresh memory cool down."
+    },
+    {
+      id: "week",
+      label: "7d",
+      count: counts.next7d,
+      role: "Bring back stable recall."
+    },
+    {
+      id: "later",
+      label: "Later",
+      count: counts.later,
+      role: "Keep long-term signals alive."
+    }
+  ];
+  const active = rings.find((ring) => ring.count > 0) ?? rings[0];
+  const mode = counts.now > 0 ? "due" : stats.scheduledCount > 0 ? "scheduled" : "empty";
+
+  return {
+    title: "Review Orbit",
+    mode,
+    headline:
+      mode === "due"
+        ? "A review card is back in orbit."
+        : mode === "scheduled"
+          ? "Review is scheduled, not forgotten."
+          : "First answers will seed the orbit.",
+    activeId: active.id,
+    activeLabel: mode === "empty" ? "Seed" : active.label,
+    dueCount: counts.now,
+    scheduledCount: stats.scheduledCount,
+    wrongCount: stats.wrongCount,
+    nextAction:
+      mode === "due"
+        ? "Start the due review queue."
+        : mode === "scheduled"
+          ? "Answer one fresh choice while review waits."
+          : "Answer one choice to seed the orbit.",
+    promise: "Reviews stay tiny: choose, connect, or write one short sentence.",
+    rings: rings.map((ring) => ({
+      ...ring,
+      status: mode !== "empty" && ring.id === active.id ? "active" : ring.count > 0 ? "waiting" : "empty"
+    }))
+  };
+}
+
 export function reviewSprintCard(progress, now = Date.now()) {
   const stats = reviewStats(progress, now);
   const due = getDueReviewQuestions(progress, now, 3);

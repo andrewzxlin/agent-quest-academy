@@ -72,6 +72,7 @@ import {
   questionMasteryStage,
   questionSignalPreview,
   recallComboCard,
+  reviewOrbitCard,
   reviewRescueQuest,
   reviewRhythmCard,
   reviewSprintCard,
@@ -131,6 +132,7 @@ function render() {
   const proofs = abilityProofCards(progress);
   const stats = reviewStats(progress, Date.now());
   const reviewRhythm = reviewRhythmCard(progress, Date.now());
+  const reviewOrbit = reviewOrbitCard(progress, Date.now());
   const reviewSprint = reviewSprintCard(progress, Date.now());
   const rescueQuest = reviewRescueQuest(progress, Date.now());
   const mistakeSafetyNet = mistakeSafetyNetCard(progress, Date.now());
@@ -257,6 +259,7 @@ function render() {
         ${renderDailyLandingStepCard(dailyLandingStep)}
         ${renderDailyPhraseBankCard(dailyPhraseBank)}
         ${renderMistakeSafetyNetCard(mistakeSafetyNet)}
+        ${renderReviewOrbitCard(reviewOrbit)}
         ${renderReviewRescueQuest(rescueQuest)}
         ${renderMistakeFocusCard(mistakeFocus)}
         ${renderRecommendationCard(recommendation)}
@@ -1219,6 +1222,32 @@ function renderReviewRhythmCard(card) {
   </section>`;
 }
 
+function renderReviewOrbitCard(card) {
+  return `<section class="review-orbit-card ${card.mode}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.scheduledCount} scheduled - ${card.dueCount} due</p>
+    </div>
+    <div class="review-orbit-rings">
+      ${card.rings.map((ring) => `<div class="${ring.status}">
+        <span>${ring.label}</span>
+        <strong>${ring.count}</strong>
+        <small>${ring.role}</small>
+      </div>`).join("")}
+    </div>
+    <div class="review-orbit-action">
+      <div>
+        <strong>${card.activeLabel}</strong>
+        <small>${card.promise}</small>
+      </div>
+      <button class="primary compact" data-review-orbit-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
 function renderReviewSprintCard(card) {
   return `<section class="review-sprint-card ${card.mode}">
     <div>
@@ -2064,6 +2093,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-zero-landing-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-review-orbit-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 
