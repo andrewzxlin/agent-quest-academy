@@ -1640,6 +1640,10 @@ export function dailyPhraseBankCard(progress) {
   const repairCount = reel.receipts.filter((receipt) => receipt.status === "review").length;
   const latest = reel.receipts[0] ?? null;
   const hasPhrases = reel.receipts.length > 0;
+  const roleFit = jobRoleFitCard(progress);
+  const roleSignal = [...roleFit.tracks].sort(
+    (a, b) => b.readyCount - a.readyCount || b.practicingCount - a.practicingCount
+  )[0];
 
   return {
     title: "Today Phrase Bank",
@@ -1647,6 +1651,11 @@ export function dailyPhraseBankCard(progress) {
     headline: hasPhrases ? `${reel.receipts.length} reusable lines started` : "Your first line is one answer away",
     latestLine: latest?.evidenceLine ?? "Answer one low-friction question to create the first reusable line.",
     latestUse: latest?.evidenceUseCase ?? "No writing assignment needed; the app turns the answer into a short signal.",
+    roleSignal: roleSignal?.title ?? "Role signal pending",
+    roleLevel: roleSignal?.level ?? "starter",
+    roleUse: hasPhrases
+      ? `Useful for: ${roleSignal?.title ?? "Agentic Workflow practice"}.`
+      : "A role signal appears after the first phrase.",
     proofCount,
     repairCount,
     nextAction: hasPhrases ? "Use the newest line in the one-line coach or keep answering tiny prompts." : "Start with one choice question.",

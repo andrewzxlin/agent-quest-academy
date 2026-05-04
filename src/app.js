@@ -1027,12 +1027,14 @@ function renderDailyPhraseBankCard(card) {
       <h3>${card.headline}</h3>
       <p>${card.latestLine}</p>
       <small>${card.latestUse}</small>
+      <small class="phrase-bank-role">${card.roleUse}</small>
     </div>
     <div>
       <strong>${card.proofCount}</strong>
       <span>saved</span>
       <strong>${card.repairCount}</strong>
       <span>repair</span>
+      <span class="phrase-bank-role-chip">${card.roleSignal}</span>
     </div>
     <div class="phrase-bank-steps">
       ${card.rehearsalSteps.map((step) => `<small>
