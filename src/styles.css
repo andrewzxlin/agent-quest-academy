@@ -4715,6 +4715,96 @@ h1 {
   font-size: 13px;
 }
 
+.question-mission-strip {
+  align-items: stretch;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 0.85fr 1.35fr 0.8fr;
+  margin-bottom: 12px;
+  padding: 14px;
+}
+
+.question-mission-strip.ready {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.question-mission-strip.saved {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.question-mission-strip.repair {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.question-mission-strip span,
+.question-mission-strip strong,
+.question-mission-strip small,
+.question-mission-steps b {
+  display: block;
+}
+
+.question-mission-strip span {
+  color: #475569;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.question-mission-strip strong {
+  margin-top: 4px;
+}
+
+.question-mission-strip small {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.question-mission-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.question-mission-steps em {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  padding: 10px;
+}
+
+.question-mission-steps em.current {
+  border-color: #60a5fa;
+  color: #1d4ed8;
+}
+
+.question-mission-steps em.done {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #15803d;
+}
+
+.question-mission-steps em.repair {
+  background: #ffedd5;
+  border-color: #fdba74;
+  color: #c2410c;
+}
+
+.question-mission-steps b {
+  color: var(--ink);
+  font-size: 10px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
 .question-signal-preview {
   background: #fff7ed;
   border: 1px solid #fed7aa;
@@ -5730,6 +5820,7 @@ button:disabled {
   .first-five-card,
   .session-rhythm-card,
   .ability-shard-card,
+  .question-mission-strip,
   .job-scenario-card,
   .lesson-skill-card,
   .explain-grid,
@@ -5751,6 +5842,7 @@ button:disabled {
   .mistake-safety-steps,
   .choice-lens-steps,
   .question-signal-steps,
+  .question-mission-steps,
   .session-rhythm-steps,
   .start-here-steps,
   .quest-brief-lanes,

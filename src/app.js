@@ -77,6 +77,7 @@ import {
   questionHintDeck,
   questionMasterySignal,
   questionMasteryStage,
+  questionMissionStrip,
   questionSignalPreview,
   recallComboCard,
   questBriefCard,
@@ -202,6 +203,7 @@ function render() {
   const answerReady = isAnswerReady(question, getResponse(question));
   const sessionRhythm = sessionRhythmCard(sessionQuestions, currentIndex);
   const abilityShard = abilityShardCard(progress, question);
+  const questionMission = questionMissionStrip(question, answerReady, checked, lastResult);
 
   root.innerHTML = `
     <div class="shell">
@@ -341,6 +343,7 @@ function render() {
           </div>
           ${renderSessionRhythmCard(sessionRhythm)}
           ${renderAbilityShardCard(abilityShard)}
+          ${renderQuestionMissionStrip(questionMission)}
           ${renderQuestionHintDeck(questionHintDeck(question), question)}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
@@ -532,6 +535,28 @@ function renderAbilityShardCard(card) {
     <div>
       <b>${card.progressLabel}</b>
       <small>${card.nextUse}</small>
+    </div>
+  </div>`;
+}
+
+function renderQuestionMissionStrip(card) {
+  return `<div class="question-mission-strip ${card.status}">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.headline}</strong>
+      <small>${card.action}</small>
+    </div>
+    <div class="question-mission-steps">
+      ${card.steps
+        .map((step) => `<em class="${step.status}">
+          <b>${step.label}</b>
+          ${step.text}
+        </em>`)
+        .join("")}
+    </div>
+    <div>
+      <span>${card.reward}</span>
+      <small>${card.proofUse}</small>
     </div>
   </div>`;
 }

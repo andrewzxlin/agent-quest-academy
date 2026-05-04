@@ -91,6 +91,7 @@ import {
   questionKey,
   questionMasterySignal,
   questionMasteryStage,
+  questionMissionStrip,
   questionSignalPreview,
   recallComboCard,
   questBriefCard,
@@ -149,6 +150,7 @@ const tests = [
   ["uncertainty safety cards normalize unsure answers", testUncertaintySafetyCards],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
+  ["question mission strip keeps pick check save visible", testQuestionMissionStrip],
   ["session rhythm shows choices before tiny explanation", testSessionRhythmCard],
   ["ability shard card turns each prompt into a collectible piece", testAbilityShardCard],
   ["short answer support provides concept chips", testShortAnswerSupport],
@@ -1025,6 +1027,33 @@ function testQuestionSignalPreview() {
     assert.equal(preview.steps[2].text, preview.reward);
     assert.doesNotMatch(JSON.stringify(preview), /repo|project implementation|build a project|coding task/i);
   }
+}
+
+function testQuestionMissionStrip() {
+  const question = flattenQuestions().find((item) => item.type === "single");
+  let strip = questionMissionStrip(question);
+
+  assert.equal(strip.title, "Question Mission");
+  assert.equal(strip.status, "choosing");
+  assert.equal(strip.reward, "Decision signal");
+  assert.deepEqual(strip.steps.map((step) => step.id), ["look", "answer", "save"]);
+  assert.deepEqual(strip.steps.map((step) => step.status), ["done", "current", "up-next"]);
+  assert.ok(strip.headline.includes("workflow signal"));
+  assert.doesNotMatch(JSON.stringify(strip), /repo|project implementation|build a project|coding task/i);
+
+  strip = questionMissionStrip(question, true, false);
+  assert.equal(strip.status, "ready");
+  assert.deepEqual(strip.steps.map((step) => step.status), ["done", "done", "current"]);
+
+  strip = questionMissionStrip(question, true, true, { correct: true });
+  assert.equal(strip.status, "saved");
+  assert.deepEqual(strip.steps.map((step) => step.status), ["done", "done", "done"]);
+  assert.ok(strip.action.includes("next tiny prompt"));
+
+  strip = questionMissionStrip(question, true, true, { correct: false });
+  assert.equal(strip.status, "repair");
+  assert.equal(strip.steps.find((step) => step.id === "save").status, "repair");
+  assert.ok(strip.action.includes("review"));
 }
 
 function testSessionRhythmCard() {

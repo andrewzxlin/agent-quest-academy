@@ -997,6 +997,49 @@ export function questionSignalPreview(question) {
   };
 }
 
+export function questionMissionStrip(question, answerReady = false, checked = false, result = null) {
+  const preview = questionSignalPreview(question);
+  const status = checked ? (result?.correct ? "saved" : "repair") : answerReady ? "ready" : "choosing";
+  const headlineByStatus = {
+    choosing: `${preview.format}: find the workflow signal`,
+    ready: "Ready to check this signal",
+    saved: "Signal saved to the learning trail",
+    repair: "Repair seed saved for review"
+  };
+  const actionByStatus = {
+    choosing: preview.tinyMove,
+    ready: "Check the answer and print a receipt.",
+    saved: "Move to the next tiny prompt.",
+    repair: "Read the fix, then let review bring it back."
+  };
+
+  return {
+    title: "Question Mission",
+    status,
+    headline: headlineByStatus[status],
+    reward: preview.reward,
+    proofUse: preview.proofUse,
+    action: actionByStatus[status],
+    steps: preview.steps.map((step) => ({
+      ...step,
+      status:
+        step.id === "look"
+          ? "done"
+          : step.id === "answer"
+            ? answerReady || checked
+              ? "done"
+              : "current"
+            : checked
+              ? result?.correct
+                ? "done"
+                : "repair"
+              : answerReady
+                ? "current"
+                : "up-next"
+    }))
+  };
+}
+
 export function questionHintDeck(question) {
   const summaryByType = {
     single: "Open this only if you want a nudge before choosing one answer.",
