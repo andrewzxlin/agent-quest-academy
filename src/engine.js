@@ -277,6 +277,49 @@ export function focusGuardCard(progress, now = Date.now()) {
   };
 }
 
+export function startHereCard(progress, now = Date.now()) {
+  const onboarding = onboardingState(progress);
+  const firstFive = firstFiveMinuteStartCard(progress);
+  const focus = focusGuardCard(progress, now);
+  const minimum = dailyMinimumCard(progress, now);
+  const stats = reviewStats(progress, now);
+  const next = nextPracticeRecommendation(progress, now);
+  const primaryStep =
+    !onboarding.completed
+      ? "Choose the beginner-safe route"
+      : firstFive?.status === "new"
+        ? "Answer one single-choice prompt"
+        : stats.dueCount > 0
+          ? "Replay the weakest due card"
+          : next.cta;
+
+  return {
+    title: "Start Here",
+    mode: focus.mode,
+    headline: onboarding.completed ? "Today has one obvious first move" : "Pick your start, then answer one tiny choice",
+    body: onboarding.completed
+      ? "The page is organized into route, daily loop, and review loop so a beginner can act without deciding what to study first."
+      : "No setup and no project task. Choose a coach mode, then the app turns agentic workflow into tiny choices.",
+    action: focus.action,
+    actionLabel: focus.action.label,
+    steps: [
+      {
+        label: "Now",
+        text: primaryStep
+      },
+      {
+        label: "Minimum",
+        text: minimum.status === "done" ? "Daily minimum is already banked" : "One answer is enough"
+      },
+      {
+        label: "Signal",
+        text: stats.dueCount > 0 ? `${stats.dueCount} review card keeps memory warm` : firstFive?.reward ?? "Decision signal"
+      }
+    ],
+    promise: "Five minutes should produce a visible learning signal, not a vague study session."
+  };
+}
+
 export function dashboardModeCard(progress) {
   const mode = progress.dashboardMode === "full" ? "full" : "beginner";
   return {

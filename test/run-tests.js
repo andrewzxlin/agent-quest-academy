@@ -102,6 +102,7 @@ import {
   skillProfileCard,
   shortAnswerRecipe,
   shortAnswerSupport,
+  startHereCard,
   uncertaintySafetyCard,
   zeroToLandingQuestCard
 } from "../src/engine.js";
@@ -111,6 +112,7 @@ const tests = [
   ["onboarding profile starts empty and can be selected", testOnboardingProfile],
   ["first five minute start keeps first run tiny", testFirstFiveMinuteStartCard],
   ["focus guard shows one primary beginner action", testFocusGuardCard],
+  ["start here card turns the homepage into one obvious action", testStartHereCard],
   ["dashboard mode defaults to beginner and can switch full", testDashboardModeCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["beginner glossary covers every chapter with plain-language terms", testBeginnerGlossaryCoverage],
@@ -307,6 +309,33 @@ function testFocusGuardCard() {
   assert.notEqual(card.mode, "profile");
   assert.equal(card.action.kind, "recommend");
   assert.ok(card.proof.includes("started"));
+}
+
+function testStartHereCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let card = startHereCard(progress, now);
+  assert.equal(card.title, "Start Here");
+  assert.equal(card.mode, "profile");
+  assert.equal(card.action.kind, "profile");
+  assert.equal(card.steps.length, 3);
+  assert.deepEqual(card.steps.map((step) => step.label), ["Now", "Minimum", "Signal"]);
+  assert.ok(card.body.includes("No setup"));
+  assert.ok(card.promise.includes("visible learning signal"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  selectLearnerProfile(progress, "beginner");
+  card = startHereCard(progress, now);
+  assert.equal(card.mode, "first-step");
+  assert.equal(card.action.kind, "recommend");
+  assert.ok(card.steps.find((step) => step.label === "Now").text.includes("single-choice"));
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, 99, now);
+  card = startHereCard(progress, now);
+  assert.equal(card.mode, "rescue");
+  assert.equal(card.action.kind, "review");
+  assert.ok(card.steps.find((step) => step.label === "Signal").text.includes("review card"));
 }
 
 function testDashboardModeCard() {

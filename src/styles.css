@@ -228,6 +228,69 @@ h1 {
   margin: 8px 0;
 }
 
+.start-here-card {
+  align-items: center;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 14px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr auto;
+  padding: 22px;
+}
+
+.start-here-card h3 {
+  font-size: 24px;
+  margin: 6px 0;
+}
+
+.start-here-card p,
+.start-here-card small {
+  color: var(--muted);
+}
+
+.start-here-card.profile {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.start-here-card.rescue {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.start-here-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 14px 0 10px;
+}
+
+.start-here-steps div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.start-here-steps span,
+.start-here-steps strong {
+  display: block;
+}
+
+.start-here-steps span {
+  color: #4338ca;
+  font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.start-here-steps strong {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
 .completion-card {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -5100,6 +5163,7 @@ button:disabled {
   }
 
   .hero-card,
+  .start-here-card,
   .completion-card,
   .recommendation-card,
   .dashboard-mode-card,
@@ -5159,6 +5223,7 @@ button:disabled {
   .choice-lens-steps,
   .question-signal-steps,
   .session-rhythm-steps,
+  .start-here-steps,
   .beginner-route-rail,
   .beginner-command-grid.path,
   .beginner-command-grid.daily,

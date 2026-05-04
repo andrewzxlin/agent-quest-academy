@@ -90,6 +90,7 @@ import {
   skillProfileCard,
   shortAnswerRecipe,
   shortAnswerSupport,
+  startHereCard,
   uncertaintySafetyCard,
   zeroToLandingQuestCard
 } from "./engine.js";
@@ -162,6 +163,7 @@ function render() {
   const onboarding = onboardingState(progress);
   const firstFive = firstFiveMinuteStartCard(progress);
   const focusGuard = focusGuardCard(progress, Date.now());
+  const startHere = startHereCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
   const choiceArcade = choiceArcadeCard(progress);
@@ -249,6 +251,7 @@ function render() {
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
+        ${renderStartHereCard(startHere)}
         ${renderDashboardModeCard(dashboardMode)}
         ${renderOnboardingCard(onboarding)}
         ${renderFocusGuardCard(focusGuard)}
@@ -513,6 +516,28 @@ function renderAbilityShardCard(card) {
       <small>${card.nextUse}</small>
     </div>
   </div>`;
+}
+
+function renderStartHereCard(card) {
+  return `<section class="start-here-card ${card.mode}">
+    <div>
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.body}</p>
+      <div class="start-here-steps">
+        ${card.steps
+          .map((step) => `<div>
+            <span>${step.label}</span>
+            <strong>${step.text}</strong>
+          </div>`)
+          .join("")}
+      </div>
+      <small>${card.promise}</small>
+    </div>
+    <button class="primary" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
+      ${card.actionLabel}
+    </button>
+  </section>`;
 }
 
 function renderQuestion(question) {
@@ -2263,25 +2288,27 @@ function bindEvents() {
     render();
   });
 
-  document.querySelector("[data-focus-action]")?.addEventListener("click", (event) => {
-    const action = event.currentTarget.dataset.focusAction;
-    if (action === "profile") {
-      progress = selectLearnerProfile(progress, event.currentTarget.dataset.focusTarget);
-      saveProgress(progress);
-      render();
-      return;
-    }
-    if (action === "review") {
-      sessionMode = "review";
-      sessionQuestions = buildReviewSessionQuestions(progress, Date.now(), 7);
-      currentIndex = 0;
-      activePitch = null;
-      pitchAnswer = "";
-      clearAnswerState();
-      render();
-      return;
-    }
-    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  document.querySelectorAll("[data-focus-action]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const action = event.currentTarget.dataset.focusAction;
+      if (action === "profile") {
+        progress = selectLearnerProfile(progress, event.currentTarget.dataset.focusTarget);
+        saveProgress(progress);
+        render();
+        return;
+      }
+      if (action === "review") {
+        sessionMode = "review";
+        sessionQuestions = buildReviewSessionQuestions(progress, Date.now(), 7);
+        currentIndex = 0;
+        activePitch = null;
+        pitchAnswer = "";
+        clearAnswerState();
+        render();
+        return;
+      }
+      startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+    });
   });
 
   document.querySelectorAll("[data-role-practice]").forEach((button) => {
