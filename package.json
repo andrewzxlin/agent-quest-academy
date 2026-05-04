@@ -1,0 +1,14 @@
+{
+  "name": "agent-quest-academy",
+  "version": "0.1.0",
+  "description": "Duolingo-style beginner-friendly Agentic Workflow learning app.",
+  "type": "module",
+  "scripts": {
+    "test": "node test/run-tests.js",
+    "dev": "node scripts/static-server.js 4174"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
