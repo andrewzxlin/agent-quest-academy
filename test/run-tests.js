@@ -27,6 +27,7 @@ import {
   chapterMap,
   chapterSummaryCards,
   choiceEliminationHint,
+  choiceLensCard,
   completionCard,
   conceptDiagramCard,
   completeBossQuiz,
@@ -123,6 +124,7 @@ const tests = [
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
   ["choice elimination hints reduce option overload", testChoiceEliminationHints],
+  ["choice lens cards make selection practice feel guided", testChoiceLensCards],
   ["uncertainty safety cards normalize unsure answers", testUncertaintySafetyCards],
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
@@ -735,6 +737,31 @@ function testChoiceEliminationHints() {
     if (question.type === "multi") {
       assert.ok(hint.body.includes("Keep every option"));
       assert.ok(hint.checks.some((check) => check.includes("Do not stop")));
+    }
+  }
+}
+
+function testChoiceLensCards() {
+  const questions = [...flattenQuestions(), ...flattenInterviewQuestions()];
+  for (const question of questions) {
+    const card = choiceLensCard(question);
+    if (question.type === "short") {
+      assert.equal(card, null);
+      continue;
+    }
+    assert.equal(card.title, "Choice Lens");
+    assert.equal(card.mode, question.type);
+    assert.equal(card.steps.length, 3);
+    assert.ok(card.body.includes(question.type === "single" ? "one answer" : "multiple answers"));
+    assert.ok(card.checkpoint.length >= 35);
+    assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+    if (question.type === "single") {
+      assert.deepEqual(card.steps.map((step) => step.id), ["goal", "signal", "trap"]);
+      assert.ok(card.steps.some((step) => step.text.includes("workflow state")));
+    }
+    if (question.type === "multi") {
+      assert.deepEqual(card.steps.map((step) => step.id), ["parts", "coverage", "extras"]);
+      assert.ok(card.steps.some((step) => step.text.includes("human feedback")));
     }
   }
 }

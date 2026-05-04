@@ -971,6 +971,37 @@ export function choiceEliminationHint(question) {
   throw new Error(`Unknown question type: ${question.type}`);
 }
 
+export function choiceLensCard(question) {
+  if (question.type === "single") {
+    return {
+      title: "Choice Lens",
+      mode: "single",
+      body: "Use this like a tiny scanner before tapping one answer.",
+      steps: [
+        { id: "goal", label: "Goal", text: "What is the agent trying to decide?" },
+        { id: "signal", label: "Signal", text: "Which option changes workflow state, tools, risk, or feedback most clearly?" },
+        { id: "trap", label: "Trap", text: "Cross out answers that only sound polished but do not change the work." }
+      ],
+      checkpoint: "One defended choice is enough for this round."
+    };
+  }
+  if (question.type === "multi") {
+    return {
+      title: "Choice Lens",
+      mode: "multi",
+      body: "Use this like a checklist before keeping multiple answers.",
+      steps: [
+        { id: "parts", label: "Parts", text: "Find every option that plays a real workflow role." },
+        { id: "coverage", label: "Coverage", text: "Keep choices that cover state, tools, checks, retrieval, or human feedback." },
+        { id: "extras", label: "Extras", text: "Remove nice-to-have ideas that do not affect the agent loop." }
+      ],
+      checkpoint: "Multiple small signals can be correct together."
+    };
+  }
+  if (question.type === "short") return null;
+  throw new Error(`Unknown question type: ${question.type}`);
+}
+
 export function uncertaintySafetyCard(question) {
   const stage = questionMasteryStage(question);
   const action =

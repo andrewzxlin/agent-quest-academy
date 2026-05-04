@@ -3132,6 +3132,63 @@ h1 {
   padding: 5px 9px;
 }
 
+.choice-lens-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  background: #f0fdf4;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.choice-lens-card span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(22 163 74 / 0.14);
+  color: #15803d;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.choice-lens-card p,
+.choice-lens-card strong {
+  margin: 0;
+}
+
+.choice-lens-card p {
+  color: var(--ink);
+  margin-top: 8px;
+}
+
+.choice-lens-card strong {
+  color: #166534;
+  font-size: 13px;
+}
+
+.choice-lens-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.choice-lens-steps small {
+  border: 1px solid #dcfce7;
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--muted);
+  line-height: 1.45;
+  padding: 9px 10px;
+}
+
+.choice-lens-steps b {
+  color: #15803d;
+  display: block;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
 .uncertainty-safety-card {
   display: grid;
   gap: 8px;
@@ -4296,6 +4353,7 @@ button:disabled {
   .daily-landing-route,
   .rescue-quest-grid,
   .mistake-safety-steps,
+  .choice-lens-steps,
   .question-signal-steps,
   .session-rhythm-steps,
   .short-recipe-steps,

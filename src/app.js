@@ -14,6 +14,7 @@ import {
   chapterMap,
   chapterSummaryCards,
   choiceEliminationHint,
+  choiceLensCard,
   completionCard,
   conceptDiagramCard,
   completeBossQuiz,
@@ -300,6 +301,7 @@ function render() {
           ${renderQuestionMasteryStage(questionMasteryStage(question))}
           ${renderQuestionSignalPreview(questionSignalPreview(question))}
           ${renderQuestionCoach(questionCoachHint(question))}
+          ${renderChoiceLensCard(choiceLensCard(question))}
           ${renderChoiceEliminationHint(choiceEliminationHint(question))}
           ${renderUncertaintySafetyCard(uncertaintySafetyCard(question))}
           ${renderQuestion(question)}
@@ -1629,6 +1631,23 @@ function renderChoiceEliminationHint(hint) {
     <div class="elimination-checks">
       ${hint.checks.map((check) => `<small>${check}</small>`).join("")}
     </div>
+  </div>`;
+}
+
+function renderChoiceLensCard(card) {
+  if (!card) return "";
+  return `<div class="choice-lens-card ${card.mode}">
+    <div>
+      <span>${card.title}</span>
+      <p>${card.body}</p>
+    </div>
+    <div class="choice-lens-steps">
+      ${card.steps.map((step) => `<small>
+        <b>${step.label}</b>
+        ${step.text}
+      </small>`).join("")}
+    </div>
+    <strong>${card.checkpoint}</strong>
   </div>`;
 }
 

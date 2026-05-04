@@ -124,6 +124,12 @@
 - The hint teaches beginners what to cross out: options that sound nice but do not change workflow state, risk, tools, checks, or feedback.
 - Short-answer questions skip this card so the final explanation step stays lightweight.
 
+## Choice Lens Cards
+
+- Choice questions now include a small Goal / Signal / Trap lens before answering.
+- Single-choice prompts train one defended selection; multi-select prompts train keeping every real workflow part.
+- Short answers skip this card, keeping the lesson flow choice-heavy with only a tiny explanation at the end.
+
 ## Workplace Scenario Cards
 
 - Every chapter has a work-facing scenario before the quiz.
