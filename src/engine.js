@@ -912,6 +912,65 @@ export function chapterGateMap(progress) {
   });
 }
 
+export function bossReadinessCard(progress, chapterId) {
+  const chapter = chapterMap(progress).find((item) => item.chapterId === chapterId);
+  if (!chapter) return null;
+  const gate = chapterGateMap(progress).find((item) => item.chapterId === chapterId);
+  const remainingLessons = Math.max(0, chapter.totalLessons - chapter.completedLessons);
+  const status = chapter.bossPassed ? "cleared" : gate?.bossUnlocked ? "ready" : gate?.lessonsUnlocked ? "building" : "locked";
+  const checks = [
+    {
+      id: "lessons",
+      label: "Finish micro-lessons",
+      done: chapter.completedLessons === chapter.totalLessons,
+      detail: `${chapter.completedLessons}/${chapter.totalLessons} lessons done`
+    },
+    {
+      id: "boss",
+      label: "Beat Boss Quiz",
+      done: chapter.bossPassed,
+      detail: chapter.bossScore ? `Best score ${chapter.bossScore}` : "8 low-friction checkpoint questions"
+    },
+    {
+      id: "unlock",
+      label: "Unlock interview drill",
+      done: gate?.interviewUnlocked ?? false,
+      detail: "Boss proof opens the job-facing scenario drill"
+    }
+  ];
+
+  return {
+    chapterId,
+    title: "Boss readiness",
+    status,
+    headline:
+      status === "cleared"
+        ? "Boss proof saved"
+        : status === "ready"
+          ? "Ready for the chapter Boss"
+          : status === "locked"
+            ? "Finish the previous Boss first"
+            : `${remainingLessons} micro-lesson${remainingLessons === 1 ? "" : "s"} before Boss`,
+    body:
+      status === "ready"
+        ? "Use the Boss as a lightweight checkpoint before interview practice."
+        : status === "cleared"
+          ? "This chapter can now feed role evidence and interview practice."
+          : "Clear the remaining choice-first lessons before the Boss unlocks.",
+    completedCount: checks.filter((check) => check.done).length,
+    totalCount: checks.length,
+    nextAction:
+      status === "ready"
+        ? "Start Boss Quiz"
+        : status === "cleared"
+          ? "Practice interview drill"
+          : remainingLessons > 0
+            ? "Finish next micro-lesson"
+            : "Clear prerequisite Boss",
+    checks
+  };
+}
+
 export function jobReadinessMap(progress) {
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
   return jobReadinessSkills.map((skill) => {

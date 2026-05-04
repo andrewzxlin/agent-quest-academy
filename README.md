@@ -93,6 +93,12 @@
 - Each card explains the likely workplace task, the common beginner trap, and the interview signal.
 - This connects low-friction practice to job-ready agent workflow judgment without adding implementation assignments.
 
+## Boss Readiness Cards
+
+- The current chapter now shows whether the Boss checkpoint is locked, building, ready, or cleared.
+- The card breaks readiness into three checks: finish micro-lessons, beat Boss Quiz, and unlock interview drill.
+- This makes the next checkpoint explicit without adding project work or heavier assignments.
+
 ## Profile Quest Routes
 
 - Each onboarding profile now gets three small next-step goals.

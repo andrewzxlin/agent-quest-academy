@@ -18,6 +18,7 @@ import {
   answerRecallCue,
   answerQuestion,
   beginnerGlossaryCards,
+  bossReadinessCard,
   buildReviewSessionQuestions,
   buildSessionQuestions,
   careerReadinessSnapshot,
@@ -118,6 +119,7 @@ const tests = [
   ["mistake focus card picks the highest-priority wrong answer", testMistakeFocusCard],
   ["chapter map summarizes lesson and boss progress", testChapterMap],
   ["chapter gate map stages lessons boss interview and pitch unlocks", testChapterGateMap],
+  ["boss readiness card explains chapter checkpoint", testBossReadinessCard],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
   ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
@@ -1017,6 +1019,35 @@ function testChapterGateMap() {
   assert.equal(gates[0].pitchUnlocked, true);
   assert.equal(gates[1].gate, "current");
   assert.equal(gates[1].lessonsUnlocked, true);
+}
+
+function testBossReadinessCard() {
+  const progress = createInitialProgress(1000);
+  const chapter = course.chapters[0];
+  let card = bossReadinessCard(progress, chapter.id);
+  assert.equal(card.chapterId, chapter.id);
+  assert.equal(card.status, "building");
+  assert.equal(card.title, "Boss readiness");
+  assert.equal(card.completedCount, 0);
+  assert.equal(card.totalCount, 3);
+  assert.deepEqual(card.checks.map((check) => check.id), ["lessons", "boss", "unlock"]);
+  assert.ok(card.headline.includes("micro-lesson"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project/i);
+
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  card = bossReadinessCard(progress, chapter.id);
+  assert.equal(card.status, "ready");
+  assert.equal(card.checks.find((check) => check.id === "lessons").done, true);
+  assert.ok(card.nextAction.includes("Boss"));
+
+  completeBossQuiz(progress, chapter.id, 7, 8, 1000);
+  card = bossReadinessCard(progress, chapter.id);
+  assert.equal(card.status, "cleared");
+  assert.equal(card.completedCount, 3);
+  assert.equal(card.checks.find((check) => check.id === "unlock").done, true);
+  assert.equal(bossReadinessCard(progress, "missing-chapter"), null);
 }
 
 function testChapterSummaryCards() {

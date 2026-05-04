@@ -1567,6 +1567,70 @@ h1 {
   margin-bottom: 6px;
 }
 
+.boss-readiness-card {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.boss-readiness-card.ready {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.boss-readiness-card.cleared {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.boss-readiness-card > p {
+  color: var(--muted);
+}
+
+.boss-readiness-checks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.boss-readiness-checks div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.boss-readiness-checks div.done {
+  border-color: #86efac;
+}
+
+.boss-readiness-checks span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgb(37 99 235 / 0.1);
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+}
+
+.boss-readiness-checks div.done span {
+  background: rgb(22 163 74 / 0.14);
+  color: #15803d;
+}
+
+.boss-readiness-checks strong,
+.boss-readiness-checks small {
+  display: block;
+  margin-top: 8px;
+}
+
+.boss-readiness-checks small {
+  color: var(--muted);
+}
+
 .pitch-card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -2559,6 +2623,7 @@ button:disabled {
   .landing-checklist-grid,
   .practice-plan-grid,
   .analogy-bridge-grid,
+  .boss-readiness-checks,
   .diagram-flow,
   .mastery-ladder-grid,
   .lesson-pitch-lines,

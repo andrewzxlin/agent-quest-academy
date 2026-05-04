@@ -5,6 +5,7 @@ import {
   answerRecallCue,
   answerQuestion,
   beginnerGlossaryCards,
+  bossReadinessCard,
   buildReviewSessionQuestions,
   buildSessionQuestions,
   careerReadinessSnapshot,
@@ -108,6 +109,7 @@ function render() {
   const onboarding = onboardingState(progress);
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
+  const bossReadiness = bossReadinessCard(progress, chapter.id);
   const skillCard = lessonSkillCard(progress, lesson.id);
   const practicePlan = lessonPracticePlan(progress, lesson.id);
   const analogyBridge = lessonAnalogyBridge(lesson.id);
@@ -196,6 +198,7 @@ function render() {
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
         ${renderJobScenarioCard(jobScenario)}
+        ${renderBossReadinessCard(bossReadiness)}
         ${renderGlossaryCard(glossary)}
         ${renderLessonSkillCard(skillCard)}
         ${renderLessonPracticePlan(practicePlan)}
@@ -917,6 +920,29 @@ function renderJobScenarioCard(card) {
         <span>面試訊號</span>
         <strong>${card.interviewSignal}</strong>
       </div>
+    </div>
+  </section>`;
+}
+
+function renderBossReadinessCard(card) {
+  if (!card) return "";
+  return `<section class="boss-readiness-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.completedCount}/${card.totalCount} checks ready - ${card.nextAction}</p>
+    </div>
+    <p>${card.body}</p>
+    <div class="boss-readiness-checks">
+      ${card.checks
+        .map((check) => `<div class="${check.done ? "done" : ""}">
+          <span>${check.done ? "ready" : "next"}</span>
+          <strong>${check.label}</strong>
+          <small>${check.detail}</small>
+        </div>`)
+        .join("")}
     </div>
   </section>`;
 }
