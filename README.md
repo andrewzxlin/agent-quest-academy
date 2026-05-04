@@ -140,6 +140,12 @@
 - Daily activity uses the learner's local calendar day, so late-night practice is counted against the expected day.
 - Repeating an already completed lesson no longer advances the lesson path or daily completion count.
 
+## Mistake Notebook Rescue
+
+- Mistake notebook cards now include a short rescue prompt for each wrong answer.
+- The rescue prompt tells learners what to look for next time, turning review into a guided micro-coaching loop.
+- This keeps wrong answers useful without adding harder exercises.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

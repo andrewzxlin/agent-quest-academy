@@ -1173,6 +1173,12 @@ button:disabled {
   background: #fff7ed;
 }
 
+.mistake-card p {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
+
 .mission.done,
 .badge.unlocked {
   border-color: #86efac;

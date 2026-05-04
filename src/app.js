@@ -235,6 +235,7 @@ function render() {
                         <span>${item.due ? "已到期" : "已排程"} / 錯 ${item.wrongCount} 次</span>
                         <strong>${item.question.prompt}</strong>
                         <small>${item.chapterTitle} / ${item.lessonTitle}</small>
+                        ${item.rescue ? `<p>${item.rescue.body}</p>` : ""}
                       </div>`)
                       .join("")
               }

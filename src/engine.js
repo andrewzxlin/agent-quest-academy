@@ -373,6 +373,7 @@ export function mistakeNotebook(progress, now = Date.now(), limit = 6) {
         question,
         lessonTitle: question?.lessonTitle ?? "Unknown lesson",
         chapterTitle: question?.chapterTitle ?? "Unknown chapter",
+        rescue: question ? mistakeRescuePrompt(question, { correct: false, missing: question.keywords ?? [] }) : null,
         wrongCount: state.wrongCount,
         correctCount: state.correctCount,
         lastResult: state.lastResult,

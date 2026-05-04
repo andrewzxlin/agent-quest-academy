@@ -600,6 +600,8 @@ function testMistakeNotebook() {
   assert.equal(notebook[0].question.id, secondWrong.id);
   assert.equal(notebook[0].due, true);
   assert.equal(notebook[0].wrongCount, 1);
+  assert.ok(notebook[0].rescue.title.length > 0);
+  assert.ok(notebook[0].rescue.body.length >= 20);
   assert.equal(notebook.some((item) => item.question.id === correctOnly.id), false);
 }
 
