@@ -32,6 +32,7 @@ import {
   completeLesson,
   createInitialProgress,
   achievements,
+  dashboardModeCard,
   dailyMinimumCard,
   dailyLandingStepCard,
   dailyMomentum,
@@ -81,6 +82,7 @@ import {
   reviewSprintCard,
   reviewStats,
   selectLearnerProfile,
+  setDashboardMode,
   sevenDayLandingPath,
   signalPreviewCard,
   shortAnswerSupport,
@@ -92,6 +94,7 @@ const tests = [
   ["onboarding profile starts empty and can be selected", testOnboardingProfile],
   ["first five minute start keeps first run tiny", testFirstFiveMinuteStartCard],
   ["focus guard shows one primary beginner action", testFocusGuardCard],
+  ["dashboard mode defaults to beginner and can switch full", testDashboardModeCard],
   ["course covers job-ready agentic workflow map", testCourseCoverage],
   ["beginner glossary covers every chapter with plain-language terms", testBeginnerGlossaryCoverage],
   ["chapter visuals cover every chapter", testChapterVisuals],
@@ -270,6 +273,28 @@ function testFocusGuardCard() {
   assert.notEqual(card.mode, "profile");
   assert.equal(card.action.kind, "recommend");
   assert.ok(card.proof.includes("started"));
+}
+
+function testDashboardModeCard() {
+  const progress = createInitialProgress(1000);
+  let card = dashboardModeCard(progress);
+  assert.equal(card.title, "Dashboard Mode");
+  assert.equal(card.mode, "beginner");
+  assert.equal(card.nextMode, "full");
+  assert.ok(card.visibleGroups.includes("Start"));
+  assert.ok(card.body.includes("start"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  setDashboardMode(progress, "full");
+  card = dashboardModeCard(progress);
+  assert.equal(card.mode, "full");
+  assert.equal(card.nextMode, "beginner");
+  assert.ok(card.visibleGroups.includes("Evidence"));
+  assert.ok(card.body.includes("full evidence"));
+
+  setDashboardMode(progress, "unknown");
+  card = dashboardModeCard(progress);
+  assert.equal(card.mode, "beginner");
 }
 
 function testCourseCoverage() {

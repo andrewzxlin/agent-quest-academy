@@ -375,6 +375,48 @@ h1 {
   border-color: #86efac;
 }
 
+.dashboard-mode-card {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr auto;
+  padding: 20px;
+}
+
+.dashboard-mode-card.beginner {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.dashboard-mode-card h3 {
+  font-size: 22px;
+  margin: 6px 0;
+}
+
+.dashboard-mode-card p {
+  color: var(--muted);
+}
+
+.dashboard-mode-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.dashboard-mode-tags span {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 9px;
+}
+
 .quest-compass {
   background: #0f172a;
   border: 1px solid rgb(148 163 184 / 0.34);
@@ -3699,6 +3741,7 @@ button:disabled {
   .hero-card,
   .completion-card,
   .recommendation-card,
+  .dashboard-mode-card,
   .quest-compass,
   .career-snapshot,
   .job-signal-passport,

@@ -130,6 +130,12 @@
 - It prioritizes choosing beginner mode, starting the first choice, rescuing due review, then the next recommended step.
 - This reduces decision overload without adding new exercise types or implementation assignments.
 
+## Dashboard Mode
+
+- The home screen now defaults to Beginner view, showing only start, today, review rescue, and next-step cards.
+- Learners can switch to Full Dashboard when they want every evidence, role, landing, review, and lesson support signal.
+- The mode reduces first-run information overload while keeping the complete dashboard one click away.
+
 ## Ability Proof Cards
 
 - Progress is translated into "I can judge..." ability statements.

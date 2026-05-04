@@ -133,6 +133,7 @@ export function createInitialProgress(now = Date.now()) {
     bossResults: [],
     dailyActivity: {},
     learnerProfile: null,
+    dashboardMode: "beginner",
     lastActiveAt: now
   };
 }
@@ -274,6 +275,30 @@ export function focusGuardCard(progress, now = Date.now()) {
     guardrail: "Only one primary action is shown here; no setup or project work required.",
     proof: firstFive?.status === "started" ? "Your proof loop has started." : "The next tiny action creates the next signal."
   };
+}
+
+export function dashboardModeCard(progress) {
+  const mode = progress.dashboardMode === "full" ? "full" : "beginner";
+  return {
+    title: "Dashboard Mode",
+    mode,
+    headline: mode === "beginner" ? "Beginner view: only the next useful pieces" : "Full dashboard: every signal visible",
+    body:
+      mode === "beginner"
+        ? "Showing start, today, review rescue, and next-step cards so the page stays easy to act on."
+        : "Showing the full evidence, role-fit, landing, puzzle, and lesson support dashboard.",
+    nextMode: mode === "beginner" ? "full" : "beginner",
+    actionLabel: mode === "beginner" ? "Show full dashboard" : "Return to beginner view",
+    visibleGroups:
+      mode === "beginner"
+        ? ["Start", "Today", "Review rescue", "Next step"]
+        : ["Evidence", "Roles", "Landing", "Review", "Lesson support"]
+  };
+}
+
+export function setDashboardMode(progress, mode) {
+  progress.dashboardMode = mode === "full" ? "full" : "beginner";
+  return progress;
 }
 
 export function beginnerGlossaryCards(chapterId) {

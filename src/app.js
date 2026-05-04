@@ -19,6 +19,7 @@ import {
   completeLesson,
   createInitialProgress,
   achievements,
+  dashboardModeCard,
   dailyMinimumCard,
   dailyLandingStepCard,
   dailyMomentum,
@@ -69,6 +70,7 @@ import {
   resetProgress,
   saveProgress,
   selectLearnerProfile,
+  setDashboardMode,
   sevenDayLandingPath,
   signalPreviewCard,
   shortAnswerSupport,
@@ -138,6 +140,8 @@ function render() {
   const onboarding = onboardingState(progress);
   const firstFive = firstFiveMinuteStartCard(progress);
   const focusGuard = focusGuardCard(progress, Date.now());
+  const dashboardMode = dashboardModeCard(progress);
+  const showFullDashboard = dashboardMode.mode === "full";
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
   const bossReadiness = bossReadinessCard(progress, chapter.id);
@@ -215,10 +219,20 @@ function render() {
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
+        ${renderDashboardModeCard(dashboardMode)}
         ${renderOnboardingCard(onboarding)}
         ${renderFocusGuardCard(focusGuard)}
         ${renderFirstFiveMinuteStartCard(firstFive)}
-        ${renderExerciseScopeCard(exerciseScope)}
+        ${renderDailyQuestSnapshot(dailyQuest)}
+        ${renderDailyMinimumCard(dailyMinimum)}
+        ${renderDailyLandingStepCard(dailyLandingStep)}
+        ${renderReviewRescueQuest(rescueQuest)}
+        ${renderMistakeFocusCard(mistakeFocus)}
+        ${renderRecommendationCard(recommendation)}
+        ${renderQuestCompass(compass)}
+        ${
+          showFullDashboard
+            ? `${renderExerciseScopeCard(exerciseScope)}
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderJobRoleFitCard(roleFit)}
         ${renderJobSignalPassport(signalPassport)}
@@ -228,21 +242,12 @@ function render() {
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderOneLineCoachCard(oneLineCoach)}
         ${renderLearningReceiptReel(receiptReel)}
-        ${renderDailyQuestSnapshot(dailyQuest)}
-        ${renderDailyMinimumCard(dailyMinimum)}
-        ${renderDailyLandingStepCard(dailyLandingStep)}
         ${renderDailyMomentumCard(momentum)}
         ${renderRecallComboCard(recallCombo)}
         ${renderSignalPreviewCard(signalPreview)}
         ${renderReviewRhythmCard(reviewRhythm)}
         ${renderReviewSprintCard(reviewSprint)}
-        ${renderReviewRescueQuest(rescueQuest)}
-        ${renderMistakeFocusCard(mistakeFocus)}
         ${renderLearningPuzzleBoard(puzzle)}
-        ${renderRecommendationCard(recommendation)}
-        ${renderQuestCompass(compass)}
-        ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
-        ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
         ${renderJobScenarioCard(jobScenario)}
         ${renderBossReadinessCard(bossReadiness)}
         ${renderGlossaryCard(glossary)}
@@ -253,7 +258,11 @@ function render() {
         ${renderLessonAnalogyBridge(analogyBridge)}
         ${renderConceptDiagramCard(conceptDiagram)}
         ${renderLessonMasteryLadder(masteryLadder)}
-        ${renderLessonPitchBuilder(lessonPitch)}
+        ${renderLessonPitchBuilder(lessonPitch)}`
+            : ""
+        }
+        ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
+        ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
 
         <section class="quiz-card">
           <div class="progress-row">
@@ -481,6 +490,20 @@ function renderRecommendationCard(recommendation) {
       <p>${recommendation.reason}</p>
     </div>
     <button class="primary compact" data-recommend="true" ${recommendation.type === "done" ? "disabled" : ""}>${recommendation.cta}</button>
+  </section>`;
+}
+
+function renderDashboardModeCard(card) {
+  return `<section class="dashboard-mode-card ${card.mode}">
+    <div>
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <p>${card.body}</p>
+      <div class="dashboard-mode-tags">
+        ${card.visibleGroups.map((group) => `<span>${group}</span>`).join("")}
+      </div>
+    </div>
+    <button class="secondary compact" data-dashboard-mode="${card.nextMode}">${card.actionLabel}</button>
   </section>`;
 }
 
@@ -1649,6 +1672,12 @@ function bindEvents() {
 
   document.querySelector("[data-seven-day-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-dashboard-mode]")?.addEventListener("click", (event) => {
+    progress = setDashboardMode(progress, event.currentTarget.dataset.dashboardMode);
+    saveProgress(progress);
+    render();
   });
 
   document.querySelector("[data-focus-action]")?.addEventListener("click", (event) => {
