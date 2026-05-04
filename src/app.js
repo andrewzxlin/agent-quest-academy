@@ -253,20 +253,22 @@ function render() {
         ${renderOnboardingCard(onboarding)}
         ${renderFocusGuardCard(focusGuard)}
         ${renderFirstFiveMinuteStartCard(firstFive)}
-        ${renderPracticeDietCard(practiceDiet)}
-        ${renderChoiceArcadeCard(choiceArcade)}
-        ${renderBeginnerSkillMapCard(beginnerSkillMap)}
-        ${renderZeroToLandingQuestCard(zeroToLandingQuest)}
-        ${renderRoleSamplerCard(roleSampler)}
-        ${renderJargonShieldCard(jargonShield)}
-        ${renderDailyQuestSnapshot(dailyQuest)}
-        ${renderDailyMinimumCard(dailyMinimum)}
-        ${renderDailySkillTicketCard(dailySkillTicket)}
-        ${renderDailyLandingStepCard(dailyLandingStep)}
-        ${renderDailyPhraseBankCard(dailyPhraseBank)}
-        ${renderMistakeSafetyNetCard(mistakeSafetyNet)}
-        ${renderReviewOrbitCard(reviewOrbit)}
-        ${renderReviewRescueQuest(rescueQuest)}
+        ${renderBeginnerCommandCenter({
+          practiceDiet,
+          choiceArcade,
+          beginnerSkillMap,
+          zeroToLandingQuest,
+          roleSampler,
+          jargonShield,
+          dailyQuest,
+          dailyMinimum,
+          dailySkillTicket,
+          dailyLandingStep,
+          dailyPhraseBank,
+          mistakeSafetyNet,
+          reviewOrbit,
+          rescueQuest
+        })}
         ${renderMistakeFocusCard(mistakeFocus)}
         ${renderRecommendationCard(recommendation)}
         ${renderQuestCompass(compass)}
@@ -617,6 +619,52 @@ function renderPracticeDietCard(card) {
     <div class="practice-diet-action">
       <small>${card.promise}</small>
       <button class="primary compact" data-practice-diet-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderBeginnerCommandCenter(cards) {
+  return `<section class="beginner-command-center">
+    <div class="beginner-section-heading">
+      <div>
+        <p class="eyebrow">Beginner Route</p>
+        <h3>Learn by tiny choices, visible proof, and scheduled review</h3>
+      </div>
+      <p>No setup, no project gate, no blank-page writing.</p>
+    </div>
+    <div class="beginner-command-grid path">
+      ${renderPracticeDietCard(cards.practiceDiet)}
+      ${renderChoiceArcadeCard(cards.choiceArcade)}
+      ${renderBeginnerSkillMapCard(cards.beginnerSkillMap)}
+      ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
+      ${renderRoleSamplerCard(cards.roleSampler)}
+      ${renderJargonShieldCard(cards.jargonShield)}
+    </div>
+    <div class="beginner-section-heading compact">
+      <div>
+        <p class="eyebrow">Daily Loop</p>
+        <h3>One small ticket can still move the path</h3>
+      </div>
+      <p>Stop after the minimum or keep the proof trail warm.</p>
+    </div>
+    <div class="beginner-command-grid daily">
+      ${renderDailyQuestSnapshot(cards.dailyQuest)}
+      ${renderDailyMinimumCard(cards.dailyMinimum)}
+      ${renderDailySkillTicketCard(cards.dailySkillTicket)}
+      ${renderDailyLandingStepCard(cards.dailyLandingStep)}
+      ${renderDailyPhraseBankCard(cards.dailyPhraseBank)}
+    </div>
+    <div class="beginner-section-heading compact">
+      <div>
+        <p class="eyebrow">Review Loop</p>
+        <h3>Weak signals come back before they fade</h3>
+      </div>
+      <p>Mistakes become scheduled cards, not dead ends.</p>
+    </div>
+    <div class="beginner-command-grid review">
+      ${renderMistakeSafetyNetCard(cards.mistakeSafetyNet)}
+      ${renderReviewOrbitCard(cards.reviewOrbit)}
+      ${renderReviewRescueQuest(cards.rescueQuest)}
     </div>
   </section>`;
 }

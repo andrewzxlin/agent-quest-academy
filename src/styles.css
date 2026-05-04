@@ -479,6 +479,58 @@ h1 {
   text-transform: uppercase;
 }
 
+.beginner-command-center {
+  display: grid;
+  gap: 18px;
+}
+
+.beginner-section-heading {
+  align-items: end;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  padding: 4px 2px 0;
+}
+
+.beginner-section-heading.compact {
+  margin-top: 8px;
+}
+
+.beginner-section-heading h3 {
+  font-size: 22px;
+  margin-top: 4px;
+}
+
+.beginner-section-heading p:last-child {
+  color: var(--muted);
+  max-width: 360px;
+}
+
+.beginner-command-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.beginner-command-grid.path {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.beginner-command-grid.daily {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.beginner-command-grid.review {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.beginner-command-grid .zero-landing-quest-card,
+.beginner-command-grid .role-sampler-card,
+.beginner-command-grid .jargon-shield-card,
+.beginner-command-grid .daily-landing-step-card,
+.beginner-command-grid .daily-phrase-bank-card {
+  grid-column: 1 / -1;
+}
+
 .choice-arcade-card {
   background: #fefce8;
   border: 1px solid #fde047;
@@ -5036,6 +5088,9 @@ button:disabled {
   .choice-lens-steps,
   .question-signal-steps,
   .session-rhythm-steps,
+  .beginner-command-grid.path,
+  .beginner-command-grid.daily,
+  .beginner-command-grid.review,
   .short-recipe-steps,
   .answer-evidence-clip,
   .proof-booster-card,
@@ -5084,6 +5139,11 @@ button:disabled {
 
   .section-title {
     display: block;
+  }
+
+  .beginner-section-heading {
+    align-items: start;
+    display: grid;
   }
 
   .learning-library > summary {
