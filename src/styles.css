@@ -1283,6 +1283,7 @@ h1 {
 .receipt span,
 .receipt strong,
 .receipt p,
+.receipt em,
 .receipt small {
   display: block;
 }
@@ -1298,13 +1299,21 @@ h1 {
 }
 
 .receipt p,
+.receipt em,
 .receipt small,
 .receipt-empty {
   color: var(--muted);
 }
 
-.receipt p {
+.receipt p,
+.receipt em {
   margin: 8px 0;
+}
+
+.receipt em {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 700;
 }
 
 .receipt small {

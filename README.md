@@ -24,6 +24,7 @@
 - Every checked answer now produces a compact Evidence Clip at the top of feedback.
 - Correct answers become reusable interview signals; misses become visible repair targets.
 - This keeps the loop game-like while turning small questions into a job-facing proof trail.
+- The receipt reel now reuses these clip lines, so saved answers become a visible phrase bank.
 
 ## Session Rhythm
 

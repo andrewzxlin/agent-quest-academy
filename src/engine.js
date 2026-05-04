@@ -1598,6 +1598,7 @@ export function learningReceiptReel(progress, limit = 4) {
       if (!question) return null;
       const stage = questionMasteryStage(question);
       const status = state.lastResult === "correct" ? "proof" : "review";
+      const clip = answerEvidenceClip(question, receiptReplayResult(question, state));
       return {
         key,
         status,
@@ -1606,6 +1607,9 @@ export function learningReceiptReel(progress, limit = 4) {
         lessonTitle: question.lessonTitle,
         resultLabel: status === "proof" ? "Proof gained" : "Review seed",
         proof: `${stage.label} practice for ${question.chapterTitle}: ${stage.proof}`,
+        evidenceHeadline: clip.headline,
+        evidenceLine: clip.line,
+        evidenceUseCase: clip.useCase,
         nextUse:
           status === "proof"
             ? "Save this as one tiny job-facing evidence point."
@@ -3114,6 +3118,25 @@ function recordDailyActivity(progress, now, patch) {
 
 function reviewableQuestions() {
   return [...flattenQuestions(), ...flattenInterviewQuestions()];
+}
+
+function receiptReplayResult(question, state) {
+  const response =
+    state.lastResult === "correct" ? correctReplayResponse(question) : wrongReplayResponse(question);
+  return gradeQuestion(question, response);
+}
+
+function correctReplayResponse(question) {
+  if (question.type === "single" || question.type === "multi") return question.answer;
+  if (question.type === "short") return question.keywords.slice(0, Math.max(1, question.minMatches)).join(" ");
+  return null;
+}
+
+function wrongReplayResponse(question) {
+  if (question.type === "single") return -1;
+  if (question.type === "multi") return [];
+  if (question.type === "short") return "";
+  return null;
 }
 
 function wrongAnswerCountsByChapter(progress) {

@@ -1066,6 +1066,9 @@ function testLearningReceiptReel() {
   assert.equal(reel.receipts[1].resultLabel, "Proof gained");
   assert.ok(reel.receipts.every((receipt) => ["Recognize", "Connect", "Explain"].includes(receipt.stage)));
   assert.ok(reel.receipts.every((receipt) => receipt.proof.includes(receipt.chapterTitle)));
+  assert.ok(reel.receipts.every((receipt) => receipt.evidenceLine.startsWith("I can ")));
+  assert.ok(reel.receipts.every((receipt) => receipt.evidenceHeadline.includes(receipt.status === "proof" ? "reusable signal" : "repair target")));
+  assert.ok(reel.receipts.every((receipt) => receipt.evidenceUseCase.includes(receipt.status === "proof" ? "interview" : "Review")));
   assert.ok(reel.receipts.every((receipt) => receipt.nextUse.length >= 30));
   assert.doesNotMatch(JSON.stringify(reel), /repo|project implementation|build a project|coding task/i);
 }

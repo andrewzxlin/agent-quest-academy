@@ -926,7 +926,9 @@ function renderLearningReceiptReel(reel) {
             .map((receipt) => `<div class="receipt ${receipt.status}">
               <span>${receipt.resultLabel}</span>
               <strong>${receipt.stage} - ${receipt.chapterTitle}</strong>
-              <p>${receipt.proof}</p>
+              <p>${receipt.evidenceHeadline}</p>
+              <em>${receipt.evidenceLine}</em>
+              <small>${receipt.evidenceUseCase}</small>
               <small>${receipt.nextUse}</small>
             </div>`)
             .join("")}
