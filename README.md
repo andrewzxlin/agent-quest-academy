@@ -126,6 +126,12 @@
 - The card connects the lesson to one job-facing skill signal and one answer lens.
 - It reinforces that the current path stays low-friction: single choice, multi-select, and short answers before coding work.
 
+## Learning Puzzle Board
+
+- The home screen now shows 8 job-readiness puzzle pieces across the full agentic workflow path.
+- Each piece is derived from real progress: micro-lessons, Boss proof, and interview drill completion.
+- Every piece includes one small next action so learners always know the next low-friction move.
+
 一個用 Duolingo 式節奏學 Agentic Workflow 的互動學習小遊戲。
 
 目標不是先逼初學者寫專案，而是先用選擇題、複選題、少量簡答、錯題重現與定期複習，把「Agent 到底在做什麼」變成可以每天 5 分鐘累積的直覺。

@@ -36,6 +36,7 @@ import {
   jobReadinessMap,
   jobScenarioCard,
   lessonSkillCard,
+  learningPuzzleBoard,
   masteryForLesson,
   mistakeRescuePrompt,
   mistakeNotebook,
@@ -56,6 +57,7 @@ const tests = [
   ["job readiness skills cover every chapter", testJobReadinessCoverage],
   ["job scenario cards map chapters to workplace signals", testJobScenarioCards],
   ["lesson micro skill cards explain low-friction job signals", testLessonSkillCards],
+  ["learning puzzle board tracks job-readiness pieces", testLearningPuzzleBoard],
   ["interview scenarios cover every chapter with low-friction questions", testInterviewScenarioCoverage],
   ["course stays low-friction", testLowFrictionQuestionTypes],
   ["question coach hints reduce blank-page friction", testQuestionCoachHints],
@@ -238,6 +240,46 @@ function testLessonSkillCards() {
   assert.equal(updated.correct, 1);
   assert.ok(updated.mastery > 0);
   assert.equal(lessonSkillCard(progress, "missing-lesson"), null);
+}
+
+function testLearningPuzzleBoard() {
+  const progress = createInitialProgress(1000);
+  let board = learningPuzzleBoard(progress);
+  assert.equal(board.length, course.chapters.length);
+  assert.equal(board[0].status, "new");
+  assert.equal(board[1].status, "locked");
+  assert.equal(board[0].stages.length, 3);
+  assert.ok(board[0].whyItMatters.length >= 20);
+  assert.ok(board[0].nextAction.includes("micro-lesson") || board[0].nextAction.includes("選擇"));
+  assert.doesNotMatch(board.map((piece) => piece.nextAction).join(" "), /repo|project implementation|實作專案/i);
+
+  const chapter = course.chapters[0];
+  const chapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === chapter.id);
+  completeLesson(progress, chapterLessons[0].id, 1000);
+  board = learningPuzzleBoard(progress);
+  assert.equal(board[0].status, "learning");
+  assert.ok(board[0].percent > 0);
+  assert.equal(board[0].stages[0].progress, `1/${chapterLessons.length}`);
+
+  for (const lesson of chapterLessons.slice(1)) {
+    completeLesson(progress, lesson.id, 1000);
+  }
+  board = learningPuzzleBoard(progress);
+  assert.equal(board[0].status, "boss_ready");
+  assert.ok(board[0].nextAction.includes("Boss Quiz"));
+
+  completeBossQuiz(progress, chapter.id, 8, 8, 1000);
+  board = learningPuzzleBoard(progress);
+  assert.equal(board[0].status, "proven");
+  assert.equal(board[1].status, "new");
+
+  for (const question of interviewQuestionsForChapter(chapter.id)) {
+    answerQuestion(progress, question, question.type === "multi" ? question.answer : question.answer ?? question.keywords[0], 1000);
+  }
+  board = learningPuzzleBoard(progress);
+  assert.equal(board[0].status, "complete");
+  assert.equal(board[0].percent, 100);
+  assert.equal(board[0].stages[2].done, true);
 }
 
 function testInterviewScenarioCoverage() {

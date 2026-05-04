@@ -22,6 +22,7 @@ import {
   jobReadinessMap,
   jobScenarioCard,
   lessonSkillCard,
+  learningPuzzleBoard,
   loadProgress,
   masteryForLesson,
   mistakeRescuePrompt,
@@ -70,6 +71,7 @@ function render() {
   const gates = chapterGateMap(progress);
   const gatesByChapter = new Map(gates.map((item) => [item.chapterId, item]));
   const readiness = jobReadinessMap(progress);
+  const puzzle = learningPuzzleBoard(progress);
   const summaries = chapterSummaryCards(progress);
   const proofs = abilityProofCards(progress);
   const stats = reviewStats(progress, Date.now());
@@ -149,6 +151,7 @@ function render() {
         ${renderOnboardingCard(onboarding)}
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderDailyQuestSnapshot(dailyQuest)}
+        ${renderLearningPuzzleBoard(puzzle)}
         ${renderRecommendationCard(recommendation)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
@@ -391,6 +394,38 @@ function renderDailyQuestSnapshot(snapshot) {
   </section>`;
 }
 
+function renderLearningPuzzleBoard(pieces) {
+  return `<section class="learning-puzzle-board">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Learning Puzzle</p>
+        <h3>8 塊上岸能力拼圖</h3>
+      </div>
+      <p>每塊都只靠 micro-lessons、Boss、面試情境題逐步補齊。</p>
+    </div>
+    <div class="puzzle-grid">
+      ${pieces
+        .map(
+          (piece) => `<div class="puzzle-piece ${piece.status}">
+            <div class="puzzle-topline">
+              <span>${piece.order}</span>
+              <small>${puzzleStatusText(piece.status)} · ${piece.percent}%</small>
+            </div>
+            <strong>${piece.title}</strong>
+            <p>${piece.whyItMatters}</p>
+            <div class="puzzle-stages">
+              ${piece.stages
+                .map((stage) => `<span class="${stage.done ? "done" : ""}">${stage.done ? "✓" : "○"} ${stage.label} ${stage.progress}</span>`)
+                .join("")}
+            </div>
+            <em>${piece.nextAction}</em>
+          </div>`
+        )
+        .join("")}
+    </div>
+  </section>`;
+}
+
 function renderOnboardingCard(onboarding) {
   if (onboarding.completed) {
     return `<section class="onboarding-card compact-card">
@@ -615,6 +650,15 @@ function proofStatusText(status) {
   if (status === "proven") return "Boss 已證明";
   if (status === "practicing") return "練習中";
   return "待啟動";
+}
+
+function puzzleStatusText(status) {
+  if (status === "complete") return "已完成";
+  if (status === "proven") return "Boss 已證明";
+  if (status === "boss_ready") return "可挑戰 Boss";
+  if (status === "learning") return "練習中";
+  if (status === "locked") return "未解鎖";
+  return "新拼圖";
 }
 
 function bindEvents() {

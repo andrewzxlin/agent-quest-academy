@@ -460,6 +460,74 @@ export function jobReadinessMap(progress) {
   });
 }
 
+export function learningPuzzleBoard(progress) {
+  const gatesByChapter = new Map(chapterGateMap(progress).map((gate) => [gate.chapterId, gate]));
+  const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
+  const skillsByChapter = new Map(jobReadinessSkills.map((skill) => [skill.chapterId, skill]));
+
+  return chapterMap(progress).map((chapter, index) => {
+    const gate = gatesByChapter.get(chapter.chapterId);
+    const proof = proofsByChapter.get(chapter.chapterId);
+    const skill = skillsByChapter.get(chapter.chapterId);
+    const interviewReady = proof?.status === "interview_ready";
+    const lessonDone = chapter.completedLessons === chapter.totalLessons;
+    const locked = gate?.lessonsUnlocked === false;
+    const percent = locked
+      ? 0
+      : Math.min(100, Math.round(chapter.lessonPercent * 0.6) + (chapter.bossPassed ? 25 : 0) + (interviewReady ? 15 : 0));
+    const status = locked
+      ? "locked"
+      : interviewReady
+        ? "complete"
+        : chapter.bossPassed
+          ? "proven"
+          : lessonDone
+            ? "boss_ready"
+            : chapter.completedLessons > 0
+              ? "learning"
+              : "new";
+    const nextAction = locked
+      ? "先通過前一章 Boss，這塊拼圖就會解鎖。"
+      : interviewReady
+        ? "已補上這塊拼圖；用 60 秒 pitch 把它講順。"
+        : chapter.bossPassed
+          ? "做面試情境題，把 Boss 能力轉成口語判斷。"
+          : lessonDone
+            ? "挑戰 Boss Quiz，確認這塊能力能穩定判斷。"
+            : chapter.completedLessons > 0
+              ? "完成下一個 micro-lesson，先把小判斷練熟。"
+              : "從第一個 micro-lesson 開始，只先做選擇與簡答。";
+
+    return {
+      chapterId: chapter.chapterId,
+      order: index + 1,
+      title: skill?.title ?? chapter.title,
+      chapterTitle: chapter.title,
+      status,
+      percent,
+      whyItMatters: skill?.signal ?? chapter.theme,
+      nextAction,
+      stages: [
+        {
+          label: "Micro-lessons",
+          done: lessonDone,
+          progress: `${chapter.completedLessons}/${chapter.totalLessons}`
+        },
+        {
+          label: "Boss proof",
+          done: chapter.bossPassed,
+          progress: chapter.bossScore ?? "not yet"
+        },
+        {
+          label: "Interview drill",
+          done: interviewReady,
+          progress: proof?.interviewProgress ?? "0/3 interview drill"
+        }
+      ]
+    };
+  });
+}
+
 export function chapterSummaryCards(progress) {
   const skillsByChapter = new Map(jobReadinessSkills.map((skill) => [skill.chapterId, skill]));
   const wrongByChapter = wrongAnswerCountsByChapter(progress);

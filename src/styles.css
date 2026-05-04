@@ -392,6 +392,103 @@ h1 {
   font-size: 30px;
 }
 
+.learning-puzzle-board {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.puzzle-piece {
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.78);
+  padding: 14px;
+}
+
+.puzzle-piece.locked {
+  opacity: 0.56;
+}
+
+.puzzle-piece.complete {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.puzzle-piece.proven,
+.puzzle-piece.boss_ready {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+}
+
+.puzzle-piece.learning {
+  border-color: #a5f3fc;
+  background: #ecfeff;
+}
+
+.puzzle-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.puzzle-topline span {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: #0f172a;
+  color: white;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.puzzle-topline small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.puzzle-piece strong {
+  display: block;
+  font-size: 14px;
+}
+
+.puzzle-piece p,
+.puzzle-piece em {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  font-style: normal;
+  margin-top: 8px;
+}
+
+.puzzle-stages {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.puzzle-stages span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.puzzle-stages span.done {
+  color: #15803d;
+}
+
 .onboarding-card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -1367,6 +1464,7 @@ button:disabled {
   .chapter-track,
   .readiness-grid,
   .glossary-grid,
+  .puzzle-grid,
   .skill-grid,
   .pitch-grid,
   .profile-grid,
