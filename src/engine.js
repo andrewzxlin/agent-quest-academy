@@ -2023,6 +2023,67 @@ export function sevenDayLandingPath(progress, now = Date.now()) {
   };
 }
 
+export function zeroToLandingQuestCard(progress, now = Date.now()) {
+  const path = sevenDayLandingPath(progress, now);
+  const checklist = landingReadinessChecklist(progress, now);
+  const next = nextPracticeRecommendation(progress, now);
+  const dayDone = (id) => path.days.find((day) => day.id === id)?.done ?? false;
+  const gateDone = (id) => checklist.items.find((item) => item.id === id)?.done ?? false;
+  const milestones = [
+    {
+      id: "first-choice",
+      label: "First choice",
+      done: dayDone("first-answer"),
+      proof: "One answer starts the recall trail."
+    },
+    {
+      id: "first-receipt",
+      label: "First receipt",
+      done: dayDone("first-lesson"),
+      proof: "A micro-lesson becomes visible progress."
+    },
+    {
+      id: "boss-proof",
+      label: "Boss proof",
+      done: dayDone("boss-proof"),
+      proof: "A chapter becomes defended evidence."
+    },
+    {
+      id: "role-signal",
+      label: "Role signal",
+      done: gateDone("role-paths"),
+      proof: "Proof connects to more than one role path."
+    },
+    {
+      id: "interview-line",
+      label: "Interview line",
+      done: gateDone("interview-lines"),
+      proof: "Short explanations become interview-ready."
+    }
+  ];
+  const completedCount = milestones.filter((milestone) => milestone.done).length;
+  const active = milestones.find((milestone) => !milestone.done) ?? milestones[milestones.length - 1];
+
+  return {
+    title: "Zero-to-Landing Quest",
+    headline:
+      completedCount === milestones.length
+        ? "The beginner landing route is warm."
+        : `Next milestone: ${active.label}`,
+    completedCount,
+    totalCount: milestones.length,
+    percent: Math.round((completedCount / milestones.length) * 100),
+    activeId: active.id,
+    activeProof: active.proof,
+    nextAction: next.type === "done" ? "Rehearse one interview line." : next.cta,
+    promise: "The whole route starts with choices and keeps writing tiny.",
+    milestones: milestones.map((milestone) => ({
+      ...milestone,
+      status: milestone.done ? "done" : milestone.id === active.id ? "active" : "locked"
+    }))
+  };
+}
+
 export function jobRoleFitCard(progress) {
   const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));

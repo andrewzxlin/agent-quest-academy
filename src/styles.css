@@ -487,6 +487,78 @@ h1 {
   margin-top: 14px;
 }
 
+.zero-landing-quest-card {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.zero-landing-quest-card .section-title > p,
+.zero-landing-action small,
+.zero-landing-milestones small {
+  color: var(--muted);
+}
+
+.zero-landing-milestones {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+  margin-top: 14px;
+}
+
+.zero-landing-milestones div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(22 163 74 / 0.14);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.zero-landing-milestones div.active {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgb(34 197 94 / 0.12);
+}
+
+.zero-landing-milestones div.locked {
+  opacity: 0.68;
+}
+
+.zero-landing-milestones span,
+.zero-landing-milestones strong,
+.zero-landing-milestones small,
+.zero-landing-action strong,
+.zero-landing-action small {
+  display: block;
+}
+
+.zero-landing-milestones span {
+  background: #dcfce7;
+  border-radius: 999px;
+  color: #15803d;
+  display: grid;
+  font-size: 12px;
+  font-weight: 900;
+  height: 26px;
+  place-items: center;
+  width: 26px;
+}
+
+.zero-landing-milestones strong {
+  margin-top: 8px;
+}
+
+.zero-landing-milestones small {
+  margin-top: 6px;
+}
+
+.zero-landing-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
 .quest-compass {
   background: #0f172a;
   border: 1px solid rgb(148 163 184 / 0.34);
@@ -4024,6 +4096,7 @@ button:disabled {
   .recommendation-card,
   .dashboard-mode-card,
   .practice-diet-card,
+  .zero-landing-quest-card,
   .quest-compass,
   .career-snapshot,
   .skill-profile-card,
@@ -4077,6 +4150,7 @@ button:disabled {
   .role-fit-grid,
   .practice-diet-formats,
   .practice-diet-rules,
+  .zero-landing-milestones,
   .skill-profile-metrics,
   .skill-profile-highlights,
   .skill-profile-lines,
@@ -4125,6 +4199,11 @@ button:disabled {
   }
 
   .practice-diet-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .zero-landing-action {
     align-items: stretch;
     flex-direction: column;
   }

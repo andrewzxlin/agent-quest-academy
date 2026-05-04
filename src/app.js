@@ -78,7 +78,8 @@ import {
   signalPreviewCard,
   skillProfileCard,
   shortAnswerSupport,
-  uncertaintySafetyCard
+  uncertaintySafetyCard,
+  zeroToLandingQuestCard
 } from "./engine.js";
 
 let progress = loadProgress();
@@ -147,6 +148,7 @@ function render() {
   const focusGuard = focusGuardCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
+  const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const showFullDashboard = dashboardMode.mode === "full";
   const glossary = beginnerGlossaryCards(chapter.id);
   const jobScenario = jobScenarioCard(chapter.id);
@@ -232,6 +234,7 @@ function render() {
         ${renderFocusGuardCard(focusGuard)}
         ${renderFirstFiveMinuteStartCard(firstFive)}
         ${renderPracticeDietCard(practiceDiet)}
+        ${renderZeroToLandingQuestCard(zeroToLandingQuest)}
         ${renderDailyQuestSnapshot(dailyQuest)}
         ${renderDailyMinimumCard(dailyMinimum)}
         ${renderDailyLandingStepCard(dailyLandingStep)}
@@ -588,6 +591,34 @@ function renderPracticeDietCard(card) {
     <div class="practice-diet-action">
       <small>${card.promise}</small>
       <button class="primary compact" data-practice-diet-action="true">${card.nextAction}</button>
+    </div>
+  </section>`;
+}
+
+function renderZeroToLandingQuestCard(card) {
+  return `<section class="zero-landing-quest-card">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.completedCount}/${card.totalCount} - ${card.percent}%</p>
+    </div>
+    <div class="zero-landing-milestones">
+      ${card.milestones
+        .map((milestone, index) => `<div class="${milestone.status}">
+          <span>${index + 1}</span>
+          <strong>${milestone.label}</strong>
+          <small>${milestone.proof}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="zero-landing-action">
+      <div>
+        <strong>${card.activeProof}</strong>
+        <small>${card.promise}</small>
+      </div>
+      <button class="primary compact" data-zero-landing-action="true">${card.nextAction}</button>
     </div>
   </section>`;
 }
@@ -1795,6 +1826,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-practice-diet-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-zero-landing-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

@@ -154,6 +154,12 @@
 - It makes the current lesson mix explicit: mostly single choice and multi-select, with one tiny short answer at the end.
 - The card gives learners a clear start button while promising no build assignment, setup, or long writing in this phase.
 
+## Zero-to-Landing Quest
+
+- Beginner view now compresses the path from first choice to interview line into five visible milestones.
+- The milestones reuse real progress: first answer, first receipt, Boss proof, role signal, and interview-ready explanations.
+- This keeps the landing path visible without exposing the full dashboard or adding heavier work.
+
 ## Ability Proof Cards
 
 - Progress is translated into "I can judge..." ability statements.

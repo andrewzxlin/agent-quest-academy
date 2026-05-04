@@ -90,7 +90,8 @@ import {
   signalPreviewCard,
   skillProfileCard,
   shortAnswerSupport,
-  uncertaintySafetyCard
+  uncertaintySafetyCard,
+  zeroToLandingQuestCard
 } from "../src/engine.js";
 
 const tests = [
@@ -154,6 +155,7 @@ const tests = [
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
   ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
   ["daily landing step maps tiny practice to job value", testDailyLandingStepCard],
+  ["zero to landing quest compresses the beginner route", testZeroToLandingQuestCard],
   ["quest compass turns recommendation into a game-like next step", testQuestCompass],
   ["daily momentum derives real active-day streaks", testDailyMomentum],
   ["recall combo card rewards clean low-friction runs", testRecallComboCard],
@@ -1370,6 +1372,47 @@ function testDailyLandingStepCard() {
   card = dailyLandingStepCard(progress, now + 1);
   assert.equal(card.minimumAction, "Rescue one weak signal");
   assert.equal(card.abilityPiece, "recall stability");
+}
+
+function testZeroToLandingQuestCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = zeroToLandingQuestCard(progress, now);
+  assert.equal(card.title, "Zero-to-Landing Quest");
+  assert.equal(card.completedCount, 0);
+  assert.equal(card.totalCount, 5);
+  assert.equal(card.percent, 0);
+  assert.equal(card.activeId, "first-choice");
+  assert.deepEqual(card.milestones.map((milestone) => milestone.id), [
+    "first-choice",
+    "first-receipt",
+    "boss-proof",
+    "role-signal",
+    "interview-line"
+  ]);
+  assert.equal(card.milestones[0].status, "active");
+  assert.ok(card.promise.includes("choices"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = zeroToLandingQuestCard(progress, now);
+  assert.equal(card.milestones.find((milestone) => milestone.id === "first-choice").status, "done");
+  assert.equal(card.activeId, "first-receipt");
+
+  completeLesson(progress, flattenLessons()[0].id, now);
+  card = zeroToLandingQuestCard(progress, now);
+  assert.equal(card.milestones.find((milestone) => milestone.id === "first-receipt").status, "done");
+
+  const firstChapter = course.chapters[0];
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === firstChapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, firstChapter.id, 8, 8, now);
+  card = zeroToLandingQuestCard(progress, now);
+  assert.equal(card.milestones.find((milestone) => milestone.id === "boss-proof").status, "done");
+  assert.equal(card.milestones.find((milestone) => milestone.id === "role-signal").status, "done");
+  assert.equal(card.activeId, "interview-line");
 }
 
 function testQuestCompass() {
