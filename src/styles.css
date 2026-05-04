@@ -596,6 +596,54 @@ h1 {
   margin-top: 8px;
 }
 
+.landing-gap-radar {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.landing-gap-radar > p,
+.landing-gap-radar > small {
+  color: var(--muted);
+}
+
+.landing-gap-radar > strong,
+.landing-gap-radar > small {
+  display: block;
+  margin-top: 10px;
+}
+
+.gap-radar-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.gap-radar-steps div {
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.gap-radar-steps span,
+.gap-radar-steps small {
+  display: block;
+}
+
+.gap-radar-steps span {
+  color: #c2410c;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.gap-radar-steps small {
+  color: var(--muted);
+  margin-top: 7px;
+}
+
 .landing-checklist-card {
   background: #f8fafc;
   border: 1px solid var(--line);
@@ -2875,6 +2923,7 @@ button:disabled {
   .quest-compass,
   .career-snapshot,
   .job-signal-passport,
+  .landing-gap-radar,
   .landing-checklist-card,
   .job-evidence-brief,
   .exercise-scope-card,
@@ -2903,6 +2952,7 @@ button:disabled {
   .proof-grid,
   .role-fit-grid,
   .passport-stamps,
+  .gap-radar-steps,
   .landing-checklist-grid,
   .evidence-story-seeds,
   .receipt-grid,

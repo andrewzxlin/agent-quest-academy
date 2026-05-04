@@ -31,6 +31,7 @@ import {
   jobReadinessMap,
   jobEvidenceBrief,
   jobSignalPassport,
+  landingGapRadar,
   landingReadinessChecklist,
   jobRoleFitCard,
   jobScenarioCard,
@@ -109,6 +110,7 @@ function render() {
   const signalPassport = jobSignalPassport(progress, Date.now());
   const evidenceBrief = jobEvidenceBrief(progress, Date.now());
   const receiptReel = learningReceiptReel(progress);
+  const gapRadar = landingGapRadar(progress, Date.now());
   const landingChecklist = landingReadinessChecklist(progress, Date.now());
   const exerciseScope = exerciseScopeCard();
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
@@ -196,6 +198,7 @@ function render() {
         ${renderCareerSnapshot(careerSnapshot)}
         ${renderJobRoleFitCard(roleFit)}
         ${renderJobSignalPassport(signalPassport)}
+        ${renderLandingGapRadar(gapRadar)}
         ${renderLandingReadinessChecklist(landingChecklist)}
         ${renderJobEvidenceBrief(evidenceBrief)}
         ${renderLearningReceiptReel(receiptReel)}
@@ -526,6 +529,29 @@ function renderJobSignalPassport(passport) {
           <span>${stamp.label}</span>
           <strong>${stamp.value}</strong>
           <small>${stamp.detail}</small>
+        </div>`)
+        .join("")}
+    </div>
+  </section>`;
+}
+
+function renderLandingGapRadar(radar) {
+  return `<section class="landing-gap-radar ${radar.mode}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${radar.title}</p>
+        <h3>${radar.headline}</h3>
+      </div>
+      <p>${radar.percent}% ready - ${radar.progress}</p>
+    </div>
+    <p>${radar.why}</p>
+    <strong>${radar.microMove}</strong>
+    <small>${radar.after}</small>
+    <div class="gap-radar-steps">
+      ${radar.steps
+        .map((step) => `<div>
+          <span>${step.label}</span>
+          <small>${step.text}</small>
         </div>`)
         .join("")}
     </div>

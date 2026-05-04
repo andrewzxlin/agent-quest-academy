@@ -151,6 +151,12 @@
 - The checklist points to the next smallest practice action instead of adding project implementation tasks.
 - This makes the path feel concrete for beginners: they can see which learning puzzle pieces are already proven and which one to close next.
 
+## Landing Gap Radar
+
+- The home screen now highlights the single closest job-readiness gate to close.
+- The radar shows the active gate, tiny next move, and how the result becomes proof.
+- It keeps the full checklist from feeling overwhelming by focusing on one gap at a time.
+
 ## Mistake Rescue Prompts
 
 - Wrong answers now show a short rescue prompt before the detailed explanation.

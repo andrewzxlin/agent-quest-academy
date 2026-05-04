@@ -44,6 +44,7 @@ import {
   jobReadinessMap,
   jobEvidenceBrief,
   jobSignalPassport,
+  landingGapRadar,
   landingReadinessChecklist,
   questCompass,
   jobRoleFitCard,
@@ -134,6 +135,7 @@ const tests = [
   ["career readiness snapshot summarizes proof progress", testCareerReadinessSnapshot],
   ["job role fit card maps progress to role paths", testJobRoleFitCard],
   ["job signal passport summarizes current role evidence", testJobSignalPassport],
+  ["landing gap radar highlights the closest job-readiness gap", testLandingGapRadar],
   ["landing checklist tracks job-readiness gates", testLandingReadinessChecklist],
   ["job evidence brief turns progress into an interview line", testJobEvidenceBrief],
   ["exercise scope card keeps practice low-friction", testExerciseScopeCard],
@@ -1283,6 +1285,43 @@ function testJobSignalPassport() {
   assert.equal(passport.status, "evidence started");
   assert.ok(passport.summary.includes("Current strongest signal"));
   assert.ok(passport.stamps.find((stamp) => stamp.id === "receipt").value.includes("Proof gained"));
+}
+
+function testLandingGapRadar() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let radar = landingGapRadar(progress, now);
+  assert.equal(radar.title, "Landing Gap Radar");
+  assert.equal(radar.mode, "gap-open");
+  assert.equal(radar.activeGate, "Start without setup");
+  assert.equal(radar.progress, "0/1");
+  assert.deepEqual(radar.steps.map((step) => step.id), ["spot", "move", "save"]);
+  assert.ok(radar.microMove.length > 0);
+  assert.ok(radar.after.includes("passport"));
+  assert.doesNotMatch(JSON.stringify(radar), /repo|project implementation|build a project|coding task/i);
+
+  completeLesson(progress, flattenLessons()[0].id, now);
+  radar = landingGapRadar(progress, now);
+  assert.equal(radar.percent, 25);
+  assert.equal(radar.activeGate, "Boss-proven foundations");
+  assert.equal(radar.progress, "0/3");
+
+  for (const chapter of course.chapters.slice(0, 3)) {
+    for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+      completeLesson(progress, lesson.id, now);
+    }
+    completeBossQuiz(progress, chapter.id, 8, 8, now);
+  }
+  for (const chapter of course.chapters.slice(0, 2)) {
+    for (const question of interviewQuestionsForChapter(chapter.id)) {
+      const response = question.type === "multi" ? question.answer : question.answer ?? question.keywords[0];
+      answerQuestion(progress, question, response, now);
+    }
+  }
+  radar = landingGapRadar(progress, now);
+  assert.equal(radar.mode, "ready-loop");
+  assert.equal(radar.percent, 100);
+  assert.ok(radar.microMove.includes("Rehearse"));
 }
 
 function testLandingReadinessChecklist() {

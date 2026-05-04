@@ -1317,6 +1317,44 @@ export function landingReadinessChecklist(progress, now = Date.now()) {
   };
 }
 
+export function landingGapRadar(progress, now = Date.now()) {
+  const checklist = landingReadinessChecklist(progress, now);
+  const active = checklist.items.find((item) => !item.done) ?? checklist.items[checklist.items.length - 1];
+  const next = nextPracticeRecommendation(progress, now);
+  const completed = checklist.completedCount === checklist.totalCount;
+
+  return {
+    title: "Landing Gap Radar",
+    mode: completed ? "ready-loop" : "gap-open",
+    headline: completed ? "All current landing gates are warm." : `Closest gap: ${active.title}`,
+    percent: checklist.percent,
+    activeGate: active.title,
+    progress: `${active.current}/${active.target}`,
+    why: active.proof,
+    microMove: completed ? "Rehearse one role proof out loud." : next.cta,
+    after: completed
+      ? "Keep receipts fresh with review or pitch practice."
+      : `Closing this gap moves the passport toward ${active.title}.`,
+    steps: [
+      {
+        id: "spot",
+        label: "Spot",
+        text: "Focus on one gate, not the whole map."
+      },
+      {
+        id: "move",
+        label: "Move",
+        text: "Take the smallest recommended practice step."
+      },
+      {
+        id: "save",
+        label: "Save",
+        text: "Let the result become proof, review, or an interview line."
+      }
+    ]
+  };
+}
+
 export function jobRoleFitCard(progress) {
   const proofsByChapter = new Map(abilityProofCards(progress).map((proof) => [proof.chapterId, proof]));
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
