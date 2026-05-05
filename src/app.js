@@ -3180,6 +3180,7 @@ function renderFeedback(question, result, progressState, nextActionLabel) {
       <button class="primary feedback-next-action" data-next="true">${nextActionLabel}</button>
       <small>${feedbackNext}</small>
     </div>
+    ${renderFeedbackRouteStrip(result, nextActionLabel)}
     ${renderAnswerOutcomeCard(answerOutcomeCard(question, result, progressState))}
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
@@ -3203,6 +3204,28 @@ function renderFeedback(question, result, progressState, nextActionLabel) {
       ${renderAnswerMemoryHookCard(answerMemoryHookCard(question, result))}
       ${renderReviewReceipt(result)}
     </details>
+  </div>`;
+}
+
+function renderFeedbackRouteStrip(result, nextActionLabel) {
+  const steps = result.correct
+    ? [
+        { label: "Saved", text: "Proof line is ready." },
+        { label: "Use", text: "Keep it as job evidence." },
+        { label: "Next", text: nextActionLabel }
+      ]
+    : [
+        { label: result.usedUnsure ? "Safe" : "Repair", text: result.usedUnsure ? "Uncertainty is saved." : "Weak signal is visible." },
+        { label: "Review", text: "This can return later." },
+        { label: "Next", text: nextActionLabel }
+      ];
+  return `<div class="feedback-route-strip ${result.correct ? "correct" : "repair"}">
+    ${steps
+      .map((step) => `<em>
+        <span>${step.label}</span>
+        <strong>${step.text}</strong>
+      </em>`)
+      .join("")}
   </div>`;
 }
 
