@@ -6948,6 +6948,55 @@ h1 {
   resize: vertical;
 }
 
+.short-answer-meter {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  gap: 2px 10px;
+  grid-template-columns: auto auto 1fr;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+}
+
+.short-answer-meter.started {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.short-answer-meter strong {
+  align-items: center;
+  background: #ffedd5;
+  border-radius: 999px;
+  color: #c2410c;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 900;
+  height: 28px;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0 8px;
+}
+
+.short-answer-meter.started strong {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.short-answer-meter span {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.short-answer-meter small {
+  color: var(--muted);
+  font-size: 12px;
+  justify-self: end;
+}
+
 .short-support {
   display: grid;
   gap: 10px;
@@ -8599,7 +8648,12 @@ button:disabled {
     grid-template-columns: auto 1fr;
   }
 
-  .multi-select-meter small {
+  .short-answer-meter {
+    grid-template-columns: auto 1fr;
+  }
+
+  .multi-select-meter small,
+  .short-answer-meter small {
     grid-column: 1 / -1;
     justify-self: start;
   }

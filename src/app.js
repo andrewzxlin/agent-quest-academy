@@ -622,6 +622,16 @@ function keepActiveSidebarLessonVisible() {
   map.scrollTop = Math.max(activeCenter - map.clientHeight / 2, 0);
 }
 
+function updateShortAnswerMeter(value) {
+  const meter = document.querySelector("[data-short-meter]");
+  if (!meter) return;
+  const wordCount = value.trim() ? value.trim().split(/\s+/).length : 0;
+  meter.classList.toggle("started", wordCount > 0);
+  meter.classList.toggle("empty", wordCount === 0);
+  const count = meter.querySelector("strong");
+  if (count) count.textContent = `${wordCount}`;
+}
+
 function renderSessionRhythmCard(card) {
   return `<div class="session-rhythm-card">
     <div>
@@ -1115,8 +1125,14 @@ function renderQuestion(question) {
       })
       .join("")}</div><p class="hint">可複選，選完再檢查。</p>`;
   }
+  const shortWords = shortAnswer.trim() ? shortAnswer.trim().split(/\s+/).length : 0;
   return `${renderShortAnswerSupport(shortAnswerSupport(question))}
     ${renderShortAnswerRecipe(shortAnswerRecipe(question))}
+    <div class="short-answer-meter ${shortAnswer.trim() ? "started" : "empty"}" data-short-meter="true" data-min-matches="${question.minMatches}">
+      <strong>${shortWords}</strong>
+      <span>words</span>
+      <small>A tiny answer can pass when it uses ${question.minMatches} key concept${question.minMatches === 1 ? "" : "s"}.</small>
+    </div>
     <textarea class="short-input" placeholder="用一句話回答即可，不需要寫程式。">${shortAnswer}</textarea>`;
 }
 
@@ -3460,6 +3476,7 @@ function bindEvents() {
   if (textarea) {
     textarea.addEventListener("input", (event) => {
       shortAnswer = event.target.value;
+      updateShortAnswerMeter(shortAnswer);
     });
   }
 
