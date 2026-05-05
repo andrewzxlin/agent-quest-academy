@@ -1226,15 +1226,32 @@ function renderQuestion(question, isChecked = false) {
     return `<div class="choices">${question.choices
       .map((choice, index) => {
         const selected = selectedSingle === index;
-        const choiceBadge = isChecked ? (selected ? "Saved" : "Review") : selected ? "Ready" : selectedSingle === null ? "Pick" : "Switch";
+        const expected = lastResult?.expected;
+        const correctChoice = isChecked && index === expected;
+        const wrongPick = isChecked && selected && !correctChoice;
+        const choiceBadge = isChecked
+          ? correctChoice
+            ? "Correct"
+            : wrongPick
+              ? "Your pick"
+              : "Review"
+          : selected
+            ? "Ready"
+            : selectedSingle === null
+              ? "Pick"
+              : "Switch";
         const choiceHelp = isChecked
-          ? "Answer locked for review."
+          ? correctChoice
+            ? "This is the workflow signal to remember."
+            : wrongPick
+              ? "This miss is saved for review."
+              : "Not the key signal for this prompt."
           : selected
             ? "Ready to check. Tap another option to switch."
             : selectedSingle === null
               ? "Pick one answer, then check."
               : "Tap to switch before checking.";
-        return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""}" data-single="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
+        return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""} ${correctChoice ? "correct-choice" : ""} ${wrongPick ? "wrong-choice" : ""}" data-single="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
           <span class="choice-token">${choiceToken(index)}</span>
           <span class="choice-copy">
             <strong>${choice}</strong>
@@ -1259,13 +1276,33 @@ function renderQuestion(question, isChecked = false) {
     <div class="choices">${question.choices
       .map((choice, index) => {
         const selected = selectedMulti.has(index);
-        const choiceBadge = isChecked ? (selected ? "Saved" : "Review") : selected ? "Added" : "Add";
+        const expected = new Set(lastResult?.expected ?? []);
+        const correctChoice = isChecked && expected.has(index);
+        const missedChoice = correctChoice && !selected;
+        const extraChoice = isChecked && selected && !correctChoice;
+        const choiceBadge = isChecked
+          ? correctChoice && selected
+            ? "Correct"
+            : missedChoice
+              ? "Missed"
+              : extraChoice
+                ? "Extra"
+                : "Review"
+          : selected
+            ? "Added"
+            : "Add";
         const choiceHelp = isChecked
-          ? "Answer locked for review."
+          ? correctChoice && selected
+            ? "Correctly included in the workflow."
+            : missedChoice
+              ? "This belonged in the workflow."
+              : extraChoice
+                ? "This extra choice becomes review material."
+                : "Not needed for this workflow."
           : selected
             ? "Added to this attempt. Tap again to remove."
             : "Tap to add if this belongs in the workflow.";
-        return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""}" data-multi="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
+        return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""} ${correctChoice ? "correct-choice" : ""} ${missedChoice ? "missed-choice" : ""} ${extraChoice ? "wrong-choice" : ""}" data-multi="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
           <span class="choice-token">${choiceToken(index)}</span>
           <span class="choice-copy">
             <strong>${choice}</strong>
