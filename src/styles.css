@@ -7238,6 +7238,15 @@ h1 {
   display: block;
 }
 
+.feedback-copy {
+  min-width: 0;
+}
+
+.feedback-copy strong,
+.feedback-copy p {
+  overflow-wrap: anywhere;
+}
+
 .feedback-copy p {
   margin: 6px 0 0;
 }
@@ -8909,6 +8918,15 @@ button:disabled {
   .short-answer-meter small {
     grid-column: 1 / -1;
     justify-self: start;
+  }
+
+  .feedback-head {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-head > span {
+    justify-self: start;
+    white-space: normal;
   }
 
   .answer-readiness {
