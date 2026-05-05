@@ -508,6 +508,93 @@ h1 {
   font-weight: 900;
 }
 
+.question-action-dock {
+  background: #ffffff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 14px;
+}
+
+.question-action-dock.ready,
+.question-action-dock.saved {
+  border-color: #86efac;
+}
+
+.question-action-dock.repair {
+  border-color: #fdba74;
+}
+
+.question-action-dock-head,
+.question-action-dock-proof {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.question-action-dock-head span,
+.question-action-dock-head strong,
+.question-action-dock-head em,
+.question-action-dock-steps span,
+.question-action-dock-steps small,
+.question-action-dock-proof strong,
+.question-action-dock-proof small {
+  display: block;
+}
+
+.question-action-dock-head span,
+.question-action-dock-steps span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.question-action-dock-head em,
+.question-action-dock-steps small,
+.question-action-dock-proof small {
+  color: var(--muted);
+  font-style: normal;
+}
+
+.question-action-dock-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.question-action-dock-steps > div {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 9px;
+  min-height: 74px;
+  padding: 10px;
+}
+
+.question-action-dock-steps > div.current {
+  background: #eff6ff;
+  border-color: #60a5fa;
+}
+
+.question-action-dock-steps > div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.question-action-dock-steps > div.repair {
+  background: #fff7ed;
+  border-color: #fdba74;
+}
+
+.question-action-dock-proof {
+  background: #f8fafc;
+  border-radius: 9px;
+  padding: 10px;
+}
+
 .learning-toolbox {
   background: #f8fafc;
   border: 1px solid rgb(15 23 42 / 0.1);
@@ -7867,6 +7954,7 @@ button:disabled {
   .chapter-gate-strip,
   .hero-mission-lanes,
   .now-playing-main,
+  .question-action-dock-head,
   .question-image-quest-card,
   .session-rhythm-card,
   .ability-shard-card,
@@ -7910,6 +7998,7 @@ button:disabled {
   .lesson-ladder-steps,
   .session-rhythm-steps,
   .now-playing-lanes,
+  .question-action-dock-steps,
   .image-quest-panels,
   .landing-mission-route,
   .start-here-steps,
@@ -8067,6 +8156,11 @@ button:disabled {
   }
 
   .now-playing-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .question-action-dock-proof {
     align-items: stretch;
     flex-direction: column;
   }

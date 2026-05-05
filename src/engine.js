@@ -1503,6 +1503,68 @@ export function questionMissionStrip(question, answerReady = false, checked = fa
   };
 }
 
+export function questionActionDockCard(
+  progress,
+  question,
+  answerReady = false,
+  checked = false,
+  result = null,
+  currentIndex = 0,
+  totalCount = 1,
+  mode = "lesson",
+  now = Date.now()
+) {
+  const mission = questionMissionStrip(question, answerReady, checked, result);
+  const shard = abilityShardCard(progress, question);
+  const packet = jobPacketPreviewCard(progress, now);
+  const next = checked ? nextStepNudgeCard(question, result, currentIndex, totalCount, mode) : null;
+  const status = checked ? (result?.correct ? "saved" : "repair") : answerReady ? "ready" : "choosing";
+  const nextLabel = next?.actionLabel ?? (answerReady ? "Check answer" : mission.action);
+  const lanes = [
+    {
+      id: "pick",
+      label: "Pick",
+      status: answerReady || checked ? "done" : "current",
+      text: mission.steps.find((step) => step.id === "answer")?.text ?? "Choose one answer."
+    },
+    {
+      id: "check",
+      label: "Check",
+      status: checked ? "done" : answerReady ? "current" : "locked",
+      text: answerReady || checked ? "Answer can be checked." : "Pick first."
+    },
+    {
+      id: "save",
+      label: "Save",
+      status: checked ? (result?.correct ? "done" : "repair") : "locked",
+      text: checked ? mission.reward : "Receipt appears after checking."
+    },
+    {
+      id: "next",
+      label: "Next",
+      status: checked ? "current" : "locked",
+      text: nextLabel
+    }
+  ];
+
+  return {
+    title: "Action Dock",
+    status,
+    headline:
+      status === "choosing"
+        ? "Pick first, then the app checks and saves the signal"
+        : status === "ready"
+          ? "Ready to check without rereading everything"
+          : status === "saved"
+            ? "Signal saved. Move while it is fresh"
+            : "Repair seed saved. Continue without restarting",
+    currentAction: nextLabel,
+    proofLine: checked ? mission.proofUse : shard.jobUse,
+    progressLabel: `${Math.min(currentIndex + 1, totalCount)}/${Math.max(totalCount, 1)} prompt / ${packet.readyCount}/${packet.totalCount} packet`,
+    lanes
+  };
+}
+
 export function questionHintDeck(question) {
   const summaryByType = {
     single: "Open this only if you want a nudge before choosing one answer.",

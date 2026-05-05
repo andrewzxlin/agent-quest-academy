@@ -102,6 +102,7 @@ import {
   pitchUnlockPreviewCard,
   practiceDietCard,
   proofBoosterCard,
+  questionActionDockCard,
   questionCoachHint,
   questionComfortMeterCard,
   questionHintDeck,
@@ -181,6 +182,7 @@ const tests = [
   ["question mastery stage maps every question to the ladder", testQuestionMasteryStage],
   ["question signal preview shows the tiny reward for each question", testQuestionSignalPreview],
   ["question role signal connects each prompt to role evidence", testQuestionRoleSignalCard],
+  ["question action dock keeps the answer loop visible", testQuestionActionDockCard],
   ["question comfort meter makes each prompt feel low-friction", testQuestionComfortMeterCard],
   ["question timebox keeps every prompt small", testQuestionTimeboxCard],
   ["question mission strip keeps pick check save visible", testQuestionMissionStrip],
@@ -1317,6 +1319,43 @@ function testQuestionRoleSignalCard() {
   card = questionRoleSignalCard(short);
   assert.equal(card.stage, "Explain");
   assert.ok(card.chips.find((chip) => chip.id === "stage").value.includes("Explain"));
+}
+
+function testQuestionActionDockCard() {
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  const question = flattenQuestions().find((item) => item.type === "single");
+  let card = questionActionDockCard(progress, question, false, false, null, 0, 4, "lesson", now);
+
+  assert.equal(card.title, "Action Dock");
+  assert.equal(card.status, "choosing");
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["pick", "check", "save", "next"]);
+  assert.equal(card.lanes.find((lane) => lane.id === "pick").status, "current");
+  assert.equal(card.lanes.find((lane) => lane.id === "check").status, "locked");
+  assert.ok(card.headline.includes("Pick first"));
+  assert.ok(card.progressLabel.includes("1/4 prompt"));
+  assert.ok(card.proofLine.length > 0);
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  card = questionActionDockCard(progress, question, true, false, null, 0, 4, "lesson", now);
+  assert.equal(card.status, "ready");
+  assert.equal(card.currentAction, "Check answer");
+  assert.equal(card.lanes.find((lane) => lane.id === "pick").status, "done");
+  assert.equal(card.lanes.find((lane) => lane.id === "check").status, "current");
+
+  const result = gradeQuestion(question, question.answer);
+  answerQuestion(progress, question, question.answer, now);
+  card = questionActionDockCard(progress, question, true, true, result, 0, 4, "lesson", now);
+  assert.equal(card.status, "saved");
+  assert.equal(card.lanes.find((lane) => lane.id === "save").status, "done");
+  assert.equal(card.lanes.find((lane) => lane.id === "next").status, "current");
+  assert.ok(card.currentAction.includes("Next"));
+
+  const wrong = gradeQuestion(question, -1);
+  card = questionActionDockCard(progress, question, true, true, wrong, 3, 4, "review", now);
+  assert.equal(card.status, "repair");
+  assert.equal(card.lanes.find((lane) => lane.id === "save").status, "repair");
+  assert.ok(card.currentAction.includes("Complete"));
 }
 
 function testQuestionComfortMeterCard() {

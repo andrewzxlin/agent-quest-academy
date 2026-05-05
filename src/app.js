@@ -89,6 +89,7 @@ import {
   pitchUnlockPreviewCard,
   practiceDietCard,
   proofBoosterCard,
+  questionActionDockCard,
   questionCoachHint,
   questionComfortMeterCard,
   questionHintDeck,
@@ -234,6 +235,17 @@ function render() {
   const sessionRhythm = sessionRhythmCard(sessionQuestions, currentIndex);
   const abilityShard = abilityShardCard(progress, question);
   const questionMission = questionMissionStrip(question, answerReady, checked, lastResult);
+  const actionDock = questionActionDockCard(
+    progress,
+    question,
+    answerReady,
+    checked,
+    lastResult,
+    currentIndex,
+    sessionQuestions.length,
+    sessionMode,
+    Date.now()
+  );
   const roleSignal = questionRoleSignalCard(question);
   const comfortMeter = questionComfortMeterCard(question, answerReady, checked, lastResult);
   const timebox = questionTimeboxCard(question, currentIndex, sessionQuestions.length, checked, lastResult);
@@ -397,6 +409,7 @@ function render() {
               <small>本課熟練度</small>
             </div>
           </div>
+          ${renderQuestionActionDockCard(actionDock)}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
           ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
@@ -946,6 +959,31 @@ function renderNowPlayingHudCard(card) {
       <small>${card.reward} / ${card.nextUse}</small>
     </div>
   </section>`;
+}
+
+function renderQuestionActionDockCard(card) {
+  if (!card) return "";
+  return `<div class="question-action-dock ${card.status}">
+    <div class="question-action-dock-head">
+      <div>
+        <span>${card.title}</span>
+        <strong>${card.headline}</strong>
+      </div>
+      <em>${card.progressLabel}</em>
+    </div>
+    <div class="question-action-dock-steps">
+      ${card.lanes
+        .map((lane) => `<div class="${lane.status}">
+          <span>${lane.label}</span>
+          <small>${lane.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="question-action-dock-proof">
+      <strong>${card.currentAction}</strong>
+      <small>${card.proofLine}</small>
+    </div>
+  </div>`;
 }
 
 function renderLearningToolbox(cards) {
