@@ -776,6 +776,16 @@ h1 {
   padding: 10px;
 }
 
+.question-action-dock-proof > div,
+.question-action-dock-proof small {
+  min-width: 0;
+}
+
+.question-action-dock-proof strong,
+.question-action-dock-proof small {
+  overflow-wrap: anywhere;
+}
+
 .learning-toolbox {
   background: #f8fafc;
   border: 1px solid rgb(15 23 42 / 0.1);
