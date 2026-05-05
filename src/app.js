@@ -606,6 +606,16 @@ function render() {
   `;
 
   bindEvents();
+  keepActiveSidebarLessonVisible();
+}
+
+function keepActiveSidebarLessonVisible() {
+  const map = document.querySelector(".map");
+  const activeLesson = map?.querySelector(".lesson-pill.active");
+  if (!map || !activeLesson) return;
+
+  const activeCenter = activeLesson.offsetTop - map.offsetTop + activeLesson.offsetHeight / 2;
+  map.scrollTop = Math.max(activeCenter - map.clientHeight / 2, 0);
 }
 
 function renderSessionRhythmCard(card) {

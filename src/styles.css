@@ -321,7 +321,10 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: min(48vh, 560px);
   overflow: auto;
+  padding-right: 2px;
+  scrollbar-gutter: stable;
 }
 
 .lesson-chapter-divider {
@@ -8304,6 +8307,10 @@ button:disabled {
   .sidebar {
     border-right: 0;
     border-bottom: 1px solid var(--line);
+  }
+
+  .map {
+    max-height: 280px;
   }
 
   .hero-card,
