@@ -64,6 +64,7 @@ import {
   gradeQuestion,
   isAnswerReady,
   heroMissionPanelCard,
+  interviewReadinessDockCard,
   interviewUnlockPreviewCard,
   jargonShieldCard,
   jobReadinessMap,
@@ -252,6 +253,7 @@ const tests = [
   ["pitch unlock preview turns interview proof into a rehearseable answer", testPitchUnlockPreviewCard],
   ["job packet preview shows the final reusable learning packet", testJobPacketPreviewCard],
   ["job packet showcase turns packet pieces into sayable lines", testJobPacketShowcaseCard],
+  ["interview readiness dock shows sayable job material", testInterviewReadinessDockCard],
   ["boss readiness card explains chapter checkpoint", testBossReadinessCard],
   ["chapter summary cards turn progress into interview-ready guidance", testChapterSummaryCards],
   ["ability proof cards derive evidence from real progress", testAbilityProofCards],
@@ -3066,6 +3068,51 @@ function testJobPacketShowcaseCard() {
   assert.ok(card.headline.includes("Three lines"));
   assert.ok(card.rehearsal.includes("Read the three lines"));
   assert.ok(card.lines.find((line) => line.id === "evidence").text.includes("agentic workflow"));
+}
+
+function testInterviewReadinessDockCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  const chapter = course.chapters[0];
+  let card = interviewReadinessDockCard(progress, now);
+
+  assert.equal(card.title, "Interview Readiness Dock");
+  assert.equal(card.status, "starter");
+  assert.equal(card.lanes.length, 4);
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["one-line", "receipt", "evidence", "pitch"]);
+  assert.ok(card.headline.includes("sayable pieces"));
+  assert.ok(card.progressLabel.includes("packet"));
+  assert.ok(card.progressLabel.includes("speaking"));
+  assert.ok(card.promise.includes("No blank-page"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = interviewReadinessDockCard(progress, now);
+  assert.equal(card.status, "building");
+  assert.equal(card.lanes.find((lane) => lane.id === "one-line").done, true);
+  assert.equal(card.lanes.find((lane) => lane.id === "receipt").done, true);
+  assert.equal(card.lanes.find((lane) => lane.id === "evidence").done, false);
+
+  for (const lesson of flattenLessons().filter((item) => item.chapterId === chapter.id)) {
+    completeLesson(progress, lesson.id, now);
+  }
+  completeBossQuiz(progress, chapter.id, 8, 8, now);
+  card = interviewReadinessDockCard(progress, now);
+  assert.equal(card.lanes.find((lane) => lane.id === "evidence").done, true);
+  assert.equal(card.lanes.find((lane) => lane.id === "pitch").done, false);
+
+  for (const interviewQuestion of interviewQuestionsForChapter(chapter.id)) {
+    const response =
+      interviewQuestion.type === "multi"
+        ? interviewQuestion.answer
+        : interviewQuestion.answer ?? interviewQuestion.keywords[0];
+    answerQuestion(progress, interviewQuestion, response, now);
+  }
+  card = interviewReadinessDockCard(progress, now);
+  assert.equal(card.status, "ready");
+  assert.equal(card.action.kind, "pitch");
+  assert.equal(card.lanes.find((lane) => lane.id === "pitch").done, true);
 }
 
 function testBossReadinessCard() {

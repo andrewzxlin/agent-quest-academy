@@ -1543,6 +1543,7 @@ h1 {
 .beginner-command-grid .pitch-unlock-preview-card,
 .beginner-command-grid .job-packet-preview-card,
 .beginner-command-grid .job-packet-showcase-card,
+.beginner-command-grid .interview-readiness-dock-card,
 .beginner-command-grid .role-sampler-card,
 .beginner-command-grid .jargon-shield-card,
 .beginner-command-grid .daily-run-meter-card,
@@ -2166,6 +2167,74 @@ h1 {
   gap: 12px;
   justify-content: space-between;
   margin-top: 14px;
+}
+
+.interview-readiness-dock-card {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.interview-readiness-dock-card.ready {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.interview-readiness-dock-card .section-title > p,
+.interview-readiness-dock-card > p,
+.interview-readiness-lanes small,
+.interview-readiness-action small {
+  color: var(--muted);
+}
+
+.interview-readiness-lanes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+.interview-readiness-lanes > div {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(14 165 233 / 0.16);
+  border-radius: 9px;
+  min-height: 96px;
+  padding: 11px;
+}
+
+.interview-readiness-lanes > div.done {
+  border-color: #86efac;
+}
+
+.interview-readiness-lanes span,
+.interview-readiness-lanes small,
+.interview-readiness-action strong,
+.interview-readiness-action small {
+  display: block;
+}
+
+.interview-readiness-lanes span {
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.interview-readiness-action {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgb(14 165 233 / 0.16);
+  border-radius: 10px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 12px;
+}
+
+.interview-readiness-action small {
+  margin-top: 5px;
 }
 
 .zero-landing-quest-card {
@@ -7976,6 +8045,7 @@ button:disabled {
   .pitch-unlock-preview-card,
   .job-packet-preview-card,
   .job-packet-showcase-card,
+  .interview-readiness-dock-card,
   .zero-landing-quest-card,
   .jargon-shield-card,
   .quest-compass,
@@ -8092,6 +8162,7 @@ button:disabled {
   .pitch-preview-lines,
   .job-packet-items,
   .packet-showcase-lines,
+  .interview-readiness-lanes,
   .zero-landing-milestones,
   .role-sampler-grid,
   .phrase-bank-steps,
@@ -8192,6 +8263,11 @@ button:disabled {
   }
 
   .zero-landing-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .interview-readiness-action {
     align-items: stretch;
     flex-direction: column;
   }

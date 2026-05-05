@@ -3394,6 +3394,61 @@ export function jobPacketShowcaseCard(progress, now = Date.now()) {
   };
 }
 
+export function interviewReadinessDockCard(progress, now = Date.now()) {
+  const packet = jobPacketPreviewCard(progress, now);
+  const showcase = jobPacketShowcaseCard(progress, now);
+  const coach = oneLineCoachCard(progress, now);
+  const pitch = pitchUnlockPreviewCard(progress);
+  const latestLine = showcase.lines.find((line) => line.id === "latest");
+  const evidenceLine = showcase.lines.find((line) => line.id === "evidence");
+  const lineReady = packet.status !== "starter" && Boolean(coach?.lines?.[0]?.text);
+  const receiptReady = latestLine && !latestLine.text.includes("low-friction prompt");
+  const evidenceReady = packet.items.find((item) => item.id === "evidence")?.done ?? false;
+  const pitchReady = pitch?.status === "ready";
+  const lanes = [
+    {
+      id: "one-line",
+      label: "One line",
+      done: lineReady,
+      text: coach?.lines?.[0]?.text ?? "Answer once to unlock a sayable line."
+    },
+    {
+      id: "receipt",
+      label: "Receipt",
+      done: Boolean(receiptReady),
+      text: latestLine?.text ?? "Latest answer becomes the first receipt."
+    },
+    {
+      id: "evidence",
+      label: "Evidence",
+      done: evidenceReady,
+      text: evidenceLine?.text ?? "Boss proof turns learning into stronger evidence."
+    },
+    {
+      id: "pitch",
+      label: "Pitch",
+      done: pitchReady,
+      text: pitchReady ? pitch.sampleAnswer : (pitch?.nextAction ?? "Finish the proof route.")
+    }
+  ];
+  const readyCount = lanes.filter((lane) => lane.done).length;
+  const active = lanes.find((lane) => !lane.done) ?? lanes[lanes.length - 1];
+
+  return {
+    title: "Interview Readiness Dock",
+    status: readyCount === lanes.length ? "ready" : readyCount > 0 ? "building" : "starter",
+    headline: readyCount === lanes.length ? "Ready to rehearse out loud" : `${readyCount}/${lanes.length} sayable pieces ready`,
+    summary: "This turns learning signals into the smallest interview-ready wording, one line at a time.",
+    activeLabel: active.label,
+    activeLine: active.text,
+    progressLabel: `${packet.readyCount}/${packet.totalCount} packet / ${readyCount}/${lanes.length} speaking`,
+    action: packet.action,
+    actionLabel: pitchReady ? "Open pitch practice" : packet.nextAction,
+    promise: "No blank-page interview prep: reuse receipts, role signals, Boss proof, and pitch seeds.",
+    lanes
+  };
+}
+
 export function jobReadinessMap(progress) {
   const chaptersById = new Map(chapterMap(progress).map((chapter) => [chapter.chapterId, chapter]));
   return jobReadinessSkills.map((skill) => {

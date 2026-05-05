@@ -51,6 +51,7 @@ import {
   heroMissionPanelCard,
   isAnswerReady,
   interviewUnlockPreviewCard,
+  interviewReadinessDockCard,
   jargonShieldCard,
   questCompass,
   jobReadinessMap,
@@ -210,6 +211,7 @@ function render() {
   const pitchPreview = pitchUnlockPreviewCard(progress);
   const jobPacketPreview = jobPacketPreviewCard(progress, Date.now());
   const jobPacketShowcase = jobPacketShowcaseCard(progress, Date.now());
+  const interviewReadiness = interviewReadinessDockCard(progress, Date.now());
   const zeroToLandingQuest = zeroToLandingQuestCard(progress, Date.now());
   const roleQuestBoard = roleQuestBoardCard(progress, Date.now());
   const roleSampler = roleSamplerCard(progress);
@@ -345,6 +347,7 @@ function render() {
           pitchPreview,
           jobPacketPreview,
           jobPacketShowcase,
+          interviewReadiness,
           zeroToLandingQuest,
           roleQuestBoard,
           roleSampler,
@@ -1210,6 +1213,7 @@ function renderBeginnerCommandCenter(cards) {
         ${renderPitchUnlockPreviewCard(cards.pitchPreview)}
         ${renderJobPacketPreviewCard(cards.jobPacketPreview)}
         ${renderJobPacketShowcaseCard(cards.jobPacketShowcase)}
+        ${renderInterviewReadinessDockCard(cards.interviewReadiness)}
         ${renderZeroToLandingQuestCard(cards.zeroToLandingQuest)}
         ${renderRoleQuestBoardCard(cards.roleQuestBoard)}
         ${renderRoleSamplerCard(cards.roleSampler)}
@@ -1490,6 +1494,36 @@ function renderJobPacketShowcaseCard(card) {
     <div class="packet-showcase-rehearsal">
       <strong>${card.rehearsal}</strong>
       <small>${card.promise}</small>
+    </div>
+  </section>`;
+}
+
+function renderInterviewReadinessDockCard(card) {
+  if (!card) return "";
+  return `<section class="interview-readiness-dock-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.progressLabel}</p>
+    </div>
+    <p>${card.summary}</p>
+    <div class="interview-readiness-lanes">
+      ${card.lanes
+        .map((lane) => `<div class="${lane.done ? "done" : "open"}">
+          <span>${lane.label}</span>
+          <small>${lane.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="interview-readiness-action">
+      <div>
+        <strong>${card.activeLabel}</strong>
+        <small>${card.activeLine}</small>
+        <small>${card.promise}</small>
+      </div>
+      <button class="primary compact" data-interview-readiness-action="${card.action.chapterId ?? ""}">${card.actionLabel}</button>
     </div>
   </section>`;
 }
@@ -3226,6 +3260,18 @@ function bindEvents() {
 
   document.querySelector("[data-job-packet-action]")?.addEventListener("click", () => {
     const card = jobPacketPreviewCard(progress, Date.now());
+    if (card?.action.kind === "pitch" && card.action.chapterId) {
+      activePitch = pitchPracticeCard(progress, card.action.chapterId);
+      pitchAnswer = "";
+      latestCompletion = null;
+      render();
+      return;
+    }
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-interview-readiness-action]")?.addEventListener("click", () => {
+    const card = interviewReadinessDockCard(progress, Date.now());
     if (card?.action.kind === "pitch" && card.action.chapterId) {
       activePitch = pitchPracticeCard(progress, card.action.chapterId);
       pitchAnswer = "";
