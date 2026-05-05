@@ -1088,6 +1088,7 @@ function renderCompletionCard(card) {
     <div>
       <strong>${card.result}</strong>
       <em class="completion-role-signal">${card.roleSignal}</em>
+      ${renderCompletionProofDock(card.proofDock)}
       <div class="completion-reward-strip">
         ${card.rewards
           .map((reward) => `<div>
@@ -1108,6 +1109,25 @@ function renderCompletionCard(card) {
       <button class="secondary compact" data-dismiss-completion="true">繼續練習</button>
     </div>
   </section>`;
+}
+
+function renderCompletionProofDock(dock) {
+  if (!dock) return "";
+  return `<div class="completion-proof-dock ${dock.status}">
+    <div>
+      <span>${dock.title}</span>
+      <strong>${dock.headline}</strong>
+      <small>${dock.summary}</small>
+    </div>
+    <div class="completion-proof-items">
+      ${dock.items
+        .map((item) => `<div class="${item.done ? "done" : "open"}">
+          <span>${item.label}</span>
+          <small>${item.text}</small>
+        </div>`)
+        .join("")}
+    </div>
+  </div>`;
 }
 
 function renderRecommendationCard(recommendation) {

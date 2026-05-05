@@ -4732,7 +4732,7 @@ export function dailyMomentum(progress, now = Date.now()) {
   };
 }
 
-export function completionCard(progress, event) {
+export function completionCard(progress, event, now = Date.now()) {
   const summariesByChapter = new Map(chapterSummaryCards(progress).map((item) => [item.chapterId, item]));
   const summary = event.chapterId ? summariesByChapter.get(event.chapterId) : null;
   const roleSignal = roleFitCompletionLine(event.chapterId);
@@ -4756,6 +4756,7 @@ export function completionCard(progress, event) {
           ? "錯題與間隔複習已更新"
           : "進度、XP 與複習排程已更新",
     roleSignal,
+    proofDock: completionProofDock(progress, event, roleSignal, nextAction, now),
     rewards: completionRewards(event, roleSignal, nextAction),
     exitTicket: completionExitTicket(event, roleSignal, nextAction),
     nextAction: summary?.nextAction ?? "繼續下一個低阻力練習。"
@@ -4797,6 +4798,54 @@ function completionRewards(event, roleSignal, nextAction) {
       detail: nextAction
     }
   ];
+}
+
+function completionProofDock(progress, event, roleSignal, nextAction, now) {
+  const packet = jobPacketPreviewCard(progress, now);
+  const receipt = learningReceiptReel(progress, 1).receipts[0] ?? null;
+  const savedLine =
+    event.type === "review"
+      ? "A weak signal was refreshed for future recall."
+      : event.type === "boss"
+        ? event.passed
+          ? "A Boss result can become stronger evidence."
+          : "The retry target is now visible."
+        : event.type === "interview"
+          ? "One spoken answer pass is now reusable."
+          : "One learning run was added to the proof trail.";
+
+  return {
+    title: "Proof Dock",
+    status: packet.status,
+    headline: receipt ? receipt.evidenceLine : savedLine,
+    summary: "This finish screen turns the run into reusable role, receipt, packet, and next-step signals.",
+    items: [
+      {
+        id: "receipt",
+        label: "Receipt",
+        done: Boolean(receipt),
+        text: receipt?.resultLabel ?? savedLine
+      },
+      {
+        id: "role",
+        label: "Role use",
+        done: true,
+        text: roleSignal
+      },
+      {
+        id: "packet",
+        label: "Packet",
+        done: packet.readyCount > 0,
+        text: `${packet.readyCount}/${packet.totalCount} pieces ready`
+      },
+      {
+        id: "reuse",
+        label: "Reuse",
+        done: true,
+        text: nextAction
+      }
+    ]
+  };
 }
 
 function completionExitTicket(event, roleSignal, nextAction) {

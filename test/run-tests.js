@@ -3471,7 +3471,9 @@ function testCompletionCards() {
   const progress = createInitialProgress(1000);
   const chapter = course.chapters[0];
   const lesson = flattenLessons().find((item) => item.chapterId === chapter.id);
+  const question = flattenQuestions().find((item) => item.chapterId === chapter.id && item.type === "single");
 
+  answerQuestion(progress, question, question.answer, 1000);
   completeLesson(progress, lesson.id, 1000);
   const lessonCard = completionCard(progress, {
     type: "lesson",
@@ -3489,6 +3491,12 @@ function testCompletionCards() {
   assert.ok(lessonCard.rewards[1].detail.includes("AI App Builder"));
   assert.ok(lessonCard.rewards[2].detail.includes("Boss Quiz"));
   assert.doesNotMatch(JSON.stringify(lessonCard.rewards), /repo|project implementation|build a project/i);
+  assert.equal(lessonCard.proofDock.title, "Proof Dock");
+  assert.deepEqual(lessonCard.proofDock.items.map((item) => item.id), ["receipt", "role", "packet", "reuse"]);
+  assert.ok(lessonCard.proofDock.headline.length > 0);
+  assert.equal(lessonCard.proofDock.items.find((item) => item.id === "receipt").done, true);
+  assert.ok(lessonCard.proofDock.items.find((item) => item.id === "packet").text.includes("pieces ready"));
+  assert.doesNotMatch(JSON.stringify(lessonCard.proofDock), /repo|project implementation|build a project|coding task/i);
   assert.deepEqual(lessonCard.exitTicket.map((item) => item.id), ["saved", "reuse", "next"]);
   assert.ok(lessonCard.exitTicket.find((item) => item.id === "saved").text.includes("micro-lesson"));
   assert.ok(lessonCard.exitTicket.find((item) => item.id === "reuse").text.includes("AI App Builder"));
@@ -3508,6 +3516,7 @@ function testCompletionCards() {
   assert.ok(bossCard.result.includes("7/8"));
   assert.ok(bossCard.roleSignal.includes("AI App Builder"));
   assert.equal(bossCard.rewards[0].label, "Boss proof saved");
+  assert.ok(bossCard.proofDock.items.find((item) => item.id === "role").text.includes("AI App Builder"));
   assert.ok(bossCard.nextAction.includes("面試情境題"));
 
   const reviewCard = completionCard(progress, { type: "review", title: "錯題複習" });
@@ -3516,6 +3525,7 @@ function testCompletionCards() {
   assert.ok(reviewCard.roleSignal.includes("every role path"));
   assert.equal(reviewCard.rewards[0].label, "Recall strengthened");
   assert.ok(reviewCard.exitTicket.find((item) => item.id === "saved").text.includes("recall"));
+  assert.ok(reviewCard.proofDock.items.find((item) => item.id === "reuse").text.length > 0);
   assert.doesNotMatch(JSON.stringify(reviewCard.exitTicket), /repo|project implementation|build a project|coding task/i);
 }
 
