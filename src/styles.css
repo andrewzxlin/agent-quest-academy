@@ -6529,13 +6529,17 @@ h1 {
   color: #374151;
   font-size: 11px;
   font-weight: 800;
+  grid-column: 1;
   padding: 3px 8px;
   width: max-content;
 }
 
 .question-hint-deck summary strong,
 .question-hint-deck summary small {
+  grid-column: 1;
   margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .question-hint-deck summary strong {
