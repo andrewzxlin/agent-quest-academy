@@ -1073,7 +1073,10 @@ function renderQuestionActionDockCard(card) {
         .join("")}
     </div>
     <div class="question-action-dock-proof">
-      <strong>${card.currentAction}</strong>
+      <div>
+        <span>${card.actionCue}</span>
+        <strong>${card.currentAction}</strong>
+      </div>
       <small>${card.proofLine}</small>
     </div>
   </div>`;

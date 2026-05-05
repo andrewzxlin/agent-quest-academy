@@ -1558,6 +1558,7 @@ export function questionActionDockCard(
           : status === "saved"
             ? "Signal saved. Move while it is fresh"
             : "Repair seed saved. Continue without restarting",
+    actionCue: "Do this now",
     currentAction: nextLabel,
     proofLine: checked ? mission.proofUse : shard.jobUse,
     progressLabel: `${Math.min(currentIndex + 1, totalCount)}/${Math.max(totalCount, 1)} prompt / ${packet.readyCount}/${packet.totalCount} packet`,

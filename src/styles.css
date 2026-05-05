@@ -715,17 +715,23 @@ h1 {
 .question-action-dock-head em,
 .question-action-dock-steps span,
 .question-action-dock-steps small,
+.question-action-dock-proof span,
 .question-action-dock-proof strong,
 .question-action-dock-proof small {
   display: block;
 }
 
 .question-action-dock-head span,
-.question-action-dock-steps span {
+.question-action-dock-steps span,
+.question-action-dock-proof span {
   color: #1d4ed8;
   font-size: 11px;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+.question-action-dock-proof span {
+  margin-bottom: 3px;
 }
 
 .question-action-dock-head em,

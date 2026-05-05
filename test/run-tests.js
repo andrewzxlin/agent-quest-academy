@@ -1333,6 +1333,7 @@ function testQuestionActionDockCard() {
 
   assert.equal(card.title, "Action Dock");
   assert.equal(card.status, "choosing");
+  assert.equal(card.actionCue, "Do this now");
   assert.deepEqual(card.lanes.map((lane) => lane.id), ["pick", "check", "save", "next"]);
   assert.equal(card.lanes.find((lane) => lane.id === "pick").status, "current");
   assert.equal(card.lanes.find((lane) => lane.id === "check").status, "locked");
