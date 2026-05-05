@@ -275,8 +275,9 @@ function render() {
   const sessionProgressPercent = sessionQuestions.length
     ? Math.round(((currentIndex + (checked ? 1 : 0.35)) / sessionQuestions.length) * 100)
     : 0;
+  const currentQuestionCount = Math.min(currentIndex + 1, sessionQuestions.length);
   const savedQuestionCount = Math.min(currentIndex + (checked ? 1 : 0), sessionQuestions.length);
-  const promptsLeft = Math.max(sessionQuestions.length - savedQuestionCount, 0);
+  const promptsLeft = Math.max(sessionQuestions.length - currentQuestionCount, 0);
   const sessionProgressLabel = checked
     ? `${savedQuestionCount}/${sessionQuestions.length} saved`
     : `${currentIndex + 1}/${sessionQuestions.length} current`;
