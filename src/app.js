@@ -444,6 +444,10 @@ function render() {
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
           ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
+          <div class="answer-readiness ${answerReady ? "ready" : "waiting"}">
+            <span>${answerReady ? "Ready" : "Waiting"}</span>
+            <small>${answerReadinessText(question, answerReady, checked)}</small>
+          </div>
           <div class="actions">
             <button class="primary" data-check="true" ${checked || !answerReady ? "disabled" : ""}>檢查答案</button>
             <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
@@ -630,6 +634,14 @@ function updateShortAnswerMeter(value) {
   meter.classList.toggle("empty", wordCount === 0);
   const count = meter.querySelector("strong");
   if (count) count.textContent = `${wordCount}`;
+}
+
+function answerReadinessText(question, ready, isChecked) {
+  if (isChecked) return "Answer saved. Use Next to keep the loop moving.";
+  if (ready) return "Check is unlocked. You can submit this answer now.";
+  if (question.type === "single") return "Pick one option to unlock Check.";
+  if (question.type === "multi") return "Add at least one option to unlock Check.";
+  return "Write one tiny sentence to unlock Check.";
 }
 
 function renderSessionRhythmCard(card) {

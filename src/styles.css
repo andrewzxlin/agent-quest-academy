@@ -7943,6 +7943,43 @@ h1 {
   margin-bottom: 0;
 }
 
+.answer-readiness {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 10px 12px;
+}
+
+.answer-readiness.ready {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.answer-readiness span {
+  background: #e2e8f0;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+.answer-readiness.ready span {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.answer-readiness small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
 .actions {
   display: flex;
   gap: 10px;
@@ -8656,6 +8693,11 @@ button:disabled {
   .short-answer-meter small {
     grid-column: 1 / -1;
     justify-self: start;
+  }
+
+  .answer-readiness {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .choice em {
