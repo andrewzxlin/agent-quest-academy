@@ -666,6 +666,23 @@ function updateShortAnswerMeter(value) {
   if (count) count.textContent = `${wordCount}`;
 }
 
+function updateLiveAnswerReadiness(question) {
+  const ready = isAnswerReady(question, getResponse(question));
+  const checkButton = document.querySelector("[data-check]");
+  if (checkButton) checkButton.disabled = checked || !ready;
+
+  const readiness = document.querySelector(".answer-readiness");
+  if (!readiness) return;
+  const status = checked ? "saved" : ready ? "ready" : "waiting";
+  readiness.classList.toggle("waiting", status === "waiting");
+  readiness.classList.toggle("ready", status === "ready");
+  readiness.classList.toggle("saved", status === "saved");
+  const label = readiness.querySelector("span");
+  if (label) label.textContent = checked ? "Saved" : ready ? "Ready" : "Waiting";
+  const detail = readiness.querySelector("small");
+  if (detail) detail.textContent = answerReadinessText(question, ready, checked);
+}
+
 function answerReadinessText(question, ready, isChecked) {
   if (isChecked) return "Answer saved. Use Next to keep the loop moving.";
   if (ready) return "Check is unlocked. You can submit this answer now.";
@@ -3569,6 +3586,7 @@ function bindEvents() {
     textarea.addEventListener("input", (event) => {
       shortAnswer = event.target.value;
       updateShortAnswerMeter(shortAnswer);
+      updateLiveAnswerReadiness(sessionQuestions[currentIndex]);
     });
   }
 
