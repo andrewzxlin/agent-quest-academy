@@ -5963,6 +5963,14 @@ h1 {
   padding-left: 10px;
 }
 
+.choice.locked {
+  cursor: default;
+}
+
+.choice.locked:hover {
+  transform: none;
+}
+
 .choice-token {
   align-items: center;
   background: #f1f5f9;

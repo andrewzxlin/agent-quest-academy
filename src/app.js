@@ -461,7 +461,7 @@ function render() {
             <small>${sessionRemainingLabel}</small>
           </div>
           ${renderQuestionActionDockCard(actionDock)}
-          ${renderQuestion(question)}
+          ${renderQuestion(question, checked)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
           ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
           <div class="answer-readiness ${readinessStatus}">
@@ -1128,16 +1128,16 @@ function renderQuestionImageQuestCard(card) {
   </div>`;
 }
 
-function renderQuestion(question) {
+function renderQuestion(question, isChecked = false) {
   if (question.type === "single") {
     return `<div class="choices">${question.choices
       .map((choice, index) => {
         const selected = selectedSingle === index;
-        return `<button class="choice ${selected ? "selected" : ""}" data-single="${index}" aria-pressed="${selected}">
+        return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""}" data-single="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
           <span class="choice-token">${choiceToken(index)}</span>
           <span class="choice-copy">
             <strong>${choice}</strong>
-            <small>Pick one answer, then check.</small>
+            <small>${isChecked ? "Answer locked for review." : "Pick one answer, then check."}</small>
           </span>
           <em>${selected ? "Selected" : "Pick"}</em>
         </button>`;
@@ -1153,11 +1153,11 @@ function renderQuestion(question) {
     <div class="choices">${question.choices
       .map((choice, index) => {
         const selected = selectedMulti.has(index);
-        return `<button class="choice ${selected ? "selected" : ""}" data-multi="${index}" aria-pressed="${selected}">
+        return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""}" data-multi="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
           <span class="choice-token">${choiceToken(index)}</span>
           <span class="choice-copy">
             <strong>${choice}</strong>
-            <small>Multi-select is allowed here.</small>
+            <small>${isChecked ? "Answer locked for review." : "Multi-select is allowed here."}</small>
           </span>
           <em>${selected ? "Added" : "Add"}</em>
         </button>`;
