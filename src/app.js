@@ -2987,9 +2987,19 @@ function renderShortAnswerRecipe(recipe) {
 
 function renderFeedback(question, result, progressState) {
   const tone = result.correct ? "correct" : "repair";
+  const feedbackCue = result.correct ? "Proof saved" : "Review seed saved";
+  const feedbackNext = result.correct
+    ? "Scan the proof cards below, then keep the chain moving."
+    : "Read the repair cards below; review will replay this later.";
   return `<div class="feedback ${tone}">
+    <div class="feedback-head">
+      <span>${feedbackCue}</span>
+      <div class="feedback-copy">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
+      </div>
+      <small>${feedbackNext}</small>
+    </div>
     ${renderAnswerGateProgressCard(answerGateProgressCard(progressState, question, result, sessionMode))}
     ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
     ${renderAnswerRunChainCard(answerRunChainCard(progressState, result))}
