@@ -468,6 +468,7 @@ function render() {
             <span>${sessionProgressLabel}</span>
             <small>${sessionRemainingLabel}</small>
           </div>
+          ${renderSessionRhythmMiniRail(sessionRhythm)}
           ${renderQuestionActionDockCard(actionDock)}
           ${renderQuestion(question, checked)}
           ${checked ? renderFeedback(question, lastResult, progress, nextActionLabel) : ""}
@@ -732,6 +733,25 @@ function renderSessionRhythmCard(card) {
         .join("")}
     </div>
     <small>${card.promise}</small>
+  </div>`;
+}
+
+function renderSessionRhythmMiniRail(card) {
+  if (!card) return "";
+  return `<div class="session-rhythm-mini">
+    <div class="session-rhythm-mini-copy">
+      <span>${card.title}</span>
+      <strong>${card.currentLabel}: ${card.currentFormat}</strong>
+      <small>${card.headline}</small>
+    </div>
+    <div class="session-rhythm-mini-steps" aria-label="${card.title}">
+      ${card.steps
+        .map((step, index) => `<em class="${step.status}">
+          <b>${index + 1}</b>
+          <span>${step.label}</span>
+        </em>`)
+        .join("")}
+    </div>
   </div>`;
 }
 
