@@ -75,6 +75,7 @@ import {
   lessonWarmupCard,
   learningReceiptReel,
   learningPuzzleBoard,
+  learningViewTabs,
   learningHud,
   loadProgress,
   masteryForLesson,
@@ -143,6 +144,7 @@ let bossScore = 0;
 let latestCompletion = null;
 let activePitch = null;
 let pitchAnswer = "";
+let activeMainView = "path";
 
 const root = document.querySelector("#app");
 
@@ -204,6 +206,7 @@ function render() {
   const focusGuard = focusGuardCard(progress, Date.now());
   const startHere = startHereCard(progress, Date.now());
   const todayRoute = todayRouteCard(progress, Date.now());
+  const viewTabs = learningViewTabs(progress, activeMainView, Date.now());
   const missionDock = beginnerMissionDockCard(progress, Date.now());
   const questBrief = questBriefCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
@@ -382,75 +385,10 @@ function render() {
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
+        ${renderLearningViewTabs(viewTabs)}
+        <div class="learning-view-panel ${activeMainView === "path" ? "active" : "hidden"}" data-view-panel="path">
         ${renderTodayRouteCard(todayRoute)}
         ${renderQuestBriefCard(questBrief)}
-        ${renderLandingMissionStripCard(landingMission)}
-        ${renderStartHereCard(startHere)}
-        ${renderBeginnerMissionDockCard(missionDock)}
-        ${renderDashboardModeCard(dashboardMode)}
-        ${renderOnboardingCard(onboarding)}
-        ${renderFocusGuardCard(focusGuard)}
-        ${renderFirstFiveMinuteStartCard(firstFive)}
-        ${renderBeginnerCommandCenter({
-          practiceDiet,
-          choiceArcade,
-          beginnerSkillMap,
-          bossGateTeaser,
-          interviewPreview,
-          pitchPreview,
-          jobPacketPreview,
-          jobPacketShowcase,
-          interviewReadiness,
-          zeroToLandingQuest,
-          roleQuestBoard,
-          roleSampler,
-          jargonShield,
-          dailyQuest,
-          dailyMinimum,
-          dailyRunMeter,
-          streakShield,
-          dailySkillTicket,
-          dailyLandingStep,
-          dailyPhraseBank,
-          mistakeSafetyNet,
-          reviewOrbit,
-          rescueQuest
-        })}
-        ${renderMistakeFocusCard(mistakeFocus)}
-        ${renderRecommendationCard(recommendation)}
-        ${renderQuestCompass(compass)}
-        ${
-          showFullDashboard
-            ? `${renderExerciseScopeCard(exerciseScope)}
-        ${renderCareerSnapshot(careerSnapshot)}
-        ${renderSkillProfileCard(skillProfile)}
-        ${renderJobRoleFitCard(roleFit)}
-        ${renderJobSignalPassport(signalPassport)}
-        ${renderLandingGapRadar(gapRadar)}
-        ${renderLandingReadinessChecklist(landingChecklist)}
-        ${renderSevenDayLandingPath(landingPath)}
-        ${renderJobEvidenceBrief(evidenceBrief)}
-        ${renderOneLineCoachCard(oneLineCoach)}
-        ${renderLearningReceiptReel(receiptReel)}
-        ${renderDailyMomentumCard(momentum)}
-        ${renderRecallComboCard(recallCombo)}
-        ${renderSignalPreviewCard(signalPreview)}
-        ${renderReviewRhythmCard(reviewRhythm)}
-        ${renderReviewSprintCard(reviewSprint)}
-        ${renderLearningPuzzleBoard(puzzle)}
-        ${renderJobScenarioCard(jobScenario)}
-        ${renderBossReadinessCard(bossReadiness)}
-        ${renderGlossaryCard(glossary)}
-        ${renderLessonSkillCard(skillCard)}
-        ${renderLessonPracticePlan(practicePlan)}
-        ${renderLessonStageRoute(stageRoute)}
-        ${renderLessonWarmupCard(warmupCard)}
-        ${renderLessonAnalogyBridge(analogyBridge)}
-        ${renderConceptDiagramCard(conceptDiagram)}
-        ${renderLessonMasteryLadder(masteryLadder)}
-        ${renderLessonPitchBuilder(lessonPitch)}`
-            : ""
-        }
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
         ${renderNowPlayingHudCard(nowPlaying)}
@@ -504,8 +442,78 @@ function render() {
             checked
           })}
         </section>
+        </div>
 
-        <details class="learning-library">
+        <div class="learning-view-panel ${activeMainView === "practice" ? "active" : "hidden"}" data-view-panel="practice">
+          ${renderStartHereCard(startHere)}
+          ${renderBeginnerMissionDockCard(missionDock)}
+          ${renderDashboardModeCard(dashboardMode)}
+          ${renderOnboardingCard(onboarding)}
+          ${renderFocusGuardCard(focusGuard)}
+          ${renderFirstFiveMinuteStartCard(firstFive)}
+          ${renderBeginnerCommandCenter({
+            practiceDiet,
+            choiceArcade,
+            beginnerSkillMap,
+            bossGateTeaser,
+            interviewPreview,
+            pitchPreview,
+            jobPacketPreview,
+            jobPacketShowcase,
+            interviewReadiness,
+            zeroToLandingQuest,
+            roleQuestBoard,
+            roleSampler,
+            jargonShield,
+            dailyQuest,
+            dailyMinimum,
+            dailyRunMeter,
+            streakShield,
+            dailySkillTicket,
+            dailyLandingStep,
+            dailyPhraseBank,
+            mistakeSafetyNet,
+            reviewOrbit,
+            rescueQuest
+          })}
+          ${renderMistakeFocusCard(mistakeFocus)}
+          ${renderRecommendationCard(recommendation)}
+          ${renderQuestCompass(compass)}
+        </div>
+
+        <div class="learning-view-panel ${activeMainView === "career" ? "active" : "hidden"}" data-view-panel="career">
+          ${renderLandingMissionStripCard(landingMission)}
+          ${renderCareerSnapshot(careerSnapshot)}
+          ${renderSkillProfileCard(skillProfile)}
+          ${renderJobRoleFitCard(roleFit)}
+          ${renderJobSignalPassport(signalPassport)}
+          ${renderLandingGapRadar(gapRadar)}
+          ${renderLandingReadinessChecklist(landingChecklist)}
+          ${renderSevenDayLandingPath(landingPath)}
+          ${renderJobEvidenceBrief(evidenceBrief)}
+          ${renderOneLineCoachCard(oneLineCoach)}
+          ${showFullDashboard ? `${renderExerciseScopeCard(exerciseScope)}
+          ${renderLearningReceiptReel(receiptReel)}
+          ${renderDailyMomentumCard(momentum)}
+          ${renderRecallComboCard(recallCombo)}
+          ${renderSignalPreviewCard(signalPreview)}
+          ${renderReviewRhythmCard(reviewRhythm)}
+          ${renderReviewSprintCard(reviewSprint)}
+          ${renderLearningPuzzleBoard(puzzle)}
+          ${renderJobScenarioCard(jobScenario)}
+          ${renderBossReadinessCard(bossReadiness)}
+          ${renderGlossaryCard(glossary)}
+          ${renderLessonSkillCard(skillCard)}
+          ${renderLessonPracticePlan(practicePlan)}
+          ${renderLessonStageRoute(stageRoute)}
+          ${renderLessonWarmupCard(warmupCard)}
+          ${renderLessonAnalogyBridge(analogyBridge)}
+          ${renderConceptDiagramCard(conceptDiagram)}
+          ${renderLessonMasteryLadder(masteryLadder)}
+          ${renderLessonPitchBuilder(lessonPitch)}` : ""}
+        </div>
+
+        <details class="learning-library ${activeMainView === "career" ? "active" : "hidden"}">
           <summary>
             <strong>學習地圖與進度細節</strong>
             <span>章節、錯題、成就、能力地圖與 pitch 練習</span>
@@ -1025,6 +1033,25 @@ function renderTodayRouteCard(card) {
       <button class="primary compact" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
         ${card.actionLabel}
       </button>
+    </div>
+  </section>`;
+}
+
+function renderLearningViewTabs(card) {
+  return `<section class="learning-view-tabs">
+    <div>
+      <p class="eyebrow">${card.title}</p>
+      <h3>${card.headline}</h3>
+      <small>${card.promise}</small>
+    </div>
+    <div class="learning-view-tab-list" role="tablist" aria-label="${card.title}">
+      ${card.tabs
+        .map((tab) => `<button class="${tab.active ? "active" : ""}" data-main-view="${tab.id}" role="tab" aria-selected="${tab.active}">
+          <span>${tab.label}</span>
+          <strong>${tab.title}</strong>
+          <small>${tab.detail}</small>
+        </button>`)
+        .join("")}
     </div>
   </section>`;
 }
@@ -3568,11 +3595,19 @@ function puzzleStatusText(status) {
 }
 
 function bindEvents() {
+  document.querySelectorAll("[data-main-view]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeMainView = button.dataset.mainView ?? "path";
+      render();
+    });
+  });
+
   document.querySelectorAll("[data-lesson]").forEach((button) => {
     button.addEventListener("click", () => {
       selectedLessonIndex = Number(button.dataset.lesson);
       progress.currentLessonIndex = selectedLessonIndex;
       sessionMode = "lesson";
+      activeMainView = "path";
       bossScore = 0;
       latestCompletion = null;
       activePitch = null;
@@ -3587,6 +3622,7 @@ function bindEvents() {
 
   document.querySelector("[data-review]")?.addEventListener("click", () => {
     sessionMode = "review";
+    activeMainView = "path";
     sessionQuestions = buildReviewSessionQuestions(progress, Date.now(), 7);
     currentIndex = 0;
     bossScore = 0;
@@ -3601,6 +3637,7 @@ function bindEvents() {
     const lessons = flattenLessons();
     const lesson = lessons[selectedLessonIndex] ?? lessons[0];
     sessionMode = "boss";
+    activeMainView = "path";
     sessionQuestions = bossQuestionsForChapter(lesson.chapterId, 8);
     currentIndex = 0;
     bossScore = 0;
@@ -3615,6 +3652,7 @@ function bindEvents() {
     const lessons = flattenLessons();
     const lesson = lessons[selectedLessonIndex] ?? lessons[0];
     sessionMode = "interview";
+    activeMainView = "path";
     sessionQuestions = interviewQuestionsForChapter(lesson.chapterId);
     currentIndex = 0;
     bossScore = 0;
@@ -3663,6 +3701,7 @@ function bindEvents() {
       activePitch = pitchPracticeCard(progress, event.currentTarget.dataset.pitchPreviewAction);
       pitchAnswer = "";
       latestCompletion = null;
+      activeMainView = "path";
       render();
       return;
     }
@@ -3675,6 +3714,7 @@ function bindEvents() {
       activePitch = pitchPracticeCard(progress, card.action.chapterId);
       pitchAnswer = "";
       latestCompletion = null;
+      activeMainView = "path";
       render();
       return;
     }
@@ -3931,6 +3971,7 @@ function bindEvents() {
 
 function startRecommendedPractice(recommendation) {
   const lessons = flattenLessons();
+  activeMainView = "path";
   latestCompletion = null;
   activePitch = null;
   pitchAnswer = "";

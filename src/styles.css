@@ -1146,6 +1146,77 @@ h1 {
   padding: 12px;
 }
 
+.learning-view-tabs {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 0.75fr 1.25fr;
+  padding: 16px;
+}
+
+.learning-view-tabs h3 {
+  font-size: 20px;
+  margin: 4px 0;
+}
+
+.learning-view-tabs small {
+  color: var(--muted);
+}
+
+.learning-view-tab-list {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.learning-view-tab-list button {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  color: var(--ink);
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  padding: 11px;
+  text-align: left;
+}
+
+.learning-view-tab-list button.active {
+  background: #ecfeff;
+  border-color: #06b6d4;
+  box-shadow: 0 10px 24px rgb(6 182 212 / 0.12);
+}
+
+.learning-view-tab-list span,
+.learning-view-tab-list strong,
+.learning-view-tab-list small {
+  display: block;
+}
+
+.learning-view-tab-list span {
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.learning-view-tab-list strong {
+  font-size: 14px;
+}
+
+.learning-view-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.learning-view-panel.hidden,
+.learning-library.hidden {
+  display: none;
+}
+
 .mission-dock-card {
   background: #ffffff;
   border: 1px solid #bae6fd;
@@ -9322,6 +9393,7 @@ button:disabled {
   .landing-mission-strip,
   .start-here-card,
   .today-route-copy,
+  .learning-view-tabs,
   .mission-dock-copy,
   .completion-card,
   .recommendation-card,
@@ -9422,6 +9494,7 @@ button:disabled {
   .landing-mission-route,
   .start-here-steps,
   .today-route-steps,
+  .learning-view-tab-list,
   .mission-dock-lanes,
   .quest-brief-lanes,
   .beginner-skill-gate-path,

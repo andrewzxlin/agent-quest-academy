@@ -379,6 +379,46 @@ export function todayRouteCard(progress, now = Date.now()) {
   };
 }
 
+export function learningViewTabs(progress, activeView = "path", now = Date.now()) {
+  const validViews = ["path", "practice", "career"];
+  const selectedView = validViews.includes(activeView) ? activeView : "path";
+  const minimum = dailyMinimumCard(progress, now);
+  const stats = reviewStats(progress, now);
+  const packet = jobPacketPreviewCard(progress, now);
+  const landing = landingMissionStripCard(progress, now);
+  const tabs = [
+    {
+      id: "path",
+      label: "Path",
+      title: "Today path",
+      detail: minimum.status === "done" ? "Minimum banked" : "One prompt to bank today"
+    },
+    {
+      id: "practice",
+      label: "Practice",
+      title: "Support hub",
+      detail: stats.dueCount > 0 ? `${stats.dueCount} due review cards` : "Optional drills and rescue cards"
+    },
+    {
+      id: "career",
+      label: "Career",
+      title: "Proof hub",
+      detail: `${landing.percent}% landing / ${packet.readyCount}/${packet.totalCount} proof pieces`
+    }
+  ];
+
+  return {
+    title: "Learning Views",
+    activeView: selectedView,
+    headline: "One screen at a time",
+    promise: "The main path stays clean; support and career modules live in separate views.",
+    tabs: tabs.map((tab) => ({
+      ...tab,
+      active: tab.id === selectedView
+    }))
+  };
+}
+
 export function beginnerMissionDockCard(progress, now = Date.now()) {
   const start = startHereCard(progress, now);
   const minimum = dailyMinimumCard(progress, now);

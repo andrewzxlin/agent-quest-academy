@@ -89,6 +89,7 @@ import {
   lessonWarmupCard,
   learningReceiptReel,
   learningPuzzleBoard,
+  learningViewTabs,
   learningHud,
   masteryForLesson,
   mistakeFocusCard,
@@ -148,6 +149,7 @@ const tests = [
   ["focus guard shows one primary beginner action", testFocusGuardCard],
   ["start here card turns the homepage into one obvious action", testStartHereCard],
   ["today route compresses the first screen into one tiny loop", testTodayRouteCard],
+  ["learning view tabs keep modules out of one crowded page", testLearningViewTabs],
   ["mission dock compresses the homepage into one scan line", testBeginnerMissionDockCard],
   ["quest brief makes the first screen action reward and packet clear", testQuestBriefCard],
   ["hero mission panel ties the first screen to skill proof", testHeroMissionPanelCard],
@@ -440,6 +442,27 @@ function testTodayRouteCard() {
   assert.equal(card.action.kind, "review");
   assert.equal(card.steps.find((step) => step.id === "play").status, "active");
   assert.ok(card.body.includes("Review appears first"));
+}
+
+function testLearningViewTabs() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let card = learningViewTabs(progress, "path", now);
+  assert.equal(card.title, "Learning Views");
+  assert.equal(card.activeView, "path");
+  assert.deepEqual(card.tabs.map((tab) => tab.id), ["path", "practice", "career"]);
+  assert.equal(card.tabs.filter((tab) => tab.active).length, 1);
+  assert.equal(card.tabs.find((tab) => tab.id === "path").active, true);
+  assert.ok(card.promise.includes("separate views"));
+  assert.doesNotMatch(JSON.stringify(card), /all modules on one page|crowded page|repo|project implementation|build a project/i);
+
+  card = learningViewTabs(progress, "practice", now);
+  assert.equal(card.activeView, "practice");
+  assert.equal(card.tabs.find((tab) => tab.id === "practice").active, true);
+  assert.ok(card.tabs.find((tab) => tab.id === "practice").detail.includes("Optional"));
+
+  card = learningViewTabs(progress, "unknown", now);
+  assert.equal(card.activeView, "path");
 }
 
 function testBeginnerMissionDockCard() {
