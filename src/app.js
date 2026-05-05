@@ -272,6 +272,9 @@ function render() {
 
   const completedLessonCount = lessons.filter((item) => progress.completedLessons.includes(item.id)).length;
   const lessonPathPercent = lessons.length ? Math.round((completedLessonCount / lessons.length) * 100) : 0;
+  const sessionProgressPercent = sessionQuestions.length
+    ? Math.round(((currentIndex + (checked ? 1 : 0.35)) / sessionQuestions.length) * 100)
+    : 0;
 
   root.innerHTML = `
     <div class="shell">
@@ -425,7 +428,7 @@ function render() {
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
         ${renderNowPlayingHudCard(nowPlaying)}
 
-        <section class="quiz-card">
+        <section class="quiz-card" style="--session-progress-percent: ${Math.min(sessionProgressPercent, 100)}%">
           <div class="progress-row">
             <div>
               <p class="eyebrow">${isReviewMode ? "複習" : isBossMode ? "Boss" : "第"} ${currentIndex + 1} / ${sessionQuestions.length} 題</p>
@@ -436,6 +439,7 @@ function render() {
               <small>本課熟練度</small>
             </div>
           </div>
+          <div class="session-progress-track" aria-hidden="true"><span></span></div>
           ${renderQuestionActionDockCard(actionDock)}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
