@@ -313,11 +313,20 @@ function render() {
         <div class="map">
           ${lessons
             .map((item, index) => {
+              const previous = lessons[index - 1];
+              const gate = gatesByChapter.get(item.chapterId);
+              const chapterDivider =
+                !previous || previous.chapterId !== item.chapterId
+                  ? `<div class="lesson-chapter-divider">
+                    <span>${item.chapterTitle}</span>
+                    <small>${item.chapterTheme}</small>
+                    <em>${gate?.gateLabel ?? "Open"}</em>
+                  </div>`
+                  : "";
               const active = index === selectedLessonIndex ? "active" : "";
               const done = progress.completedLessons.includes(item.id) ? "done" : "";
-              const gate = gatesByChapter.get(item.chapterId);
               const locked = gate?.lessonsUnlocked ? "" : "locked";
-              return `<button class="lesson-pill ${active} ${done} ${locked}" data-lesson="${index}" ${locked ? "disabled" : ""}>
+              return `${chapterDivider}<button class="lesson-pill ${active} ${done} ${locked}" data-lesson="${index}" ${locked ? "disabled" : ""}>
                 <span>${index + 1}</span>
                 <strong>${item.title}</strong>
                 <small>${locked ? gate.gateLabel : item.chapterTitle}</small>
