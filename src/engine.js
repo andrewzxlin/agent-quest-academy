@@ -4844,6 +4844,7 @@ export function completionCard(progress, event, now = Date.now()) {
   const summary = event.chapterId ? summariesByChapter.get(event.chapterId) : null;
   const roleSignal = roleFitCompletionLine(event.chapterId);
   const nextAction = summary?.nextAction ?? "Keep going with the next tiny practice step.";
+  const minimum = dailyMinimumCard(progress, now);
   const titleByType = {
     lesson: "Micro-lesson cleared",
     boss: event.passed ? "Boss cleared" : "Boss needs another run",
@@ -4866,7 +4867,20 @@ export function completionCard(progress, event, now = Date.now()) {
     proofDock: completionProofDock(progress, event, roleSignal, nextAction, now),
     rewards: completionRewards(event, roleSignal, nextAction),
     exitTicket: completionExitTicket(event, roleSignal, nextAction),
+    stopLine: completionStopLine(minimum),
     nextAction: summary?.nextAction ?? "繼續下一個低阻力練習。"
+  };
+}
+
+function completionStopLine(minimum) {
+  return {
+    status: minimum.status,
+    headline: minimum.status === "done" ? "Daily minimum banked" : "One tiny answer can still bank today",
+    body:
+      minimum.status === "done"
+        ? "You can stop here without losing the learning loop, or continue if you still have energy."
+        : "Finish one low-friction answer to turn today into a saved learning signal.",
+    progress: `${minimum.doneCount}/${minimum.totalCount} checks`
   };
 }
 

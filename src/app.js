@@ -1377,6 +1377,7 @@ function renderCompletionCard(card) {
       <strong>${card.result}</strong>
       <em class="completion-role-signal">${card.roleSignal}</em>
       ${renderCompletionProofDock(card.proofDock)}
+      ${renderCompletionStopLine(card.stopLine)}
       <div class="completion-reward-strip">
         ${card.rewards
           .map((reward) => `<div>
@@ -1397,6 +1398,16 @@ function renderCompletionCard(card) {
       <button class="secondary compact" data-dismiss-completion="true">繼續練習</button>
     </div>
   </section>`;
+}
+
+function renderCompletionStopLine(stopLine) {
+  if (!stopLine) return "";
+  return `<div class="completion-stop-line ${stopLine.status}">
+    <span>Stop line</span>
+    <strong>${stopLine.headline}</strong>
+    <small>${stopLine.body}</small>
+    <em>${stopLine.progress}</em>
+  </div>`;
 }
 
 function renderCompletionProofDock(dock) {

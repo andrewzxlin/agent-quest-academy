@@ -3560,7 +3560,7 @@ function testCompletionCards() {
     type: "lesson",
     chapterId: chapter.id,
     title: lesson.title
-  });
+  }, 1000);
   assert.equal(lessonCard.type, "lesson");
   assert.equal(lessonCard.headline, lesson.title);
   assert.ok(lessonCard.ability.length > 20);
@@ -3578,6 +3578,10 @@ function testCompletionCards() {
   assert.equal(lessonCard.proofDock.items.find((item) => item.id === "receipt").done, true);
   assert.ok(lessonCard.proofDock.items.find((item) => item.id === "packet").text.includes("pieces ready"));
   assert.doesNotMatch(JSON.stringify(lessonCard.proofDock), /repo|project implementation|build a project|coding task/i);
+  assert.equal(lessonCard.stopLine.status, "done");
+  assert.ok(lessonCard.stopLine.headline.includes("Daily minimum"));
+  assert.ok(lessonCard.stopLine.body.includes("stop here"));
+  assert.ok(lessonCard.stopLine.progress.includes("checks"));
   assert.deepEqual(lessonCard.exitTicket.map((item) => item.id), ["saved", "reuse", "next"]);
   assert.ok(lessonCard.exitTicket.find((item) => item.id === "saved").text.includes("micro-lesson"));
   assert.ok(lessonCard.exitTicket.find((item) => item.id === "reuse").text.includes("AI App Builder"));
