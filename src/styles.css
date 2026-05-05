@@ -5862,8 +5862,20 @@ h1 {
   background: #eff6ff;
 }
 
-.choice:hover {
+.choice:hover,
+.choice:focus-visible {
+  outline: 0;
   transform: translateY(-1px);
+}
+
+.choice:focus-visible {
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.14);
+}
+
+.choice.selected {
+  border-left: 5px solid var(--blue);
+  box-shadow: 0 10px 24px rgb(37 99 235 / 0.12);
+  padding-left: 10px;
 }
 
 .choice-token {
@@ -5911,6 +5923,11 @@ h1 {
   background: var(--blue);
   border-color: var(--blue);
   color: #fff;
+}
+
+.choice.selected .choice-copy small {
+  color: #1d4ed8;
+  font-weight: 800;
 }
 
 .question-role-signal-card {
