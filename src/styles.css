@@ -8006,6 +8006,11 @@ h1 {
   border-color: #bbf7d0;
 }
 
+.answer-readiness.saved {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
 .answer-readiness span {
   background: #e2e8f0;
   border-radius: 999px;
@@ -8019,6 +8024,11 @@ h1 {
 .answer-readiness.ready span {
   background: #dcfce7;
   color: #15803d;
+}
+
+.answer-readiness.saved span {
+  background: #dbeafe;
+  color: #1d4ed8;
 }
 
 .answer-readiness small {

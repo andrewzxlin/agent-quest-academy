@@ -279,6 +279,8 @@ function render() {
   const actionHint = checked
     ? "Next is unlocked. Feedback is saved; continue when ready."
     : "Unsure simply saves this as a review card. No penalty, no lost progress.";
+  const readinessStatus = checked ? "saved" : answerReady ? "ready" : "waiting";
+  const readinessLabel = checked ? "Saved" : answerReady ? "Ready" : "Waiting";
 
   root.innerHTML = `
     <div class="shell">
@@ -448,8 +450,8 @@ function render() {
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
           ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
-          <div class="answer-readiness ${answerReady ? "ready" : "waiting"}">
-            <span>${answerReady ? "Ready" : "Waiting"}</span>
+          <div class="answer-readiness ${readinessStatus}">
+            <span>${readinessLabel}</span>
             <small>${answerReadinessText(question, answerReady, checked)}</small>
           </div>
           <div class="actions ${checked ? "checked" : "answering"}">
