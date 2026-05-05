@@ -1165,14 +1165,14 @@ function renderQuestion(question, isChecked = false) {
       .join("")}</div><p class="hint">可複選，選完再檢查。</p>`;
   }
   const shortWords = shortAnswer.trim() ? shortAnswer.trim().split(/\s+/).length : 0;
-  return `${renderShortAnswerSupport(shortAnswerSupport(question))}
+  return `${renderShortAnswerSupport(shortAnswerSupport(question), isChecked)}
     ${renderShortAnswerRecipe(shortAnswerRecipe(question))}
-    <div class="short-answer-meter ${shortAnswer.trim() ? "started" : "empty"}" data-short-meter="true" data-min-matches="${question.minMatches}">
+    <div class="short-answer-meter ${shortAnswer.trim() ? "started" : "empty"} ${isChecked ? "locked" : ""}" data-short-meter="true" data-min-matches="${question.minMatches}">
       <strong>${shortWords}</strong>
       <span>words</span>
       <small>A tiny answer can pass when it uses ${question.minMatches} key concept${question.minMatches === 1 ? "" : "s"}.</small>
     </div>
-    <textarea class="short-input" placeholder="用一句話回答即可，不需要寫程式。">${shortAnswer}</textarea>`;
+    <textarea class="short-input ${isChecked ? "locked" : ""}" placeholder="用一句話回答即可，不需要寫程式。" ${isChecked ? "disabled" : ""}>${shortAnswer}</textarea>`;
 }
 
 function choiceToken(index) {
@@ -2944,7 +2944,7 @@ function renderQuestionSignalPreview(preview) {
   </div>`;
 }
 
-function renderShortAnswerSupport(support) {
+function renderShortAnswerSupport(support, isChecked = false) {
   if (!support) return "";
   return `<div class="short-support">
     <div>
@@ -2952,10 +2952,10 @@ function renderShortAnswerSupport(support) {
       <p>${support.prompt}</p>
     </div>
     <div class="concept-chip-row">
-      ${support.concepts.map((concept, index) => `<button class="concept-chip" data-short-concept="${index}">${concept}</button>`).join("")}
+      ${support.concepts.map((concept, index) => `<button class="concept-chip" data-short-concept="${index}" ${isChecked ? "disabled" : ""}>${concept}</button>`).join("")}
     </div>
-    <button class="starter-chip sentence-template" data-short-template="true">套用一句完整說法</button>
-    <small>至少命中 ${support.needed} 個概念即可，不需要寫程式。</small>
+    <button class="starter-chip sentence-template" data-short-template="true" ${isChecked ? "disabled" : ""}>套用一句完整說法</button>
+    <small>${isChecked ? "Answer locked. Use the feedback below, then move forward." : `至少命中 ${support.needed} 個概念即可，不需要寫程式。`}</small>
   </div>`;
 }
 
@@ -3531,6 +3531,7 @@ function bindEvents() {
 
   document.querySelectorAll("[data-starter]").forEach((button) => {
     button.addEventListener("click", () => {
+      if (checked) return;
       shortAnswer = button.dataset.starter;
       render();
     });
@@ -3538,6 +3539,7 @@ function bindEvents() {
 
   document.querySelectorAll("[data-short-concept]").forEach((button) => {
     button.addEventListener("click", () => {
+      if (checked) return;
       const support = shortAnswerSupport(sessionQuestions[currentIndex]);
       const concept = support?.concepts[Number(button.dataset.shortConcept)];
       shortAnswer = appendConcept(shortAnswer, concept);
@@ -3547,6 +3549,7 @@ function bindEvents() {
 
   document.querySelectorAll("[data-short-template]").forEach((button) => {
     button.addEventListener("click", () => {
+      if (checked) return;
       const support = shortAnswerSupport(sessionQuestions[currentIndex]);
       shortAnswer = support?.sentenceTemplate ?? shortAnswer;
       render();

@@ -7008,6 +7008,13 @@ h1 {
   resize: vertical;
 }
 
+.short-input.locked:disabled {
+  background: #f8fafc;
+  color: var(--ink);
+  opacity: 1;
+  resize: none;
+}
+
 .short-answer-meter {
   align-items: center;
   background: #f8fafc;
@@ -7023,6 +7030,11 @@ h1 {
 .short-answer-meter.started {
   background: #f0fdf4;
   border-color: #bbf7d0;
+}
+
+.short-answer-meter.locked {
+  background: #eff6ff;
+  border-color: #bfdbfe;
 }
 
 .short-answer-meter strong {
@@ -7094,6 +7106,12 @@ h1 {
   background: var(--panel);
   color: #c2410c;
   border: 1px solid #fed7aa;
+}
+
+.concept-chip:disabled,
+.sentence-template:disabled {
+  cursor: default;
+  opacity: 0.7;
 }
 
 .sentence-template {
