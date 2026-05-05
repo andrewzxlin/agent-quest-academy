@@ -181,13 +181,50 @@ h1 {
 .review-button,
 .boss-button,
 .interview-button {
+  align-items: center;
   border: 1px solid #fed7aa;
   border-radius: 12px;
   background: #fff7ed;
   color: #9a3412;
+  display: grid;
+  gap: 4px 10px;
+  grid-template-columns: 36px 1fr;
+  min-height: 68px;
   padding: 14px;
   text-align: left;
   cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.review-button::before,
+.boss-button::before,
+.interview-button::before {
+  align-items: center;
+  background: rgb(255 255 255 / 0.78);
+  border: 1px solid rgb(154 52 18 / 0.18);
+  border-radius: 10px;
+  content: "R";
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 900;
+  grid-row: 1 / span 2;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.review-button:not(:disabled):hover,
+.review-button:not(:disabled):focus-visible,
+.boss-button:not(:disabled):hover,
+.boss-button:not(:disabled):focus-visible,
+.interview-button:not(:disabled):hover,
+.interview-button:not(:disabled):focus-visible {
+  box-shadow: 0 10px 24px rgb(15 23 42 / 0.1);
+  outline: 0;
+  transform: translateY(-1px);
 }
 
 .boss-button {
@@ -196,10 +233,20 @@ h1 {
   color: #1d4ed8;
 }
 
+.boss-button::before {
+  border-color: rgb(29 78 216 / 0.18);
+  content: "B";
+}
+
 .interview-button {
   border-color: #c4b5fd;
   background: #f5f3ff;
   color: #6d28d9;
+}
+
+.interview-button::before {
+  border-color: rgb(109 40 217 / 0.18);
+  content: "I";
 }
 
 .review-button strong,
