@@ -265,6 +265,58 @@ h1 {
   font-size: 13px;
 }
 
+.lesson-map-summary {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.lesson-map-summary > div {
+  display: grid;
+  gap: 4px;
+}
+
+.lesson-map-summary span {
+  color: #4338ca;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.lesson-map-summary strong,
+.lesson-map-summary small,
+.lesson-map-summary p {
+  display: block;
+}
+
+.lesson-map-summary small,
+.lesson-map-summary p {
+  color: var(--muted);
+}
+
+.lesson-map-summary p {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.lesson-map-track {
+  background: rgb(15 23 42 / 0.08);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.lesson-map-track span {
+  background: linear-gradient(90deg, #6366f1, #22c55e);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  width: var(--lesson-path-percent);
+}
+
 .map {
   display: flex;
   flex-direction: column;

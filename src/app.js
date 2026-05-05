@@ -270,6 +270,9 @@ function render() {
     Date.now()
   );
 
+  const completedLessonCount = lessons.filter((item) => progress.completedLessons.includes(item.id)).length;
+  const lessonPathPercent = lessons.length ? Math.round((completedLessonCount / lessons.length) * 100) : 0;
+
   root.innerHTML = `
     <div class="shell">
       <aside class="sidebar">
@@ -298,6 +301,15 @@ function render() {
           <strong>面試情境題</strong>
           <span>${chapter.title} 設計判斷</span>
         </button>
+        <div class="lesson-map-summary" style="--lesson-path-percent: ${lessonPathPercent}%">
+          <div>
+            <span>Lesson Path</span>
+            <strong>${lesson.title}</strong>
+            <small>${lesson.chapterTitle}</small>
+          </div>
+          <p>${completedLessonCount}/${lessons.length} cleared</p>
+          <div class="lesson-map-track"><span></span></div>
+        </div>
         <div class="map">
           ${lessons
             .map((item, index) => {
