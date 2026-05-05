@@ -286,6 +286,14 @@ function render() {
       ? "This is the finish step."
       : `${promptsLeft} prompt${promptsLeft === 1 ? "" : "s"} left after this.`;
   const nextButtonClass = checked ? "primary next-action" : "secondary";
+  const nextActionLabel =
+    currentIndex === sessionQuestions.length - 1
+      ? isReviewMode
+        ? "Finish review"
+        : isBossMode
+          ? "Settle Boss"
+          : "Finish lesson"
+      : "Next prompt";
   const actionHint = checked
     ? "Next is unlocked. Feedback is saved; continue when ready."
     : "Unsure simply saves this as a review card. No penalty, no lost progress.";
@@ -462,7 +470,7 @@ function render() {
           </div>
           ${renderQuestionActionDockCard(actionDock)}
           ${renderQuestion(question, checked)}
-          ${checked ? renderFeedback(question, lastResult, progress) : ""}
+          ${checked ? renderFeedback(question, lastResult, progress, nextActionLabel) : ""}
           ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
           <div class="answer-readiness ${readinessStatus}">
             <span>${readinessLabel}</span>
@@ -471,7 +479,7 @@ function render() {
           <div class="actions ${checked ? "checked" : "answering"}">
             <button class="primary" data-check="true" ${checked || !answerReady ? "disabled" : ""}>檢查答案</button>
             <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
-            <button class="${nextButtonClass}" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : isBossMode ? "結算 Boss" : "完成本課") : "下一題"}</button>
+            <button class="${nextButtonClass}" data-next="true" ${checked ? "" : "disabled"}>${nextActionLabel}</button>
           </div>
           <p class="action-hint ${checked ? "ready" : "safe"}">${actionHint}</p>
           ${renderLearningToolbox({
@@ -2987,7 +2995,7 @@ function renderShortAnswerRecipe(recipe) {
   </div>`;
 }
 
-function renderFeedback(question, result, progressState) {
+function renderFeedback(question, result, progressState, nextActionLabel) {
   const tone = result.correct ? "correct" : "repair";
   const feedbackCue = result.correct ? "Proof saved" : "Review seed saved";
   const feedbackNext = result.correct
@@ -3000,6 +3008,7 @@ function renderFeedback(question, result, progressState) {
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
       </div>
+      <button class="primary feedback-next-action" data-next="true">${nextActionLabel}</button>
       <small>${feedbackNext}</small>
     </div>
     ${renderAnswerGateProgressCard(answerGateProgressCard(progressState, question, result, sessionMode))}
@@ -3603,7 +3612,7 @@ function bindEvents() {
     submitCurrentAnswer(getUnsureResponse(sessionQuestions[currentIndex]));
   });
 
-  document.querySelector("[data-next]")?.addEventListener("click", () => {
+  document.querySelectorAll("[data-next]").forEach((button) => button.addEventListener("click", () => {
     if (currentIndex === sessionQuestions.length - 1) {
       if (sessionMode === "review" || sessionMode === "interview") {
         const lessons = flattenLessons();
@@ -3646,7 +3655,7 @@ function bindEvents() {
     clearAnswerState();
     saveProgress(progress);
     render();
-  });
+  }));
 
   document.querySelector("[data-reset]")?.addEventListener("click", () => {
     resetProgress();
