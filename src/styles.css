@@ -1039,6 +1039,113 @@ h1 {
   line-height: 1.35;
 }
 
+.today-route-card {
+  background: #ffffff;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.today-route-copy {
+  align-items: start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr auto;
+}
+
+.today-route-copy h3 {
+  font-size: 22px;
+  margin: 4px 0 6px;
+}
+
+.today-route-copy p,
+.today-route-card small,
+.today-route-meter span {
+  color: var(--muted);
+}
+
+.today-route-meter {
+  background: #eff6ff;
+  border: 1px solid rgb(37 99 235 / 0.14);
+  border-radius: 10px;
+  min-width: 170px;
+  padding: 12px;
+  text-align: right;
+}
+
+.today-route-meter span,
+.today-route-meter strong {
+  display: block;
+}
+
+.today-route-meter span {
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.today-route-meter strong {
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.today-route-steps {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.today-route-steps > div {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  display: grid;
+  gap: 5px;
+  min-height: 104px;
+  padding: 12px;
+}
+
+.today-route-steps > div.active {
+  background: #ecfeff;
+  border-color: #67e8f9;
+}
+
+.today-route-steps > div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.today-route-steps span,
+.today-route-steps strong,
+.today-route-steps small {
+  display: block;
+}
+
+.today-route-steps span {
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.today-route-steps strong {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.today-route-action {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px;
+}
+
 .mission-dock-card {
   background: #ffffff;
   border: 1px solid #bae6fd;
@@ -9214,6 +9321,7 @@ button:disabled {
   .quest-brief-card,
   .landing-mission-strip,
   .start-here-card,
+  .today-route-copy,
   .mission-dock-copy,
   .completion-card,
   .recommendation-card,
@@ -9313,6 +9421,7 @@ button:disabled {
   .image-quest-panels,
   .landing-mission-route,
   .start-here-steps,
+  .today-route-steps,
   .mission-dock-lanes,
   .quest-brief-lanes,
   .beginner-skill-gate-path,
@@ -9418,6 +9527,16 @@ button:disabled {
 
   .quest-brief-action span {
     text-align: left;
+  }
+
+  .today-route-meter {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .today-route-action {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .choice {

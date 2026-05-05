@@ -124,6 +124,7 @@ import {
   shortAnswerRecipe,
   shortAnswerSupport,
   startHereCard,
+  todayRouteCard,
   uncertaintySafetyCard,
   zeroToLandingQuestCard
 } from "./engine.js";
@@ -202,6 +203,7 @@ function render() {
   const firstFive = firstFiveMinuteStartCard(progress);
   const focusGuard = focusGuardCard(progress, Date.now());
   const startHere = startHereCard(progress, Date.now());
+  const todayRoute = todayRouteCard(progress, Date.now());
   const missionDock = beginnerMissionDockCard(progress, Date.now());
   const questBrief = questBriefCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
@@ -380,6 +382,7 @@ function render() {
             <strong>${isReviewMode ? `目前排程 ${stats.scheduledCount} 題，最近答錯 ${stats.wrongCount} 題。` : isBossMode ? `目前得分 ${bossScore}/${sessionQuestions.length}` : lesson.analogy}</strong>
           </div>
         </section>
+        ${renderTodayRouteCard(todayRoute)}
         ${renderQuestBriefCard(questBrief)}
         ${renderLandingMissionStripCard(landingMission)}
         ${renderStartHereCard(startHere)}
@@ -992,6 +995,37 @@ function renderStartHereCard(card) {
     <button class="primary" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
       ${card.actionLabel}
     </button>
+  </section>`;
+}
+
+function renderTodayRouteCard(card) {
+  return `<section class="today-route-card ${card.mode}">
+    <div class="today-route-copy">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+        <p>${card.body}</p>
+      </div>
+      <div class="today-route-meter">
+        <span>${card.progressLabel}</span>
+        <strong>${card.proofLabel}</strong>
+      </div>
+    </div>
+    <div class="today-route-steps">
+      ${card.steps
+        .map((step) => `<div class="${step.status}">
+          <span>${step.label}</span>
+          <strong>${step.title}</strong>
+          <small>${step.detail}</small>
+        </div>`)
+        .join("")}
+    </div>
+    <div class="today-route-action">
+      <small>${card.reassurance}</small>
+      <button class="primary compact" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
+        ${card.actionLabel}
+      </button>
+    </div>
   </section>`;
 }
 

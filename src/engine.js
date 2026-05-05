@@ -321,6 +321,64 @@ export function startHereCard(progress, now = Date.now()) {
   };
 }
 
+export function todayRouteCard(progress, now = Date.now()) {
+  const onboarding = onboardingState(progress);
+  const start = startHereCard(progress, now);
+  const minimum = dailyMinimumCard(progress, now);
+  const packet = jobPacketPreviewCard(progress, now);
+  const stats = reviewStats(progress, now);
+  const next = nextPracticeRecommendation(progress, now);
+  const packetFocus = packet.items.find((item) => !item.done) ?? packet.items[packet.items.length - 1];
+  const activeId =
+    !onboarding.completed
+      ? "set"
+      : stats.dueCount > 0
+        ? "review"
+        : minimum.status !== "done"
+          ? "play"
+          : "keep";
+
+  const steps = [
+    {
+      id: "set",
+      label: "Set",
+      title: onboarding.completed ? "Coach mode is ready" : "Choose one coach mode",
+      detail: onboarding.completed ? onboarding.selected.title : "The app hides extra decisions after this.",
+      status: activeId === "set" ? "active" : onboarding.completed ? "done" : "open"
+    },
+    {
+      id: "play",
+      label: "Play",
+      title: minimum.status === "done" ? "Daily answer is banked" : "Answer one tiny prompt",
+      detail: stats.dueCount > 0 ? `${stats.dueCount} due review card first` : next.cta,
+      status: activeId === "play" || activeId === "review" ? "active" : minimum.status === "done" ? "done" : "open"
+    },
+    {
+      id: "keep",
+      label: "Keep",
+      title: packet.status === "ready" ? "Proof packet is ready" : `Next proof: ${packetFocus.label}`,
+      detail: `${packet.readyCount}/${packet.totalCount} packet pieces`,
+      status: activeId === "keep" ? "active" : packet.status === "ready" ? "done" : "open"
+    }
+  ];
+
+  return {
+    title: "Today Route",
+    mode: activeId,
+    headline: activeId === "review" ? "Replay the weak signal before new study" : "Set, play, keep: one tiny loop today",
+    body:
+      activeId === "review"
+        ? "Review appears first because it is the lowest-effort way to protect yesterday's learning."
+        : "A beginner only needs to know the current stop, the tiny action, and the proof that gets saved.",
+    action: start.action,
+    actionLabel: activeId === "review" ? "Start review" : start.actionLabel,
+    progressLabel: minimum.status === "done" ? "Minimum banked" : "One answer banks today",
+    proofLabel: `${packet.readyCount}/${packet.totalCount} proof pieces`,
+    reassurance: "No project work here. The route is choice-first and safe to stop after the minimum.",
+    steps
+  };
+}
+
 export function beginnerMissionDockCard(progress, now = Date.now()) {
   const start = startHereCard(progress, now);
   const minimum = dailyMinimumCard(progress, now);

@@ -136,6 +136,7 @@ import {
   shortAnswerRecipe,
   shortAnswerSupport,
   startHereCard,
+  todayRouteCard,
   uncertaintySafetyCard,
   zeroToLandingQuestCard
 } from "../src/engine.js";
@@ -146,6 +147,7 @@ const tests = [
   ["first five minute start keeps first run tiny", testFirstFiveMinuteStartCard],
   ["focus guard shows one primary beginner action", testFocusGuardCard],
   ["start here card turns the homepage into one obvious action", testStartHereCard],
+  ["today route compresses the first screen into one tiny loop", testTodayRouteCard],
   ["mission dock compresses the homepage into one scan line", testBeginnerMissionDockCard],
   ["quest brief makes the first screen action reward and packet clear", testQuestBriefCard],
   ["hero mission panel ties the first screen to skill proof", testHeroMissionPanelCard],
@@ -402,6 +404,42 @@ function testStartHereCard() {
   assert.equal(card.mode, "rescue");
   assert.equal(card.action.kind, "review");
   assert.ok(card.steps.find((step) => step.label === "Signal").text.includes("review card"));
+}
+
+function testTodayRouteCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let card = todayRouteCard(progress, now);
+  assert.equal(card.title, "Today Route");
+  assert.equal(card.mode, "set");
+  assert.equal(card.action.kind, "profile");
+  assert.deepEqual(card.steps.map((step) => step.id), ["set", "play", "keep"]);
+  assert.equal(card.steps.find((step) => step.id === "set").status, "active");
+  assert.ok(card.headline.includes("Set, play, keep"));
+  assert.ok(card.progressLabel.includes("One answer"));
+  assert.ok(card.reassurance.includes("choice-first"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  selectLearnerProfile(progress, "beginner");
+  card = todayRouteCard(progress, now);
+  assert.equal(card.mode, "play");
+  assert.equal(card.steps.find((step) => step.id === "set").status, "done");
+  assert.equal(card.steps.find((step) => step.id === "play").status, "active");
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = todayRouteCard(progress, now);
+  assert.equal(card.mode, "keep");
+  assert.equal(card.steps.find((step) => step.id === "play").status, "done");
+  assert.ok(card.progressLabel.includes("Minimum"));
+  assert.ok(card.proofLabel.includes("proof pieces"));
+
+  answerQuestion(progress, question, 99, now + 1);
+  card = todayRouteCard(progress, now + 1);
+  assert.equal(card.mode, "review");
+  assert.equal(card.action.kind, "review");
+  assert.equal(card.steps.find((step) => step.id === "play").status, "active");
+  assert.ok(card.body.includes("Review appears first"));
 }
 
 function testBeginnerMissionDockCard() {
