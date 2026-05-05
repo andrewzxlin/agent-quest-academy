@@ -1057,6 +1057,12 @@ function renderLearningToolbox(cards) {
       <div>
         <span>Learning Toolbox</span>
         <strong>Open visual map, hints, and route support</strong>
+        <div class="toolbox-summary-chips">
+          <em>Visual map</em>
+          <em>Plain decode</em>
+          <em>Hints</em>
+          <em>Role signal</em>
+        </div>
       </div>
       <small>Optional help stays out of the way until you need it.</small>
     </summary>

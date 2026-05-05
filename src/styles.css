@@ -825,6 +825,24 @@ h1 {
   color: var(--muted);
 }
 
+.toolbox-summary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.toolbox-summary-chips em {
+  background: #ffffff;
+  border: 1px solid rgb(29 78 216 / 0.14);
+  border-radius: 999px;
+  color: #1e40af;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 850;
+  padding: 4px 8px;
+}
+
 .learning-toolbox-grid {
   border-top: 1px solid rgb(15 23 42 / 0.08);
   display: grid;
