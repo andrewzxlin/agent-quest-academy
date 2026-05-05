@@ -7331,6 +7331,75 @@ h1 {
   justify-self: end;
 }
 
+.short-answer-outcome {
+  background: #ffffff;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  display: grid;
+  gap: 10px;
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding: 10px;
+}
+
+.short-answer-outcome.correct {
+  border-color: #86efac;
+}
+
+.short-answer-outcome.repair {
+  border-color: #fdba74;
+}
+
+.short-answer-outcome span,
+.short-answer-outcome strong,
+.short-answer-outcome-grid b {
+  display: block;
+}
+
+.short-answer-outcome span {
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.short-answer-outcome strong {
+  margin-top: 3px;
+}
+
+.short-answer-outcome-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.short-answer-outcome-grid em {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--muted);
+  font-style: normal;
+  overflow-wrap: anywhere;
+  padding: 8px;
+}
+
+.short-answer-outcome-grid em.matched {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+.short-answer-outcome-grid em.missing {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #c2410c;
+}
+
+.short-answer-outcome-grid b {
+  font-size: 11px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
 .short-support {
   display: grid;
   gap: 10px;
@@ -9141,6 +9210,7 @@ button:disabled {
   .answer-interview-steps,
   .job-story-seed-steps,
   .memory-hook-grid,
+  .short-answer-outcome-grid,
   .answer-evidence-clip,
   .proof-booster-card,
   .puzzle-grid,

@@ -1323,12 +1323,37 @@ function renderQuestion(question, isChecked = false) {
       <strong>${shortWords}</strong>
       <span>words</span>
       <small>${shortMeterHelp}</small>
+      ${renderShortAnswerOutcome(question, lastResult, isChecked)}
     </div>
     <textarea class="short-input ${isChecked ? "locked" : ""}" placeholder="用一句話回答即可，不需要寫程式。" ${isChecked ? "disabled" : ""}>${shortAnswer}</textarea>`;
 }
 
 function choiceToken(index) {
   return String.fromCharCode(65 + index);
+}
+
+function renderShortAnswerOutcome(question, result, isChecked = false) {
+  if (!isChecked || !result) return "";
+  const matches = result.matches ?? [];
+  const missing = result.missing ?? [];
+  const matchedText = matches.length > 0 ? matches.join(", ") : "No key concept matched yet";
+  const missingText = missing.length > 0 ? missing.slice(0, 4).join(", ") : "No required concept missing";
+  return `<div class="short-answer-outcome ${result.correct ? "correct" : "repair"}">
+    <div>
+      <span>${result.correct ? "Short answer saved" : "Review seed saved"}</span>
+      <strong>${matches.length}/${question.minMatches} required concepts matched</strong>
+    </div>
+    <div class="short-answer-outcome-grid">
+      <em class="matched">
+        <b>Matched</b>
+        ${matchedText}
+      </em>
+      <em class="missing">
+        <b>Still useful to add</b>
+        ${missingText}
+      </em>
+    </div>
+  </div>`;
 }
 
 function renderCompletionCard(card) {
