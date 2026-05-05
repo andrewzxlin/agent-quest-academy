@@ -1226,12 +1226,19 @@ function renderQuestion(question, isChecked = false) {
     return `<div class="choices">${question.choices
       .map((choice, index) => {
         const selected = selectedSingle === index;
-        const choiceBadge = isChecked ? (selected ? "Saved" : "Review") : selected ? "Selected" : "Pick";
+        const choiceBadge = isChecked ? (selected ? "Saved" : "Review") : selected ? "Ready" : selectedSingle === null ? "Pick" : "Switch";
+        const choiceHelp = isChecked
+          ? "Answer locked for review."
+          : selected
+            ? "Ready to check. Tap another option to switch."
+            : selectedSingle === null
+              ? "Pick one answer, then check."
+              : "Tap to switch before checking.";
         return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""}" data-single="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
           <span class="choice-token">${choiceToken(index)}</span>
           <span class="choice-copy">
             <strong>${choice}</strong>
-            <small>${isChecked ? "Answer locked for review." : "Pick one answer, then check."}</small>
+            <small>${choiceHelp}</small>
           </span>
           <em>${choiceBadge}</em>
         </button>`;
@@ -1239,7 +1246,11 @@ function renderQuestion(question, isChecked = false) {
       .join("")}</div>`;
   }
   if (question.type === "multi") {
-    const multiMeterHelp = isChecked ? "Selection locked. Read the feedback, then continue." : "Add every option that belongs, then check.";
+    const multiMeterHelp = isChecked
+      ? "Selection locked. Read the feedback, then continue."
+      : selectedMulti.size > 0
+        ? "Check is unlocked. Add or remove signals before submitting."
+        : "Add every option that belongs, then check.";
     return `<div class="multi-select-meter ${isChecked ? "locked" : ""}">
       <strong>${selectedMulti.size}</strong>
       <span>selected</span>
@@ -1249,11 +1260,16 @@ function renderQuestion(question, isChecked = false) {
       .map((choice, index) => {
         const selected = selectedMulti.has(index);
         const choiceBadge = isChecked ? (selected ? "Saved" : "Review") : selected ? "Added" : "Add";
+        const choiceHelp = isChecked
+          ? "Answer locked for review."
+          : selected
+            ? "Added to this attempt. Tap again to remove."
+            : "Tap to add if this belongs in the workflow.";
         return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""}" data-multi="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
           <span class="choice-token">${choiceToken(index)}</span>
           <span class="choice-copy">
             <strong>${choice}</strong>
-            <small>${isChecked ? "Answer locked for review." : "Multi-select is allowed here."}</small>
+            <small>${choiceHelp}</small>
           </span>
           <em>${choiceBadge}</em>
         </button>`;
