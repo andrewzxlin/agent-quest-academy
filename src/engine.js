@@ -419,6 +419,66 @@ export function learningViewTabs(progress, activeView = "path", now = Date.now()
   };
 }
 
+export function lessonPathTrailCard(progress, selectedLessonIndex = 0) {
+  const lessons = flattenLessons();
+  const safeIndex = Math.min(Math.max(selectedLessonIndex, 0), lessons.length - 1);
+  const activeLesson = lessons[safeIndex] ?? lessons[0];
+  const chapter = course.chapters.find((item) => item.id === activeLesson?.chapterId) ?? course.chapters[0];
+  const gate = chapterGateMap(progress).find((item) => item.chapterId === chapter.id);
+  const bossResult = (progress.bossResults ?? []).find((item) => item.chapterId === chapter.id);
+  const chapterLessons = lessons
+    .map((lesson, index) => ({ ...lesson, index }))
+    .filter((lesson) => lesson.chapterId === chapter.id);
+  const completedCount = chapterLessons.filter((lesson) => progress.completedLessons.includes(lesson.id)).length;
+  const nextLesson = chapterLessons.find((lesson) => !progress.completedLessons.includes(lesson.id)) ?? chapterLessons.at(-1);
+  const activeNodeId = gate?.bossUnlocked && completedCount === chapterLessons.length && !bossResult?.passed ? "boss" : activeLesson?.id;
+  const nodes = chapterLessons.map((lesson, localIndex) => {
+    const done = progress.completedLessons.includes(lesson.id);
+    const locked = !gate?.lessonsUnlocked;
+    const active = lesson.id === activeNodeId;
+    return {
+      id: lesson.id,
+      type: "lesson",
+      index: lesson.index,
+      number: localIndex + 1,
+      title: lesson.title,
+      detail: lesson.analogy,
+      status: locked ? "locked" : active ? "active" : done ? "done" : "open",
+      cta: done ? "Replay" : active ? "Continue" : "Start"
+    };
+  });
+  nodes.push({
+    id: "boss",
+    type: "boss",
+    number: "B",
+    title: "Boss Quiz",
+    detail: bossResult?.passed ? `Cleared ${bossResult.score}/${bossResult.total}` : "Unlocks after this unit's lessons.",
+    status: !gate?.bossUnlocked && !bossResult?.passed ? "locked" : bossResult?.passed ? "done" : activeNodeId === "boss" ? "active" : "open",
+    cta: bossResult?.passed ? "Cleared" : gate?.bossUnlocked ? "Start Boss" : "Locked"
+  });
+  nodes.push({
+    id: "interview",
+    type: "interview",
+    number: "I",
+    title: "Interview Drill",
+    detail: gate?.interviewUnlocked ? "Turn this unit into spoken proof." : "Clear Boss first.",
+    status: gate?.interviewUnlocked ? "open" : "locked",
+    cta: gate?.interviewUnlocked ? "Practice" : "Locked"
+  });
+
+  return {
+    title: "Path Trail",
+    chapterId: chapter.id,
+    chapterTitle: chapter.title,
+    theme: chapter.theme,
+    headline: `Unit ${course.chapters.findIndex((item) => item.id === chapter.id) + 1}: ${chapter.title}`,
+    subline: gate?.lessonsUnlocked ? "Follow the nodes. One active stop at a time." : "This unit opens after the previous Boss.",
+    progressLabel: `${completedCount}/${chapterLessons.length} lessons`,
+    nextLabel: gate?.bossUnlocked && !bossResult?.passed ? "Boss Quiz" : nextLesson?.title ?? "Next lesson",
+    nodes
+  };
+}
+
 export function beginnerMissionDockCard(progress, now = Date.now()) {
   const start = startHereCard(progress, now);
   const minimum = dailyMinimumCard(progress, now);

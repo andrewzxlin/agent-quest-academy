@@ -77,6 +77,7 @@ import {
   learningPuzzleBoard,
   learningViewTabs,
   learningHud,
+  lessonPathTrailCard,
   loadProgress,
   masteryForLesson,
   mistakeFocusCard,
@@ -207,6 +208,7 @@ function render() {
   const startHere = startHereCard(progress, Date.now());
   const todayRoute = todayRouteCard(progress, Date.now());
   const viewTabs = learningViewTabs(progress, activeMainView, Date.now());
+  const pathTrail = lessonPathTrailCard(progress, selectedLessonIndex);
   const missionDock = beginnerMissionDockCard(progress, Date.now());
   const questBrief = questBriefCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
@@ -388,6 +390,7 @@ function render() {
         ${renderLearningViewTabs(viewTabs)}
         <div class="learning-view-panel ${activeMainView === "path" ? "active" : "hidden"}" data-view-panel="path">
         ${renderTodayRouteCard(todayRoute)}
+        ${renderLessonPathTrailCard(pathTrail)}
         ${renderQuestBriefCard(questBrief)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
@@ -1051,6 +1054,40 @@ function renderLearningViewTabs(card) {
           <strong>${tab.title}</strong>
           <small>${tab.detail}</small>
         </button>`)
+        .join("")}
+    </div>
+  </section>`;
+}
+
+function renderLessonPathTrailCard(card) {
+  return `<section class="lesson-path-trail-card">
+    <div class="lesson-path-trail-head">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+        <small>${card.subline}</small>
+      </div>
+      <div>
+        <span>${card.progressLabel}</span>
+        <strong>${card.nextLabel}</strong>
+      </div>
+    </div>
+    <div class="lesson-path-trail">
+      ${card.nodes
+        .map((node) => {
+          const actionAttr =
+            node.type === "lesson"
+              ? `data-lesson="${node.index}"`
+              : node.type === "boss"
+                ? `data-path-boss="true"`
+                : `data-path-interview="true"`;
+          return `<button class="path-node ${node.type} ${node.status}" ${actionAttr} ${node.status === "locked" ? "disabled" : ""}>
+            <span>${node.number}</span>
+            <strong>${node.title}</strong>
+            <small>${node.detail}</small>
+            <em>${node.cta}</em>
+          </button>`;
+        })
         .join("")}
     </div>
   </section>`;
@@ -3648,7 +3685,37 @@ function bindEvents() {
     render();
   });
 
+  document.querySelector("[data-path-boss]")?.addEventListener("click", () => {
+    const lessons = flattenLessons();
+    const lesson = lessons[selectedLessonIndex] ?? lessons[0];
+    sessionMode = "boss";
+    activeMainView = "path";
+    sessionQuestions = bossQuestionsForChapter(lesson.chapterId, 8);
+    currentIndex = 0;
+    bossScore = 0;
+    latestCompletion = null;
+    activePitch = null;
+    pitchAnswer = "";
+    clearAnswerState();
+    render();
+  });
+
   document.querySelector("[data-interview]")?.addEventListener("click", () => {
+    const lessons = flattenLessons();
+    const lesson = lessons[selectedLessonIndex] ?? lessons[0];
+    sessionMode = "interview";
+    activeMainView = "path";
+    sessionQuestions = interviewQuestionsForChapter(lesson.chapterId);
+    currentIndex = 0;
+    bossScore = 0;
+    latestCompletion = null;
+    activePitch = null;
+    pitchAnswer = "";
+    clearAnswerState();
+    render();
+  });
+
+  document.querySelector("[data-path-interview]")?.addEventListener("click", () => {
     const lessons = flattenLessons();
     const lesson = lessons[selectedLessonIndex] ?? lessons[0];
     sessionMode = "interview";

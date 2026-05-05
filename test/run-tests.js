@@ -91,6 +91,7 @@ import {
   learningPuzzleBoard,
   learningViewTabs,
   learningHud,
+  lessonPathTrailCard,
   masteryForLesson,
   mistakeFocusCard,
   mistakeSafetyNetCard,
@@ -150,6 +151,7 @@ const tests = [
   ["start here card turns the homepage into one obvious action", testStartHereCard],
   ["today route compresses the first screen into one tiny loop", testTodayRouteCard],
   ["learning view tabs keep modules out of one crowded page", testLearningViewTabs],
+  ["lesson path trail makes the path view feel like a node route", testLessonPathTrailCard],
   ["mission dock compresses the homepage into one scan line", testBeginnerMissionDockCard],
   ["quest brief makes the first screen action reward and packet clear", testQuestBriefCard],
   ["hero mission panel ties the first screen to skill proof", testHeroMissionPanelCard],
@@ -463,6 +465,40 @@ function testLearningViewTabs() {
 
   card = learningViewTabs(progress, "unknown", now);
   assert.equal(card.activeView, "path");
+}
+
+function testLessonPathTrailCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  const firstChapter = course.chapters[0];
+  const chapterLessons = flattenLessons().filter((lesson) => lesson.chapterId === firstChapter.id);
+  let card = lessonPathTrailCard(progress, 0);
+  assert.equal(card.title, "Path Trail");
+  assert.equal(card.chapterId, firstChapter.id);
+  assert.equal(card.nodes.length, chapterLessons.length + 2);
+  assert.equal(card.nodes[0].status, "active");
+  assert.equal(card.nodes.find((node) => node.type === "boss").status, "locked");
+  assert.equal(card.nodes.find((node) => node.type === "interview").status, "locked");
+  assert.ok(card.subline.toLowerCase().includes("one active stop"));
+  assert.ok(card.progressLabel.includes("lessons"));
+  assert.doesNotMatch(JSON.stringify(card), /all modules on one page|crowded page|repo|project implementation|build a project/i);
+
+  completeLesson(progress, chapterLessons[0].id, now);
+  card = lessonPathTrailCard(progress, 1);
+  assert.equal(card.nodes.find((node) => node.id === chapterLessons[0].id).status, "done");
+  assert.equal(card.nodes.find((node) => node.id === chapterLessons[1].id).status, "active");
+
+  for (const lesson of chapterLessons) {
+    completeLesson(progress, lesson.id, now);
+  }
+  card = lessonPathTrailCard(progress, chapterLessons.length - 1);
+  assert.equal(card.nodes.find((node) => node.type === "boss").status, "active");
+  assert.equal(card.nextLabel, "Boss Quiz");
+
+  completeBossQuiz(progress, firstChapter.id, 8, 8, now);
+  card = lessonPathTrailCard(progress, chapterLessons.length - 1);
+  assert.equal(card.nodes.find((node) => node.type === "boss").status, "done");
+  assert.equal(card.nodes.find((node) => node.type === "interview").status, "open");
 }
 
 function testBeginnerMissionDockCard() {

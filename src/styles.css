@@ -1217,6 +1217,143 @@ h1 {
   display: none;
 }
 
+.lesson-path-trail-card {
+  background: #ffffff;
+  border: 1px solid #bbf7d0;
+  border-radius: 14px;
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.lesson-path-trail-head {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr auto;
+}
+
+.lesson-path-trail-head h3 {
+  font-size: 22px;
+  margin: 4px 0;
+}
+
+.lesson-path-trail-head small,
+.lesson-path-trail-head span {
+  color: var(--muted);
+}
+
+.lesson-path-trail-head span,
+.lesson-path-trail-head strong {
+  display: block;
+  text-align: right;
+}
+
+.lesson-path-trail-head span {
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.lesson-path-trail {
+  align-items: stretch;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.path-node {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 12px;
+  color: var(--ink);
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  min-height: 142px;
+  padding: 12px;
+  text-align: left;
+}
+
+.path-node:nth-child(even) {
+  transform: translateY(14px);
+}
+
+.path-node span {
+  align-items: center;
+  background: #e2e8f0;
+  border-radius: 999px;
+  color: #475569;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+.path-node strong,
+.path-node small,
+.path-node em {
+  display: block;
+}
+
+.path-node strong {
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.path-node small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.path-node em {
+  color: #0369a1;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  margin-top: auto;
+}
+
+.path-node.active {
+  background: #ecfeff;
+  border-color: #06b6d4;
+  box-shadow: 0 12px 28px rgb(6 182 212 / 0.14);
+}
+
+.path-node.active span {
+  background: #06b6d4;
+  color: #ffffff;
+}
+
+.path-node.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.path-node.done span {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.path-node.locked {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.path-node.boss,
+.path-node.interview {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+}
+
+.path-node.boss.active,
+.path-node.interview.active {
+  border-color: #8b5cf6;
+  box-shadow: 0 12px 28px rgb(139 92 246 / 0.14);
+}
+
 .mission-dock-card {
   background: #ffffff;
   border: 1px solid #bae6fd;
@@ -9394,6 +9531,7 @@ button:disabled {
   .start-here-card,
   .today-route-copy,
   .learning-view-tabs,
+  .lesson-path-trail-head,
   .mission-dock-copy,
   .completion-card,
   .recommendation-card,
@@ -9495,6 +9633,7 @@ button:disabled {
   .start-here-steps,
   .today-route-steps,
   .learning-view-tab-list,
+  .lesson-path-trail,
   .mission-dock-lanes,
   .quest-brief-lanes,
   .beginner-skill-gate-path,
@@ -9610,6 +9749,15 @@ button:disabled {
   .today-route-action {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .lesson-path-trail-head span,
+  .lesson-path-trail-head strong {
+    text-align: left;
+  }
+
+  .path-node:nth-child(even) {
+    transform: none;
   }
 
   .choice {
