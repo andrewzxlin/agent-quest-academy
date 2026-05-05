@@ -6569,6 +6569,18 @@ h1 {
   font-weight: 700;
 }
 
+.hint-stack-guide {
+  background: rgb(255 255 255 / 0.76);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 999px;
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  padding: 7px 10px;
+}
+
 .elimination-hint {
   display: grid;
   gap: 10px;

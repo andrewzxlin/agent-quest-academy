@@ -1224,6 +1224,7 @@ function testQuestionHintDeck() {
   assert.equal(singleDeck.mode, "single");
   assert.ok(singleDeck.summary.includes("one answer"));
   assert.ok(singleDeck.primaryNudge.includes("optional"));
+  assert.ok(singleDeck.readingRule.includes("Read one card"));
   assert.deepEqual(singleDeck.cardIds, ["stage", "signal", "coach", "choice-lens", "elimination", "safety"]);
 
   const multiDeck = questionHintDeck(multi);

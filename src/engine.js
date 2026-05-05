@@ -1589,6 +1589,7 @@ export function questionHintDeck(question) {
     mode: question.type,
     summary: summaryByType[question.type],
     primaryNudge: primaryByType[question.type],
+    readingRule: "Read one card, then stop when you can answer.",
     cardIds: cardIdsByType[question.type],
     promise: "The question is still answerable without opening this deck."
   };

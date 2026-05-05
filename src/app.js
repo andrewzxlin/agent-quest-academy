@@ -2901,6 +2901,7 @@ function renderQuestionHintDeck(deck, question, isChecked = false) {
       <small>${deck.summary}</small>
     </summary>
     <div class="question-hint-stack">
+      <small class="hint-stack-guide">${deck.readingRule}</small>
       ${renderQuestionMasteryStage(questionMasteryStage(question))}
       ${renderQuestionSignalPreview(questionSignalPreview(question))}
       ${renderQuestionCoach(questionCoachHint(question), isChecked)}
