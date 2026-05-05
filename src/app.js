@@ -656,14 +656,22 @@ function keepActiveSidebarLessonVisible() {
   map.scrollTop = Math.max(activeCenter - map.clientHeight / 2, 0);
 }
 
-function updateShortAnswerMeter(value) {
+function updateShortAnswerMeter(value, question = null) {
   const meter = document.querySelector("[data-short-meter]");
   if (!meter) return;
   const wordCount = value.trim() ? value.trim().split(/\s+/).length : 0;
+  const ready = question ? isAnswerReady(question, value) : false;
   meter.classList.toggle("started", wordCount > 0);
   meter.classList.toggle("empty", wordCount === 0);
+  meter.classList.toggle("ready", ready);
   const count = meter.querySelector("strong");
   if (count) count.textContent = `${wordCount}`;
+  const help = meter.querySelector("small");
+  if (help && question) {
+    help.textContent = ready
+      ? "Check is unlocked. Submit this tiny answer."
+      : `A tiny answer can pass when it uses ${question.minMatches} key concept${question.minMatches === 1 ? "" : "s"}.`;
+  }
 }
 
 function updateLiveAnswerReadiness(question) {
@@ -3585,7 +3593,7 @@ function bindEvents() {
   if (textarea) {
     textarea.addEventListener("input", (event) => {
       shortAnswer = event.target.value;
-      updateShortAnswerMeter(shortAnswer);
+      updateShortAnswerMeter(shortAnswer, sessionQuestions[currentIndex]);
       updateLiveAnswerReadiness(sessionQuestions[currentIndex]);
     });
   }

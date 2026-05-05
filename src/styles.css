@@ -7081,6 +7081,11 @@ h1 {
   border-color: #bbf7d0;
 }
 
+.short-answer-meter.ready {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
 .short-answer-meter.locked {
   background: #eff6ff;
   border-color: #bfdbfe;
@@ -7103,6 +7108,11 @@ h1 {
 .short-answer-meter.started strong {
   background: #dcfce7;
   color: #15803d;
+}
+
+.short-answer-meter.ready small {
+  color: #15803d;
+  font-weight: 800;
 }
 
 .short-answer-meter span {
