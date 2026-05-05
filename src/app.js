@@ -1273,26 +1273,26 @@ function renderBeginnerRouteRail(cards) {
       ? `${cards.reviewOrbit.dueCount} due`
       : `${cards.reviewOrbit.scheduledCount} scheduled`;
   return `<div class="beginner-route-rail">
-    <div class="active">
+    <button type="button" class="active" data-beginner-jump="route">
       <span>01</span>
       <strong>Route</strong>
       <small>${routeDone}/${routeTotal} mastered</small>
-    </div>
-    <div class="${cards.dailySkillTicket.status}">
+    </button>
+    <button type="button" class="${cards.dailySkillTicket.status}" data-beginner-jump="daily">
       <span>02</span>
       <strong>Daily</strong>
       <small>${dailyDone}/${dailyTotal} stamps</small>
-    </div>
-    <div class="${cards.jobPacketPreview.status}">
+    </button>
+    <button type="button" class="${cards.jobPacketPreview.status}" data-beginner-jump="packet">
       <span>03</span>
       <strong>Packet</strong>
       <small>${packetDone}/${packetTotal} pieces</small>
-    </div>
-    <div class="${reviewMode}">
+    </button>
+    <button type="button" class="${reviewMode}" data-beginner-jump="review">
       <span>04</span>
       <strong>Review</strong>
       <small>${reviewLabel}</small>
-    </div>
+    </button>
   </div>`;
 }
 
@@ -3327,6 +3327,19 @@ function bindEvents() {
 
   document.querySelector("[data-streak-shield-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  const beginnerJumpTargets = {
+    route: ".beginner-command-group.route",
+    daily: ".beginner-command-group.daily",
+    packet: ".job-packet-preview-card",
+    review: ".beginner-command-group.review"
+  };
+  document.querySelectorAll("[data-beginner-jump]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const target = beginnerJumpTargets[event.currentTarget.dataset.beginnerJump];
+      document.querySelector(target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   });
 
   document.querySelector("[data-review-orbit-action]")?.addEventListener("click", () => {

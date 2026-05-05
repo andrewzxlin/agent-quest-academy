@@ -1445,32 +1445,47 @@ h1 {
   grid-template-columns: repeat(4, 1fr);
 }
 
-.beginner-route-rail div {
+.beginner-route-rail button {
   align-items: center;
   background: rgb(255 255 255 / 0.82);
   border: 1px solid var(--line);
   border-radius: 12px;
+  color: var(--ink);
+  cursor: pointer;
   display: grid;
   gap: 4px;
   grid-template-columns: auto 1fr;
   padding: 12px;
+  text-align: left;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
 
-.beginner-route-rail div.active,
-.beginner-route-rail div.open,
-.beginner-route-rail div.due,
-.beginner-route-rail div.building {
+.beginner-route-rail button:hover,
+.beginner-route-rail button:focus-visible {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 0.12);
+  outline: 0;
+  transform: translateY(-1px);
+}
+
+.beginner-route-rail button.active,
+.beginner-route-rail button.open,
+.beginner-route-rail button.due,
+.beginner-route-rail button.building {
   border-color: #8b5cf6;
   box-shadow: 0 0 0 3px rgb(139 92 246 / 0.1);
 }
 
-.beginner-route-rail div.done,
-.beginner-route-rail div.scheduled,
-.beginner-route-rail div.ready {
+.beginner-route-rail button.done,
+.beginner-route-rail button.scheduled,
+.beginner-route-rail button.ready {
   border-color: #86efac;
 }
 
-.beginner-route-rail div.starter {
+.beginner-route-rail button.starter {
   border-color: #fde68a;
 }
 
