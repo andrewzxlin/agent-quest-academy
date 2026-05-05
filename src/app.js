@@ -679,6 +679,23 @@ function updateLiveAnswerReadiness(question) {
   const checkButton = document.querySelector("[data-check]");
   if (checkButton) checkButton.disabled = checked || !ready;
 
+  const actionDock = document.querySelector(".question-action-dock");
+  if (actionDock) {
+    actionDock.outerHTML = renderQuestionActionDockCard(
+      questionActionDockCard(
+        progress,
+        question,
+        ready,
+        checked,
+        lastResult,
+        currentIndex,
+        sessionQuestions.length,
+        sessionMode,
+        Date.now()
+      )
+    );
+  }
+
   const readiness = document.querySelector(".answer-readiness");
   if (!readiness) return;
   const status = checked ? "saved" : ready ? "ready" : "waiting";
