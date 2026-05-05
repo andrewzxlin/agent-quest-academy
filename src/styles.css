@@ -1439,10 +1439,24 @@ h1 {
   border-color: #86efac;
 }
 
+.beginner-command-group,
+.job-packet-preview-card {
+  scroll-margin-top: 110px;
+}
+
 .beginner-route-rail {
+  background: rgb(248 250 252 / 0.92);
+  border: 1px solid rgb(226 232 240 / 0.9);
+  border-radius: 16px;
+  box-shadow: 0 14px 32px rgb(15 23 42 / 0.08);
+  backdrop-filter: blur(14px);
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(4, 1fr);
+  padding: 10px;
+  position: sticky;
+  top: 14px;
+  z-index: 5;
 }
 
 .beginner-route-rail button {
@@ -8282,6 +8296,23 @@ button:disabled {
   .lesson-pitch-lines,
   .summary-grid {
     grid-template-columns: 1fr;
+  }
+
+  .beginner-command-group,
+  .job-packet-preview-card {
+    scroll-margin-top: 132px;
+  }
+
+  .beginner-route-rail {
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    margin-inline: -4px;
+    overflow-x: auto;
+    padding: 8px;
+    top: 8px;
+  }
+
+  .beginner-route-rail button {
+    min-width: 150px;
   }
 
   .diagram-node::after {

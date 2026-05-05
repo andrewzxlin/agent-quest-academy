@@ -1199,7 +1199,7 @@ function renderPracticeDietCard(card) {
 function renderBeginnerCommandCenter(cards) {
   return `<section class="beginner-command-center">
     ${renderBeginnerRouteRail(cards)}
-    <div class="beginner-command-group route">
+    <div class="beginner-command-group route" data-beginner-section="route">
       <div class="beginner-section-heading">
         <div>
           <p class="eyebrow">Beginner Route</p>
@@ -1224,7 +1224,7 @@ function renderBeginnerCommandCenter(cards) {
       </div>
     </div>
 
-    <div class="beginner-command-group daily">
+    <div class="beginner-command-group daily" data-beginner-section="daily">
       <div class="beginner-section-heading compact">
         <div>
           <p class="eyebrow">Daily Loop</p>
@@ -1243,7 +1243,7 @@ function renderBeginnerCommandCenter(cards) {
       </div>
     </div>
 
-    <div class="beginner-command-group review">
+    <div class="beginner-command-group review" data-beginner-section="review">
       <div class="beginner-section-heading compact">
         <div>
           <p class="eyebrow">Review Loop</p>
@@ -3330,10 +3330,10 @@ function bindEvents() {
   });
 
   const beginnerJumpTargets = {
-    route: ".beginner-command-group.route",
-    daily: ".beginner-command-group.daily",
+    route: "[data-beginner-section='route']",
+    daily: "[data-beginner-section='daily']",
     packet: ".job-packet-preview-card",
-    review: ".beginner-command-group.review"
+    review: "[data-beginner-section='review']"
   };
   document.querySelectorAll("[data-beginner-jump]").forEach((button) => {
     button.addEventListener("click", (event) => {
