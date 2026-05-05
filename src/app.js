@@ -1151,10 +1151,11 @@ function renderQuestion(question, isChecked = false) {
       .join("")}</div>`;
   }
   if (question.type === "multi") {
-    return `<div class="multi-select-meter">
+    const multiMeterHelp = isChecked ? "Selection locked. Read the feedback, then continue." : "Add every option that belongs, then check.";
+    return `<div class="multi-select-meter ${isChecked ? "locked" : ""}">
       <strong>${selectedMulti.size}</strong>
       <span>selected</span>
-      <small>Add every option that belongs, then check.</small>
+      <small>${multiMeterHelp}</small>
     </div>
     <div class="choices">${question.choices
       .map((choice, index) => {

@@ -5906,6 +5906,11 @@ h1 {
   padding: 10px 12px;
 }
 
+.multi-select-meter.locked {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
 .multi-select-meter strong {
   align-items: center;
   background: #dbeafe;
