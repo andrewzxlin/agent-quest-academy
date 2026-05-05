@@ -275,6 +275,7 @@ function render() {
   const sessionProgressPercent = sessionQuestions.length
     ? Math.round(((currentIndex + (checked ? 1 : 0.35)) / sessionQuestions.length) * 100)
     : 0;
+  const nextButtonClass = checked ? "primary next-action" : "secondary";
 
   root.innerHTML = `
     <div class="shell">
@@ -448,10 +449,10 @@ function render() {
             <span>${answerReady ? "Ready" : "Waiting"}</span>
             <small>${answerReadinessText(question, answerReady, checked)}</small>
           </div>
-          <div class="actions">
+          <div class="actions ${checked ? "checked" : "answering"}">
             <button class="primary" data-check="true" ${checked || !answerReady ? "disabled" : ""}>檢查答案</button>
             <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
-            <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : isBossMode ? "結算 Boss" : "完成本課") : "下一題"}</button>
+            <button class="${nextButtonClass}" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : isBossMode ? "結算 Boss" : "完成本課") : "下一題"}</button>
           </div>
           <p class="unsure-safety">Unsure simply saves this as a review card. No penalty, no lost progress.</p>
           ${renderLearningToolbox({

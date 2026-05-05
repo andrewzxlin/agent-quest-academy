@@ -8014,6 +8014,26 @@ h1 {
   margin-top: 18px;
 }
 
+.actions .compact {
+  margin-top: 0;
+}
+
+.actions.checked {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.actions.checked button:not(.next-action) {
+  flex: 0 1 auto;
+}
+
+.actions.checked .next-action {
+  flex: 1 1 220px;
+  box-shadow: 0 12px 24px rgb(37 99 235 / 0.18);
+}
+
 .unsure-safety {
   color: var(--muted);
   font-size: 12px;
@@ -8733,6 +8753,14 @@ button:disabled {
   .answer-readiness {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .actions button {
+    flex: 1 1 150px;
   }
 
   .choice em {
