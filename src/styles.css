@@ -1547,6 +1547,7 @@ h1 {
 .beginner-command-grid .role-sampler-card,
 .beginner-command-grid .jargon-shield-card,
 .beginner-command-grid .daily-run-meter-card,
+.beginner-command-grid .streak-shield-card,
 .beginner-command-grid .daily-landing-step-card,
 .beginner-command-grid .daily-phrase-bank-card {
   grid-column: 1 / -1;
@@ -3459,6 +3460,81 @@ h1 {
 
 .daily-run-footer strong {
   color: #0369a1;
+}
+
+.streak-shield-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.streak-shield-card.shield {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.streak-shield-card.protected {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.streak-shield-card > p,
+.streak-shield-card .section-title > p,
+.streak-shield-card small {
+  color: var(--muted);
+}
+
+.streak-shield-lanes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+.streak-shield-lanes > div {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 9px;
+  padding: 11px;
+}
+
+.streak-shield-lanes > div.active {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgb(96 165 250 / 0.12);
+}
+
+.streak-shield-lanes > div.done {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.streak-shield-lanes span,
+.streak-shield-lanes small {
+  display: block;
+}
+
+.streak-shield-lanes span {
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.streak-shield-lanes small {
+  margin-top: 6px;
+}
+
+.streak-shield-action {
+  align-items: center;
+  background: #fff;
+  border: 1px solid rgb(22 163 74 / 0.16);
+  border-radius: 10px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 12px;
 }
 
 .daily-minimum-card {
@@ -8059,6 +8135,7 @@ button:disabled {
   .one-line-coach-card,
   .exercise-scope-card,
   .daily-run-meter-card,
+  .streak-shield-card,
   .daily-quest-snapshot,
   .daily-minimum-card,
   .daily-skill-ticket-card,
@@ -8105,6 +8182,7 @@ button:disabled {
   .signal-preview-stats,
   .rhythm-grid,
   .review-orbit-rings,
+  .streak-shield-lanes,
   .daily-skill-ticket-lanes,
   .daily-run-steps,
   .daily-landing-route,
@@ -8257,7 +8335,8 @@ button:disabled {
     flex-direction: column;
   }
 
-  .daily-skill-ticket-action {
+  .daily-skill-ticket-action,
+  .streak-shield-action {
     align-items: stretch;
     flex-direction: column;
   }

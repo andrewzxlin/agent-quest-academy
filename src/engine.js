@@ -4559,6 +4559,56 @@ export function dailyRunMeterCard(progress, now = Date.now()) {
   };
 }
 
+export function streakShieldCard(progress, now = Date.now()) {
+  const today = getDailyActivity(progress, now);
+  const todayActive = isActiveDay(today);
+  const yesterdayStart = addLocalDays(startOfLocalDay(now), -1);
+  const yesterdayActive = isActiveDay((progress.dailyActivity ?? {})[dailyKey(yesterdayStart)]);
+  const momentum = dailyMomentum(progress, now);
+  const minimum = dailyMinimumCard(progress, now);
+  const status = todayActive ? "protected" : yesterdayActive ? "shield" : "open";
+  const lanes = [
+    {
+      id: "yesterday",
+      label: "Yesterday",
+      done: yesterdayActive,
+      text: yesterdayActive ? "Rhythm carried in." : "No pressure from yesterday."
+    },
+    {
+      id: "today",
+      label: "Today",
+      done: todayActive,
+      text: todayActive ? "Shield is active." : "One answer turns it on."
+    },
+    {
+      id: "tomorrow",
+      label: "Next return",
+      done: false,
+      text: todayActive ? "Come back to extend the chain." : "Start tiny and return later."
+    }
+  ];
+
+  return {
+    title: "Streak Shield",
+    status,
+    headline:
+      status === "protected"
+        ? `${momentum.streakDays}-day rhythm protected`
+        : status === "shield"
+          ? "One tiny answer protects the rhythm"
+          : "Start a rhythm without pressure",
+    summary:
+      status === "protected"
+        ? "Today already has a visible learning signal. Stopping here is allowed."
+        : "The shield is built for low-energy days: one question is enough to keep returning easy.",
+    streakLabel: `${momentum.streakDays} day${momentum.streakDays === 1 ? "" : "s"}`,
+    actionLabel: minimum.status === "done" ? minimum.nextAction : "Answer one question",
+    nextAction: minimum.nextAction,
+    promise: "No streak punishment, no catch-up backlog; the goal is returning to one useful signal.",
+    lanes
+  };
+}
+
 export function dailyMinimumCard(progress, now = Date.now()) {
   const activity = getDailyActivity(progress, now);
   const next = nextPracticeRecommendation(progress, now);

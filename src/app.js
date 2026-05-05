@@ -39,6 +39,7 @@ import {
   dailyLandingStepCard,
   dailyRunMeterCard,
   dailySkillTicketCard,
+  streakShieldCard,
   dailyMomentum,
   dailyPhraseBankCard,
   dailyQuestSnapshot,
@@ -192,6 +193,7 @@ function render() {
   const dailyQuest = dailyQuestSnapshot(progress, Date.now());
   const dailyMinimum = dailyMinimumCard(progress, Date.now());
   const dailyRunMeter = dailyRunMeterCard(progress, Date.now());
+  const streakShield = streakShieldCard(progress, Date.now());
   const dailySkillTicket = dailySkillTicketCard(progress, Date.now());
   const dailyLandingStep = dailyLandingStepCard(progress, Date.now());
   const dailyPhraseBank = dailyPhraseBankCard(progress);
@@ -355,6 +357,7 @@ function render() {
           dailyQuest,
           dailyMinimum,
           dailyRunMeter,
+          streakShield,
           dailySkillTicket,
           dailyLandingStep,
           dailyPhraseBank,
@@ -1231,6 +1234,7 @@ function renderBeginnerCommandCenter(cards) {
       </div>
       <div class="beginner-command-grid daily">
         ${renderDailyRunMeterCard(cards.dailyRunMeter)}
+        ${renderStreakShieldCard(cards.streakShield)}
         ${renderDailyQuestSnapshot(cards.dailyQuest)}
         ${renderDailyMinimumCard(cards.dailyMinimum)}
         ${renderDailySkillTicketCard(cards.dailySkillTicket)}
@@ -1993,6 +1997,33 @@ function renderDailyRunMeterCard(card) {
       <strong>${card.activeLabel}</strong>
       <small>${card.nextAction}</small>
       <small>${card.promise}</small>
+    </div>
+  </section>`;
+}
+
+function renderStreakShieldCard(card) {
+  return `<section class="streak-shield-card ${card.status}">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">${card.title}</p>
+        <h3>${card.headline}</h3>
+      </div>
+      <p>${card.streakLabel}</p>
+    </div>
+    <p>${card.summary}</p>
+    <div class="streak-shield-lanes">
+      ${card.lanes
+        .map(
+          (lane) => `<div class="${lane.done ? "done" : lane.id === "today" ? "active" : ""}">
+            <span>${lane.label}</span>
+            <small>${lane.text}</small>
+          </div>`
+        )
+        .join("")}
+    </div>
+    <div class="streak-shield-action">
+      <small>${card.promise}</small>
+      <button class="primary compact" data-streak-shield-action="true">${card.actionLabel}</button>
     </div>
   </section>`;
 }
@@ -3291,6 +3322,10 @@ function bindEvents() {
   });
 
   document.querySelector("[data-daily-skill-ticket-action]")?.addEventListener("click", () => {
+    startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
+  });
+
+  document.querySelector("[data-streak-shield-action]")?.addEventListener("click", () => {
     startRecommendedPractice(nextPracticeRecommendation(progress, Date.now()));
   });
 

@@ -52,6 +52,7 @@ import {
   dailyLandingStepCard,
   dailyRunMeterCard,
   dailySkillTicketCard,
+  streakShieldCard,
   dailyMomentum,
   dailyPhraseBankCard,
   dailyQuestSnapshot,
@@ -231,6 +232,7 @@ const tests = [
   ["daily missions track answers lessons and boss passes", testDailyMissions],
   ["daily quest snapshot shows nearest small progress", testDailyQuestSnapshot],
   ["daily run meter visualizes the smallest useful daily loop", testDailyRunMeterCard],
+  ["streak shield makes one-question return safe", testStreakShieldCard],
   ["daily minimum card sets a tiny stop line", testDailyMinimumCard],
   ["daily skill ticket stamps one tiny type loop", testDailySkillTicketCard],
   ["daily landing step maps tiny practice to job value", testDailyLandingStepCard],
@@ -2352,6 +2354,36 @@ function testDailyRunMeterCard() {
   assert.equal(card.doneCount, 3);
   assert.ok(card.steps.every((step) => step.done));
   assert.ok(card.nextAction.includes("Stop here"));
+}
+
+function testStreakShieldCard() {
+  const day = 24 * 60 * 60 * 1000;
+  const now = Date.UTC(2026, 4, 4);
+  const progress = createInitialProgress(now);
+  let card = streakShieldCard(progress, now);
+
+  assert.equal(card.title, "Streak Shield");
+  assert.equal(card.status, "open");
+  assert.equal(card.streakLabel, "0 days");
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["yesterday", "today", "tomorrow"]);
+  assert.equal(card.lanes.find((lane) => lane.id === "today").done, false);
+  assert.ok(card.headline.includes("without pressure"));
+  assert.ok(card.promise.includes("No streak punishment"));
+  assert.doesNotMatch(JSON.stringify(card), /repo|project implementation|build a project|coding task/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, question.answer, now);
+  card = streakShieldCard(progress, now);
+  assert.equal(card.status, "protected");
+  assert.equal(card.streakLabel, "1 day");
+  assert.equal(card.lanes.find((lane) => lane.id === "today").done, true);
+  assert.ok(card.headline.includes("protected"));
+
+  card = streakShieldCard(progress, now + day);
+  assert.equal(card.status, "shield");
+  assert.equal(card.lanes.find((lane) => lane.id === "yesterday").done, true);
+  assert.equal(card.lanes.find((lane) => lane.id === "today").done, false);
+  assert.ok(card.headline.includes("protects"));
 }
 
 function testDailyMinimumCard() {
