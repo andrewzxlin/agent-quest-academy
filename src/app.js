@@ -3001,6 +3001,7 @@ function renderFeedback(question, result, progressState, nextActionLabel) {
   const feedbackNext = result.correct
     ? "Scan the proof cards below, then keep the chain moving."
     : "Read the repair cards below; review will replay this later.";
+  const drawerLabel = result.correct ? "Optional proof details" : "Optional repair details";
   return `<div class="feedback ${tone}">
     <div class="feedback-head">
       <span>${feedbackCue}</span>
@@ -3011,22 +3012,28 @@ function renderFeedback(question, result, progressState, nextActionLabel) {
       <button class="primary feedback-next-action" data-next="true">${nextActionLabel}</button>
       <small>${feedbackNext}</small>
     </div>
-    ${renderAnswerGateProgressCard(answerGateProgressCard(progressState, question, result, sessionMode))}
-    ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
-    ${renderAnswerRunChainCard(answerRunChainCard(progressState, result))}
-    ${renderAnswerInterviewLineCard(answerInterviewLineCard(question, result))}
-    ${renderAnswerJobStorySeedCard(answerJobStorySeedCard(question, result))}
     ${renderAnswerOutcomeCard(answerOutcomeCard(question, result, progressState))}
-    ${renderAnswerEvidenceClip(answerEvidenceClip(question, result))}
-    ${renderProofBoosterCard(proofBoosterCard(question, result, progressState))}
-    ${renderAnswerProofLine(answerProofLine(question, result))}
-    ${renderQuestionMasterySignal(questionMasterySignal(progressState, question))}
-    ${renderRecallCue(answerRecallCue(question, result))}
-    ${renderAnswerMemoryHookCard(answerMemoryHookCard(question, result))}
-    ${renderReviewReceipt(result)}
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
+    <details class="feedback-detail-drawer">
+      <summary>
+        <span>${drawerLabel}</span>
+        <strong>Gate progress, interview lines, memory hooks</strong>
+      </summary>
+      ${renderAnswerGateProgressCard(answerGateProgressCard(progressState, question, result, sessionMode))}
+      ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
+      ${renderAnswerRunChainCard(answerRunChainCard(progressState, result))}
+      ${renderAnswerInterviewLineCard(answerInterviewLineCard(question, result))}
+      ${renderAnswerJobStorySeedCard(answerJobStorySeedCard(question, result))}
+      ${renderAnswerEvidenceClip(answerEvidenceClip(question, result))}
+      ${renderProofBoosterCard(proofBoosterCard(question, result, progressState))}
+      ${renderAnswerProofLine(answerProofLine(question, result))}
+      ${renderQuestionMasterySignal(questionMasterySignal(progressState, question))}
+      ${renderRecallCue(answerRecallCue(question, result))}
+      ${renderAnswerMemoryHookCard(answerMemoryHookCard(question, result))}
+      ${renderReviewReceipt(result)}
+    </details>
   </div>`;
 }
 

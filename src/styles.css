@@ -7264,6 +7264,69 @@ h1 {
   white-space: nowrap;
 }
 
+.feedback-detail-drawer {
+  background: rgb(255 255 255 / 0.62);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  margin-top: 12px;
+  padding: 0;
+}
+
+.feedback-detail-drawer > summary {
+  align-items: center;
+  cursor: pointer;
+  display: grid;
+  gap: 4px 12px;
+  grid-template-columns: 1fr auto;
+  list-style: none;
+  padding: 12px;
+}
+
+.feedback-detail-drawer > summary::-webkit-details-marker {
+  display: none;
+}
+
+.feedback-detail-drawer > summary::after {
+  align-items: center;
+  background: rgb(255 255 255 / 0.7);
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 999px;
+  content: "+";
+  display: inline-flex;
+  font-weight: 900;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.feedback-detail-drawer[open] > summary::after {
+  content: "-";
+}
+
+.feedback-detail-drawer span,
+.feedback-detail-drawer strong {
+  display: block;
+}
+
+.feedback-detail-drawer span {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.feedback-detail-drawer strong {
+  color: var(--ink);
+}
+
+.feedback-detail-drawer > :not(summary) {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.feedback-detail-drawer > :last-child {
+  margin-bottom: 12px;
+}
+
 .feedback.wrong {
   background: #fee2e2;
   color: #7f1d1d;
