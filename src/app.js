@@ -1139,13 +1139,14 @@ function renderQuestion(question, isChecked = false) {
     return `<div class="choices">${question.choices
       .map((choice, index) => {
         const selected = selectedSingle === index;
+        const choiceBadge = isChecked ? (selected ? "Saved" : "Review") : selected ? "Selected" : "Pick";
         return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""}" data-single="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
           <span class="choice-token">${choiceToken(index)}</span>
           <span class="choice-copy">
             <strong>${choice}</strong>
             <small>${isChecked ? "Answer locked for review." : "Pick one answer, then check."}</small>
           </span>
-          <em>${selected ? "Selected" : "Pick"}</em>
+          <em>${choiceBadge}</em>
         </button>`;
       })
       .join("")}</div>`;
@@ -1160,13 +1161,14 @@ function renderQuestion(question, isChecked = false) {
     <div class="choices">${question.choices
       .map((choice, index) => {
         const selected = selectedMulti.has(index);
+        const choiceBadge = isChecked ? (selected ? "Saved" : "Review") : selected ? "Added" : "Add";
         return `<button class="choice ${selected ? "selected" : ""} ${isChecked ? "locked" : ""}" data-multi="${index}" aria-pressed="${selected}" ${isChecked ? "disabled" : ""}>
           <span class="choice-token">${choiceToken(index)}</span>
           <span class="choice-copy">
             <strong>${choice}</strong>
             <small>${isChecked ? "Answer locked for review." : "Multi-select is allowed here."}</small>
           </span>
-          <em>${selected ? "Added" : "Add"}</em>
+          <em>${choiceBadge}</em>
         </button>`;
       })
       .join("")}</div><p class="hint">可複選，選完再檢查。</p>`;
