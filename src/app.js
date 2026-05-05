@@ -470,6 +470,7 @@ function render() {
           </div>
           ${renderSessionRhythmMiniRail(sessionRhythm)}
           ${renderQuestionActionDockCard(actionDock)}
+          ${renderQuestionPlainDecoderMini(plainDecoder)}
           ${renderQuestion(question, checked)}
           ${checked ? renderFeedback(question, lastResult, progress, nextActionLabel) : ""}
           ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
@@ -868,6 +869,19 @@ function renderQuestionPlainDecoderCard(card) {
         </em>`)
         .join("")}
     </div>
+  </div>`;
+}
+
+function renderQuestionPlainDecoderMini(card) {
+  if (!card) return "";
+  const ask = card.chips.find((chip) => chip.id === "ask") ?? card.chips[0];
+  const move = card.chips.find((chip) => chip.id === "move") ?? card.chips[card.chips.length - 1];
+  return `<div class="question-decoder-mini">
+    <div>
+      <span>${card.title}</span>
+      <strong>${ask.text}</strong>
+    </div>
+    <small>${move.text}</small>
   </div>`;
 }
 
