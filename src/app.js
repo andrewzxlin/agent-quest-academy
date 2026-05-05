@@ -2986,7 +2986,7 @@ function renderShortAnswerRecipe(recipe) {
 }
 
 function renderFeedback(question, result, progressState) {
-  const tone = result.correct ? "correct" : "wrong";
+  const tone = result.correct ? "correct" : "repair";
   return `<div class="feedback ${tone}">
     <strong>${result.correct ? "答對了" : "先記下來，之後會再出現"}</strong>
     <p>${question.explanation}</p>
