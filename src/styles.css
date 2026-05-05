@@ -7294,6 +7294,8 @@ h1 {
   content: "+";
   display: inline-flex;
   font-weight: 900;
+  grid-column: 2;
+  grid-row: 1 / span 3;
   height: 28px;
   justify-content: center;
   width: 28px;
@@ -7307,6 +7309,9 @@ h1 {
 .feedback-detail-drawer strong,
 .feedback-detail-drawer small {
   display: block;
+  grid-column: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .feedback-detail-drawer span {
