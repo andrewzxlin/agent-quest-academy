@@ -275,6 +275,15 @@ function render() {
   const sessionProgressPercent = sessionQuestions.length
     ? Math.round(((currentIndex + (checked ? 1 : 0.35)) / sessionQuestions.length) * 100)
     : 0;
+  const savedQuestionCount = Math.min(currentIndex + (checked ? 1 : 0), sessionQuestions.length);
+  const promptsLeft = Math.max(sessionQuestions.length - savedQuestionCount, 0);
+  const sessionProgressLabel = checked
+    ? `${savedQuestionCount}/${sessionQuestions.length} saved`
+    : `${currentIndex + 1}/${sessionQuestions.length} current`;
+  const sessionRemainingLabel =
+    promptsLeft === 0
+      ? "This is the finish step."
+      : `${promptsLeft} prompt${promptsLeft === 1 ? "" : "s"} left after this.`;
   const nextButtonClass = checked ? "primary next-action" : "secondary";
   const actionHint = checked
     ? "Next is unlocked. Feedback is saved; continue when ready."
@@ -446,6 +455,10 @@ function render() {
             </div>
           </div>
           <div class="session-progress-track" aria-hidden="true"><span></span></div>
+          <div class="session-progress-caption">
+            <span>${sessionProgressLabel}</span>
+            <small>${sessionRemainingLabel}</small>
+          </div>
           ${renderQuestionActionDockCard(actionDock)}
           ${renderQuestion(question)}
           ${checked ? renderFeedback(question, lastResult, progress) : ""}
