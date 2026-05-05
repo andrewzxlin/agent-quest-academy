@@ -778,6 +778,11 @@ h1 {
   overflow: hidden;
 }
 
+.learning-toolbox.locked {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
 .learning-toolbox summary {
   align-items: center;
   cursor: pointer;
@@ -841,6 +846,10 @@ h1 {
   font-style: normal;
   font-weight: 850;
   padding: 4px 8px;
+}
+
+.learning-toolbox.locked .toolbox-summary-chips em {
+  border-color: rgb(29 78 216 / 0.22);
 }
 
 .learning-toolbox-grid {

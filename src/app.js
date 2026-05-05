@@ -1072,11 +1072,16 @@ function renderQuestionActionDockCard(card) {
 }
 
 function renderLearningToolbox(cards) {
-  return `<details class="learning-toolbox">
+  const isChecked = Boolean(cards.checked);
+  const toolboxHeadline = isChecked ? "Review saved support, diagrams, and role signals" : "Open visual map, hints, and route support";
+  const toolboxHelp = isChecked
+    ? "Use these cards to understand the saved answer; edits are locked for this prompt."
+    : "Optional help stays out of the way until you need it.";
+  return `<details class="learning-toolbox ${isChecked ? "locked" : ""}">
     <summary>
       <div>
         <span>Learning Toolbox</span>
-        <strong>Open visual map, hints, and route support</strong>
+        <strong>${toolboxHeadline}</strong>
         <div class="toolbox-summary-chips">
           <em>Visual map</em>
           <em>Plain decode</em>
@@ -1084,7 +1089,7 @@ function renderLearningToolbox(cards) {
           <em>Role signal</em>
         </div>
       </div>
-      <small>Optional help stays out of the way until you need it.</small>
+      <small>${toolboxHelp}</small>
     </summary>
     <div class="learning-toolbox-grid">
       ${renderQuestionImageQuestCard(cards.imageQuest)}
