@@ -2966,6 +2966,7 @@ function renderFeedback(question, result, progressState) {
     ${renderQuestionMasterySignal(questionMasterySignal(progressState, question))}
     ${renderRecallCue(answerRecallCue(question, result))}
     ${renderAnswerMemoryHookCard(answerMemoryHookCard(question, result))}
+    ${renderReviewReceipt(result)}
     ${renderMistakeRescue(mistakeRescuePrompt(question, result))}
     ${renderChoiceFeedback(question, result)}
     ${renderShortFeedback(question, result)}
@@ -3181,6 +3182,15 @@ function renderMistakeRescue(rescue) {
   return `<div class="mistake-rescue">
     <span>${rescue.title}</span>
     <p>${rescue.body}</p>
+  </div>`;
+}
+
+function renderReviewReceipt(result) {
+  if (result.correct) return "";
+  return `<div class="review-receipt">
+    <span>Review saved</span>
+    <strong>This weak signal will return later.</strong>
+    <small>Continue now; the app will bring it back when review is due.</small>
   </div>`;
 }
 
