@@ -133,6 +133,7 @@ import {
   setDashboardMode,
   sevenDayLandingPath,
   sessionRhythmCard,
+  sidebarPathSummaryCard,
   signalPreviewCard,
   skillProfileCard,
   shortAnswerRecipe,
@@ -152,6 +153,7 @@ const tests = [
   ["today route compresses the first screen into one tiny loop", testTodayRouteCard],
   ["learning view tabs keep modules out of one crowded page", testLearningViewTabs],
   ["lesson path trail makes the path view feel like a node route", testLessonPathTrailCard],
+  ["sidebar path summary keeps the full lesson list tucked away", testSidebarPathSummaryCard],
   ["mission dock compresses the homepage into one scan line", testBeginnerMissionDockCard],
   ["quest brief makes the first screen action reward and packet clear", testQuestBriefCard],
   ["hero mission panel ties the first screen to skill proof", testHeroMissionPanelCard],
@@ -499,6 +501,30 @@ function testLessonPathTrailCard() {
   card = lessonPathTrailCard(progress, chapterLessons.length - 1);
   assert.equal(card.nodes.find((node) => node.type === "boss").status, "done");
   assert.equal(card.nodes.find((node) => node.type === "interview").status, "open");
+}
+
+function testSidebarPathSummaryCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  const lessons = flattenLessons();
+  let card = sidebarPathSummaryCard(progress, 0);
+  assert.equal(card.title, "Current Path");
+  assert.equal(card.lessonTitle, lessons[0].title);
+  assert.equal(card.percent, 0);
+  assert.ok(card.progressLabel.includes(`${lessons.length} lessons`));
+  assert.ok(card.chapterProgress.includes("0/"));
+  assert.equal(card.drawerLabel, "All lessons");
+  assert.ok(card.drawerHint.includes("Open only when switching"));
+  assert.doesNotMatch(JSON.stringify(card), /all modules on one page|crowded page|repo|project implementation|build a project/i);
+
+  completeLesson(progress, lessons[0].id, now);
+  card = sidebarPathSummaryCard(progress, 1);
+  assert.equal(card.lessonTitle, lessons[1].title);
+  assert.ok(card.percent > 0);
+  assert.ok(card.chapterProgress.startsWith("1/"));
+
+  card = sidebarPathSummaryCard(progress, 999);
+  assert.equal(card.lessonTitle, lessons.at(-1).title);
 }
 
 function testBeginnerMissionDockCard() {

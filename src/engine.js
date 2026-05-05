@@ -479,6 +479,30 @@ export function lessonPathTrailCard(progress, selectedLessonIndex = 0) {
   };
 }
 
+export function sidebarPathSummaryCard(progress, selectedLessonIndex = 0) {
+  const lessons = flattenLessons();
+  const safeIndex = Math.min(Math.max(selectedLessonIndex, 0), lessons.length - 1);
+  const lesson = lessons[safeIndex] ?? lessons[0];
+  const completedLessonCount = lessons.filter((item) => progress.completedLessons.includes(item.id)).length;
+  const percent = lessons.length ? Math.round((completedLessonCount / lessons.length) * 100) : 0;
+  const chapter = course.chapters.find((item) => item.id === lesson?.chapterId) ?? course.chapters[0];
+  const gate = chapterGateMap(progress).find((item) => item.chapterId === chapter.id);
+  const chapterLessons = lessons.filter((item) => item.chapterId === chapter.id);
+  const chapterDone = chapterLessons.filter((item) => progress.completedLessons.includes(item.id)).length;
+
+  return {
+    title: "Current Path",
+    lessonTitle: lesson?.title ?? "Start the first lesson",
+    chapterTitle: lesson?.chapterTitle ?? chapter.title,
+    gateLabel: gate?.gateLabel ?? "Open",
+    progressLabel: `${completedLessonCount}/${lessons.length} lessons cleared`,
+    chapterProgress: `${chapterDone}/${chapterLessons.length} in this unit`,
+    percent,
+    drawerLabel: "All lessons",
+    drawerHint: "Open only when switching units. The main path shows the next node."
+  };
+}
+
 export function beginnerMissionDockCard(progress, now = Date.now()) {
   const start = startHereCard(progress, now);
   const minimum = dailyMinimumCard(progress, now);

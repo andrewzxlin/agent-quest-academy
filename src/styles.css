@@ -317,6 +317,58 @@ h1 {
   width: var(--lesson-path-percent);
 }
 
+.lesson-map-drawer {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.lesson-map-drawer summary {
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  list-style: none;
+  padding: 12px 14px;
+}
+
+.lesson-map-drawer summary::-webkit-details-marker {
+  display: none;
+}
+
+.lesson-map-drawer summary::after {
+  color: var(--muted);
+  content: "Open";
+  font-size: 11px;
+  font-weight: 900;
+  justify-self: start;
+  text-transform: uppercase;
+}
+
+.lesson-map-drawer[open] summary::after {
+  content: "Close";
+}
+
+.lesson-map-drawer summary strong,
+.lesson-map-drawer summary small {
+  display: block;
+}
+
+.lesson-map-drawer summary strong {
+  font-size: 14px;
+}
+
+.lesson-map-drawer summary small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.lesson-map-drawer .map {
+  border-top: 1px solid var(--line);
+  max-height: min(42vh, 460px);
+  padding: 12px;
+}
+
 .map {
   display: flex;
   flex-direction: column;

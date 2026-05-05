@@ -121,6 +121,7 @@ import {
   setDashboardMode,
   sevenDayLandingPath,
   sessionRhythmCard,
+  sidebarPathSummaryCard,
   signalPreviewCard,
   skillProfileCard,
   shortAnswerRecipe,
@@ -277,8 +278,7 @@ function render() {
     Date.now()
   );
 
-  const completedLessonCount = lessons.filter((item) => progress.completedLessons.includes(item.id)).length;
-  const lessonPathPercent = lessons.length ? Math.round((completedLessonCount / lessons.length) * 100) : 0;
+  const sidebarPath = sidebarPathSummaryCard(progress, selectedLessonIndex);
   const sessionProgressPercent = sessionQuestions.length
     ? Math.round(((currentIndex + (checked ? 1 : 0.35)) / sessionQuestions.length) * 100)
     : 0;
@@ -335,39 +335,37 @@ function render() {
           <strong>面試情境題</strong>
           <span>${chapter.title} 設計判斷</span>
         </button>
-        <div class="lesson-map-summary" style="--lesson-path-percent: ${lessonPathPercent}%">
-          <div>
-            <span>Lesson Path</span>
-            <strong>${lesson.title}</strong>
-            <small>${lesson.chapterTitle}</small>
+        ${renderSidebarPathSummary(sidebarPath)}
+        <details class="lesson-map-drawer">
+          <summary>
+            <strong>${sidebarPath.drawerLabel}</strong>
+            <small>${sidebarPath.drawerHint}</small>
+          </summary>
+          <div class="map">
+            ${lessons
+              .map((item, index) => {
+                const previous = lessons[index - 1];
+                const gate = gatesByChapter.get(item.chapterId);
+                const chapterDivider =
+                  !previous || previous.chapterId !== item.chapterId
+                    ? `<div class="lesson-chapter-divider">
+                      <span>${item.chapterTitle}</span>
+                      <small>${item.chapterTheme}</small>
+                      <em>${gate?.gateLabel ?? "Open"}</em>
+                    </div>`
+                    : "";
+                const active = index === selectedLessonIndex ? "active" : "";
+                const done = progress.completedLessons.includes(item.id) ? "done" : "";
+                const locked = gate?.lessonsUnlocked ? "" : "locked";
+                return `${chapterDivider}<button class="lesson-pill ${active} ${done} ${locked}" data-lesson="${index}" ${locked ? "disabled" : ""}>
+                  <span>${index + 1}</span>
+                  <strong>${item.title}</strong>
+                  <small>${locked ? gate.gateLabel : item.chapterTitle}</small>
+                </button>`;
+              })
+              .join("")}
           </div>
-          <p>${completedLessonCount}/${lessons.length} cleared</p>
-          <div class="lesson-map-track"><span></span></div>
-        </div>
-        <div class="map">
-          ${lessons
-            .map((item, index) => {
-              const previous = lessons[index - 1];
-              const gate = gatesByChapter.get(item.chapterId);
-              const chapterDivider =
-                !previous || previous.chapterId !== item.chapterId
-                  ? `<div class="lesson-chapter-divider">
-                    <span>${item.chapterTitle}</span>
-                    <small>${item.chapterTheme}</small>
-                    <em>${gate?.gateLabel ?? "Open"}</em>
-                  </div>`
-                  : "";
-              const active = index === selectedLessonIndex ? "active" : "";
-              const done = progress.completedLessons.includes(item.id) ? "done" : "";
-              const locked = gate?.lessonsUnlocked ? "" : "locked";
-              return `${chapterDivider}<button class="lesson-pill ${active} ${done} ${locked}" data-lesson="${index}" ${locked ? "disabled" : ""}>
-                <span>${index + 1}</span>
-                <strong>${item.title}</strong>
-                <small>${locked ? gate.gateLabel : item.chapterTitle}</small>
-              </button>`;
-            })
-            .join("")}
-        </div>
+        </details>
         <button class="ghost" data-reset="true">重置進度</button>
       </aside>
 
@@ -1056,6 +1054,19 @@ function renderLearningViewTabs(card) {
         </button>`)
         .join("")}
     </div>
+  </section>`;
+}
+
+function renderSidebarPathSummary(card) {
+  return `<section class="lesson-map-summary" style="--lesson-path-percent: ${card.percent}%">
+    <div>
+      <span>${card.title}</span>
+      <strong>${card.lessonTitle}</strong>
+      <small>${card.chapterTitle}</small>
+    </div>
+    <p>${card.progressLabel}</p>
+    <small>${card.chapterProgress} / ${card.gateLabel}</small>
+    <div class="lesson-map-track"><span></span></div>
   </section>`;
 }
 
