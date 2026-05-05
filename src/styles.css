@@ -7304,7 +7304,8 @@ h1 {
 }
 
 .feedback-detail-drawer span,
-.feedback-detail-drawer strong {
+.feedback-detail-drawer strong,
+.feedback-detail-drawer small {
   display: block;
 }
 
@@ -7316,6 +7317,11 @@ h1 {
 
 .feedback-detail-drawer strong {
   color: var(--ink);
+}
+
+.feedback-detail-drawer small {
+  color: var(--muted);
+  font-weight: 800;
 }
 
 .feedback-detail-drawer > :not(summary) {

@@ -3020,6 +3020,7 @@ function renderFeedback(question, result, progressState, nextActionLabel) {
       <summary>
         <span>${drawerLabel}</span>
         <strong>Gate progress, interview lines, memory hooks</strong>
+        <small>Optional: skip this drawer when you already know the fix.</small>
       </summary>
       ${renderAnswerGateProgressCard(answerGateProgressCard(progressState, question, result, sessionMode))}
       ${renderAnswerLootCard(answerLootCard(question, result, progressState))}
