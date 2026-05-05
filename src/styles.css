@@ -5838,6 +5838,44 @@ h1 {
   gap: 10px;
 }
 
+.multi-select-meter {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  gap: 2px 10px;
+  grid-template-columns: auto auto 1fr;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+}
+
+.multi-select-meter strong {
+  align-items: center;
+  background: #dbeafe;
+  border-radius: 999px;
+  color: #1d4ed8;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 900;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.multi-select-meter span {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.multi-select-meter small {
+  color: var(--muted);
+  font-size: 12px;
+  justify-self: end;
+}
+
 .choice {
   align-items: center;
   border: 1px solid var(--line);
@@ -8555,6 +8593,15 @@ button:disabled {
 
   .choice {
     grid-template-columns: auto 1fr;
+  }
+
+  .multi-select-meter {
+    grid-template-columns: auto 1fr;
+  }
+
+  .multi-select-meter small {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 
   .choice em {

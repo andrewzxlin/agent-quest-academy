@@ -1096,7 +1096,12 @@ function renderQuestion(question) {
       .join("")}</div>`;
   }
   if (question.type === "multi") {
-    return `<div class="choices">${question.choices
+    return `<div class="multi-select-meter">
+      <strong>${selectedMulti.size}</strong>
+      <span>selected</span>
+      <small>Add every option that belongs, then check.</small>
+    </div>
+    <div class="choices">${question.choices
       .map((choice, index) => {
         const selected = selectedMulti.has(index);
         return `<button class="choice ${selected ? "selected" : ""}" data-multi="${index}" aria-pressed="${selected}">
