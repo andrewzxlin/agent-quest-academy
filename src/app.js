@@ -473,6 +473,7 @@ function render() {
           ${renderQuestionPlainDecoderMini(plainDecoder)}
           ${renderQuestion(question, checked)}
           ${checked ? renderFeedback(question, lastResult, progress, nextActionLabel) : ""}
+          ${checked ? renderUnsureReceipt(lastResult) : ""}
           ${checked ? renderNextStepNudgeCard(nextStepNudgeCard(question, lastResult, currentIndex, sessionQuestions.length, sessionMode)) : ""}
           <div class="answer-readiness ${readinessStatus}">
             <span>${readinessLabel}</span>
@@ -1326,6 +1327,15 @@ function renderQuestion(question, isChecked = false) {
       ${renderShortAnswerOutcome(question, lastResult, isChecked)}
     </div>
     <textarea class="short-input ${isChecked ? "locked" : ""}" placeholder="用一句話回答即可，不需要寫程式。" ${isChecked ? "disabled" : ""}>${shortAnswer}</textarea>`;
+}
+
+function renderUnsureReceipt(result) {
+  if (!result?.usedUnsure) return "";
+  return `<div class="unsure-receipt">
+    <span>Unsure saved</span>
+    <strong>This became a review seed, not a failed run.</strong>
+    <small>The card can return later so the weak signal gets easier without stopping today.</small>
+  </div>`;
 }
 
 function choiceToken(index) {
@@ -3776,7 +3786,7 @@ function bindEvents() {
   });
 
   document.querySelector("[data-unsure]")?.addEventListener("click", () => {
-    submitCurrentAnswer(getUnsureResponse(sessionQuestions[currentIndex]));
+    submitCurrentAnswer(getUnsureResponse(sessionQuestions[currentIndex]), { usedUnsure: true });
   });
 
   document.querySelectorAll("[data-next]").forEach((button) => button.addEventListener("click", () => {
@@ -3907,9 +3917,12 @@ function appendConcept(answer, concept) {
   return cleanAnswer ? `${cleanAnswer} ${concept}` : concept;
 }
 
-function submitCurrentAnswer(response) {
+function submitCurrentAnswer(response, options = {}) {
   const question = sessionQuestions[currentIndex];
-  lastResult = gradeQuestion(question, response);
+  lastResult = {
+    ...gradeQuestion(question, response),
+    usedUnsure: Boolean(options.usedUnsure)
+  };
   const answered = answerQuestion(progress, question, response);
   progress = answered.progress;
   if (sessionMode === "boss" && lastResult.correct) {
