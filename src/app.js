@@ -486,7 +486,8 @@ function render() {
             comfortMeter,
             timebox,
             questionMission,
-            question
+            question,
+            checked
           })}
         </section>
 
@@ -1089,7 +1090,7 @@ function renderLearningToolbox(cards) {
       ${renderQuestionImageQuestCard(cards.imageQuest)}
       ${renderQuestionMiniDiagramCard(cards.miniDiagram)}
       ${renderQuestionPlainDecoderCard(cards.plainDecoder)}
-      ${renderQuestionHintDeck(questionHintDeck(cards.question), cards.question)}
+      ${renderQuestionHintDeck(questionHintDeck(cards.question), cards.question, cards.checked)}
       ${renderQuestionComfortMeterCard(cards.comfortMeter)}
       ${renderQuestionTimeboxCard(cards.timebox)}
       ${renderQuestionMissionStrip(cards.questionMission)}
@@ -2852,11 +2853,11 @@ function renderBossReadinessCard(card) {
   </section>`;
 }
 
-function renderQuestionCoach(hint) {
+function renderQuestionCoach(hint, isChecked = false) {
   return `<div class="question-coach">
     <span>${hint.title}</span>
     <p>${hint.body}</p>
-    ${hint.starter ? `<button class="starter-chip" data-starter="${hint.starter}">套用起手式</button>` : ""}
+    ${hint.starter ? `<button class="starter-chip" data-starter="${hint.starter}" ${isChecked ? "disabled" : ""}>套用起手式</button>` : ""}
   </div>`;
 }
 
@@ -2873,7 +2874,7 @@ function renderChoiceEliminationHint(hint) {
   </div>`;
 }
 
-function renderQuestionHintDeck(deck, question) {
+function renderQuestionHintDeck(deck, question, isChecked = false) {
   return `<details class="question-hint-deck">
     <summary>
       <span>${deck.title}</span>
@@ -2883,7 +2884,7 @@ function renderQuestionHintDeck(deck, question) {
     <div class="question-hint-stack">
       ${renderQuestionMasteryStage(questionMasteryStage(question))}
       ${renderQuestionSignalPreview(questionSignalPreview(question))}
-      ${renderQuestionCoach(questionCoachHint(question))}
+      ${renderQuestionCoach(questionCoachHint(question), isChecked)}
       ${renderChoiceLensCard(choiceLensCard(question))}
       ${renderChoiceEliminationHint(choiceEliminationHint(question))}
       ${renderUncertaintySafetyCard(uncertaintySafetyCard(question))}

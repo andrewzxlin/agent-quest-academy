@@ -7108,6 +7108,7 @@ h1 {
   border: 1px solid #fed7aa;
 }
 
+.starter-chip:disabled,
 .concept-chip:disabled,
 .sentence-template:disabled {
   cursor: default;
