@@ -379,6 +379,41 @@ export function todayRouteCard(progress, now = Date.now()) {
   };
 }
 
+export function pathBriefingCard(progress, now = Date.now()) {
+  const route = todayRouteCard(progress, now);
+  const quest = questBriefCard(progress, now);
+  return {
+    title: "Path Briefing",
+    mode: quest.mode,
+    headline: quest.headline,
+    summary: route.progressLabel,
+    proofLabel: `${quest.packetProgress} packet`,
+    reward: quest.reward,
+    action: quest.action,
+    actionLabel: quest.headline,
+    collapsedHint: "Open only if you want the mission details.",
+    promise: "Path keeps the route first; briefing details stay tucked away.",
+    lanes: [
+      {
+        id: "route",
+        label: "Route",
+        text: route.steps.find((step) => step.status === "active")?.title ?? route.headline
+      },
+      {
+        id: "move",
+        label: "Move",
+        text: quest.lanes.find((lane) => lane.id === "move")?.text ?? quest.headline
+      },
+      {
+        id: "packet",
+        label: "Packet",
+        text: quest.lanes.find((lane) => lane.id === "packet")?.text ?? quest.packetFocus
+      }
+    ],
+    reassurance: quest.reassurance
+  };
+}
+
 export function learningViewTabs(progress, activeView = "path", now = Date.now()) {
   const validViews = ["path", "practice", "career"];
   const selectedView = validViews.includes(activeView) ? activeView : "path";

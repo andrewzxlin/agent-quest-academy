@@ -102,6 +102,7 @@ import {
   nowPlayingHudCard,
   onboardingState,
   oneLineCoachCard,
+  pathBriefingCard,
   pitchPracticeCard,
   pitchUnlockPreviewCard,
   practiceDietCard,
@@ -152,6 +153,7 @@ const tests = [
   ["start here card turns the homepage into one obvious action", testStartHereCard],
   ["today route compresses the first screen into one tiny loop", testTodayRouteCard],
   ["learning view tabs keep modules out of one crowded page", testLearningViewTabs],
+  ["path briefing keeps route details collapsed by default", testPathBriefingCard],
   ["lesson path trail makes the path view feel like a node route", testLessonPathTrailCard],
   ["sidebar path summary keeps the full lesson list tucked away", testSidebarPathSummaryCard],
   ["mission dock compresses the homepage into one scan line", testBeginnerMissionDockCard],
@@ -467,6 +469,28 @@ function testLearningViewTabs() {
 
   card = learningViewTabs(progress, "unknown", now);
   assert.equal(card.activeView, "path");
+}
+
+function testPathBriefingCard() {
+  const now = 1000;
+  const progress = createInitialProgress(now);
+  let card = pathBriefingCard(progress, now);
+  assert.equal(card.title, "Path Briefing");
+  assert.equal(card.mode, "lesson");
+  assert.equal(card.lanes.length, 3);
+  assert.deepEqual(card.lanes.map((lane) => lane.id), ["route", "move", "packet"]);
+  assert.ok(card.collapsedHint.includes("Open only"));
+  assert.ok(card.promise.includes("details stay tucked away"));
+  assert.ok(card.summary.includes("One answer"));
+  assert.ok(card.proofLabel.includes("packet"));
+  assert.doesNotMatch(JSON.stringify(card), /all modules on one page|crowded page|repo|project implementation|build a project/i);
+
+  const question = flattenQuestions().find((item) => item.type === "single");
+  answerQuestion(progress, question, 99, now);
+  card = pathBriefingCard(progress, now);
+  assert.equal(card.mode, "review");
+  assert.equal(card.action.type, "review");
+  assert.ok(card.reassurance.includes("Due cards"));
 }
 
 function testLessonPathTrailCard() {

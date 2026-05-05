@@ -89,6 +89,7 @@ import {
   nowPlayingHudCard,
   onboardingState,
   oneLineCoachCard,
+  pathBriefingCard,
   pitchPracticeCard,
   pitchUnlockPreviewCard,
   practiceDietCard,
@@ -127,7 +128,6 @@ import {
   shortAnswerRecipe,
   shortAnswerSupport,
   startHereCard,
-  todayRouteCard,
   uncertaintySafetyCard,
   zeroToLandingQuestCard
 } from "./engine.js";
@@ -207,11 +207,10 @@ function render() {
   const firstFive = firstFiveMinuteStartCard(progress);
   const focusGuard = focusGuardCard(progress, Date.now());
   const startHere = startHereCard(progress, Date.now());
-  const todayRoute = todayRouteCard(progress, Date.now());
+  const pathBriefing = pathBriefingCard(progress, Date.now());
   const viewTabs = learningViewTabs(progress, activeMainView, Date.now());
   const pathTrail = lessonPathTrailCard(progress, selectedLessonIndex);
   const missionDock = beginnerMissionDockCard(progress, Date.now());
-  const questBrief = questBriefCard(progress, Date.now());
   const dashboardMode = dashboardModeCard(progress);
   const practiceDiet = practiceDietCard(progress, lesson.id, Date.now());
   const choiceArcade = choiceArcadeCard(progress);
@@ -387,9 +386,8 @@ function render() {
         </section>
         ${renderLearningViewTabs(viewTabs)}
         <div class="learning-view-panel ${activeMainView === "path" ? "active" : "hidden"}" data-view-panel="path">
-        ${renderTodayRouteCard(todayRoute)}
         ${renderLessonPathTrailCard(pathTrail)}
-        ${renderQuestBriefCard(questBrief)}
+        ${renderPathBriefingCard(pathBriefing)}
         ${latestCompletion ? renderCompletionCard(latestCompletion) : ""}
         ${activePitch ? renderPitchPracticeCard(activePitch) : ""}
         ${renderNowPlayingHudCard(nowPlaying)}
@@ -1007,37 +1005,6 @@ function renderStartHereCard(card) {
   </section>`;
 }
 
-function renderTodayRouteCard(card) {
-  return `<section class="today-route-card ${card.mode}">
-    <div class="today-route-copy">
-      <div>
-        <p class="eyebrow">${card.title}</p>
-        <h3>${card.headline}</h3>
-        <p>${card.body}</p>
-      </div>
-      <div class="today-route-meter">
-        <span>${card.progressLabel}</span>
-        <strong>${card.proofLabel}</strong>
-      </div>
-    </div>
-    <div class="today-route-steps">
-      ${card.steps
-        .map((step) => `<div class="${step.status}">
-          <span>${step.label}</span>
-          <strong>${step.title}</strong>
-          <small>${step.detail}</small>
-        </div>`)
-        .join("")}
-    </div>
-    <div class="today-route-action">
-      <small>${card.reassurance}</small>
-      <button class="primary compact" data-focus-action="${card.action.kind}" data-focus-target="${card.action.target}">
-        ${card.actionLabel}
-      </button>
-    </div>
-  </section>`;
-}
-
 function renderLearningViewTabs(card) {
   return `<section class="learning-view-tabs">
     <div>
@@ -1055,6 +1022,37 @@ function renderLearningViewTabs(card) {
         .join("")}
     </div>
   </section>`;
+}
+
+function renderPathBriefingCard(card) {
+  return `<details class="path-briefing-card ${card.mode}">
+    <summary>
+      <div>
+        <span>${card.title}</span>
+        <strong>${card.headline}</strong>
+        <small>${card.summary} / ${card.proofLabel}</small>
+      </div>
+      <em>${card.collapsedHint}</em>
+    </summary>
+    <div class="path-briefing-body">
+      <div>
+        <p>${card.reward}</p>
+        <small>${card.promise}</small>
+      </div>
+      <div class="path-briefing-lanes">
+        ${card.lanes
+          .map((lane) => `<div>
+            <span>${lane.label}</span>
+            <small>${lane.text}</small>
+          </div>`)
+          .join("")}
+      </div>
+      <div class="path-briefing-action">
+        <small>${card.reassurance}</small>
+        <button class="primary compact" data-quest-brief-action="true">${card.actionLabel}</button>
+      </div>
+    </div>
+  </details>`;
 }
 
 function renderSidebarPathSummary(card) {
@@ -1132,33 +1130,6 @@ function renderBeginnerMissionDockCard(card) {
         ${card.actionLabel}
       </button>
     </div>
-  </section>`;
-}
-
-function renderQuestBriefCard(card) {
-  return `<section class="quest-brief-card ${card.mode}">
-    <div class="quest-brief-copy">
-      <p class="eyebrow">${card.title}</p>
-      <h3>${card.headline}</h3>
-      <p>${card.body}</p>
-      <strong>${card.reward}</strong>
-    </div>
-    <div class="quest-brief-lanes">
-      ${card.lanes
-        .map((lane) => `<div class="${lane.done ? "done" : "active"}">
-          <span>${lane.label}</span>
-          <small>${lane.text}</small>
-        </div>`)
-        .join("")}
-    </div>
-    <div class="quest-brief-action">
-      <div>
-        <span>${card.packetProgress}</span>
-        <small>${card.packetFocus}</small>
-      </div>
-      <button class="primary compact" data-quest-brief-action="true">${card.headline}</button>
-    </div>
-    <p class="quest-brief-reassurance">${card.reassurance}</p>
   </section>`;
 }
 

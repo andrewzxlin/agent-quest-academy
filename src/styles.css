@@ -1269,6 +1269,98 @@ h1 {
   display: none;
 }
 
+.path-briefing-card {
+  background: #ffffff;
+  border: 1px solid #bae6fd;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.path-briefing-card summary {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  list-style: none;
+  padding: 14px 16px;
+}
+
+.path-briefing-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.path-briefing-card summary span,
+.path-briefing-card summary strong,
+.path-briefing-card summary small,
+.path-briefing-card summary em {
+  display: block;
+}
+
+.path-briefing-card summary span {
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.path-briefing-card summary strong {
+  font-size: 16px;
+  margin-top: 3px;
+}
+
+.path-briefing-card summary small,
+.path-briefing-card summary em,
+.path-briefing-body small {
+  color: var(--muted);
+}
+
+.path-briefing-card summary em {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+  text-align: right;
+}
+
+.path-briefing-body {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px 16px;
+}
+
+.path-briefing-lanes {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.path-briefing-lanes div {
+  background: #f8fafc;
+  border: 1px solid rgb(15 23 42 / 0.08);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.path-briefing-lanes span,
+.path-briefing-lanes small {
+  display: block;
+}
+
+.path-briefing-lanes span {
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.path-briefing-action {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
 .lesson-path-trail-card {
   background: #ffffff;
   border: 1px solid #bbf7d0;
@@ -9685,6 +9777,7 @@ button:disabled {
   .start-here-steps,
   .today-route-steps,
   .learning-view-tab-list,
+  .path-briefing-lanes,
   .lesson-path-trail,
   .mission-dock-lanes,
   .quest-brief-lanes,
@@ -9801,6 +9894,16 @@ button:disabled {
   .today-route-action {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .path-briefing-card summary,
+  .path-briefing-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .path-briefing-card summary em {
+    text-align: left;
   }
 
   .lesson-path-trail-head span,
