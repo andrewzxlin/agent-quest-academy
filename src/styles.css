@@ -5698,6 +5698,7 @@ h1 {
   color: var(--muted);
   font-size: 12px;
   font-weight: 850;
+  min-width: 0;
 }
 
 .session-progress-caption span {
@@ -8804,6 +8805,12 @@ button:disabled {
   .answer-readiness {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .session-progress-caption {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
   }
 
   .actions {
