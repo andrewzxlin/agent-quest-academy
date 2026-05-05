@@ -276,6 +276,9 @@ function render() {
     ? Math.round(((currentIndex + (checked ? 1 : 0.35)) / sessionQuestions.length) * 100)
     : 0;
   const nextButtonClass = checked ? "primary next-action" : "secondary";
+  const actionHint = checked
+    ? "Next is unlocked. Feedback is saved; continue when ready."
+    : "Unsure simply saves this as a review card. No penalty, no lost progress.";
 
   root.innerHTML = `
     <div class="shell">
@@ -454,7 +457,7 @@ function render() {
             <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
             <button class="${nextButtonClass}" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : isBossMode ? "結算 Boss" : "完成本課") : "下一題"}</button>
           </div>
-          <p class="unsure-safety">Unsure simply saves this as a review card. No penalty, no lost progress.</p>
+          <p class="action-hint ${checked ? "ready" : "safe"}">${actionHint}</p>
           ${renderLearningToolbox({
             chapterGate,
             ladderStrip,

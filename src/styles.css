@@ -8052,11 +8052,15 @@ h1 {
   box-shadow: 0 12px 24px rgb(37 99 235 / 0.18);
 }
 
-.unsure-safety {
+.action-hint {
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
   margin-top: 8px;
+}
+
+.action-hint.ready {
+  color: #1d4ed8;
 }
 
 .primary,
