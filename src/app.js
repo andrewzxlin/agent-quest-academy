@@ -1165,12 +1165,15 @@ function renderQuestion(question, isChecked = false) {
       .join("")}</div><p class="hint">可複選，選完再檢查。</p>`;
   }
   const shortWords = shortAnswer.trim() ? shortAnswer.trim().split(/\s+/).length : 0;
+  const shortMeterHelp = isChecked
+    ? "Answer locked. Read the feedback, then continue."
+    : `A tiny answer can pass when it uses ${question.minMatches} key concept${question.minMatches === 1 ? "" : "s"}.`;
   return `${renderShortAnswerSupport(shortAnswerSupport(question), isChecked)}
     ${renderShortAnswerRecipe(shortAnswerRecipe(question))}
     <div class="short-answer-meter ${shortAnswer.trim() ? "started" : "empty"} ${isChecked ? "locked" : ""}" data-short-meter="true" data-min-matches="${question.minMatches}">
       <strong>${shortWords}</strong>
       <span>words</span>
-      <small>A tiny answer can pass when it uses ${question.minMatches} key concept${question.minMatches === 1 ? "" : "s"}.</small>
+      <small>${shortMeterHelp}</small>
     </div>
     <textarea class="short-input ${isChecked ? "locked" : ""}" placeholder="用一句話回答即可，不需要寫程式。" ${isChecked ? "disabled" : ""}>${shortAnswer}</textarea>`;
 }
