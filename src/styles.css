@@ -5971,6 +5971,11 @@ h1 {
   transform: none;
 }
 
+.choice.locked:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
 .choice-token {
   align-items: center;
   background: #f1f5f9;
