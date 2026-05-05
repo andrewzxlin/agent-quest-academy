@@ -453,6 +453,7 @@ function render() {
             <button class="ghost compact" data-unsure="true" ${checked ? "disabled" : ""}>我還不確定</button>
             <button class="secondary" data-next="true" ${checked ? "" : "disabled"}>${currentIndex === sessionQuestions.length - 1 ? (isReviewMode ? "完成複習" : isBossMode ? "結算 Boss" : "完成本課") : "下一題"}</button>
           </div>
+          <p class="unsure-safety">Unsure simply saves this as a review card. No penalty, no lost progress.</p>
           ${renderLearningToolbox({
             chapterGate,
             ladderStrip,

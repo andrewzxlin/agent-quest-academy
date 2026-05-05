@@ -7986,6 +7986,13 @@ h1 {
   margin-top: 18px;
 }
 
+.unsure-safety {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  margin-top: 8px;
+}
+
 .primary,
 .secondary,
 .ghost {
